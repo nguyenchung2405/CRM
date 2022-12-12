@@ -1,0 +1,17 @@
+{
+  "name": "TT_CRM",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "nguyenchung2405 <chungdaik@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon proxy/index.js",
+    "clientWebpack": "cd crm && npm run startWebpack",
+    "dev": "concurrently \"yarn clientWebpack\" \"yarn server\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20"
+  }
+}
