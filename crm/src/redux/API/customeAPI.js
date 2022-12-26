@@ -41,3 +41,18 @@ export async function searchCustomerAPI(data){
         return "Thất bại"
     }
 }
+
+export async function updateCustomerAPI(data){
+    try {
+        let {id, ...rest} = data;
+        const result = await axios({
+            url: `${local}/api/client/update?id=${id}`,
+            method: "PUT",
+            data: rest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+};

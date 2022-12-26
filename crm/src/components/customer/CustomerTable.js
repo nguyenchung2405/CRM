@@ -15,6 +15,8 @@ export default function CustomerTable() {
     const {customerList} = useSelector(state => state.customerReducer);
     const {messageAlert} = useSelector(state => state.messageReducer);
     const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
+    const [dataToModal, setDataToModal] = useState({});
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [search, setSearch] = useState({name: "", tax_number: ""})
@@ -116,12 +118,21 @@ export default function CustomerTable() {
                     </div>
                 } else {
                     return <div className="table__thaotac">
-                        <button >Chỉnh sửa</button>
+                        <button onClick={()=>{
+                            setIsShowModalUpdate(true);
+                            setDataToModal({...text})
+                        }}>Chỉnh sửa</button>
                         <button>Ẩn</button>
                     </div>
                 }
             }} />
         </Table>
+        <ModalCustomer
+            title="Cập nhật khách hàng"
+            isShowModal={isShowModalUpdate}
+            setIsShowModalUpdate={setIsShowModalUpdate}
+            dataToModal={dataToModal} 
+        />
     </div>
   )
 }

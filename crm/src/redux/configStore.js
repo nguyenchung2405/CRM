@@ -4,6 +4,7 @@ import rootSaga from "./rootSaga";
 import customerSlice from "./features/customer.feature"
 import loadingSlice from "./features/loadingSlice";
 import messageSlice from "./features/messageSlice";
+import contractSlice from "./features/contractSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,7 +12,8 @@ export const store = configureStore({
     reducer: {
         customerReducer: customerSlice,
         loadingReducer: loadingSlice,
-        messageReducer: messageSlice
+        messageReducer: messageSlice,
+        contractReducer: contractSlice
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(sagaMiddleware)

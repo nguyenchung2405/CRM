@@ -1,30 +1,33 @@
 import { DatePicker, Table, Select } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GET_CUSTOMER_LIST } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 
 export default function CreateContract() {
+  
   const { Column } = Table;
   const { Option } = Select;
+  const dispatch = useDispatch();
+  const {customerList} = useSelector(state => state.customerReducer);
   const [isShowModal, setIsShowModal] = useState(false);
-  const dataCustomer = [
-    "Nguyễn Văn Chương",
-    "Nguyễn Trọng Trí",
-    "Đoàn Nguyễn Chung",
-    "Nguyễn Hoài Nam",
-  ];
-  const dataTable = [
-    {
-      sanPham: "ĐẶC San (02/09/2022)",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque porro earum deleniti quam a eveniet magnam praesentium sint explicabo molestiae debitis modi culpa laborum, animi aut quod sunt numquam repellat.",
-      dateUp: "01/02/2022 - 01/02/2022",
-      price: "900,000",
-    },
-  ];
+  const [dataTable, setDataTable] = useState([{
+    sanPham: "ĐẶC San (02/09/2022)",
+    content:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque porro earum deleniti quam a eveniet magnam praesentium sint explicabo molestiae debitis modi culpa laborum, animi aut quod sunt numquam repellat.",
+    dateUp: "01/02/2022 - 01/02/2022",
+    price: "900,000",
+  },]);
+
+  useEffect(()=>{
+    dispatch({
+      type: GET_CUSTOMER_LIST
+    });
+  }, []);
 
   const renderOption = () => {
-    return dataCustomer.map((customer, index) => {
-      return <Option key={index}>{customer}</Option>;
+    return customerList?.map((customer, index) => {
+      return <Option key={customer.id}>{customer.name}</Option>;
     });
   };
 
