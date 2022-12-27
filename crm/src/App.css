@@ -444,7 +444,7 @@ ul.ant-pagination {
 
 .ant-modal-root .ant-modal-footer {
     text-align: center;
-    padding-bottom: 0px;
+    padding-bottom: 36px;
     border-top: none;
 }
 
@@ -500,6 +500,41 @@ ul.ant-pagination {
     margin-bottom: 21px;
 }
 
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select {
+    display: flex;
+    padding-left: 63px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field .ant-picker .ant-picker-input {
+    width: 44%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field .ant-picker .ant-picker-clear {
+    top: 36%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    width: 100%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector .ant-select-selection-search {
+    width: 100%;
+    left: 0;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-search > input,
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-placeholder {
+    color: #666666;
+    
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+    text-align: left;
+}
+
 .ant-modal-root .ant-modal-body div.modal__content .modal__field > input {
     border: none;
     border-bottom: 1px solid #CCCCCC;
@@ -509,6 +544,21 @@ ul.ant-pagination {
     color: #666666;
     font-size: 15px;
 }
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields {
+    text-align: left;
+    padding-left: 63px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input {
+    width: 245px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input:first-child {
+    margin-right: 35px;
+}
+
+
 
 .ant-modal-root .ant-modal-body div.modal__upload {
     padding-left: 63px;
@@ -639,6 +689,40 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     width: 430px;
 }
 
+.create__contract .create__contract__inforCustomer .field__input .date__range__picker {
+    width: 430px;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+    outline: none;
+    box-shadow: none;
+}
+
+.create__contract .create__contract__inforCustomer .field__input .date__range__picker .ant-picker-input {
+    width: 44%;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select {
+    width: 430px;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    width: 100%;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search {
+    width: 100%;
+    left: 0;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search > input,
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-placeholder {
+    color: #666666;
+}
+
 .create__contract .create__contract__inforCustomer .field__input > div {
     width: 432px;
     display: flex;
@@ -702,7 +786,6 @@ div.ant-select-selector .ant-select-selection-placeholder {
     border-color: #CCCCCC;
 }
 
-.create__contract .create__contract__inforCustomer .ant-picker-input input,
 .create__contract .create__contract__payment .ant-picker-input input,
 .create__contract .create__contract__inforCustomer .ant-picker-input input::placeholder,
 .create__contract .create__contract__payment .ant-picker-input input::placeholder,
@@ -766,7 +849,6 @@ div.ant-select-selector .ant-select-selection-placeholder {
 }
 
 .create__contract .create__contract__payment .ant-picker-focused, 
-.create__contract .create__contract__inforCustomer .field__input > div.ant-picker-focused,
 .contract__service div.ant-picker-focused {
     box-shadow: none;
 }
