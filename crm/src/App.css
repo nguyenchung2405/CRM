@@ -1,0 +1,982 @@
+*, :after, :before {
+    box-sizing: border-box;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+div.App {
+    /* display: flex; */
+    background-color: #eef0f8;
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 35px;
+}
+
+.App p {
+    margin: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji !important;
+}
+
+.style {
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+    width: 525px;
+    padding: 0 0 9px 9px;
+    outline: none;
+    color: #666666;
+    font-size: 15px;
+}
+
+.style::placeholder {
+    color: #666666;
+}
+
+p.required__field {
+    color: red;
+    margin-bottom: 0;
+    text-align: left;
+    padding-left: 63px;
+}
+
+/* loading css */
+
+.loading {
+    position: absolute;
+    height: -webkit-fill-available;
+    width: calc(100% - 80px);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.loading > svg {
+    height: 100%;
+    font-size: 70px;
+}
+
+/* ------ Hêt loading ----------- */
+/* sidebar */
+
+.sidebar {
+    width: 265px;
+    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #459C60;
+}
+
+.sidebar .bg_pri_blue {
+    background-color: #35794a;
+}
+
+.sidebar .sidebar__logo {
+    display: flex;
+    width: 100%;
+    height: 65px;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar .sidebar__personal__information {
+    width: 100%;
+    padding: 14px 0 14px 23px;
+}
+
+.sidebar .sidebar__personal__information p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+}
+
+.sidebar .sidebar__personal__information svg {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.sidebar .sidebar__sub__menu {
+    padding: 10px 0;
+}
+
+.sidebar .sidebar__sub__menu ul {
+    list-style-type: none;
+    padding-left: 53px;
+    margin: 0;
+}
+
+.sidebar .sidebar__sub__menu ul li {
+    padding: 7px 0;
+}
+
+.sidebar .sidebar__sub__menu ul li a {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.sidebar_SubMenu__XZeb6 ul.ant-menu {
+    background-color: #35794a;
+}
+
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu div svg {
+    color: white;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title>.ant-menu-title-content {
+    font-weight: bold;
+    color: white;
+    font-size: 16px;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-submenu-arrow {
+    color: white;
+}
+
+.sidebar_SubMenu__XZeb6 ul.ant-menu li.ant-menu-item {
+    align-items: center;
+    transition: all .3s;
+}
+
+.sidebar_SubMenu__XZeb6 ul.ant-menu li.ant-menu-item > svg {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title>.ant-menu-title-content, .sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-item>.ant-menu-title-content {
+    color: white;
+    font-size: 16px;
+    margin-left: 0;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item-active, .sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item:hover {
+    background-color: white;
+}
+
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-active span.ant-menu-title-content, 
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-selected svg, 
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover span.ant-menu-title-content, 
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover svg, 
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-selected span.ant-menu-title-content {
+    color: black;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-inline .ant-menu-item:after {
+    border-right: 3px solid #35796C;
+}
+
+.sidebar_SubMenu__XZeb6 .ant-menu-submenu:hover>.ant-menu-submenu-title>.ant-menu-submenu-arrow {
+    color: #8bc34a;
+}
+
+/* hết sidebar */
+
+/* CSS Header */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 265px;
+    width: calc(100% - 265px);
+    height: fit-content;
+    background-color: white;
+    z-index: 10;
+}
+
+.header .header__infor {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 28px;
+    height: 65px;
+    border-bottom: 1px solid #EEEFF3;;
+}
+
+.header .header__infor .header__avtar {
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+    margin-right: 17px;
+    border-radius: 50%;
+}
+
+.header .header__infor .header__avtar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header .header__infor p {
+    margin-right: 21px;
+}
+
+.header .header__infor svg {
+    cursor: pointer;
+}
+
+.header .header__infor p span {
+    font-weight: bold;
+}
+
+.header .header__beadrum {
+    height: 54px;
+    padding-left: 36px;
+}
+
+.header .header__beadrum nav {
+    line-height: 54px;
+}
+
+/* Hết CSS Header */
+/* ----------------------------------------------- */
+/* CSS customer table */
+
+.customer__table {
+    position: relative;
+}
+
+.App > div.content {
+    height: fit-content;
+    margin-left: 265px;
+    margin-top: 119px;
+    padding: 35px 40px 0 40px;
+}
+
+.customer__table table thead tr th {
+    color: #A1A5B7;
+    background-color: white;
+}
+
+.customer__table .ant-table-wrapper ul li.ant-pagination-item:hover,
+.customer__table .ant-table-wrapper ul li.ant-pagination-item:hover a {
+    border-color: #459C60;
+    color: #459C60;
+}
+
+.customer__table .table__features {
+    padding: 17px 30px;
+    background-color: white;
+    border-bottom: 1px solid #EEEFF3;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    overflow: hidden;
+}
+
+.customer__table .table__features .table__features__add {
+    margin-bottom: 13px;
+}
+
+.customer__table .table__features .table__features__add h1 {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.customer__table .table__features .table__features__add svg {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.customer__table .table__features .table__features__search {
+    display: flex;
+}
+
+.customer__table .table__features .table__features__search__btn {
+    text-align: right;
+    width: calc(100% - 410px - 240px);
+}
+
+.customer__table .table__features .table__features__search__btn button {
+    width: 115px;
+    height: 40px;
+    background-color: #35794a;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    border-style: none;
+    transition: all .5s;
+}
+
+.customer__table .table__features .table__features__search__btn button:hover {
+    background-color: white;
+    color: #35794a;
+    border: 1px solid #35794a;
+}
+
+.customer__table .table__features .table__features__search input {
+    background-color: #F0F5FA;
+    border-radius: 3px;
+    border-style: none;
+    height: 40px;
+    padding-left: 20px;
+    width: 200px;
+}
+
+.customer__table .table__features .table__features__search input:first-child {
+    margin-right: 37px;
+    width: 410px;
+}
+
+.customer__table .ant-table-wrapper {
+    background-color: white;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    overflow: hidden;
+}
+
+.customer__table ul li.ant-pagination-total-text {
+    position: absolute;
+    right: 30px;
+    margin-right: 0px;
+}
+
+.customer__table .ant-pagination-next:hover button.ant-pagination-item-link, .customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
+    color: #459C60;
+    border-color: #459C60;
+}
+
+.customer__table li.ant-pagination-item-active {
+    font-weight: 500;
+    background: #fff;
+    border-color: #459C60;
+}
+
+.customer__table li.ant-pagination-item-active a {
+    color: #459C60;
+}
+
+.customer__table ul li.ant-pagination-options {
+    position: absolute;
+    right: 190px;
+}
+
+.customer__table .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+    border-color: #459C60;
+}
+
+.customer__table span.anticon svg {
+    color: #459C60;
+}
+
+ul.ant-pagination {
+    padding: 0 30px;
+}
+
+.customer__table .customer__table__name {
+    padding-left: 30px;
+    width: 400px;
+}
+
+.customer__table .customer__table__masothue {
+    width: 130px;
+}
+
+.customer__table .customer__table__phone {
+    width: 130px;
+}
+
+.customer__table .customer__table__thaotac {
+    padding-right: 30px;
+    width: 260px;
+}
+
+.customer__table .table__thaotac button {
+    cursor: pointer;
+    border-style: none;
+    border-radius: 4px;
+    width: 92px;
+    height: 32px;
+}
+
+.customer__table .table__thaotac button:first-child {
+    background: #E0FFF1;
+    color: #29B171;
+    margin-right: 22px;
+}
+
+.customer__table .table__thaotac button:nth-child(2){
+    background: #FFEEF3;;
+    color: #F1416C;
+}
+
+.customer__table .table__thaotac button[disabled] {
+    background: #F5F8FA;
+    cursor: not-allowed;
+    color: #A1A5B7;
+}
+
+/* Hết CSS customer table */
+/* ---------------------------------------- */
+/* CSS Modal  */
+
+.ant-modal-root .ant-modal-content {
+    border-radius: 10px;
+    overflow: hidden;
+    width: 700px;
+}
+
+.ant-modal-root .ant-modal-header {
+    padding-top: 57px;
+    border-bottom: none;
+}
+
+.ant-modal-root .ant-modal-header .ant-modal-title {
+    font-weight: bold;
+    font-size: 26px;
+    text-align: center;
+}
+
+.ant-modal-root .ant-modal-footer {
+    text-align: center;
+    padding-bottom: 36px;
+    border-top: none;
+}
+
+.contract__service__footer {
+    padding-bottom: 42px;
+}
+
+.ant-modal-root .ant-modal-footer .ant-btn {
+    width: 136.5px;
+    height: 44px;
+    font-size: 18px;
+}
+
+.ant-modal-root .ant-modal-footer .btn__cancel {
+    background: #FFFFFF;
+    border: 1px solid #35794A;
+    border-radius: 3px;
+    color: #35794A;
+}
+
+.ant-modal-root .ant-modal-footer .btn__add {
+    background: #35794A;
+    border: 1px solid #35794A;
+    border-radius: 3px;
+    color: white;
+}
+
+.ant-modal-root .ant-modal-body div.ant-radio-group {
+    text-align: center;
+    display: block;
+}
+
+.ant-modal-root .ant-radio-checked .ant-radio-inner {
+    background: #35794A;
+    border: none;
+}
+
+.ant-modal-root .ant-radio-checked .ant-radio-inner::after {
+    width: 0;
+    height: 0;
+}
+
+.ant-modal-root .ant-radio:hover .ant-radio-inner {
+    border-color: #35794A;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field {
+    margin-bottom: 21px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select {
+    display: flex;
+    padding-left: 63px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field .ant-picker .ant-picker-input {
+    width: 44%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field .ant-picker .ant-picker-clear {
+    top: 36%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    width: 100%;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector .ant-select-selection-search {
+    width: 100%;
+    left: 0;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-search > input,
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-placeholder {
+    color: #666666;
+    
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+    text-align: left;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field > input {
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+    width: 525px;
+    padding: 0 0 9px 9px;
+    outline: none;
+    color: #666666;
+    font-size: 15px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields {
+    text-align: left;
+    padding-left: 63px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input {
+    width: 245px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input:first-child {
+    margin-right: 35px;
+}
+
+
+
+.ant-modal-root .ant-modal-body div.modal__upload {
+    padding-left: 63px;
+    text-align: left;
+}
+
+.ant-modal-root .ant-modal-body div.modal__upload > span {
+    color: #666666;
+    font-size: 15px;
+}
+
+.ant-modal-root .ant-modal-body div.modal__upload > input {
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    
+}
+
+.ant-modal-root .ant-modal-body div.modal__upload label {
+    display: block;
+    width: 110px;
+    height: 110px;
+    text-align: center;
+    border: 1px dashed #CCCCCC;
+    padding-top: 34px;
+    color: #AAAAAA;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.ant-modal-root .ant-modal-body div.modal__upload  label > svg {
+    width: 16px;
+    height: 18px;
+}
+
+/* Hết CSS Modal */
+/* ------------------------------------ */
+/* CSS Contract Table */
+
+div.contract__table .table__features .table__features__search input:first-child {
+    margin-right: 37px;
+    width: 200px;
+}
+
+div.contract__table .table__features .table__features__search input:nth-child(2) {
+    margin-right: 37px;
+    width: 410px;
+}
+
+div.contract__table .table__features .table__features__search input:nth-child(3) {
+    width: 251px;
+}
+
+.contract__table .contract__table__soHopDong {
+    padding-left: 30px;
+    width: 180px;
+}
+
+.contract__table .contract__table__customerName {
+    width: 350px;
+}
+
+.contract__table td.contract__table__customerName, .contract__table td.contract__table__status {
+    font-weight: bold;
+}
+
+.contract__table td.contract__table__status > span[status^="đang"] {
+    color: #F1416C;
+}
+
+.contract__table td.contract__table__status > span[status^="kết"] {
+    color: #29B171;
+}
+
+.contract__table .contract__table__thaotac {
+    padding-right: 30px;
+}
+
+/* Hết CSS Contract table */
+/* ------------------------------------- */
+/* CSS Create Contract */
+
+.create__contract .create__contract__content {
+    background: #FFFFFF;
+    border-radius: 12px;
+}
+
+.create__contract .border_bottom_3px {
+    border-bottom: 3px solid #EEF0F8;;
+}
+
+.create__contract .create__contract__content .create__contract__header {
+    padding: 20px 0 20px 26px;
+}
+
+.create__contract .create__contract__content .create__contract__header > h2 {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.create__contract .create__contract__inforCustomer,
+.create__contract .create__contract__contactInfor,
+.create__contract .create__contract__value,
+.create__contract .create__contract__payment,
+.create__contract .create__contract__term {
+    padding: 23px 0 36px 118px;
+}
+
+.create__contract .create__contract__inforCustomer > p,
+.create__contract .create__contract__contactInfor .display__flex,
+.create__contract .create__contract__value p,
+.create__contract .create__contract__payment .display__flex,
+.create__contract .create__contract__term .display__flex {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.create__contract .create__contract__inforCustomer .field__flex {
+    display: flex;
+}
+
+.create__contract .create__contract__inforCustomer .field__input input,
+.create__contract .create__contract__value .field__input_2 input {
+    width: 430px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input .date__range__picker {
+    width: 430px;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+    outline: none;
+    box-shadow: none;
+}
+
+.create__contract .create__contract__inforCustomer .field__input .date__range__picker .ant-picker-input {
+    width: 44%;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select {
+    width: 430px;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    width: 100%;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search {
+    width: 100%;
+    left: 0;
+}
+
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search > input,
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-placeholder {
+    color: #666666;
+}
+
+.create__contract .create__contract__inforCustomer .field__input > div {
+    width: 432px;
+    display: flex;
+    align-items: center;
+    margin-right: 54px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input > div .ant-select-selection-search input {
+    width: 398px;
+    margin-right: 12px;
+    color:  #666666;
+}
+
+.create__contract .create__contract__inforCustomer .field__input > div .ant-select-selection-search input::placeholder {
+    color:  #666666;
+}
+
+.margin_right_54 {
+    margin-right: 54px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input {
+    margin-bottom: 14px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input:last-child {
+    margin-bottom: 0;
+}
+
+.create__contract .create__contract__inforCustomer .field__input > div > svg,
+.create__contract svg {
+    cursor: pointer;
+}
+
+.create__contract.content .create__contract__content .create__contract__inforCustomer .field__input 
+> div .ant-select {
+    width: 410px;
+}
+
+.create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    width: 100%;
+}
+
+.create__contract.content .create__contract__content .create__contract__inforCustomer 
+div.ant-select-selector .ant-select-selection-search {
+    width: 100%;
+    left: 0;
+}
+
+.create__contract.content .create__contract__content .create__contract__inforCustomer 
+div.ant-select-selector .ant-select-selection-placeholder {
+    color:  #666666;
+}
+
+.create__contract .create__contract__inforCustomer .ant-picker:hover,
+.create__contract .create__contract__payment .ant-picker:hover,
+.contract__service .ant-picker:hover {
+    border-color: #CCCCCC;
+}
+
+.create__contract .create__contract__payment .ant-picker-input input,
+.create__contract .create__contract__inforCustomer .ant-picker-input input::placeholder,
+.create__contract .create__contract__payment .ant-picker-input input::placeholder,
+.contract__service .ant-picker-input input::placeholder {
+    color: #666666;
+}
+
+.create__contract .create__contract__contactInfor .display__flex > p,
+.create__contract .create__contract__payment .display__flex > p,
+.create__contract .create__contract__term .display__flex > p {
+    margin-right: 14px;
+}
+
+.create__contract .create__contract__contactInfor .display__flex,
+.create__contract .create__contract__payment .display__flex,
+.create__contract .create__contract__term .display__flex {
+    display: flex;
+    align-items: center;
+}
+
+.create__contract .create__contract__contactInfor .field__input_3 input,
+.create__contract .create__contract__value .field__input_3 input {
+    width: 265px;
+    margin-right: 59.05px;
+}
+
+.field__input_3 input[placeholder$="đồng"]::placeholder {
+    color: #F1416C;
+}
+
+.create__contract .create__contract__contactInfor .field__input_3,
+.create__contract .create__contract__value .field__input_2 {
+    margin-bottom: 14px;
+}
+
+.create__contract .create__contract__contactInfor .field__input_3 input:last-child {
+    margin-right: 0;
+}
+
+.create__contract .create__contract__contactInfor .field__input input {
+    width: 913px;
+}
+
+.create__contract .create__contract__value > textarea {
+    width: 916px;
+    height: 76px;
+    resize: none;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    margin-top: 33px;
+    padding: 10px 0 0 15px;
+    outline: none;
+}
+
+.create__contract .create__contract__payment .ant-picker {
+    margin-right: 54px;
+}
+
+.create__contract .create__contract__payment .ant-picker, .create__contract .create__contract__payment input {
+    width: 262px;
+}
+
+.create__contract .create__contract__payment .ant-picker-focused, 
+.contract__service div.ant-picker-focused {
+    box-shadow: none;
+}
+
+.create__contract .create__contract__payment .contract__payment__process .payment__contract {
+    display: flex;
+    justify-content: space-between;
+    width: 916px;
+    border-bottom: 1px solid #EEEFF3;
+    padding: 18px 0;
+}
+
+.create__contract .create__contract__payment .contract__payment__process .payment__contract > span:first-child{
+    font-weight: bold;
+}
+
+.create__contract .create__contract__payment .contract__payment__process .payment__contract > span:last-child {
+    color: #F1416C;
+    font-weight: bold;
+    min-width: 125px;
+    text-align: right;
+}
+
+.create__contract .create__contract__term table {
+    width: 916px;
+}
+
+.create__contract .create__contract__term table th {
+    background-color: white;
+    color: #999999;
+}
+
+.create__contract .create__contract__term table tr:hover > td {
+    background-color: white;
+}
+
+.create__contract .create__contract__term table tr td.price {
+    color: #F1416C;
+}
+
+.create__contract .create__contract__term table .item {
+    width: 150px;
+}
+
+.create__contract .create__contract__term table .content {
+    width: 300px;
+}
+
+.create__contract .create__contract__term table .dateUp {
+    width: 185px;
+}
+
+.create__contract .create__contract__term table .price {
+    min-width: 150px;
+}
+
+.create__contract .create__contract__term table td.item,
+.create__contract .create__contract__term table td.price {
+    font-weight: bold;
+}
+
+.create__contract .create__contract__term table .thaoTac {
+    min-width: 92px;
+}
+
+.create__contract .create__contract__term table .thaoTac > button{
+    background: #FFEEF3;
+    border-radius: 4px;
+    color: #F1416C;
+    width: 92px;
+    height: 32px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.5s;
+}
+
+.create__contract .create__contract__term table .thaoTac > button:hover {
+    border: 1px solid #F1416C;
+    background-color: white;
+    color: #F1416C;
+}
+
+.create__contract .create__contract__footer {
+    padding: 28px 0 28px 0;
+    margin-left: 118px;
+    width: 916px;
+    text-align: right;
+}
+
+.create__contract .create__contract__footer .footer__btn {
+    width: 135px;
+    height: 44px;
+    margin-right: 40px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.create__contract .create__contract__footer .footer__btn.btn__delete {
+    background-color: white;
+    color: #35794A;
+    border: 1px solid #35794A;
+}
+
+.create__contract .create__contract__footer .footer__btn.btn__review {
+    background: #3699FF;
+    border: 1px solid #3699FF;
+    color: white;
+}
+
+.create__contract .create__contract__footer .footer__btn.btn__create {
+    margin-right: 0;
+    background: #35794A;
+    border: 1px solid #35794A;
+    color: white;
+}
+
+div.ant-select-dropdown {
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    padding: 0;
+    overflow: hidden;
+}
+
+div.ant-select-dropdown div.ant-select-item {
+    border-bottom: 1px solid #DDDDDD;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+/* Hết CSS create contract */
+/* ----------------------------------------------------- */
