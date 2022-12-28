@@ -1,4 +1,5 @@
 import docCookie from "doc-cookies"
+import moment from "moment"
 
 export let getTokenInCookie = ()=>{
     try {
@@ -11,6 +12,15 @@ export let getTokenInCookie = ()=>{
         }
         // console.log(tokenCookie);
         return tokenCookie
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function convertDate(dateString){
+    try {
+        let convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
+        return convert;
     } catch (error) {
         console.log(error)
     }
