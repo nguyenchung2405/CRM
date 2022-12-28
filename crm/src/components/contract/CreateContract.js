@@ -2,8 +2,9 @@ import { DatePicker, Table, Select } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_CUSTOMER_LIST } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_PRODUCT_LIST, GET_PRODUCT_TYPE_LIST, TOKEN } from "../../title/title";
 import TermModal from "../modal/contract/Term";
+import jwtdecode from "jwt-decode"
 
 export default function CreateContract() {
   
@@ -12,20 +13,22 @@ export default function CreateContract() {
   const {RangePicker} = DatePicker;
   const dispatch = useDispatch();
   const {customerList} = useSelector(state => state.customerReducer);
+  const {contractTypeList} = useSelector(state => state.contractReducer);
+  const {productList} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
-  const [dataTable, setDataTable] = useState([{
-    sanPham: "ĐẶC San (02/09/2022)",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque porro earum deleniti quam a eveniet magnam praesentium sint explicabo molestiae debitis modi culpa laborum, animi aut quod sunt numquam repellat.",
-    dateUp: "01/02/2022 - 01/02/2022",
-    price: "900,000",
-  },]);
+  const [dataTable, setDataTable] = useState([]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
-  console.log(valueForm,",", dataTable)
+  
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST
+    });
+    dispatch({
+      type: GET_PRODUCT_LIST
+    });
+    dispatch({
+      type: GET_CONTRACT_TYPE_LIST
     });
   }, []);
 
@@ -42,9 +45,8 @@ export default function CreateContract() {
   };
 
   const renderLoaiHopDong = ()=>{
-    let arrLoaiHopDong = [1,2,3,4,5]
-    return arrLoaiHopDong.map((item)=>{
-      return <Option value={item}>{item}</Option>
+    return contractTypeList?.map((item)=>{
+      return <Option value={item.id}>{item.name}</Option>
     });
   }
 
@@ -67,7 +69,7 @@ export default function CreateContract() {
                   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                 }
                 onChange={(value)=>{
-                    handleChangeValue("client_ID", value)
+                    handleChangeValue("client_ID", +value)
                 }}
               >
                 {renderOption()}
@@ -334,7 +336,7 @@ export default function CreateContract() {
         </div>
         <div className="create__contract__term border_bottom_3px">
           <div className="display__flex">
-            <p>Hạn mục thực hiện</p>
+            <p>Hạng mục thực hiện</p>
             <svg
               width="22"
               height="22"
@@ -376,12 +378,16 @@ export default function CreateContract() {
               title="Sản phẩm"
               key="item"
               dataIndex="product_ID"
+              render={(text)=>{
+                let product = productList?.find(product => product.id === text)
+                return product?.name
+              }}
             />
             <Column
               className="content"
-              title="Nội dung"
+              title="Tên hạng mục"
               key="content"
-              dataIndex="content"
+              dataIndex="desc"
             />
             <Column
               className="dateUp"
@@ -414,12 +420,25 @@ export default function CreateContract() {
             setIsShowModal={setIsShowModal}
             setDataTable={setDataTable}
             dataTable={dataTable}
+            productList={productList}
           />
         </div>
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete">Xóa</button>
           <button className="footer__btn btn__review">Xem lại</button>
-          <button className="footer__btn btn__create">Tạo</button>
+          <button className="footer__btn btn__create"
+              onClick={()=>{
+                let creater = jwtdecode(TOKEN)?.id;
+                let newData = {
+                  contract: {...valueForm, creater},
+                  details: [...dataTable]
+                };
+                dispatch({
+                  type: CREATE_CONTRACT,
+                  data: newData
+                });
+              }}
+          >Tạo</button>
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import docCookie from "doc-cookies"
+import moment from "moment"
 
-export let getTokenInCookie = ()=>{
+export let getTokenInCookie = () => {
     try {
         let tokenCookie = docCookie.getItem("usertoken")
-        if(!tokenCookie){
+        if (!tokenCookie) {
             return null
             // Khi test trên local
             // return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzU2LCJleHAiOjI3NTA1NTQ3MzB9.drBO_G7F9JCDi7XmLRmf14QvUqYe8cW4inBIbQsmRYI"
@@ -11,6 +12,23 @@ export let getTokenInCookie = ()=>{
         }
         // console.log(tokenCookie);
         return tokenCookie
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export let checkMicroFe = () => {
+    if (window.location.href.includes("3002") || window.location.href.includes("crm_fe") ||
+        window.location.href.includes("3003") || window.location.href.includes("crm-service.tuoitre.vn")) {
+        return false;
+    } else {
+        return true;
+    }
+}
+export function convertDate(dateString){
+    try {
+        let convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
+        return convert;
     } catch (error) {
         console.log(error)
     }
