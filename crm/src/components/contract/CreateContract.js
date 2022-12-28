@@ -24,7 +24,7 @@ export default function CreateContract() {
   const [dataTable, setDataTable] = useState([]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
-  console.log(valueForm)
+  // console.log(valueForm)
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST
