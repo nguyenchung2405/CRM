@@ -1,19 +1,19 @@
 import React from 'react'
-import {Menu} from "antd"
-import {MdPeopleOutline} from "react-icons/md"
+import { Menu } from "antd"
+import { MdPeopleOutline } from "react-icons/md"
 import { useNavigate } from "react-router-dom";
-import {BsFileEarmarkFill} from "react-icons/bs"
-import {FcDepartment} from "react-icons/fc"
+import { BsFileEarmarkFill } from "react-icons/bs"
+import { FcDepartment } from "react-icons/fc"
 
 export default function SubMenu() {
     const navigate = useNavigate();
-    const positionIcon = ()=> {
+    const positionIcon = () => {
         return <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-         width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-         preserveAspectRatio="xMidYMid meet">
-        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-        fill="currentColor" stroke="none">
-        <path d="M2213 5110 c-210 -29 -362 -111 -469 -253 -97 -128 -134 -253 -134
+            width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+            preserveAspectRatio="xMidYMid meet">
+            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                fill="currentColor" stroke="none">
+                <path d="M2213 5110 c-210 -29 -362 -111 -469 -253 -97 -128 -134 -253 -134
         -452 l0 -127 -39 -45 c-143 -162 -59 -399 160 -447 22 -5 30 -17 54 -91 41
         -126 148 -268 233 -308 18 -8 22 -18 22 -52 0 -41 -1 -43 -38 -49 -24 -3 -49
         -17 -67 -36 -16 -16 -39 -30 -51 -30 -24 0 -421 -153 -492 -189 -54 -27 -127
@@ -52,20 +52,20 @@ export default function SubMenu() {
         -8 -99 -19 -215z m926 80 c34 -38 34 -115 2 -148 -21 -21 -112 -20 -136 2 -24
         22 -25 118 -1 145 22 25 113 25 135 1z m-1189 -107 c4 -40 10 -99 13 -130 l7
         -56 -58 0 -58 0 7 78 c17 188 15 182 51 182 l32 0 6 -74z"/>
-        <path d="M2051 4074 c-12 -15 -21 -34 -21 -44 0 -10 9 -29 21 -44 40 -50 119
+                <path d="M2051 4074 c-12 -15 -21 -34 -21 -44 0 -10 9 -29 21 -44 40 -50 119
         -24 119 40 0 69 -78 101 -119 48z"/>
-        <path d="M2532 4077 c-44 -46 -14 -117 48 -117 63 0 93 75 47 118 -30 28 -68
+                <path d="M2532 4077 c-44 -46 -14 -117 48 -117 63 0 93 75 47 118 -30 28 -68
         28 -95 -1z"/>
-        <path d="M2162 3768 c-7 -7 -12 -24 -12 -39 0 -52 100 -108 196 -109 60 0 147
+                <path d="M2162 3768 c-7 -7 -12 -24 -12 -39 0 -52 100 -108 196 -109 60 0 147
         40 178 82 18 25 18 28 2 52 -21 33 -48 33 -92 -1 -23 -17 -51 -28 -82 -30 -40
         -4 -54 0 -92 26 -48 33 -78 39 -98 19z"/>
-        <path d="M2526 2224 c-14 -13 -16 -48 -16 -230 l0 -214 -798 0 c-761 0 -800
+                <path d="M2526 2224 c-14 -13 -16 -48 -16 -230 l0 -214 -798 0 c-761 0 -800
         -1 -815 -18 -15 -16 -17 -46 -17 -210 0 -202 4 -222 50 -222 44 0 50 22 50
         191 l0 159 765 0 765 0 0 -159 c0 -169 6 -191 50 -191 44 0 50 22 50 191 l0
         159 765 0 765 0 0 -159 c0 -169 6 -191 50 -191 46 0 50 19 50 224 0 174 -2
         195 -18 209 -17 16 -88 17 -815 17 l-797 0 0 214 c0 228 -4 246 -50 246 -10 0
         -26 -7 -34 -16z"/>
-        <path d="M850 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
+                <path d="M850 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
         l36 -44 -46 -7 c-114 -17 -221 -99 -269 -208 -25 -54 -29 -77 -33 -187 -5
         -153 6 -203 51 -230 31 -19 54 -20 507 -20 453 0 476 1 507 20 46 28 57 77 50
         231 -4 110 -8 134 -32 187 -48 107 -156 190 -268 207 l-45 7 39 51 c96 126 91
@@ -76,7 +76,7 @@ export default function SubMenu() {
         -230 0 -230 0 0 103 c0 111 -6 127 -50 127 -44 0 -50 -16 -50 -127 l0 -104
         -62 3 -63 3 0 120 c0 74 6 135 14 159 24 68 94 133 171 157 14 4 142 7 285 6
         246 -2 262 -3 301 -24z"/>
-        <path d="M2470 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
+                <path d="M2470 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
         l36 -44 -46 -7 c-114 -17 -221 -99 -269 -208 -25 -54 -29 -77 -33 -187 -5
         -153 6 -203 51 -230 31 -19 54 -20 507 -20 453 0 476 1 507 20 46 28 57 77 50
         231 -4 110 -8 134 -32 187 -48 107 -156 190 -268 207 l-45 7 39 51 c96 126 91
@@ -87,7 +87,7 @@ export default function SubMenu() {
         -230 0 -230 0 0 103 c0 111 -6 127 -50 127 -44 0 -50 -16 -50 -127 l0 -104
         -62 3 -63 3 0 120 c0 74 6 135 14 159 24 68 94 133 171 157 14 4 142 7 285 6
         246 -2 262 -3 301 -24z"/>
-        <path d="M4090 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
+                <path d="M4090 1211 c-57 -19 -110 -53 -148 -97 -106 -119 -109 -295 -8 -418
         l36 -44 -46 -7 c-114 -17 -221 -99 -269 -208 -25 -54 -29 -77 -33 -187 -5
         -153 6 -203 51 -230 31 -19 54 -20 507 -20 453 0 476 1 507 20 46 28 57 77 50
         231 -4 110 -8 134 -32 187 -48 107 -156 190 -268 207 l-45 7 39 51 c96 126 91
@@ -98,11 +98,11 @@ export default function SubMenu() {
         -230 0 -230 0 0 103 c0 111 -6 127 -50 127 -44 0 -50 -16 -50 -127 l0 -104
         -62 3 -63 3 0 120 c0 74 6 135 14 159 24 68 94 133 171 157 14 4 142 7 285 6
         246 -2 262 -3 301 -24z"/>
-        </g>
+            </g>
         </svg>
     }
 
-    const getItem = (label, key, icon, children)=>{
+    const getItem = (label, key, icon, children) => {
         return {
             label,
             key,
@@ -112,28 +112,28 @@ export default function SubMenu() {
     }
 
     const items = [
-        getItem("Nhân sự","sub1", <MdPeopleOutline />,[
+        getItem("Nhân sự", "sub1", <MdPeopleOutline />, [
             getItem("Hồ sơ", "1", <BsFileEarmarkFill />),
             getItem("Bộ phận công tác", "2", <FcDepartment />),
             getItem("Chức danh, chức vụ", "3", positionIcon()),
         ])
     ]
 
-  return (
-    <div className="sidebar_SubMenu__XZeb6">
-        <Menu
-         mode='inline'
-         items={items}
-         onClick={(e)=>{
-            if(e.key === "1"){
-                navigate("/hr/profile")
-            } else if(e.key === "2"){
-                navigate("/hr/department")
-            } else if(e.key === "3"){
-                navigate("/hr/position");
-            }
-         }}
-        />
-    </div>
-  )
+    return (
+        <div className="sidebar_SubMenu__XZeb6">
+            <Menu
+                mode='inline'
+                items={items}
+                onClick={(e) => {
+                    if (e.key === "1") {
+                        navigate("/hr/profile")
+                    } else if (e.key === "2") {
+                        navigate("/hr/department")
+                    } else if (e.key === "3") {
+                        navigate("/hr/position");
+                    }
+                }}
+            />
+        </div>
+    )
 }
