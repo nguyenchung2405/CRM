@@ -18,7 +18,9 @@ export let getTokenInCookie = () => {
 
 export let checkMicroFe = () => {
     if (window.location.href.includes("3002") || window.location.href.includes("crm_fe") ||
-        window.location.href.includes("3003") || window.location.href.includes("crm-service.tuoitre.vn")) {
+        window.location.href.includes("3003") || window.location.href.includes("crm-service.tuoitre.vn")
+        || window.location.href.includes("crm-service-node.tuoitre.vn")
+    ) {
         return false;
     } else {
         return true;
