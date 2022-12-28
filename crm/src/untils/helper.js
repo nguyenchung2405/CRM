@@ -1,4 +1,5 @@
 import docCookie from "doc-cookies"
+import moment from "moment"
 
 export let getTokenInCookie = () => {
     try {
@@ -22,5 +23,13 @@ export let checkMicroFe = () => {
         return false;
     } else {
         return true;
+    }
+}
+export function convertDate(dateString){
+    try {
+        let convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
+        return convert;
+    } catch (error) {
+        console.log(error)
     }
 }

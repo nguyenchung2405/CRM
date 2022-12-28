@@ -4,6 +4,8 @@ import { FcPlus } from "react-icons/fc"
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
+import moment from 'moment';
+import { convertDate } from '../../untils/helper';
 
 export default function ContractTable() {
 
@@ -67,7 +69,7 @@ export default function ContractTable() {
                 <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="nguoiPhuTrach" />
                 <Column className="contract__table__time" title="Thời gian thực hiện" key="time" dataIndex="time" />
                 <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
-                    return <span status={text.status.toLowerCase()} >{text.status}</span>
+                    return <span status={text?.status?.toLowerCase()} >{text?.status}</span>
                 }} />
                 <Column className="contract__table__createdBy" title="Người tạo HĐ" key="createdBy" dataIndex="createdBy" />
                 <Column className="contract__table__thaotac" render={(text) => {

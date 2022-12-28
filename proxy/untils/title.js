@@ -1,4 +1,4 @@
-const local = "http://192.168.169.24:85";
+const local = "http://crm-service-py.tuoitre.vn";
 
 module.exports = {
     local
