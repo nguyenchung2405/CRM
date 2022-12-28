@@ -4,13 +4,14 @@ import React, { useState } from 'react'
 
 export default function TermModal(props) {
 
-  let { isShowModal, setIsShowModal, setDataTable, dataTable} = props;
+  let { isShowModal, setIsShowModal, setDataTable, dataTable, productList} = props;
   const {RangePicker} = DatePicker;
   const {Option} = Select;
   const [valueModal, setValueModal] = useState({});
-
+  
   const handleCancel = () => {
     setIsShowModal(false);
+    setValueModal({})
   };
 
   const handleOK = ()=>{
@@ -18,6 +19,7 @@ export default function TermModal(props) {
     newDataTable.push(valueModal)
     setDataTable([...newDataTable])
     setIsShowModal(false);
+    setValueModal({})
   }
 
   const handleChange = (name, value)=>{
@@ -29,9 +31,23 @@ export default function TermModal(props) {
     }
   };
 
+  const valueOfField = (name)=>{
+    if(valueModal[name] && valueModal[name] !== "" && name !== "rangePicker"){
+      return valueModal[name]
+    } else if(name === "rangePicker" && valueModal["from_date"] && valueModal["to_date"]) {
+      let newTuNgay = moment(new Date(valueModal["from_date"])).format("DD-MM-YYYY");
+      let newDenNgay = moment(new Date(valueModal["to_date"])).format("DD-MM-YYYY");
+      return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
+    } else {
+      if(name === "desc" || name === "real_price"){
+        return ""
+      }
+      return null
+    }
+  }
+
   const renderOptionProduct = ()=>{
-    let arr = [{name: "Đặc san", id:1}, {name: "Tuổi trẻ cười", id:2}];
-    return arr.map((item)=>{
+    return productList?.map((item)=>{
       return <Option value={item.id}>{item.name}</Option>
     });
   }
@@ -59,6 +75,7 @@ export default function TermModal(props) {
                    <div className="modal__field">
                     <input type="text" placeholder="Tên hạng mục"
                     name="desc"
+                    value={valueOfField("desc")}
                     onChange={(e)=>{
                         let {value, name} = e.target;
                         handleChange(name, value)
@@ -74,6 +91,7 @@ export default function TermModal(props) {
                         filterOption={(input, option) =>
                           (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
+                        value={valueOfField("product_ID")}
                         onChange={(value)=>{
                             handleChange("product_ID", value)
                         }}
@@ -85,6 +103,7 @@ export default function TermModal(props) {
                   <div className="modal__field">
                     <input type="text" placeholder="Giá tiền"
                     name="real_price"
+                    value={valueOfField("real_price")}
                     onChange={(e)=>{
                         let {value, name} = e.target;
                         handleChange(name, +value)
@@ -99,7 +118,9 @@ export default function TermModal(props) {
                     </svg>}
                     className='style' 
                     placeholder={['Ngày đăng', "Kết thúc"]}
+                    value={valueOfField("rangePicker")}
                     onChange={(date, dateString)=>{
+                      console.log(dateString)
                       let ngayDang = moment(dateString[0], "DD-MM-YYYY").toISOString();
                       let ngayKetThuc = moment(dateString[1], "DD-MM-YYYY").toISOString();
                       setValueModal({

@@ -46,7 +46,6 @@ export default function CustomerTable() {
             [name]: value
         })
     }
-
     const showLoading = () => {
         if (isLoading) {
             return <Loading />

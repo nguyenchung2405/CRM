@@ -1,4 +1,5 @@
 import docCookie from "doc-cookies"
+import moment from "moment"
 
 export let getTokenInCookie = () => {
     try {
@@ -16,6 +17,19 @@ export let getTokenInCookie = () => {
     }
 }
 
+export function convertDate(dateString) {
+    try {
+        let convert;
+        if (dateString.includes(".000Z")) {
+            convert = moment(new Date(dateString)).format("DD-MM-YYYY");
+        } else {
+            convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
+        }
+        return convert;
+    } catch (error) {
+        console.log(error)
+    }
+}
 export let checkMicroFe = () => {
     if (window.location.href.includes("3002") || window.location.href.includes("crm_fe") ||
         window.location.href.includes("3003") || window.location.href.includes("crm-service.tuoitre.vn")
