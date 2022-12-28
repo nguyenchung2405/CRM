@@ -52,8 +52,26 @@ const createContract = async (req,res)=>{
     }
 }
 
+const getContractDetail = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/detail?id=${id}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        res.send(error)
+    }
+};
+
 module.exports = {
     getContractList,
     getContractTypeList,
-    createContract
+    createContract,
+    getContractDetail
 }
