@@ -3,6 +3,7 @@ const {local} = require("../untils/title")
 
 const getCustomerList = async (req, res)=>{
     try {
+        console.log("nfaohfuahou")
         const result = await axios({
             url: `${local}/client/list`,
             method: "GET"
