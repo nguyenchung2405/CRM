@@ -38,7 +38,9 @@ module.exports = {
         }),
 
     ],
-
+    optimization: {
+        splitChunks: false,
+    },
     devServer: {
         port: 3002,
         open: true,
