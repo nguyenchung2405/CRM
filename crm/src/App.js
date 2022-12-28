@@ -16,6 +16,7 @@ function App() {
         <Route path="/crm/customer" element={<CustomerTable />} />
         <Route path="/crm/contract" element={<ContractTable />} />
         <Route path="/crm/contract/create" element={<CreateContract />} />
+        <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
         {/**<Route path="*" element={<PageNotFound />} /> */}
       </Routes>
     </div>

@@ -49,3 +49,19 @@ export async function createContractAPI(data){
         return "Thất bại"
     }
 }
+
+export async function getContractDetailAPI(contract_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/detail?id=${contract_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+};

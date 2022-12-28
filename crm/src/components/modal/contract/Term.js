@@ -8,7 +8,7 @@ export default function TermModal(props) {
   const {RangePicker} = DatePicker;
   const {Option} = Select;
   const [valueModal, setValueModal] = useState({});
-  console.log(valueModal)
+  
   const handleCancel = () => {
     setIsShowModal(false);
     setValueModal({})

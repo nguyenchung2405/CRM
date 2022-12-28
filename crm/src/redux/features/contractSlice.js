@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     contractList: [],
     total: 0,
-    contractTypeList: []
+    contractTypeList: [],
+    contractDetail: {}
 };
 
 const contractSlice = createSlice({
@@ -17,9 +18,12 @@ const contractSlice = createSlice({
         },
         setContractTypeList: (state, action)=>{
             state.contractTypeList = action.payload;
+        },
+        setContractDetail: (state, action)=>{
+            state.contractDetail = action.payload;
         }
     }
 });
 
-export const {setContractList, setContractTypeList} = contractSlice.actions;
+export const {setContractList, setContractTypeList, setContractDetail} = contractSlice.actions;
 export default contractSlice.reducer;

@@ -26,7 +26,7 @@ export default function CustomerTable() {
             dispatch({
                 type: GET_CUSTOMER_LIST
             });
-            // dispatch(setIsLoading(true))
+            dispatch(setIsLoading(true))
         }
     }, [search])
 

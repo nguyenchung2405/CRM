@@ -2,9 +2,12 @@ import { DatePicker, Table, Select } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_PRODUCT_LIST, GET_PRODUCT_TYPE_LIST, TOKEN } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_PRODUCT_LIST, GET_PRODUCT_TYPE_LIST, TOKEN } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import jwtdecode from "jwt-decode"
+import { useNavigate, useParams } from "react-router-dom";
+import { setContractDetail } from "../../redux/features/contractSlice";
+import { convertDate } from "../../untils/helper";
 
 export default function CreateContract() {
   
@@ -12,14 +15,16 @@ export default function CreateContract() {
   const { Option } = Select;
   const {RangePicker} = DatePicker;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {contract_id} = useParams();
   const {customerList} = useSelector(state => state.customerReducer);
-  const {contractTypeList} = useSelector(state => state.contractReducer);
+  const {contractTypeList, contractDetail} = useSelector(state => state.contractReducer);
   const {productList} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataTable, setDataTable] = useState([]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
-  
+  console.log(valueForm)
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST
@@ -30,11 +35,31 @@ export default function CreateContract() {
     dispatch({
       type: GET_CONTRACT_TYPE_LIST
     });
+    return ()=>{
+      dispatch(setContractDetail({}))
+    }
   }, []);
 
+  useEffect(()=>{
+    let {dataContract, dataTable: dataOfTable} = contractDetail;
+    if(dataContract && dataOfTable){
+      setValueForm({...dataContract})
+      setDataTable([...dataOfTable])
+    }
+  }, [contractDetail])
+
+  useEffect(()=>{
+    if(contract_id && typeof +contract_id === "number"){
+      dispatch({
+        type: GET_CONTRACT_DETAIL,
+        contract_id
+      });
+    }
+  }, [contract_id])
+
   const renderOption = () => {
-    return customerList?.map((customer, index) => {
-      return <Option key={customer.id}>{customer.name}</Option>;
+    return customerList?.map((customer) => {
+      return <Option value={+customer.id}>{customer.name}</Option>;
     });
   };
 
@@ -46,8 +71,50 @@ export default function CreateContract() {
 
   const renderLoaiHopDong = ()=>{
     return contractTypeList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
+      return <Option value={+item.id}>{item.name}</Option>
     });
+  }
+  
+  const valueOfField = (name)=>{
+    if(name === "rangePicker"){
+          let newTuNgay = convertDate(valueForm["begin_date"]);
+          let newDenNgay = convertDate(valueForm["end_date"]);
+          if(newTuNgay === undefined && newDenNgay === undefined){
+            return [null, null]
+          }
+          return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
+    } else {
+        if(valueForm[name]){
+        return valueForm[name]
+        }
+      
+    } 
+  }
+
+  const renderButtonCreateUpdate = ()=>{
+    if(contract_id){
+      return <button className="footer__btn btn__create"
+      onClick={()=>{
+          
+      }}>
+        Cập nhật
+      </button>
+    } else {
+      return <button className="footer__btn btn__create"
+      onClick={()=>{
+        let creater = jwtdecode(TOKEN)?.id;
+        let newData = {
+          contract: {...valueForm, creater},
+          details: [...dataTable]
+        };
+        dispatch({
+          type: CREATE_CONTRACT,
+          data: newData
+        });
+        navigate("/crm/contract")
+      }}
+  >Tạo</button>
+    }
   }
 
   return (
@@ -71,6 +138,7 @@ export default function CreateContract() {
                 onChange={(value)=>{
                     handleChangeValue("client_ID", +value)
                 }}
+                value={valueOfField("client_ID")}
               >
                 {renderOption()}
               </Select>
@@ -115,6 +183,7 @@ export default function CreateContract() {
                 let {value, name} = e.target;
                 handleChangeValue(name, value) 
               }}
+              value={valueOfField("owner")}
             />
           </div>
           <div className="field__input field__flex">
@@ -127,6 +196,7 @@ export default function CreateContract() {
                 let {value, name} = e.target;
                 handleChangeValue(name, +value) 
               }}
+              value={valueOfField("contract_number")}
             />
             <RangePicker
                 className="date__range__picker"
@@ -156,6 +226,7 @@ export default function CreateContract() {
                     end_date: ngayKetThucThucHien
                   })
                 }}
+                value={valueOfField("rangePicker")}
             />
           </div>
         </div>
@@ -213,6 +284,7 @@ export default function CreateContract() {
               onChange={(value)=>{
                   handleChangeValue("contract_type_id", value)
               }}
+              value={valueOfField("contract_type_id")}
             >
                 {renderLoaiHopDong()}
             </Select>
@@ -225,6 +297,7 @@ export default function CreateContract() {
                 let {value, name} = e.target;
                 handleChangeValue(name, +value)
             }}
+            value={valueOfField("discount_by_percent")}
             />
             <input className="style" placeholder="Thuế GTGT(%)" type="text"
             name="VAT" 
@@ -232,6 +305,7 @@ export default function CreateContract() {
                 let {value, name} = e.target;
                 handleChangeValue(name, +value)
             }}
+            value={valueOfField("VAT")}
             />
             <input
               className="style"
@@ -242,6 +316,7 @@ export default function CreateContract() {
                   let {value, name} = e.target;
                   handleChangeValue(name, +value)
               }}
+              value={valueOfField("total")}
             />
           </div>
           <textarea id="note" placeholder="Ghi chú"
@@ -250,6 +325,7 @@ export default function CreateContract() {
                 let {value, name} = e.target;
                 handleChangeValue(name, value)
             }}
+            value={valueOfField("note")}
           ></textarea>
         </div>
         <div className="create__contract__payment border_bottom_3px">
@@ -426,19 +502,7 @@ export default function CreateContract() {
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete">Xóa</button>
           <button className="footer__btn btn__review">Xem lại</button>
-          <button className="footer__btn btn__create"
-              onClick={()=>{
-                let creater = jwtdecode(TOKEN)?.id;
-                let newData = {
-                  contract: {...valueForm, creater},
-                  details: [...dataTable]
-                };
-                dispatch({
-                  type: CREATE_CONTRACT,
-                  data: newData
-                });
-              }}
-          >Tạo</button>
+          {renderButtonCreateUpdate()}
         </div>
       </div>
     </div>
