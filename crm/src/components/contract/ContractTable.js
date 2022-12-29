@@ -65,42 +65,6 @@ export default function ContractTable() {
                         <button>Tìm kiếm</button>
                     </div>
                 </div>
-                <Table
-                    dataSource={contractList}
-                    pagination={{
-                        position: ["bottomLeft"],
-                        defaultPageSize: 10,
-                        locale: { items_per_page: "" },
-                        defaultCurrent: 1,
-                        showSizeChanger: true,
-                        total: total,
-                        pageSizeOptions: [10, 50, 100],
-                        onChange: (page, pageNumber) => {
-                            setPageNumber(pageNumber);
-                            setPage(page);
-                        },
-                        showTotal: (total) => {
-                            if (pageNumber * page < total) {
-                                return `Hiển thị ${pageNumber * page} trong ${total}`;
-                            }
-                            return `Hiển thị ${total} trong ${total}`;
-                        },
-                    }}
-                >
-                    <Column className="contract__table__soHopDong" title="Số hợp đồng" key="soHopDong" dataIndex="soHopDong" />
-                    <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" dataIndex="customerName" />
-                    <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="nguoiPhuTrach" />
-                    <Column className="contract__table__time" title="Thời gian thực hiện" key="time" dataIndex="time" />
-                    <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
-                        return <span status={text.status.toLowerCase()} >{text.status}</span>
-                    }} />
-                    <Column className="contract__table__createdBy" title="Người tạo HĐ" key="createdBy" dataIndex="createdBy" />
-                    <Column className="contract__table__thaotac" render={(text) => {
-                        return <div className="table__thaotac">
-                            <button >Chỉnh sửa</button>
-                        </div>
-                    }} />
-                </Table>
             </div>
             <Table
                 dataSource={contractList}
