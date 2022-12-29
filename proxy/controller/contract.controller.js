@@ -37,7 +37,6 @@ const getContractTypeList = async (req, res)=>{
 const createContract = async (req,res)=>{
     try {
         let {headers: {authorization}} = req;
-        console.log(req.body)
         const result = await axios({
             url: `${local}/contract/create`,
             method: "POST",

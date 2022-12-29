@@ -72,16 +72,18 @@ export default function TermModal(props) {
         open={isShowModal}
         onCancel={handleCancel}>
               <div className="modal__content contract__service">
+                   {/**
                    <div className="modal__field">
-                    <input type="text" placeholder="Tên hạng mục"
-                    name="desc"
-                    value={valueOfField("desc")}
-                    onChange={(e)=>{
-                        let {value, name} = e.target;
-                        handleChange(name, value)
-                    }}
-                    />
-                  </div>
+                   <input type="text" placeholder="Tên hạng mục"
+                   name="desc"
+                   value={valueOfField("desc")}
+                   onChange={(e)=>{
+                       let {value, name} = e.target;
+                       handleChange(name, value)
+                   }}
+                   />
+                 </div>
+                  */}
                   <div className="modal__field field__select">
                     <div>
                       <Select
@@ -131,18 +133,23 @@ export default function TermModal(props) {
                     }}
                     />
                   </div>
-                  <div className="modal__field">
+                  
+                      <div className="modal__field">
                     <input type="text" placeholder="Nội dung"
-                    // name="real_price"
-                    // onChange={(e)=>{
-                    //     let {value, name} = e.target;
-                    //     handleChange(name, value)
-                    // }}
+                    name="desc"
+                    value={valueOfField("desc")}
+                    onChange={(e)=>{
+                        let {value, name} = e.target;
+                        handleChange(name, value)
+                    }}
                     />
                   </div>
-                  <div className="modal__field">
+                
+                  {/**
+                      <div className="modal__field">
                     <input type="text" placeholder="Ghi chú" />
                   </div>
+                */}
               </div>
         </Modal>
     </div>
