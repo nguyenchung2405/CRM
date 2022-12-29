@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
 import moment from 'moment';
-import { convertDate } from '../../untils/helper';
+import { checkMicroFe, convertDate } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
@@ -54,7 +54,11 @@ export default function ContractTable() {
                 <div className="table__features__add">
                     <h1>Quản lý hợp đồng</h1>
                     <FcPlus onClick={() => {
-                        navigate("/crm/contract/create")
+                        if(checkMicroFe()){
+                            navigate("/contract-service/crm/contract/create")
+                        }else {
+                            navigate("/crm/contract/create")
+                        }
                     }} />
                 </div>
                 <div className="table__features__search">
@@ -121,7 +125,11 @@ export default function ContractTable() {
                 <Column className="contract__table__thaotac" render={(text) => {
                     return <div className="table__thaotac">
                         <button onClick={() => {
-                            navigate(`/crm/detail/${text.id}`)
+                            if(checkMicroFe()){
+                                navigate(`/contract-service/crm/detail/${text.id}`)
+                            }else {
+                                navigate(`/crm/detail/${text.id}`)
+                            }
                         }}>Chỉnh sửa</button>
                     </div>
                 }} />

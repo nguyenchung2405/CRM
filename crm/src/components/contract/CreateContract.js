@@ -7,7 +7,7 @@ import TermModal from "../modal/contract/Term";
 import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
 import { setContractDetail } from "../../redux/features/contractSlice";
-import { convertDate } from "../../untils/helper";
+import { checkMicroFe, convertDate } from "../../untils/helper";
 
 export default function CreateContract() {
   
@@ -111,7 +111,11 @@ export default function CreateContract() {
           type: CREATE_CONTRACT,
           data: newData
         });
-        navigate("/crm/contract")
+        if(checkMicroFe()){
+          navigate(`/contract-service/crm/contract`)
+        }else {
+          navigate("/crm/contract")
+        }
       }}
   >Tạo</button>
     }
