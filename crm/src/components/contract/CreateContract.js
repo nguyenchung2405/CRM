@@ -292,7 +292,7 @@ export default function CreateContract() {
             >
                 {renderLoaiHopDong()}
             </Select>
-            <input className="style" placeholder="Năm" type="text" />
+            {/* <input className="style" placeholder="Năm" type="text" />* */}
           </div>
           <div className="field__input_3">
             <input className="style" placeholder="Chiết khấu (%)" type="text"
@@ -401,18 +401,20 @@ export default function CreateContract() {
                 })
             }} />
           </div>
+          {/*
           <div className="contract__payment__process">
-            <div className="payment__contract">
-              <span>Đợt thanh toán 1</span>
-              <span>01/02/2023</span>
-              <span>100,000 VNĐ</span>
-            </div>
-            <div className="payment__contract">
-              <span>Đợt thanh toán 2</span>
-              <span>01/03/2023</span>
-              <span>1,000,000,000 VNĐ</span>
-            </div>
+          <div className="payment__contract">
+            <span>Đợt thanh toán 1</span>
+            <span>01/02/2023</span>
+            <span>100,000 VNĐ</span>
           </div>
+          <div className="payment__contract">
+            <span>Đợt thanh toán 2</span>
+            <span>01/03/2023</span>
+            <span>1,000,000,000 VNĐ</span>
+          </div>
+        </div>
+        */}
         </div>
         <div className="create__contract__term border_bottom_3px">
           <div className="display__flex">
@@ -465,7 +467,7 @@ export default function CreateContract() {
             />
             <Column
               className="content"
-              title="Tên hạng mục"
+              title="Nội dung"
               key="content"
               dataIndex="desc"
             />
