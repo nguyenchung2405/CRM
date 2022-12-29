@@ -95,7 +95,14 @@ export default function TermModal(props) {
                         }
                         value={valueOfField("product_ID")}
                         onChange={(value)=>{
-                            handleChange("product_ID", value)
+                            // handleChange("product_ID", value)
+                            let product = productList.find(item => item.id === value);
+                            // handleChange("real_price", +product.product_price[0].price)
+                            setValueModal({
+                              ...valueModal,
+                              product_ID: value,
+                              real_price: +product.product_price[0].price
+                            })
                         }}
                       >
                         {renderOptionProduct()}
@@ -107,9 +114,10 @@ export default function TermModal(props) {
                     name="real_price"
                     value={valueOfField("real_price")}
                     onChange={(e)=>{
-                        let {value, name} = e.target;
-                        handleChange(name, +value)
+                        // let {value, name} = e.target;
+                        // handleChange(name, +value)
                     }}
+                    disabled
                     />
                   </div>
                   <div className="modal__field">
