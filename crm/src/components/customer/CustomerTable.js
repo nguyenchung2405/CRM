@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { GET_CUSTOMER_LIST, SEARCH_CUSTOMER } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
+import { setMessage } from '../../redux/features/messageSlice';
 
 export default function CustomerTable() {
-    console.log("khach hang")
     const { Column } = Table;
     const dispatch = useDispatch();
     const { isLoading } = useSelector(state => state.loadingReducer);
@@ -27,6 +27,7 @@ export default function CustomerTable() {
                 type: GET_CUSTOMER_LIST
             });
             dispatch(setIsLoading(true))
+            dispatch(setMessage({}))
         }
     }, [search])
 
