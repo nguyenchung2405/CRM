@@ -45,11 +45,12 @@ function* updateCustomer(payload){
     let {data} = payload;
     let result = yield call(updateCustomerAPI, data);
     let {code, data: dataResponse} = result;
+    console.log(result)
     if(+code === 200){
         yield put(updateCusomer(dataResponse))
-        yield put(setMessage({type: "thành công", msg:"Thao tác thành công."}))
+        yield put(setMessage({type: "thành công", msg:"Cập nhật thành công."}))
     } else {
-        yield put(setMessage({type: "thất bại", msg:"Thao tác thất bại."}))
+        yield put(setMessage({type: "thất bại", msg:"Cập nhật thất bại."}))
     }
 };
 

@@ -607,18 +607,24 @@ ul.ant-pagination {
 /* ------------------------------------ */
 /* CSS Contract Table */
 
-div.contract__table .table__features .table__features__search input:first-child {
+div.contract__table .table__features .table__features__search input {
     margin-right: 37px;
+}
+
+div.contract__table .table__features .table__features__search input:first-child {
     width: 200px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(2) {
-    margin-right: 37px;
     width: 410px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(3) {
     width: 251px;
+}
+
+div.contract__table .table__features .table__features__search input:nth-child(4) {
+    margin-right: 0;
 }
 
 .contract__table .contract__table__soHopDong {

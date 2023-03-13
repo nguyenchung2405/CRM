@@ -21,7 +21,7 @@ const getProductList = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
         const result = await axios({
-            url: `${local}/product/item/list?page_size=100&page=1&sort_by=id&order=desc`,
+            url: `${local}/product/list?getAll=true`,
             method: "GET",
             headers: {
                 Authorization: authorization

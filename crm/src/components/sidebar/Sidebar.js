@@ -51,7 +51,8 @@ export default function Sidebar() {
                             </defs>
                         </svg>
                     </div>
-                    <div className="sidebar__personal__information bg_pri_blue">
+                    {/**
+                        <div className="sidebar__personal__information bg_pri_blue">
                         <p>
                             <FaRegUser />
                             Công việc của tôi
@@ -95,13 +96,15 @@ export default function Sidebar() {
 
                         </ul>
                     </div>
+                    */}
+                    
                     {/* <Menu
                         items={items}
                     /> */}
                     <div className="sidebar__personal__information bg_pri_blue">
                         <p>
                             <BsReceiptCutoff />
-                            Hóa đơn
+                            Hợp đồng
                         </p>
                     </div>
                     <div className="sidebar__sub__menu">
