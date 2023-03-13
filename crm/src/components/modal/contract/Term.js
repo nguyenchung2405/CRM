@@ -48,7 +48,7 @@ export default function TermModal(props) {
 
   const renderOptionProduct = ()=>{
     return productList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
+      return <Option value={item.id}>{item.Product_name}</Option>
     });
   }
 
@@ -98,10 +98,11 @@ export default function TermModal(props) {
                             // handleChange("product_ID", value)
                             let product = productList.find(item => item.id === value);
                             // handleChange("real_price", +product.product_price[0].price)
+                            let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
                             setValueModal({
                               ...valueModal,
                               product_ID: value,
-                              real_price: +product.product_price[0].price
+                              real_price: priceConvert
                             })
                         }}
                       >

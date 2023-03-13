@@ -12,7 +12,6 @@ import { setIsLoading } from '../../redux/features/loadingSlice';
 
 export default function ContractTable() {
 
-    console.log("hop dong")
     const { Column } = Table;
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -65,6 +64,7 @@ export default function ContractTable() {
                     <input placeholder="Số hợp đồng" type="text" />
                     <input placeholder="Tên khách hàng" type="text" />
                     <input placeholder="Người phụ trách" type="text" />
+                    <input placeholder="Mã viết tắt" type="text" />
                     <div className="table__features__search__btn">
                         <button>Tìm kiếm</button>
                     </div>

@@ -72,7 +72,7 @@ export default function ModalCustomer(props) {
                 if(regexPhone.test(valueForm[vali])){
                   newValidate = {...newValidate, [vali]: false}
                   check = false;
-                  console.log("phone")
+                  // console.log("phone")
                 } else {
                   newValidate = {...newValidate, [vali]: true}
                   check = true;
@@ -87,7 +87,7 @@ export default function ModalCustomer(props) {
               if(regexEmail.test(valueForm[vali])){
                 newValidate = {...newValidate, [vali]: false}
                 check = false;
-                console.log("email")
+                // console.log("email")
               } else {
                 newValidate = {...newValidate, [vali]: true}
                 check = true;

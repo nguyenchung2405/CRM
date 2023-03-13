@@ -3,10 +3,9 @@ import './App.css';
 
 import { store } from "./redux/configStore"
 import { Provider } from "react-redux"
-import { BrowserRouter } from "react-router-dom"
 
 import Sidebar from './components/sidebar/Sidebar';
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Header from './components/header/Header';
 import CustomerTable from './components/customer/CustomerTable';
 import ContractTable from './components/contract/ContractTable';
