@@ -48,7 +48,7 @@ export default function TermModal(props) {
 
   const renderOptionProduct = ()=>{
     return productList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
+      return <Option value={item.id}>{item.Product_name}</Option>
     });
   }
 
@@ -72,16 +72,18 @@ export default function TermModal(props) {
         open={isShowModal}
         onCancel={handleCancel}>
               <div className="modal__content contract__service">
+                   {/**
                    <div className="modal__field">
-                    <input type="text" placeholder="Tên hạng mục"
-                    name="desc"
-                    value={valueOfField("desc")}
-                    onChange={(e)=>{
-                        let {value, name} = e.target;
-                        handleChange(name, value)
-                    }}
-                    />
-                  </div>
+                   <input type="text" placeholder="Tên hạng mục"
+                   name="desc"
+                   value={valueOfField("desc")}
+                   onChange={(e)=>{
+                       let {value, name} = e.target;
+                       handleChange(name, value)
+                   }}
+                   />
+                 </div>
+                  */}
                   <div className="modal__field field__select">
                     <div>
                       <Select
@@ -93,7 +95,15 @@ export default function TermModal(props) {
                         }
                         value={valueOfField("product_ID")}
                         onChange={(value)=>{
-                            handleChange("product_ID", value)
+                            // handleChange("product_ID", value)
+                            let product = productList.find(item => item.id === value);
+                            // handleChange("real_price", +product.product_price[0].price)
+                            let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
+                            setValueModal({
+                              ...valueModal,
+                              product_ID: value,
+                              real_price: priceConvert
+                            })
                         }}
                       >
                         {renderOptionProduct()}
@@ -105,9 +115,10 @@ export default function TermModal(props) {
                     name="real_price"
                     value={valueOfField("real_price")}
                     onChange={(e)=>{
-                        let {value, name} = e.target;
-                        handleChange(name, +value)
+                        // let {value, name} = e.target;
+                        // handleChange(name, +value)
                     }}
+                    disabled
                     />
                   </div>
                   <div className="modal__field">
@@ -131,18 +142,23 @@ export default function TermModal(props) {
                     }}
                     />
                   </div>
-                  <div className="modal__field">
+                  
+                      <div className="modal__field">
                     <input type="text" placeholder="Nội dung"
-                    // name="real_price"
-                    // onChange={(e)=>{
-                    //     let {value, name} = e.target;
-                    //     handleChange(name, value)
-                    // }}
+                    name="desc"
+                    value={valueOfField("desc")}
+                    onChange={(e)=>{
+                        let {value, name} = e.target;
+                        handleChange(name, value)
+                    }}
                     />
                   </div>
-                  <div className="modal__field">
+                
+                  {/**
+                      <div className="modal__field">
                     <input type="text" placeholder="Ghi chú" />
                   </div>
+                */}
               </div>
         </Modal>
     </div>

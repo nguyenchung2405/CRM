@@ -7,7 +7,7 @@ import TermModal from "../modal/contract/Term";
 import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
 import { setContractDetail } from "../../redux/features/contractSlice";
-import { convertDate } from "../../untils/helper";
+import { checkMicroFe, convertDate } from "../../untils/helper";
 
 export default function CreateContract() {
   
@@ -24,7 +24,7 @@ export default function CreateContract() {
   const [dataTable, setDataTable] = useState([]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
-  console.log(valueForm)
+  // console.log(valueForm)
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST
@@ -90,7 +90,7 @@ export default function CreateContract() {
       
     } 
   }
-
+  console.log(dataTable, valueForm)
   const renderButtonCreateUpdate = ()=>{
     if(contract_id){
       return <button className="footer__btn btn__create"
@@ -111,7 +111,11 @@ export default function CreateContract() {
           type: CREATE_CONTRACT,
           data: newData
         });
-        navigate("/crm/contract")
+        if(checkMicroFe()){
+          navigate(`/contract-service/crm/contract`)
+        }else {
+          navigate("/crm/contract")
+        }
       }}
   >Tạo</button>
     }
@@ -274,60 +278,6 @@ export default function CreateContract() {
             <input type="text" placeholder="Địa chỉ" className="style" />
           </div>
         </div>
-        <div className="create__contract__value border_bottom_3px">
-          <p>Giá trị hợp đồng</p>
-          <div className="field__input_2">
-            <Select
-              className="style margin_right_54"
-              placeholder="Loại hợp đồng"
-              type="text"
-              onChange={(value)=>{
-                  handleChangeValue("contract_type_id", value)
-              }}
-              value={valueOfField("contract_type_id")}
-            >
-                {renderLoaiHopDong()}
-            </Select>
-            <input className="style" placeholder="Năm" type="text" />
-          </div>
-          <div className="field__input_3">
-            <input className="style" placeholder="Chiết khấu (%)" type="text"
-            name="discount_by_percent" 
-            onChange={(e)=>{
-                let {value, name} = e.target;
-                handleChangeValue(name, +value)
-            }}
-            value={valueOfField("discount_by_percent")}
-            />
-            <input className="style" placeholder="Thuế GTGT(%)" type="text"
-            name="VAT" 
-            onChange={(e)=>{
-                let {value, name} = e.target;
-                handleChangeValue(name, +value)
-            }}
-            value={valueOfField("VAT")}
-            />
-            <input
-              className="style"
-              placeholder="Giá trị hợp đồng"
-              type="text"
-              name="total" 
-              onChange={(e)=>{
-                  let {value, name} = e.target;
-                  handleChangeValue(name, +value)
-              }}
-              value={valueOfField("total")}
-            />
-          </div>
-          <textarea id="note" placeholder="Ghi chú"
-            name="note" 
-            onChange={(e)=>{
-                let {value, name} = e.target;
-                handleChangeValue(name, value)
-            }}
-            value={valueOfField("note")}
-          ></textarea>
-        </div>
         <div className="create__contract__payment border_bottom_3px">
           <div className="display__flex">
             <p>Đợt thanh toán</p>
@@ -397,22 +347,24 @@ export default function CreateContract() {
                 })
             }} />
           </div>
+          {/*
           <div className="contract__payment__process">
-            <div className="payment__contract">
-              <span>Đợt thanh toán 1</span>
-              <span>01/02/2023</span>
-              <span>100,000 VNĐ</span>
-            </div>
-            <div className="payment__contract">
-              <span>Đợt thanh toán 2</span>
-              <span>01/03/2023</span>
-              <span>1,000,000,000 VNĐ</span>
-            </div>
+          <div className="payment__contract">
+            <span>Đợt thanh toán 1</span>
+            <span>01/02/2023</span>
+            <span>100,000 VNĐ</span>
           </div>
+          <div className="payment__contract">
+            <span>Đợt thanh toán 2</span>
+            <span>01/03/2023</span>
+            <span>1,000,000,000 VNĐ</span>
+          </div>
+        </div>
+        */}
         </div>
         <div className="create__contract__term border_bottom_3px">
           <div className="display__flex">
-            <p>Hạng mục thực hiện</p>
+            <p>Quyền lợi hợp đồng</p>
             <svg
               width="22"
               height="22"
@@ -456,12 +408,12 @@ export default function CreateContract() {
               dataIndex="product_ID"
               render={(text)=>{
                 let product = productList?.find(product => product.id === text)
-                return product?.name
+                return product?.name || product?.Product_name
               }}
             />
             <Column
               className="content"
-              title="Tên hạng mục"
+              title="Nội dung"
               key="content"
               dataIndex="desc"
             />
@@ -470,8 +422,8 @@ export default function CreateContract() {
               title="Ngày đăng"
               key="dateUp"
               render={(text)=>{
-                let batDau = moment(new Date(text.from_date)).format("DD-MM-YYYY")
-                let ketThuc = moment(new Date(text.to_date)).format("DD-MM-YYYY");
+                let batDau = moment(new Date(text.from_date)).format("DD/MM/YYYY")
+                let ketThuc = moment(new Date(text.to_date)).format("DD/MM/YYYY");
                 return `${batDau} - ${ketThuc}`
               }}
             />
@@ -480,8 +432,8 @@ export default function CreateContract() {
               title="Giá tiền"
               key="price"
               render={(text) => {
-                let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                return `${vndCurrency} VNĐ`;
+                // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+                return `${text.real_price} VNĐ`;
               }}
             />
             <Column
@@ -499,9 +451,62 @@ export default function CreateContract() {
             productList={productList}
           />
         </div>
+        <div className="create__contract__value border_bottom_3px">
+          <p>Giá trị hợp đồng</p>
+          <div className="field__input_2">
+            <Select
+              className="style margin_right_54"
+              placeholder="Loại hợp đồng"
+              type="text"
+              onChange={(value)=>{
+                  handleChangeValue("contract_type_id", value)
+              }}
+              value={valueOfField("contract_type_id")}
+            >
+                {renderLoaiHopDong()}
+            </Select>
+            {/* <input className="style" placeholder="Năm" type="text" />* */}
+          </div>
+          <div className="field__input_3">
+            <input className="style" placeholder="Chiết khấu (%)" type="text"
+            name="discount_by_percent" 
+            onChange={(e)=>{
+                let {value, name} = e.target;
+                handleChangeValue(name, +value)
+            }}
+            value={valueOfField("discount_by_percent")}
+            />
+            <input className="style" placeholder="Thuế GTGT(%)" type="text"
+            name="VAT" 
+            onChange={(e)=>{
+                let {value, name} = e.target;
+                handleChangeValue(name, +value)
+            }}
+            value={valueOfField("VAT")}
+            />
+            <input
+              className="style"
+              placeholder="Giá trị hợp đồng"
+              type="text"
+              name="total" 
+              onChange={(e)=>{
+                  let {value, name} = e.target;
+                  handleChangeValue(name, +value)
+              }}
+              value={valueOfField("total")}
+            />
+          </div>
+          <textarea id="note" placeholder="Ghi chú"
+            name="note" 
+            onChange={(e)=>{
+                let {value, name} = e.target;
+                handleChangeValue(name, value)
+            }}
+            value={valueOfField("note")}
+          ></textarea>
+        </div>
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete">Xóa</button>
-          <button className="footer__btn btn__review">Xem lại</button>
           {renderButtonCreateUpdate()}
         </div>
       </div>

@@ -5,3 +5,8 @@ crm/node_modules
 proxy/node_modules
 /crm/node_modules
 /proxy/node_modules
+
+.dockerignore
+dockerfile
+docker-compose.yml
+nginx.conf

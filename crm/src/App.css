@@ -1,4 +1,6 @@
-*, :after, :before {
+*,
+:after,
+:before {
     box-sizing: border-box;
 }
 
@@ -55,7 +57,7 @@ p.required__field {
     background: rgba(255, 255, 255, 0.8);
 }
 
-.loading > svg {
+.loading>svg {
     height: 100%;
     font-size: 70px;
 }
@@ -150,26 +152,28 @@ p.required__field {
     transition: all .3s;
 }
 
-.sidebar_SubMenu__XZeb6 ul.ant-menu li.ant-menu-item > svg {
+.sidebar_SubMenu__XZeb6 ul.ant-menu li.ant-menu-item>svg {
     width: 20px;
     height: 20px;
     color: white;
 }
 
-.sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title>.ant-menu-title-content, .sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-item>.ant-menu-title-content {
+.sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title>.ant-menu-title-content,
+.sidebar_SubMenu__XZeb6 .ant-menu-inline.ant-menu-root .ant-menu-item>.ant-menu-title-content {
     color: white;
     font-size: 16px;
     margin-left: 0;
 }
 
-.sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item-active, .sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item:hover {
+.sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item-active,
+.sidebar_SubMenu__XZeb6 .ant-menu-light .ant-menu-item:hover {
     background-color: white;
 }
 
-.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-active span.ant-menu-title-content, 
-.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-selected svg, 
-.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover span.ant-menu-title-content, 
-.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover svg, 
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-active span.ant-menu-title-content,
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-selected svg,
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover span.ant-menu-title-content,
+.sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item:hover svg,
 .sidebar_SubMenu__XZeb6 ul li.ant-menu-submenu ul.ant-menu .ant-menu-item-selected span.ant-menu-title-content {
     color: black;
 }
@@ -202,7 +206,8 @@ p.required__field {
     align-items: center;
     padding-right: 28px;
     height: 65px;
-    border-bottom: 1px solid #EEEFF3;;
+    border-bottom: 1px solid #EEEFF3;
+    ;
 }
 
 .header .header__infor .header__avtar {
@@ -248,7 +253,7 @@ p.required__field {
     position: relative;
 }
 
-.App > div.content {
+.App>div.content {
     height: fit-content;
     margin-left: 265px;
     margin-top: 119px;
@@ -346,7 +351,8 @@ p.required__field {
     margin-right: 0px;
 }
 
-.customer__table .ant-pagination-next:hover button.ant-pagination-item-link, .customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
+.customer__table .ant-pagination-next:hover button.ant-pagination-item-link,
+.customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
     color: #459C60;
     border-color: #459C60;
 }
@@ -410,8 +416,9 @@ ul.ant-pagination {
     margin-right: 22px;
 }
 
-.customer__table .table__thaotac button:nth-child(2){
-    background: #FFEEF3;;
+.customer__table .table__thaotac button:nth-child(2) {
+    background: #FFEEF3;
+    ;
     color: #F1416C;
 }
 
@@ -513,29 +520,29 @@ ul.ant-pagination {
     top: 36%;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector {
     border: none;
     padding: 0;
     box-shadow: none;
     width: 100%;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector .ant-select-selection-search {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector .ant-select-selection-search {
     width: 100%;
     left: 0;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-search > input,
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-search>input,
 .ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select .ant-select-selection-placeholder {
     color: #666666;
-    
+
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select > div div.ant-select .ant-select-selector {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector {
     text-align: left;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field > input {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field>input {
     border: none;
     border-bottom: 1px solid #CCCCCC;
     width: 525px;
@@ -550,11 +557,11 @@ ul.ant-pagination {
     padding-left: 63px;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields>input {
     width: 245px;
 }
 
-.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields > input:first-child {
+.ant-modal-root .ant-modal-body div.modal__content .modal__field.two__fields>input:first-child {
     margin-right: 35px;
 }
 
@@ -565,18 +572,18 @@ ul.ant-pagination {
     text-align: left;
 }
 
-.ant-modal-root .ant-modal-body div.modal__upload > span {
+.ant-modal-root .ant-modal-body div.modal__upload>span {
     color: #666666;
     font-size: 15px;
 }
 
-.ant-modal-root .ant-modal-body div.modal__upload > input {
+.ant-modal-root .ant-modal-body div.modal__upload>input {
     width: 0.1px;
     height: 0.1px;
     position: absolute;
     opacity: 0;
     z-index: -1;
-    
+
 }
 
 .ant-modal-root .ant-modal-body div.modal__upload label {
@@ -591,7 +598,7 @@ ul.ant-pagination {
     cursor: pointer;
 }
 
-.ant-modal-root .ant-modal-body div.modal__upload  label > svg {
+.ant-modal-root .ant-modal-body div.modal__upload label>svg {
     width: 16px;
     height: 18px;
 }
@@ -600,18 +607,24 @@ ul.ant-pagination {
 /* ------------------------------------ */
 /* CSS Contract Table */
 
-div.contract__table .table__features .table__features__search input:first-child {
+div.contract__table .table__features .table__features__search input {
     margin-right: 37px;
+}
+
+div.contract__table .table__features .table__features__search input:first-child {
     width: 200px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(2) {
-    margin-right: 37px;
     width: 410px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(3) {
     width: 251px;
+}
+
+div.contract__table .table__features .table__features__search input:nth-child(4) {
+    margin-right: 0;
 }
 
 .contract__table .contract__table__soHopDong {
@@ -623,15 +636,16 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     width: 350px;
 }
 
-.contract__table td.contract__table__customerName, .contract__table td.contract__table__status {
+.contract__table td.contract__table__customerName,
+.contract__table td.contract__table__status {
     font-weight: bold;
 }
 
-.contract__table td.contract__table__status > span[status^="đang"] {
+.contract__table td.contract__table__status>span[status^="đang"] {
     color: #F1416C;
 }
 
-.contract__table td.contract__table__status > span[status^="kết"] {
+.contract__table td.contract__table__status>span[status^="kết"] {
     color: #29B171;
 }
 
@@ -649,14 +663,15 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
 }
 
 .create__contract .border_bottom_3px {
-    border-bottom: 3px solid #EEF0F8;;
+    border-bottom: 3px solid #EEF0F8;
+    ;
 }
 
 .create__contract .create__contract__content .create__contract__header {
     padding: 20px 0 20px 26px;
 }
 
-.create__contract .create__contract__content .create__contract__header > h2 {
+.create__contract .create__contract__content .create__contract__header>h2 {
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 0;
@@ -670,7 +685,7 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     padding: 23px 0 36px 118px;
 }
 
-.create__contract .create__contract__inforCustomer > p,
+.create__contract .create__contract__inforCustomer>p,
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__value p,
 .create__contract .create__contract__payment .display__flex,
@@ -718,26 +733,26 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     left: 0;
 }
 
-.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search > input,
+.create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-search>input,
 .create__contract .create__contract__value .field__input_2 .ant-select div.ant-select-selector .ant-select-selection-placeholder {
     color: #666666;
 }
 
-.create__contract .create__contract__inforCustomer .field__input > div {
+.create__contract .create__contract__inforCustomer .field__input>div {
     width: 432px;
     display: flex;
     align-items: center;
     margin-right: 54px;
 }
 
-.create__contract .create__contract__inforCustomer .field__input > div .ant-select-selection-search input {
+.create__contract .create__contract__inforCustomer .field__input>div .ant-select-selection-search input {
     width: 398px;
     margin-right: 12px;
-    color:  #666666;
+    color: #666666;
 }
 
-.create__contract .create__contract__inforCustomer .field__input > div .ant-select-selection-search input::placeholder {
-    color:  #666666;
+.create__contract .create__contract__inforCustomer .field__input>div .ant-select-selection-search input::placeholder {
+    color: #666666;
 }
 
 .margin_right_54 {
@@ -752,13 +767,12 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     margin-bottom: 0;
 }
 
-.create__contract .create__contract__inforCustomer .field__input > div > svg,
+.create__contract .create__contract__inforCustomer .field__input>div>svg,
 .create__contract svg {
     cursor: pointer;
 }
 
-.create__contract.content .create__contract__content .create__contract__inforCustomer .field__input 
-> div .ant-select {
+.create__contract.content .create__contract__content .create__contract__inforCustomer .field__input>div .ant-select {
     width: 410px;
 }
 
@@ -769,15 +783,13 @@ div.contract__table .table__features .table__features__search input:nth-child(3)
     width: 100%;
 }
 
-.create__contract.content .create__contract__content .create__contract__inforCustomer 
-div.ant-select-selector .ant-select-selection-search {
+.create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector .ant-select-selection-search {
     width: 100%;
     left: 0;
 }
 
-.create__contract.content .create__contract__content .create__contract__inforCustomer 
-div.ant-select-selector .ant-select-selection-placeholder {
-    color:  #666666;
+.create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector .ant-select-selection-placeholder {
+    color: #666666;
 }
 
 .create__contract .create__contract__inforCustomer .ant-picker:hover,
@@ -793,9 +805,9 @@ div.ant-select-selector .ant-select-selection-placeholder {
     color: #666666;
 }
 
-.create__contract .create__contract__contactInfor .display__flex > p,
-.create__contract .create__contract__payment .display__flex > p,
-.create__contract .create__contract__term .display__flex > p {
+.create__contract .create__contract__contactInfor .display__flex>p,
+.create__contract .create__contract__payment .display__flex>p,
+.create__contract .create__contract__term .display__flex>p {
     margin-right: 14px;
 }
 
@@ -829,7 +841,7 @@ div.ant-select-selector .ant-select-selection-placeholder {
     width: 913px;
 }
 
-.create__contract .create__contract__value > textarea {
+.create__contract .create__contract__value>textarea {
     width: 916px;
     height: 76px;
     resize: none;
@@ -844,11 +856,12 @@ div.ant-select-selector .ant-select-selection-placeholder {
     margin-right: 54px;
 }
 
-.create__contract .create__contract__payment .ant-picker, .create__contract .create__contract__payment input {
+.create__contract .create__contract__payment .ant-picker,
+.create__contract .create__contract__payment input {
     width: 262px;
 }
 
-.create__contract .create__contract__payment .ant-picker-focused, 
+.create__contract .create__contract__payment .ant-picker-focused,
 .contract__service div.ant-picker-focused {
     box-shadow: none;
 }
@@ -861,11 +874,11 @@ div.ant-select-selector .ant-select-selection-placeholder {
     padding: 18px 0;
 }
 
-.create__contract .create__contract__payment .contract__payment__process .payment__contract > span:first-child{
+.create__contract .create__contract__payment .contract__payment__process .payment__contract>span:first-child {
     font-weight: bold;
 }
 
-.create__contract .create__contract__payment .contract__payment__process .payment__contract > span:last-child {
+.create__contract .create__contract__payment .contract__payment__process .payment__contract>span:last-child {
     color: #F1416C;
     font-weight: bold;
     min-width: 125px;
@@ -881,7 +894,7 @@ div.ant-select-selector .ant-select-selection-placeholder {
     color: #999999;
 }
 
-.create__contract .create__contract__term table tr:hover > td {
+.create__contract .create__contract__term table tr:hover>td {
     background-color: white;
 }
 
@@ -914,7 +927,7 @@ div.ant-select-selector .ant-select-selection-placeholder {
     min-width: 92px;
 }
 
-.create__contract .create__contract__term table .thaoTac > button{
+.create__contract .create__contract__term table .thaoTac>button {
     background: #FFEEF3;
     border-radius: 4px;
     color: #F1416C;
@@ -925,7 +938,7 @@ div.ant-select-selector .ant-select-selection-placeholder {
     transition: all 0.5s;
 }
 
-.create__contract .create__contract__term table .thaoTac > button:hover {
+.create__contract .create__contract__term table .thaoTac>button:hover {
     border: 1px solid #F1416C;
     background-color: white;
     color: #F1416C;

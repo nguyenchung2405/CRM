@@ -7,8 +7,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon proxy/index.js",
+    "serverDeploy": "cd proxy && pm2-runtime index.js",
     "clientWebpack": "cd crm && npm run startWebpack",
-    "dev": "concurrently \"yarn clientWebpack\" \"yarn server\""
+    "client": "cd crm && yarn start",
+    "dev": "concurrently \"yarn clientWebpack\" \"yarn server\"",
+    "start": "concurrently \"yarn serverDeploy\" \"yarn client\""
+
   },
   "devDependencies": {
     "concurrently": "^7.6.0",

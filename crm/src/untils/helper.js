@@ -30,3 +30,11 @@ export function convertDate(dateString){
         console.log(error)
     }
 }
+
+export let checkMicroFe = () => {
+    if (window.location.href.includes("3000") || window.location.href.includes("profileservice") || window.location.href.includes("3001")) {
+        return false;
+    } else {
+        return true;
+    }
+}
