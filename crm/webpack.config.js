@@ -32,7 +32,7 @@ module.exports = {
                 },
                 "react-redux": {
                     singleton: false,
-                    requiredVersion: deps["react-redux"], // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+                    requiredVersion: deps["react-redux"],
                 },
             },
         }),
