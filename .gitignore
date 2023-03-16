@@ -10,3 +10,9 @@
 # dockerfile
 # docker-compose.yml
 # nginx.conf
+
+# yarn.lock
+# package-lock.json
+# crm/package-lock.json
+# crm/yarn.lock
+# proxy/yarn.lock
