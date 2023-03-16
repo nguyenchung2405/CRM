@@ -32,7 +32,7 @@ export function convertDate(dateString){
 }
 
 export let checkMicroFe = () => {
-    if (window.location.href.includes("3000") || window.location.href.includes("profileservice") || window.location.href.includes("3001")) {
+    if (window.location.href.includes("3002") || window.location.href.includes("localhost") || window.location.href.includes("3003")) {
         return false;
     } else {
         return true;

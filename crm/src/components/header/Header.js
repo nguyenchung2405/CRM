@@ -7,6 +7,8 @@ export default function Header() {
     const location = useLocation();
     const breadcrumbNameMap = {
         '/crm/customer': 'Quản lý khách hàng',
+        '/crm/customer/create': 'Thêm khách hàng',
+        '/crm/customer/update': 'Cập nhật khách hàng',
         '/crm/contract': 'Quản lý hợp đồng',
         '/crm/contract/create': 'Tạo hợp đồng',
     };

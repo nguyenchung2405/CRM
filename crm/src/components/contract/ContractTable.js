@@ -57,9 +57,10 @@ export default function ContractTable() {
                 }} />
             </div>
             <div className="table__features__search">
-                <input placeholder="Số hợp đồng" type="text" />
+                <input placeholder="Mã hợp đồng" type="text" />
                 <input placeholder="Tên khách hàng" type="text" />
-                <input placeholder="Người phụ trách" type="text" />
+                <input placeholder="Loại hợp đồng" type="text" />
+                <input placeholder="Người đầu mối" type="text" />
                 <div className="table__features__search__btn">
                     <button>Tìm kiếm</button>
                 </div>
@@ -87,11 +88,14 @@ export default function ContractTable() {
                 },
             }}
         >
-            <Column className="contract__table__soHopDong" title="Số hợp đồng" key="soHopDong" dataIndex="contract_number" />
+            <Column className="contract__table__soHopDong" title="Mã hợp đồng" key="soHopDong" dataIndex="contract_number" />
+            <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
             <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName"
             render={(text)=>{
-                return text.client.name
+                console.log(text)
+                return text?.client_ID?.name
             }} />
+            {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{
                 // fake tên người phụ trách để đi demo
@@ -103,19 +107,26 @@ export default function ContractTable() {
                     return "Trần Quốc Duy"
                 }
             }} />
+            */}
             <Column className="contract__table__time" title="Thời gian thực hiện" key="time"
             render={(text)=>{
-                let batDau = convertDate(text.begin_date);
-                let ketThuc = convertDate(text.end_date);
+                // let batDau = convertDate(text.begin_date);
+                // let ketThuc = convertDate(text.end_date);
+                let batDau = moment(text.begin_date).format("DD/MM/YYYY");
+                let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
                 return `${batDau} - ${ketThuc}`
             }} />
             <Column className="contract__table__status" title="Trạng thái" key="status" render={(text)=>{
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
             }} />
-            <Column className="contract__table__createdBy" title="Người tạo HĐ" key="createdBy"
-            render={(text)=>{
-                return "admin"
+            <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text)=>{
+                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total)
+                return total + " VNĐ"
+            }}  />
+            <Column className="contract__table__no" title="Nợ" key="total" render={(text)=>{
+                return <span>{text.id % 2 === 0 ? "100.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
             }} />
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">

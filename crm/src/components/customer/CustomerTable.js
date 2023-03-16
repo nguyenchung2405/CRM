@@ -6,29 +6,43 @@ import {useDispatch, useSelector} from "react-redux"
 import { GET_CUSTOMER_LIST, SEARCH_CUSTOMER } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
+import { useNavigate } from 'react-router-dom';
+import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 
 export default function CustomerTable() {
 
     const {Column} = Table;
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const {isLoading} = useSelector(state => state.loadingReducer);
-    const {customerList} = useSelector(state => state.customerReducer);
+    const {customerList, totalCustomer} = useSelector(state => state.customerReducer);
     const {messageAlert} = useSelector(state => state.messageReducer);
     const [isShowModal, setIsShowModal] = useState(false);
     const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
     const [dataToModal, setDataToModal] = useState({});
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({name: "", tax_number: ""})
+    const [search, setSearch] = useState({name: "", tax_number: "", brief_name: ""})
 
     useEffect(()=>{
-        if(search?.name === "" && search?.tax_number === ""){
+        if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
             dispatch({
-                type: GET_CUSTOMER_LIST
+                type: GET_CUSTOMER_LIST,
+                data: {page, pageNumber}
             });
             dispatch(setIsLoading(true))
         }
     }, [search])
+
+    useEffect(()=>{
+        if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
+            dispatch({
+                type: GET_CUSTOMER_LIST,
+                data: {page, pageNumber}
+            });
+            dispatch(setIsLoading(true))
+        }
+    }, [page, pageNumber])
 
     useEffect(()=>{
         let {type, msg} = messageAlert;
@@ -59,12 +73,17 @@ export default function CustomerTable() {
             <div className="table__features__add">
                 <h1>Quản lý khách hàng</h1>
                 <FcPlus onClick={()=>{
-                    setIsShowModal(true)
+                    // setIsShowModal(true)
+                    dispatch(setIsCreateCustomer(true))
+                    dispatch(setDataCustomer({}))
+                    navigate("/crm/customer/create")
                 }} />
-                <ModalCustomer
+               {/**
+                     <ModalCustomer
                 title="Khách hàng mới"
                 isShowModal={isShowModal}
                 setIsShowModal={setIsShowModal} />
+                */}
             </div>
             <div className="table__features__search">
                 <input placeholder="Tên khách hàng" type="text" 
@@ -73,12 +92,19 @@ export default function CustomerTable() {
                 <input placeholder="Mã số thuế" type="text" 
                 name="tax_number"
                 onChange={handleSearchInput} />
+                <input placeholder="Tên viết tắt" type="text" 
+                name="brief_name"
+                onChange={handleSearchInput} />
                 <div className="table__features__search__btn">
                     <button onClick={()=>{
-                        dispatch({
-                            type: SEARCH_CUSTOMER,
-                            searchData: search
-                        })
+                        if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
+                           message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
+                        } else {
+                            dispatch({
+                                type: SEARCH_CUSTOMER,
+                                searchData: search
+                            })
+                        }
                     }}>Tìm kiếm</button>
                 </div>
             </div>
@@ -91,7 +117,7 @@ export default function CustomerTable() {
                 locale: { items_per_page: "" },
                 defaultCurrent: 1,
                 showSizeChanger: true,
-                total: customerList.length,
+                total: totalCustomer,
                 pageSizeOptions: [10,50,100],
                 onChange: (page, pageNumber) => {
                 setPageNumber(pageNumber);
@@ -109,6 +135,10 @@ export default function CustomerTable() {
             <Column className="customer__table__address" title="Địa chỉ" key="address" dataIndex="address" />
             <Column className="customer__table__masothue" title="Mã số thuế" key="masothue" dataIndex="tax_number" />
             <Column className="customer__table__phone" title="Số điện thoại" key="phone" dataIndex="phone" />
+            <Column className="customer__table__tenviettat" title="Tên viết tắt" key="brief_name" dataIndex="brief_name" />
+            <Column className="customer__table__nguoiphutrach" title="Người phụ trách" key="nguoiphutrach" render={()=>{
+                return "Nguyễn Văn Chương"
+            }} />
             <Column className="customer__table__thaotac" render={(text)=>{
                 if(text.name === "Công ty HYOSUNG"){
                         return <div className="table__thaotac">
@@ -118,20 +148,27 @@ export default function CustomerTable() {
                 } else {
                     return <div className="table__thaotac">
                         <button onClick={()=>{
-                            setIsShowModalUpdate(true);
-                            setDataToModal({...text})
+                            // Khi trước thêm khách hàng mới bằng Modal giờ làm component chứ ko dùng modal nữa khi nào xài modal lại thì mở ra 2 dòng dưới
+                            // setIsShowModalUpdate(true);
+                            // setDataToModal({...text})
+                            
+                            // Code thêm KH bằng component
+                            dispatch(setDataCustomer(text))
+                            dispatch(setIsCreateCustomer(false))
+                            navigate("/crm/customer/update")
                         }}>Chỉnh sửa</button>
-                        <button>Ẩn</button>
                     </div>
                 }
             }} />
         </Table>
-        <ModalCustomer
+        {/**
+                <ModalCustomer
             title="Cập nhật khách hàng"
             isShowModal={isShowModalUpdate}
             setIsShowModalUpdate={setIsShowModalUpdate}
             dataToModal={dataToModal} 
         />
+        */}
     </div>
   )
 }
