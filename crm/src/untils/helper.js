@@ -1,10 +1,10 @@
 import docCookie from "doc-cookies"
 import moment from "moment"
 
-export let getTokenInCookie = ()=>{
+export let getTokenInCookie = () => {
     try {
         let tokenCookie = docCookie.getItem("usertoken")
-        if(!tokenCookie){
+        if (!tokenCookie) {
             return null
             // Khi test trên local
             // return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzU2LCJleHAiOjI3NTA1NTQ3MzB9.drBO_G7F9JCDi7XmLRmf14QvUqYe8cW4inBIbQsmRYI"
@@ -17,13 +17,13 @@ export let getTokenInCookie = ()=>{
     }
 }
 
-export function convertDate(dateString){
+export function convertDate(dateString) {
     try {
         let convert;
-        if(dateString.includes(".000Z")){
-             convert = moment(new Date(dateString)).format("DD-MM-YYYY");
+        if (dateString.includes(".000Z")) {
+            convert = moment(new Date(dateString)).format("DD-MM-YYYY");
         } else {
-             convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
+            convert = moment(new Date(dateString.concat(".000Z"))).format("DD-MM-YYYY");
         }
         return convert;
     } catch (error) {

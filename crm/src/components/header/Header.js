@@ -24,7 +24,7 @@ export default function Header() {
       });
       const breadcrumbItems = [
         <Breadcrumb.Item key="home">
-          <NavLink to="/">Hóa đơn</NavLink>
+          <NavLink to="/">Hợp đồng</NavLink>
         </Breadcrumb.Item>,
       ].concat(extraBreadcrumbItems);
 

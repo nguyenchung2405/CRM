@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { message, Table } from 'antd';
-import {FcPlus} from "react-icons/fc"
+import { FcPlus } from "react-icons/fc"
 import ModalCustomer from '../modal/ModalCustomer';
-import {useDispatch, useSelector} from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { GET_CUSTOMER_LIST, SEARCH_CUSTOMER } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
@@ -10,8 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 
 export default function CustomerTable() {
-
-    const {Column} = Table;
+    const { Column } = Table;
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const {isLoading} = useSelector(state => state.loadingReducer);
@@ -31,6 +30,7 @@ export default function CustomerTable() {
                 data: {page, pageNumber}
             });
             dispatch(setIsLoading(true))
+            dispatch(setMessage({}))
         }
     }, [search])
 
@@ -48,20 +48,20 @@ export default function CustomerTable() {
         let {type, msg} = messageAlert;
         if(type === "thành công"){
             message.success(msg)
-        } else if(type === "thất bại"){
+        } else if (type === "thất bại") {
             message.error(msg)
         }
     }, [messageAlert])
 
-    const handleSearchInput = (e)=>{
-        let {value, name} = e.target;
+    const handleSearchInput = (e) => {
+        let { value, name } = e.target;
         setSearch({
             ...search,
             [name]: value
         })
     }
-    const showLoading = ()=>{
-        if(isLoading){
+    const showLoading = () => {
+        if (isLoading) {
             return <Loading />
         }
     }

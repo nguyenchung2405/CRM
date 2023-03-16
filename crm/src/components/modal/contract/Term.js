@@ -48,7 +48,7 @@ export default function TermModal(props) {
 
   const renderOptionProduct = ()=>{
     return productList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
+      return <Option value={item.id}>{item.Product_name}</Option>
     });
   }
 

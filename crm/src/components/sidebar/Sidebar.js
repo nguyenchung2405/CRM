@@ -1,14 +1,43 @@
 import React from 'react'
-import {FaRegUser} from "react-icons/fa";
-import {BiBriefcase} from "react-icons/bi";
-import {BsReceiptCutoff} from "react-icons/bs"
-import {HiOutlineDocumentDuplicate} from "react-icons/hi"
+import { FaRegUser } from "react-icons/fa";
+import { BiBriefcase } from "react-icons/bi";
+import { BsReceiptCutoff } from "react-icons/bs"
+import { HiOutlineDocumentDuplicate } from "react-icons/hi"
 import SubMenu from './SubMenu';
-import { NavLink } from 'react-router-dom';
+import { Menu } from "antd"
+import { NavLink, Link } from 'react-router-dom';
+import { checkMicroFe } from '../../untils/helper';
+import { MdPeopleOutline } from "react-icons/md"
+import { useNavigate } from "react-router-dom";
+import { BsFileEarmarkFill } from "react-icons/bs"
+import { FcDepartment } from "react-icons/fc"
 
 export default function Sidebar() {
+    const getItem = (label, key, icon, children) => {
+        return {
+            label,
+            key,
+            icon,
+            children
+        }
+    }
+    let uri = checkMicroFe() === true ? "contract-service" : "";
+    // const items = [
+    //     getItem("Hoá đơn", "sub1xxx", [
+    //         getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "2xxx",),
+    //         getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "3xxx",),
+    //     ])
+    // ]
+    const items = [
+        getItem("Hoá đơn", "sub1", <MdPeopleOutline />, [
+            getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "1", <BsFileEarmarkFill />),
+            getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "2", <FcDepartment />),
+        ])
+    ]
 
-   
+    const renderSubMenu = () => {
+        if (checkMicroFe() === false) {
+            return (
 
   return (
     <div className="sidebar">
