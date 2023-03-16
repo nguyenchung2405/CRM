@@ -1,10 +1,10 @@
 import axios from "axios"
 import { local } from "../../title/title"
 
-export async function getCustomerListAPI(){
+export async function getCustomerListAPI(page, pageNumber){
     try {
         const result = await axios({
-            url: `${local}/api/client/list`,
+            url: `${local}/api/client/list?page=${page}&page_size=${pageNumber}`,
             method: "GET",
         })
         return result.data;
@@ -30,9 +30,9 @@ export async function createCustomerAPI(dataCustomer){
 
 export async function searchCustomerAPI(data){
     try {
-        let {name, tax_number} = data;
+        let {name, tax_number, brief_name} = data;
         const result = await axios({
-            url: `${local}/api/client/search?name=${name}&tax_number=${tax_number}`,
+            url: `${local}/api/client/search?name=${name}&tax_number=${tax_number}&brief_name=${brief_name}`,
             method: "GET"
         });
         return result.data;

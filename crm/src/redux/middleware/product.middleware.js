@@ -5,7 +5,7 @@ import { setProductList } from "../features/productSlice";
 
 function* getProductList(){
     let result = yield call(getProductListAPI);
-    yield put(setProductList(result))
+    yield put(setProductList(result.data.product))
 }
 
 export default function* productMiddleware(){

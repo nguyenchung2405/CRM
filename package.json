@@ -12,6 +12,7 @@
     "client": "cd crm && yarn start",
     "dev": "concurrently \"yarn clientWebpack\" \"yarn server\"",
     "start": "concurrently \"yarn serverDeploy\" \"yarn client\""
+
   },
   "devDependencies": {
     "concurrently": "^7.6.0",

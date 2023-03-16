@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // set up static file
 const pathPublicDirectory = path.join(__dirname, "../crm/dist");
-app.use("/proxy/public", express.static(pathPublicDirectory));
+app.use("/", express.static(pathPublicDirectory));
 
 app.use("/api",rootRouter)
 

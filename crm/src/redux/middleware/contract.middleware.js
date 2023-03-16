@@ -9,7 +9,7 @@ import { setMessage } from "../features/messageSlice";
 function* getContractList(payload){
     let {page, pageNumber} = payload.data;
     let result = yield call(getContractListAPI, page, pageNumber);
-    let {total, data} = result;
+    let {total_data: total, contract: data} = result.data;
     yield put(setContractList({total, contractList: data}));
     yield put(setIsLoading(false))
 
@@ -17,8 +17,8 @@ function* getContractList(payload){
 
 function* getContractTypeList(){
     let result = yield call(getContractTypeListAPI);
-    let {data } = result;
-    yield put(setContractTypeList(data))
+    let {contract_type } = result.data;
+    yield put(setContractTypeList(contract_type))
 };
 
 function* createContract(payload){
