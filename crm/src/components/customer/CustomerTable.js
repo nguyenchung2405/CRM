@@ -8,6 +8,7 @@ import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
+import { setMessage } from '../../redux/features/messageSlice';
 
 export default function CustomerTable() {
     const { Column } = Table;
