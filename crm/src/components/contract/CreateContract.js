@@ -21,7 +21,15 @@ export default function CreateContract() {
   const {contractTypeList, contractDetail} = useSelector(state => state.contractReducer);
   const {productList} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
+  const [dataTable, setDataTable] = useState([
+    {
+      product: "Báo điện tử - TTO - Trang chủ",
+      from_date: "01/02/2022",
+      to_date: "04/02/2022",
+      price: "10000000",
+      quality: 10,
+    }
+  ]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
@@ -90,7 +98,10 @@ export default function CreateContract() {
           // let newDenNgay = convertDate(valueForm["end_date"]);
           let newTuNgay = moment(valueForm["begin_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
           let newDenNgay = moment(valueForm["end_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
-          if(newTuNgay === undefined && newDenNgay === undefined){
+          // if(newTuNgay === undefined && newDenNgay === undefined){
+          //   return [null, null]
+          // }
+          if(valueForm["begin_date"] === undefined && valueForm["end_date"] === undefined){
             return [null, null]
           }
           return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
@@ -429,42 +440,62 @@ export default function CreateContract() {
               />
             </svg>
           </div>
-          <Table dataSource={dataTable} pagination={false}>
+          <Table 
+          dataSource={dataTable} 
+          pagination={false}>
             <Column
               className="item"
               title="Sản phẩm"
               key="item"
-              dataIndex="product_ID"
+              // dataIndex="product_ID"
               render={(text)=>{
-                let product = productList?.find(product => product.id === text)
-                return product?.name || product?.Product_name
+                // let product = productList?.find(product => product.id === text)
+                // return product?.name || product?.Product_name
+                return text.product
               }}
-            />
-            <Column
-              className="content"
-              title="Nội dung"
-              key="content"
-              dataIndex="desc"
             />
             <Column
               className="dateUp"
               title="Ngày đăng"
               key="dateUp"
               render={(text)=>{
-                let batDau = moment(new Date(text.from_date)).format("DD/MM/YYYY")
-                let ketThuc = moment(new Date(text.to_date)).format("DD/MM/YYYY");
+                // let batDau = moment(new Date(text.from_date)).format("DD/MM/YYYY");
+                // let ketThuc = moment(new Date(text.to_date)).format("DD/MM/YYYY");
+                let batDau = text.from_date
+                let ketThuc = text.to_date;
                 return `${batDau} - ${ketThuc}`
               }}
             />
             <Column
-              className="price"
-              title="Giá tiền"
+              className="donGia"
+              title="Đơn giá"
               key="price"
               render={(text) => {
                 // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                return `${text.real_price} VNĐ`;
+                // return `${text.real_price} VNĐ`;
+                return `${new Intl.NumberFormat("vi-VN").format(text.price)} VNĐ`;
               }}
             />
+            <Column
+              className="quality"
+              title="Số lượng"
+              key="quality"
+              render={(text) => {
+                // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+                // return `${text.real_price} VNĐ`;
+                return `${text.quality}`;
+              }}
+            />
+            <Column
+            className="price"
+            title="Thành tiền"
+            key="price"
+            render={(text) => {
+              // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+              // return `${text.real_price} VNĐ`;
+              return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
+            }}
+          />
             <Column
               className="thaoTac"
               render={() => {
