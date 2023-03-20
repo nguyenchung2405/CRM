@@ -1046,5 +1046,15 @@ div.ant-select-dropdown div.ant-select-item {
     width: 300px;
 }
 
+.more__detail .contract__complete {
+    width: 550px;
+    top: 20px;
+    left: 66px;
+}
+
+.not__allow {
+    cursor: not-allowed;
+}
+
 /* Hết CSS create contract */
 /* ----------------------------------------------------- */

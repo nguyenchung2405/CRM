@@ -36,8 +36,8 @@ function* getContractDetail(payload){
     let {contract_id} = payload;
     let result = yield call(getContractDetailAPI, contract_id);
     let {code, data} = result;
-    if(+code === 200){
-        let dataAfterMapping = dataOfContractMapping(data);
+    if(+code === 200 || result.data.contract.length > 0){
+        let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         yield put(setContractDetail(dataAfterMapping))
     } else {
         yield put(setContractDetail({}))

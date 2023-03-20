@@ -92,7 +92,6 @@ export default function ContractTable() {
             <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
             <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName"
             render={(text)=>{
-                console.log(text)
                 return text?.client_ID?.name
             }} />
             {/**

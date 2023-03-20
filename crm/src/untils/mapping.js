@@ -17,12 +17,12 @@ function mappingDataOfTable(data){
 export function dataOfContractMapping(data){
     try {
         const dataContract = {
-                client_ID: data.client.id,
+                client_ID: data.client_ID.id,
                 owner: data.owner,
                 contract_number: data.contract_number,
                 begin_date: data.begin_date,
                 end_date: data.end_date,
-                contract_type_id: data.contract_type.id,
+                contract_type_id: data.contract_type_id,
                 discount_by_percent: data.discount_by_percent,
                 VAT: data.VAT,
                 total: data.total,
@@ -32,7 +32,7 @@ export function dataOfContractMapping(data){
         let dataTable = mappingDataOfTable(data)
         return {
             dataContract,
-            dataTable
+            // dataTable
         }
     } catch (error) {
         console.log(error)

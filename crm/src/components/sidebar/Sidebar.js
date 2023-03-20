@@ -1,14 +1,8 @@
 import React from 'react'
-import { FaRegUser } from "react-icons/fa";
-import { BiBriefcase } from "react-icons/bi";
 import { BsReceiptCutoff } from "react-icons/bs"
-import { HiOutlineDocumentDuplicate } from "react-icons/hi"
-import SubMenu from './SubMenu';
-import { Menu } from "antd"
 import { NavLink, Link } from 'react-router-dom';
 import { checkMicroFe } from '../../untils/helper';
 import { MdPeopleOutline } from "react-icons/md"
-import { useNavigate } from "react-router-dom";
 import { BsFileEarmarkFill } from "react-icons/bs"
 import { FcDepartment } from "react-icons/fc"
 
@@ -50,52 +44,6 @@ export default function Sidebar() {
                                 </defs>
                             </svg>
                         </div>
-                        {/**
-                                <div className="sidebar__personal__information bg_pri_blue">
-                            <p>
-                                <FaRegUser />
-                                Công việc của tôi
-                            </p>
-                        </div>
-                        <div className="sidebar__sub__menu">
-                            <ul>
-                                <li>
-                                    <a href="#">Thông báo phòng ban</a>
-                                </li>
-                                <li>
-                                    <a href="#">Việc của tôi</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="sidebar__personal__information bg_pri_blue">
-                            <p>
-                                <HiOutlineDocumentDuplicate />
-                                Tài liệu của tôi
-                            </p>
-                        </div>
-                        <div className="sidebar__sub__menu">
-                            <ul>
-                                <li>
-                                    <a href="#">Cá nhân</a>
-                                </li>
-                                
-                            </ul>
-                        </div>
-                        <div className="sidebar__personal__information bg_pri_blue">
-                            <p>
-                                <BiBriefcase />
-                                Đánh giá lao động
-                            </p>
-                        </div>
-                        <div className="sidebar__sub__menu">
-                            <ul>
-                                <li>
-                                    <a href="#">Tự đánh giá</a>
-                                </li>
-                                
-                            </ul>
-                        </div>
-                    */}
                         <div className="sidebar__personal__information bg_pri_blue">
                             <p>
                                 <BsReceiptCutoff />
@@ -112,7 +60,6 @@ export default function Sidebar() {
                                 </li>
                             </ul>
                         </div>
-                        <SubMenu />
                     </div>
                 )
         } else {

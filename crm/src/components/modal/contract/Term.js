@@ -48,7 +48,7 @@ export default function TermModal(props) {
 
   const renderOptionProduct = ()=>{
     return productList?.map((item)=>{
-      return <Option value={item.id}>{item.Product_name}</Option>
+      return <Option value={item.id}>{item.name}</Option>
     });
   }
 
@@ -85,6 +85,58 @@ export default function TermModal(props) {
                  </div>
                   */}
                   <div className="modal__field field__select">
+                  <div>
+                    <Select
+                      className="style"
+                      placeholder="Chọn kênh sản phẩm"
+                      // showSearch
+                      // filterOption={(input, option) =>
+                      //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      // }
+                      // value={valueOfField("product_ID")}
+                      // onChange={(value)=>{
+                      //     // handleChange("product_ID", value)
+                      //     let product = productList.find(item => item.id === value);
+                      //     // handleChange("real_price", +product.product_price[0].price)
+                      //     let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
+                      //     setValueModal({
+                      //       ...valueModal,
+                      //       product_ID: value,
+                      //       real_price: priceConvert
+                      //     })
+                      // }}
+                    >
+                      {renderOptionProduct()}
+                    </Select>
+                  </div>
+                </div>
+                  <div className="modal__field field__select">
+                  <div>
+                    <Select
+                      className="style"
+                      placeholder="Chọn nhóm sản phẩm"
+                      // showSearch
+                      // filterOption={(input, option) =>
+                      //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      // }
+                      // value={valueOfField("product_ID")}
+                      // onChange={(value)=>{
+                      //     // handleChange("product_ID", value)
+                      //     let product = productList.find(item => item.id === value);
+                      //     // handleChange("real_price", +product.product_price[0].price)
+                      //     let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
+                      //     setValueModal({
+                      //       ...valueModal,
+                      //       product_ID: value,
+                      //       real_price: priceConvert
+                      //     })
+                      // }}
+                    >
+                      {renderOptionProduct()}
+                    </Select>
+                  </div>
+                </div>
+                  <div className="modal__field field__select">
                     <div>
                       <Select
                         className="style"
@@ -111,7 +163,7 @@ export default function TermModal(props) {
                     </div>
                   </div>
                   <div className="modal__field">
-                    <input type="text" placeholder="Giá tiền"
+                    <input type="text" placeholder="Đơn giá"
                     name="real_price"
                     value={valueOfField("real_price")}
                     onChange={(e)=>{
@@ -119,6 +171,28 @@ export default function TermModal(props) {
                         // handleChange(name, +value)
                     }}
                     disabled
+                    />
+                  </div>
+                  <div className="modal__field">
+                    <input type="text" placeholder="Số lượng"
+                    // name="real_price"
+                    // value={valueOfField("real_price")}
+                    // onChange={(e)=>{
+                    //     // let {value, name} = e.target;
+                    //     // handleChange(name, +value)
+                    // }}
+                    // disabled
+                    />
+                  </div>
+                  <div className="modal__field">
+                    <input type="text" placeholder="Chiết khấu"
+                    // name="real_price"
+                    // value={valueOfField("real_price")}
+                    // onChange={(e)=>{
+                    //     // let {value, name} = e.target;
+                    //     // handleChange(name, +value)
+                    // }}
+                    // disabled
                     />
                   </div>
                   <div className="modal__field">
@@ -142,17 +216,18 @@ export default function TermModal(props) {
                     }}
                     />
                   </div>
-                  
-                      <div className="modal__field">
-                    <input type="text" placeholder="Nội dung"
-                    name="desc"
-                    value={valueOfField("desc")}
-                    onChange={(e)=>{
-                        let {value, name} = e.target;
-                        handleChange(name, value)
-                    }}
-                    />
-                  </div>
+                 {/**
+                 <div className="modal__field">
+                 <input type="text" placeholder="Nội dung"
+                 name="desc"
+                 value={valueOfField("desc")}
+                 onChange={(e)=>{
+                     let {value, name} = e.target;
+                     handleChange(name, value)
+                 }}
+                 />
+               </div>
+                  */}
                 
                   {/**
                       <div className="modal__field">

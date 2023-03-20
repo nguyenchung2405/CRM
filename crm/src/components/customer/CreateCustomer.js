@@ -10,9 +10,9 @@ export default function CreateCustomer(props) {
     const navigate = useNavigate();
     let [valueRadio, setValueRadio] = useState(false);
     let [valueForm, setValueForm] = useState({is_company: false});
-    let [validateForm, setValidateForm] = useState({email: false, phone: false});
+    let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
     const {isCreateCustomer, dataCustomer} = useSelector(state => state.customerReducer)
-    // console.log(valueForm)
+    
     useEffect(()=>{
         if(isCreateCustomer){
             setValueForm({is_company: false})
@@ -181,9 +181,9 @@ export default function CreateCustomer(props) {
                     onChange={handleChangeInput} />
                 </div>
                 <div className="modal__field">
-                    <input type="text" placeholder="Loại ngành nghề" name="address" 
-                    // value={valueOfField("address")}
-                    // onChange={handleChangeInput} 
+                    <input type="text" placeholder="Loại ngành nghề" name="business_type" 
+                    value={valueOfField("business_type")}
+                    onChange={handleChangeInput} 
                     />
                 </div>
                 <div className="modal__field">
@@ -221,36 +221,36 @@ export default function CreateCustomer(props) {
                   ? 
                   <>
                     <div className="modal__two__field">
-                      <input type="text" placeholder="Người đại diện" name="name" 
-                          // value={valueOfField("name")}
-                          // onChange={handleChangeInput} 
+                      <input type="text" placeholder="Người đại diện" name="representative" 
+                          value={valueOfField("representative")}
+                          onChange={handleChangeInput} 
                           />
-                      <input type="text" placeholder="Chức vụ" name="brief_name" 
-                          // value={valueOfField("brief_name")}
-                          // onChange={handleChangeInput} 
+                      <input type="text" placeholder="Chức vụ" name="represent_position" 
+                          value={valueOfField("represent_position")}
+                          onChange={handleChangeInput} 
                       />
                     </div>
                     <div className="modal__field">
-                        <input type="text" placeholder="Địa chỉ (người đại diện)" name="address" 
-                        // value={valueOfField("address")}
-                        // onChange={handleChangeInput} 
+                        <input type="text" placeholder="Địa chỉ (người đại diện)" name="represent_addr" 
+                        value={valueOfField("represent_addr")}
+                        onChange={handleChangeInput} 
                         />
                     </div>
                     <div className="modal__field">
-                        <input type="text" placeholder="Số điện thoại (người đại diện)" name="phone" 
-                        // value={valueOfField("phone")}
-                        // onBlur={regexValue}
-                        // onChange={handleChangeInput} 
+                        <input type="text" placeholder="Số điện thoại (người đại diện)" name="represent_phone" 
+                        value={valueOfField("represent_phone")}
+                        onBlur={regexValue}
+                        onChange={handleChangeInput} 
                         />
-                        {/*validateForm?.phone ? showRemind("phone") : ""*/}
+                        {validateForm?.represent_phone ? showRemind("represent_phone") : ""}
                     </div>
                     <div className="modal__field">
-                        <input type="text" placeholder="Email (người đại diện)" name="email" 
-                        // value={valueOfField("email")}
-                        // onBlur={regexValue}
-                        // onChange={handleChangeInput} 
+                        <input type="text" placeholder="Email (người đại diện)" name="represent_email" 
+                        value={valueOfField("represent_email")}
+                        onBlur={regexValue}
+                        onChange={handleChangeInput} 
                         />
-                        {/*validateForm?.email ? showRemind("email") : ""*/}
+                        {validateForm?.represent_email ? showRemind("represent_email") : ""}
                     </div>
                   </>
                   : ""

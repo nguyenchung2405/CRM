@@ -24,7 +24,8 @@ export default function CreateContract() {
   const [dataTable, setDataTable] = useState([]);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
-  // console.log(valueForm)
+  const [customerInfor, setCustomerInfor] = useState({});
+  console.log(valueForm)
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -43,9 +44,12 @@ export default function CreateContract() {
 
   useEffect(()=>{
     let {dataContract, dataTable: dataOfTable} = contractDetail;
-    if(dataContract && dataOfTable){
+    // if(dataContract && dataOfTable){
+    //   setValueForm({...dataContract})
+    //   setDataTable([...dataOfTable])
+    // }
+    if(dataContract){
       setValueForm({...dataContract})
-      setDataTable([...dataOfTable])
     }
   }, [contractDetail])
 
@@ -65,6 +69,10 @@ export default function CreateContract() {
   };
 
   const handleChangeValue = (name, value)=>{
+    if(name === "client_ID"){
+      let customerInfor = customerList.find(client => client.id  === value);
+      setCustomerInfor({...customerInfor})
+    }
     if(name !== "" && name.length > 0){
       setValueForm({...valueForm, [name]: value})
     }
@@ -78,8 +86,10 @@ export default function CreateContract() {
   
   const valueOfField = (name)=>{
     if(name === "rangePicker"){
-          let newTuNgay = convertDate(valueForm["begin_date"]);
-          let newDenNgay = convertDate(valueForm["end_date"]);
+          // let newTuNgay = convertDate(valueForm["begin_date"]);
+          // let newDenNgay = convertDate(valueForm["end_date"]);
+          let newTuNgay = moment(valueForm["begin_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
+          let newDenNgay = moment(valueForm["end_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
           if(newTuNgay === undefined && newDenNgay === undefined){
             return [null, null]
           }
@@ -90,6 +100,22 @@ export default function CreateContract() {
         }
       
     } 
+  }
+
+  const valueOfCustomer = (name)=>{
+    if(name === "daiDien"){
+      if(customerInfor["representative"] && customerInfor["represent_position"]){
+        return customerInfor["representative"] + " - " + customerInfor["represent_position"]
+      } else {
+        return null;
+      }
+    } else {
+      if(customerInfor[name]){
+        return customerInfor[name]
+      } else {
+        return null
+      }
+    }
   }
   
   const renderButtonCreateUpdate = ()=>{
@@ -103,10 +129,10 @@ export default function CreateContract() {
     } else {
       return <button className="footer__btn btn__create"
       onClick={()=>{
-        let creater = jwtdecode(TOKEN)?.id;
+        // let creater = +jwtdecode(TOKEN)?.id;
         let newData = {
-          contract: {...valueForm, creater},
-          details: [...dataTable]
+          contract: {...valueForm},
+          // details: [...dataTable]
         };
         dispatch({
           type: CREATE_CONTRACT,
@@ -259,81 +285,63 @@ export default function CreateContract() {
               name="owner"
               onChange={(e)=>{ 
                 let {value, name} = e.target;
-                handleChangeValue(name, value) 
+                handleChangeValue(name, +value) 
               }}
               value={valueOfField("owner")}
             />
           </div>
           <div className="field__input field__flex two__field">
             <input
-                className="style"
+                className="style not__allow"
                 placeholder="Mã số thuế"
                 type="text"
-                // name="owner"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, value) 
-                // }}
-                // value={valueOfField("owner")}
+                disabled
+                value={valueOfCustomer("tax_number")}
               />
               <input
-                className="style"
+                className="style not__allow"
                 placeholder="Số điện thoại"
                 type="text"
-                // name="contract_number"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, +value) 
-                // }}
-                // value={valueOfField("contract_number")}
+                disabled
+                value={valueOfCustomer("phone")}
               />
           </div>
           <div className="field__input field__flex two__field">
             <input
-                className="style"
+                className="style not__allow"
                 placeholder="Địa chỉ"
                 type="text"
-                // name="owner"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, value) 
-                // }}
-                // value={valueOfField("owner")}
+                disabled
+                value={valueOfCustomer("address")}
               />
               <input
-                className="style"
+                className="style not__allow"
                 placeholder="Email"
                 type="text"
-                // name="contract_number"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, +value) 
-                // }}
-                // value={valueOfField("contract_number")}
+                disabled
+                value={valueOfCustomer("email")}
               />
           </div>
           <div className="field__input field__flex two__field">
             <input
-                className="style"
+                className="style not__allow"
                 placeholder="Người đại diện và chức danh"
                 type="text"
-                // name="owner"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, value) 
-                // }}
-                // value={valueOfField("owner")}
+                disabled
+                value={valueOfCustomer("daiDien")}
               />
               <input
                 className="style"
                 placeholder="Người liên hệ và chức danh"
                 type="text"
-                // name="contract_number"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, +value) 
+                disabled
+                // value={()=>{
+                //   if(customerInfor["representative"] && customerInfor["represent_position"]){
+                //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
+                //   } else {
+                //     return null;
+                //   }
                 // }}
-                // value={valueOfField("contract_number")}
               />
           </div>
         </div>
@@ -616,9 +624,9 @@ export default function CreateContract() {
                   <Option value={2}>Kết thúc</Option>
                   <Option value={3}>Chưa chạy</Option>
               </Select>
-              <Progress percent={30} type="dashboard" strokeColor="red" />
-              <Progress percent={30} type="circle" strokeColor="red" />
+              <Progress className="contract__complete" status="active" percent={30} type="line" strokeColor="#6aa84f" showInfo={true} />
           </div>
+          <textarea placeholder="Ghi chú" name="" id=""></textarea>
         </div>
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={()=>{ navigate("/crm/contract", {replace: true}) }}>Hủy</button>
