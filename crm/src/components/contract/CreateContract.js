@@ -620,7 +620,7 @@ export default function CreateContract() {
                 })
             }} />
           </div>
-          {/*
+          
           <div className="contract__payment__process">
           <div className="payment__contract">
             <span>Đợt thanh toán 1</span>
@@ -633,7 +633,11 @@ export default function CreateContract() {
             <span>1,000,000,000 VNĐ</span>
           </div>
         </div>
-        */}
+        
+        <div className="contract__payment__total">
+            <h2 className="price">Tổng giá trị thanh toán<span>20.000.000 VNĐ</span></h2>
+            <h2 className="price">Nợ còn lại<span>100.000.000 VNĐ</span></h2>
+        </div>
         </div>
         <div className="create__contract__value border_bottom_3px more__detail">
           <p>Thông tin thêm</p>

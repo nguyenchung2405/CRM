@@ -57,7 +57,6 @@ export default function ContractTable() {
                 }} />
             </div>
             <div className="table__features__search">
-                <input placeholder="Mã hợp đồng" type="text" />
                 <input placeholder="Tên khách hàng" type="text" />
                 <input placeholder="Loại hợp đồng" type="text" />
                 <input placeholder="Người đầu mối" type="text" />
@@ -88,7 +87,6 @@ export default function ContractTable() {
                 },
             }}
         >
-            <Column className="contract__table__soHopDong" title="Mã hợp đồng" key="soHopDong" dataIndex="contract_number" />
             <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
             <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName"
             render={(text)=>{
@@ -119,6 +117,16 @@ export default function ContractTable() {
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
+            }} />
+            <Column className="contract__table__status" title="Người đầu mối" key="status" render={(text)=>{
+                // fake dữ liệu để đi demo, khi nào làm thì sửa lại
+                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                return <span>{text.id % 2 === 0 ? "Nguyễn Hoài Nam" : "Nguyễn Văn Lợi"}</span>
+            }} />
+            <Column className="contract__table__status" title="Người theo dõi" key="status" render={(text)=>{
+                // fake dữ liệu để đi demo, khi nào làm thì sửa lại
+                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
             }} />
             <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text)=>{
                 let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total)

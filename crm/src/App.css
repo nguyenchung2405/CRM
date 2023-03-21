@@ -735,6 +735,28 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-bottom: 20px;
 }
 
+.contract__table .contract__table__loaiHopDong {
+    padding-left: 30px;
+}
+
+.contract__payment__total {
+    margin-top: 20px;
+    width: 916px;
+    text-align: right;
+}
+
+.contract__payment__total .price {
+    color: #F1416C;
+    font-weight: bold;
+    display: block;
+}
+
+.contract__payment__total h2.price span {
+    margin-left: 50px;
+    min-width: 250px;
+    display: inline-block;
+}
+
 .create__contract .create__contract__inforCustomer .field__flex {
     display: flex;
 }
