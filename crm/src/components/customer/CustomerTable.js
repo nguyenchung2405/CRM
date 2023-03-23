@@ -9,8 +9,11 @@ import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 import { setMessage } from '../../redux/features/messageSlice';
+import { checkMicroFe } from '../../untils/helper';
 
 export default function CustomerTable() {
+
+    let uri = checkMicroFe() === true ? "contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -77,7 +80,7 @@ export default function CustomerTable() {
                     // setIsShowModal(true)
                     dispatch(setIsCreateCustomer(true))
                     dispatch(setDataCustomer({}))
-                    navigate("/crm/customer/create")
+                    navigate(`${uri}/crm/customer/create`)
                 }} />
                {/**
                      <ModalCustomer
@@ -156,7 +159,7 @@ export default function CustomerTable() {
                             // Code thêm KH bằng component
                             dispatch(setDataCustomer(text))
                             dispatch(setIsCreateCustomer(false))
-                            navigate("/crm/customer/update")
+                            navigate(`${uri}/crm/customer/update`)
                         }}>Chỉnh sửa</button>
                     </div>
                 }

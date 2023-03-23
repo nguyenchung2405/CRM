@@ -23,7 +23,7 @@ export default function Sidebar() {
     //     ])
     // ]
     const items = [
-        getItem("Hoá đơn", "sub1", <MdPeopleOutline />, [
+        getItem("Hợp đồng", "sub1", <BsReceiptCutoff />, [
             getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "1", <BsFileEarmarkFill />),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "2", <FcDepartment />),
         ])
