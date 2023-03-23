@@ -455,18 +455,6 @@ export default function CreateContract() {
               }}
             />
             <Column
-              className="dateUp"
-              title="Ngày đăng"
-              key="dateUp"
-              render={(text)=>{
-                // let batDau = moment(new Date(text.from_date)).format("DD/MM/YYYY");
-                // let ketThuc = moment(new Date(text.to_date)).format("DD/MM/YYYY");
-                let batDau = text.from_date
-                let ketThuc = text.to_date;
-                return `${batDau} - ${ketThuc}`
-              }}
-            />
-            <Column
               className="donGia"
               title="Đơn giá"
               key="price"
