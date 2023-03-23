@@ -16,3 +16,4 @@ package-lock.json
 crm/package-lock.json
 crm/yarn.lock
 proxy/yarn.lock
+.env
