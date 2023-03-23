@@ -1,6 +1,11 @@
-import { getTokenInCookie } from "../untils/helper";
+import { checkMicroFe, getTokenInCookie } from "../untils/helper";
 
-export const local = "http://localhost:3003"
+export const local = checkMicroFe() === true ? 
+                        window.location.href.includes("staging")
+                        ? "https://crmservice-staging.tuoitre.vn/"
+                        : "https://crmservice-dev.tuoitre.vn/" 
+                    : ""
+
 export const TOKEN = getTokenInCookie();
 
 export const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

@@ -948,7 +948,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract .create__contract__term table {
-    width: 916px;
+    max-width: 916px;
 }
 
 .create__contract .create__contract__term table th {
@@ -964,20 +964,16 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     color: #F1416C;
 }
 
-.create__contract .create__contract__term table .item {
+.create__contract .create__contract__term table .donGia {
     width: 150px;
 }
 
-.create__contract .create__contract__term table .content {
-    width: 300px;
-}
-
-.create__contract .create__contract__term table .dateUp {
-    width: 185px;
+.create__contract .create__contract__term table .quality {
+    width: 100px;
 }
 
 .create__contract .create__contract__term table .price {
-    min-width: 150px;
+    width: 150px;
 }
 
 .create__contract .create__contract__term table td.item,

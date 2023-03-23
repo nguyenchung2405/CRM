@@ -8,6 +8,7 @@ import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
 import { setContractDetail } from "../../redux/features/contractSlice";
 import { checkMicroFe, convertDate } from "../../untils/helper";
+import ContractRight from "./ContractRight";
 
 export default function CreateContract() {
   
@@ -24,10 +25,33 @@ export default function CreateContract() {
   const [dataTable, setDataTable] = useState([
     {
       product: "Báo điện tử - TTO - Trang chủ",
-      from_date: "01/02/2022",
-      to_date: "04/02/2022",
       price: "10000000",
       quality: 10,
+      details: [
+        {
+          key: "1",
+        "desc": "string",
+        "product_ID": {
+          "name": "Nửa trang đen trắng 24h",
+          "desc": "1 đen trắng 24h",
+          "code_indentify": "DTNUA24H",
+          "location_ID": 1,
+          "type_ID": 2,
+          "attribute_ID": 1,
+          "attribute_option_ID": null,
+          "price": null,
+          "id": 3
+        },
+        "price_ID": {
+          "product_ID": 3,
+          "price": 5.5,
+          "execute_date": "2023-03-15T02:11:52",
+          "id": 3
+        },
+        "from_date": "2023-03-15",
+        "to_date": "2023-03-15",
+        }
+      ]
     }
   ]);
   const [valueForm, setValueForm] = useState({});
@@ -441,8 +465,24 @@ export default function CreateContract() {
             </svg>
           </div>
           <Table 
+          className="term__table"
           dataSource={dataTable} 
-          pagination={false}>
+          pagination={false}
+          expandable={{
+              expandedRowRender: (record)=>{
+                {/**
+              return record.details.map(item => {
+                  return <div className="row__child">
+                    <span>{item.product_ID.name}</span>
+                    <span>{item.price_ID.price}</span>
+                    <span>{item.from_date}</span>
+                    <span>{item.to_date}</span>
+                  </div>
+                }) */}
+                return <ContractRight data={record.details} />
+              }
+          }}
+          >
             <Column
               className="item"
               title="Sản phẩm"

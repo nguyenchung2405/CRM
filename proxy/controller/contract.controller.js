@@ -36,7 +36,7 @@ const getContractTypeList = async (req, res)=>{
 
 const createContract = async (req,res)=>{
     try {
-        console.log("creat contract proxy", req.body)
+        // console.log("creat contract proxy", req.body)
         let {headers: {authorization}} = req;
         const result = await axios({
             url: `${local}/contract/create`,
@@ -48,7 +48,7 @@ const createContract = async (req,res)=>{
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error.response.data)
+        res.send(error.response)
         // res.send(error)
     }
 }
