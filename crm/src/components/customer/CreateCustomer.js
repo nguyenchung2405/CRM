@@ -212,12 +212,6 @@ export default function CreateCustomer(props) {
                     onChange={handleChangeInput} />
                     {validateForm?.email ? showRemind("email") : ""}
                 </div>
-                <div className="modal__field">
-                    <input type="text" placeholder="Người phụ trách" name="tax_number" 
-                    // value={valueOfField("tax_number")}
-                    // onChange={handleChangeInput} 
-                    />
-                </div>
                 {
                   valueRadio 
                   ? 
