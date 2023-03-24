@@ -197,7 +197,8 @@ export default function CreateContract() {
         <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin hợp đồng</p>
           <div className="field__input field__flex two__field">
-            <input
+              {/**
+              <input
                 className="style"
                 placeholder="Số tham chiếu"
                 type="text"
@@ -208,6 +209,7 @@ export default function CreateContract() {
                 // }}
                 // value={valueOfField("owner")}
               />
+            */}
               <input
                 className="style"
                 placeholder="Số hợp đồng"
@@ -691,6 +693,8 @@ export default function CreateContract() {
                   <Option value={1}>Đang chạy</Option>
                   <Option value={2}>Kết thúc</Option>
                   <Option value={3}>Chưa chạy</Option>
+                  <Option value={4}>Hủy</Option>
+                  <Option value={5}>Ngưng</Option>
               </Select>
               <Progress className="contract__complete" status="active" percent={30} type="line" strokeColor="#6aa84f" showInfo={true} />
           </div>
