@@ -12,6 +12,7 @@ import { setIsLoading } from '../../redux/features/loadingSlice';
 
 export default function ContractTable() {
 
+    let uri = checkMicroFe() === true ? "contract-service" : "";
     const { Column } = Table;
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -53,7 +54,7 @@ export default function ContractTable() {
             <div className="table__features__add">
                 <h1>Quản lý hợp đồng</h1>
                 <FcPlus onClick={()=>{
-                    navigate("/crm/contract/create")
+                    navigate(`${uri}/crm/contract/create`)
                 }} />
             </div>
             <div className="table__features__search">
@@ -138,7 +139,7 @@ export default function ContractTable() {
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">
                     <button onClick={()=>{
-                        navigate(`/crm/detail/${text.id}`)
+                        navigate(`${uri}/crm/detail/${text.id}`)
                     }}>Chỉnh sửa</button>
                </div>
             }} />

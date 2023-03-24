@@ -57,7 +57,7 @@ export default function CreateContract() {
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
-  console.log(valueForm)
+  
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -174,9 +174,13 @@ export default function CreateContract() {
           data: newData
         });
         if(checkMicroFe()){
-          navigate(`/contract-service/crm/contract`)
+          setTimeout(()=>{
+            navigate(`/contract-service/crm/contract`)
+          }, 1000)
         }else {
-          navigate("/crm/contract")
+          setTimeout(()=>{
+            navigate("/crm/contract")
+          }, 1000)
         }
       }}
   >Tạo</button>

@@ -25,7 +25,7 @@ function* createContract(payload){
     let {data} = payload;
     let result = yield call(createContractAPI, data);
     let {code} = result;
-    if(+code === 200){
+    if(+code === 200 || result.data?.idcontract){
         yield put(setMessage({type: "thành công", msg:"Tạo hợp đồng thành công."}))
     } else {
         yield put(setMessage({type: "thất bại", msg:"Tạo hợp đồng thất bại."}))
