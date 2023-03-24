@@ -80,11 +80,7 @@ export default function CustomerTable() {
                     // setIsShowModal(true)
                     dispatch(setIsCreateCustomer(true))
                     dispatch(setDataCustomer({}))
-                    if(checkMicroFe()){
-                        navigate("/create")
-                    } else {
-                        navigate(`${uri}/crm/customer/create`, { replace: true })
-                    }
+                    navigate(`${uri}/crm/customer/create`)
                 }} />
                {/**
                      <ModalCustomer
@@ -163,11 +159,7 @@ export default function CustomerTable() {
                             // Code thêm KH bằng component
                             dispatch(setDataCustomer(text))
                             dispatch(setIsCreateCustomer(false))
-                            if(checkMicroFe()){
-                                navigate("/update")
-                            } else {
-                                navigate(`${uri}/crm/customer/update`, { replace: true })
-                            }
+                            navigate(`${uri}/crm/customer/update`)
                         }}>Chỉnh sửa</button>
                     </div>
                 }
