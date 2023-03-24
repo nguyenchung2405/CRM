@@ -13,7 +13,7 @@ import { checkMicroFe } from '../../untils/helper';
 
 export default function CustomerTable() {
 
-    let uri = checkMicroFe() === true ? "contract-service" : "";
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
     const navigate = useNavigate()
