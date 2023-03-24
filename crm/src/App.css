@@ -715,6 +715,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 0;
+    width: 100%;
+    position: initial;
 }
 
 .create__contract .create__contract__inforCustomer,
@@ -749,6 +751,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     color: #F1416C;
     font-weight: bold;
     display: block;
+    width: 100%;
+    position: initial;
 }
 
 .contract__payment__total h2.price span {
