@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { CREATE_CUSTOMER, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
+import { checkMicroFe } from '../../untils/helper';
 
 export default function CreateCustomer(props) {
 
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
     const dispatch = useDispatch();
     const navigate = useNavigate();
     let [valueRadio, setValueRadio] = useState(false);
@@ -35,7 +37,7 @@ export default function CreateCustomer(props) {
     //   }
         setValidateForm({email: false, phone: false})
         setValueForm({is_company: false})
-        navigate("/crm/customer", {replace: true})
+        navigate(`${uri}/crm/customer`, {replace: true})
     };
 
     const handleOk = ()=>{
