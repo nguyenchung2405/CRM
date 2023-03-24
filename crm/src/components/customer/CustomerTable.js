@@ -140,7 +140,7 @@ export default function CustomerTable() {
             <Column className="customer__table__masothue" title="Mã số thuế" key="masothue" dataIndex="tax_number" />
             <Column className="customer__table__phone" title="Số điện thoại" key="phone" dataIndex="phone" />
             <Column className="customer__table__tenviettat" title="Tên viết tắt" key="brief_name" dataIndex="brief_name" />
-            <Column className="customer__table__nguoiphutrach" title="Người phụ trách" key="nguoiphutrach" render={()=>{
+            <Column className="customer__table__nguoiphutrach" title="Người đại diện" key="nguoiphutrach" render={()=>{
                 return "Nguyễn Văn Chương"
             }} />
             <Column className="customer__table__thaotac" render={(text)=>{
