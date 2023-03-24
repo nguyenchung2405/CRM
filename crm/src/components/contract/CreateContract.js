@@ -12,6 +12,7 @@ import ContractRight from "./ContractRight";
 
 export default function CreateContract() {
   
+  let uri = checkMicroFe() === true ? "/contract-service" : "";
   const { Column } = Table;
   const { Option } = Select;
   const {RangePicker} = DatePicker;
@@ -696,7 +697,7 @@ export default function CreateContract() {
           <textarea placeholder="Ghi chú" name="" id=""></textarea>
         </div>
         <div className="create__contract__footer">
-          <button className="footer__btn btn__delete" onClick={()=>{ navigate("/crm/contract", {replace: true}) }}>Hủy</button>
+          <button className="footer__btn btn__delete" onClick={()=>{ navigate(`${uri}/crm/contract`, {replace: true}) }}>Hủy</button>
           {renderButtonCreateUpdate()}
         </div>
       </div>
