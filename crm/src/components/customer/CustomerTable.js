@@ -80,7 +80,7 @@ export default function CustomerTable() {
                     // setIsShowModal(true)
                     dispatch(setIsCreateCustomer(true))
                     dispatch(setDataCustomer({}))
-                    navigate(`${uri}/crm/customer/create`)
+                    navigate(`${uri}/crm/customer/create`, { replace: true })
                 }} />
                {/**
                      <ModalCustomer
@@ -159,7 +159,7 @@ export default function CustomerTable() {
                             // Code thêm KH bằng component
                             dispatch(setDataCustomer(text))
                             dispatch(setIsCreateCustomer(false))
-                            navigate(`${uri}/crm/customer/update`)
+                            navigate(`${uri}/crm/customer/update`, { replace: true })
                         }}>Chỉnh sửa</button>
                     </div>
                 }
