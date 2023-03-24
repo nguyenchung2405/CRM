@@ -54,11 +54,7 @@ export default function ContractTable() {
             <div className="table__features__add">
                 <h1>Quản lý hợp đồng</h1>
                 <FcPlus onClick={()=>{
-                    if(checkMicroFe()){
-                        navigate("/create")
-                    } else {
-                        navigate(`${uri}/crm/contract/create`, { replace: true })
-                    }
+                        navigate(`${uri}/crm/contract/create`)
                 }} />
             </div>
             <div className="table__features__search">
@@ -143,11 +139,7 @@ export default function ContractTable() {
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">
                     <button onClick={()=>{
-                        if(checkMicroFe()){
-                            navigate(`detail/${text.id}`)
-                        } else {
-                            navigate(`${uri}/crm/detail/${text.id}`, { replace: true })
-                        }
+                            navigate(`${uri}/crm/detail/${text.id}`)
                     }}>Chỉnh sửa</button>
                </div>
             }} />
