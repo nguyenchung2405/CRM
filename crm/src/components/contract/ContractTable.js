@@ -12,7 +12,7 @@ import { setIsLoading } from '../../redux/features/loadingSlice';
 
 export default function ContractTable() {
 
-    let uri = checkMicroFe() === true ? "contract-service" : "";
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const navigate = useNavigate();
     const dispatch = useDispatch();
