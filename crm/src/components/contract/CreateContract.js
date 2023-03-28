@@ -64,10 +64,10 @@ export default function CreateContract() {
       type: GET_CUSTOMER_LIST,
       data: {page:1, pageNumber: 1000}
     });
-    dispatch({
-      type: GET_PRODUCT_LIST,
-      data: {page:1, pageSize: 1000}
-    });
+    // dispatch({
+    //   type: GET_PRODUCT_LIST,
+    //   data: {page:1, pageSize: 1000}
+    // });
     dispatch({
       type: GET_CONTRACT_TYPE_LIST
     });

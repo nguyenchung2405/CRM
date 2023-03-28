@@ -1,23 +1,65 @@
 import { DatePicker, Modal, Select } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
 
 export default function TermModal(props) {
 
   let { isShowModal, setIsShowModal, setDataTable, dataTable, productList} = props;
   const {RangePicker} = DatePicker;
   const {Option} = Select;
+  const dispatch = useDispatch();
   const [valueModal, setValueModal] = useState({});
-  
+  const [channelID, setChannelID] = useState(null);
+  const [locationID, setLocationID] = useState(null);
+  const [typeID, setTypeID] = useState(null);
+  const [attributeID, setAttributeID] = useState(null);
+  const {productChannel, productLocation, productType, productAttribute} = useSelector(state => state.productReducer);
+
+    useEffect(()=>{
+        dispatch({
+          type: GET_PRODUCT_CHANNEL,
+          data: {page: 1, page_size: 1000}
+        })
+        dispatch({
+          type: GET_PRODUCT_TYPE,
+          data: {page: 1, page_size: 1000}
+        })
+        dispatch({
+          type: GET_PRODUCT_ATTRIBUTE,
+          data: {page: 1, page_size: 1000}
+        })
+    }, [])
+
+    useEffect(()=>{
+      if(typeof +channelID === "number" && channelID !== null){
+        dispatch({
+          type: GET_PRODUCT_LOCATION,
+          data: {page: 1, page_size: 1000, channelID}
+        })
+        setLocationID(null)
+      }
+  }, [channelID])
+
+  useEffect(()=>{
+    dispatch({
+      type: GET_PRODUCT_LIST,
+      data: {page:1, pageSize: 1000, locationID, typeID, attributeID, channelID}
+    });
+  }, [locationID, typeID, attributeID, channelID])
+
   const handleCancel = () => {
     setIsShowModal(false);
     setValueModal({})
+    setChannelID(null)
+    setLocationID(null)
   };
 
   const handleOK = ()=>{
-    let newDataTable = [...dataTable];
-    newDataTable.push(valueModal)
-    setDataTable([...newDataTable])
+    // let newDataTable = [...dataTable];
+    // newDataTable.push(valueModal)
+    // setDataTable([...newDataTable])
     setIsShowModal(false);
     setValueModal({})
   }
@@ -52,10 +94,34 @@ export default function TermModal(props) {
     });
   }
 
+  const renderOptionProductChannel = ()=>{
+    return productChannel.map( channel => {
+      return <Option value={channel.id}>{channel.name}</Option>
+    } )
+  };
+
+  const renderOptionProductLocation = ()=>{
+      return productLocation.map( location => {
+          return <Option value={location.id}>{location.name}</Option>
+      } ); 
+  }
+
+  const renderOptionProductType = ()=>{
+    return productType.map( type => {
+        return <Option value={type.id}>{type.name}</Option>
+    } ); 
+  };
+
+  const renderOptionProductAttribute = ()=>{
+    return productAttribute.map( att => {
+        return <Option value={att.id}>{att.name}</Option>
+    } ); 
+  }
+
   return (
     <div className="modal__customer modal__term">
         <Modal
-        title="Thêm hạng mục"
+        title="Thêm quyền lợi hợp đồng"
         closeIcon={<svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.61719 6.5L13.4609 11.3438C13.5911 11.474 13.5911 11.6172 13.4609 11.7734L12.5625 12.6719C12.4062 12.8021 12.263 12.8021 12.1328 12.6719L11.3125 11.8125L7.28906 7.82812L2.44531 12.6719C2.3151 12.8021 2.17188 12.8021 2.01562 12.6719L1.11719 11.7734C0.986979 11.6172 0.986979 11.474 1.11719 11.3438L5.96094 6.5L1.11719 1.65625C0.986979 1.52604 0.986979 1.38281 1.11719 1.22656L2.01562 0.328125C2.17188 0.197917 2.3151 0.197917 2.44531 0.328125L7.28906 5.17188L12.1328 0.328125C12.263 0.197917 12.4062 0.197917 12.5625 0.328125L13.4609 1.22656C13.5911 1.38281 13.5911 1.52604 13.4609 1.65625L12.6016 2.47656L8.61719 6.5Z" fill="black"/>
         </svg>}
@@ -89,53 +155,73 @@ export default function TermModal(props) {
                     <Select
                       className="style"
                       placeholder="Chọn kênh sản phẩm"
-                      // showSearch
-                      // filterOption={(input, option) =>
-                      //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                      // }
-                      // value={valueOfField("product_ID")}
-                      // onChange={(value)=>{
-                      //     // handleChange("product_ID", value)
-                      //     let product = productList.find(item => item.id === value);
-                      //     // handleChange("real_price", +product.product_price[0].price)
-                      //     let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
-                      //     setValueModal({
-                      //       ...valueModal,
-                      //       product_ID: value,
-                      //       real_price: priceConvert
-                      //     })
-                      // }}
+                      showSearch
+                      filterOption={(input, option) =>
+                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      }
+                      value={channelID}
+                      onChange={(value)=>{
+                          setChannelID(value)
+                      }}
                     >
-                      {renderOptionProduct()}
+                      {renderOptionProductChannel()}
                     </Select>
                   </div>
                 </div>
                   <div className="modal__field field__select">
-                  <div>
-                    <Select
-                      className="style"
-                      placeholder="Chọn nhóm sản phẩm"
-                      // showSearch
-                      // filterOption={(input, option) =>
-                      //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                      // }
-                      // value={valueOfField("product_ID")}
-                      // onChange={(value)=>{
-                      //     // handleChange("product_ID", value)
-                      //     let product = productList.find(item => item.id === value);
-                      //     // handleChange("real_price", +product.product_price[0].price)
-                      //     let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
-                      //     setValueModal({
-                      //       ...valueModal,
-                      //       product_ID: value,
-                      //       real_price: priceConvert
-                      //     })
-                      // }}
-                    >
-                      {renderOptionProduct()}
-                    </Select>
+                    <div>
+                      <Select
+                        className="style"
+                        placeholder="Chọn nhóm sản phẩm"
+                        showSearch
+                        filterOption={(input, option) =>
+                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        value={locationID}
+                        onChange={(value)=>{
+                          setLocationID(value)
+                        }}
+                      >
+                        {renderOptionProductLocation()}
+                      </Select>
+                    </div>
                   </div>
-                </div>
+                  <div className="modal__field field__select">
+                    <div>
+                      <Select
+                        className="style"
+                        placeholder="Chọn loại sản phẩm"
+                        showSearch
+                        filterOption={(input, option) =>
+                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        value={typeID}
+                        onChange={(value)=>{
+                          setTypeID(value)
+                        }}
+                      >
+                        {renderOptionProductType()}
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="modal__field field__select">
+                    <div>
+                      <Select
+                        className="style"
+                        placeholder="Chọn thuôc tính sản phẩm"
+                        showSearch
+                        filterOption={(input, option) =>
+                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        value={attributeID}
+                        onChange={(value)=>{
+                          setAttributeID(value)
+                        }}
+                      >
+                        {renderOptionProductAttribute()}
+                      </Select>
+                    </div>
+                  </div>
                   <div className="modal__field field__select">
                     <div>
                       <Select
@@ -150,7 +236,7 @@ export default function TermModal(props) {
                             // handleChange("product_ID", value)
                             let product = productList.find(item => item.id === value);
                             // handleChange("real_price", +product.product_price[0].price)
-                            let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.Product_price * 1000000);
+                            let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
                             setValueModal({
                               ...valueModal,
                               product_ID: value,
