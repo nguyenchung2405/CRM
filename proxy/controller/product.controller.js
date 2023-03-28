@@ -20,8 +20,9 @@ const getProductTypeList = async (req, res)=>{
 const getProductList = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
+        let {page, page_size} = req.query;
         const result = await axios({
-            url: `${local}/product/list?sort_by=id&asc_order=true&page=1&page_size=1000`,
+            url: `${local}/product/list?sort_by=id&asc_order=true&page=${page}&page_size=${page_size}`,
             method: "GET",
             headers: {
                 Authorization: authorization

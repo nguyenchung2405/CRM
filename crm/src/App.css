@@ -46,7 +46,7 @@ p.required__field {
     color: red;
     margin-bottom: 0;
     text-align: left;
-    padding-left: 63px;
+    transform: translateX(33%);
 }
 
 /* loading css */
@@ -390,6 +390,11 @@ ul.ant-pagination {
     padding: 0 30px;
 }
 
+.customer__table .customer__table__tenviettat {
+    min-width: 105px;
+    padding-left: 30px;
+}
+
 .customer__table .customer__table__name {
     padding-left: 30px;
     width: 300px;
@@ -408,12 +413,16 @@ ul.ant-pagination {
 }
 
 .customer__table .customer__table__nguoiphutrach {
-    width: 200px;
+    min-width: 135px;
 }
 
 .customer__table .customer__table__thaotac {
     padding-right: 30px;
     width: 100px;
+}
+
+.product__table .product__table__kenhSP {
+    padding-left: 30px;
 }
 
 span.size-10 {
@@ -516,10 +525,29 @@ div.ant-radio-group {
     border-color: #35794A;
 }
 
+.modal__hidden {
+    height: 100%;
+    background: transparent;
+}
+
+.modal__hidden .ant-modal-content {
+    background: transparent;
+    height: 100%;
+    box-shadow: none;
+}
+
+.modal__hidden .ant-modal-content .ant-modal-body {
+    height: 100%;
+}
+
 div.modal__content {
     text-align: center;
     margin-top: 25px;
     
+}
+
+div.modal__content .modal__field {
+    position: relative;
 }
 
 div.modal__content .modal__field,
@@ -562,27 +590,97 @@ div.modal__content .modal__field.field__select>div div.ant-select .ant-select-se
     text-align: left;
 }
 
-div.modal__content .modal__field>input {
+.showInforBusiness {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    width: 1px;
+}
+
+div.modal__content .modal__field > input,
+div.modal__content .modal__two__field > .field__input input {
+    transition-property: border, border-radius;
+    transition-duration: 0.5s;
+}
+
+div.modal__content .modal__field > input {
     border: none;
     border-bottom: 1px solid #CCCCCC;
     width: 525px;
-    padding: 0 0 9px 9px;
+    padding: 9px 0 9px 9px;
     outline: none;
     color: #666666;
     font-size: 15px;
 }
 
-div.modal__content .modal__two__field > input {
+div.modal__content .modal__field input:focus,
+div.modal__content .modal__field input:not([value=""]) {
+    outline: none;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+}
+
+div.modal__content .modal__field input:focus ~ label,
+div.modal__content .modal__field input:not([value=""]) ~ label {
+    top: -12px;
+    font-size: 15px;
+    background-color: #fff;
+}
+
+div.modal__content .modal__two__field > .field__input {
+    position: relative;
+}
+
+div.modal__content .modal__two__field > .field__input label,
+div.modal__content .modal__field  > label {
+    position: absolute;
+    font-size: 15px;
+    top: 23%;
+    transform: translateX(-231px);
+    color: #666666;
+    pointer-events: none;
+    transition: all 0.5s;
+    width: max-content;
+    text-align: left;
+}
+
+div.modal__content .modal__field  > label {
+    transform: translateX(-515px);
+}
+
+.width__241 {
+    width: 241px;
+    display: inline-block;
+}
+
+div.modal__content .modal__two__field > .field__input input:focus,
+div.modal__content .modal__two__field > .field__input input:not([value=""]) {
+    outline: none;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+}
+
+div.modal__content .modal__two__field > .field__input input:focus ~ label,
+div.modal__content .modal__two__field > .field__input input:not([value=""]) ~ label {
+    top: -12px;
+    font-size: 15px;
+    background-color: #fff;
+}
+
+div.modal__content .modal__two__field > input,
+div.modal__content .modal__two__field > .field__input input {
+    box-sizing: border-box;
     border: none;
     border-bottom: 1px solid #CCCCCC;
     width: 241px;
-    padding: 0 0 9px 9px;
+    padding: 9px 0 9px 9px;
     outline: none;
     color: #666666;
     font-size: 15px;
 }
 
-div.modal__content .modal__two__field > input:first-child {
+div.modal__content .modal__two__field > input:first-child,
+div.modal__content .modal__two__field > .field__input:first-child {
     margin-right: calc(525px - (241px * 2));
 }
 
@@ -637,6 +735,22 @@ div.modal__upload label {
 div.modal__upload label>svg {
     width: 16px;
     height: 18px;
+}
+
+div.client__files > .ant-image {
+    display: inline-flex;
+    width: 100px;
+    height: 100px;
+}
+
+a.dowload__file {
+    text-decoration: none;
+    margin: 0 20px 0 0;
+    cursor: s-resize;
+}
+
+a.dowload__file:nth-child(2) {
+    margin-left: 20px;
 }
 
 /* Hết CSS Modal */

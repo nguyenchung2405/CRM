@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { message, Table } from 'antd';
 import { FcPlus } from "react-icons/fc"
-import ModalCustomer from '../modal/ModalCustomer';
 import { useDispatch, useSelector } from "react-redux"
-import { GET_CUSTOMER_LIST, SEARCH_CUSTOMER } from '../../title/title';
+import { GET_PRODUCT_LIST, SEARCH_CUSTOMER } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -11,18 +10,15 @@ import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/custo
 import { setMessage } from '../../redux/features/messageSlice';
 import { checkMicroFe } from '../../untils/helper';
 
-export default function CustomerTable() {
+export default function ProductTable() {
 
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const {isLoading} = useSelector(state => state.loadingReducer);
-    const {customerList, totalCustomer} = useSelector(state => state.customerReducer);
+    const {productList, totalProduct} = useSelector(state => state.productReducer);
     const {messageAlert} = useSelector(state => state.messageReducer);
-    const [isShowModal, setIsShowModal] = useState(false);
-    const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
-    const [dataToModal, setDataToModal] = useState({});
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [search, setSearch] = useState({name: "", tax_number: "", brief_name: ""})
@@ -30,8 +26,8 @@ export default function CustomerTable() {
     useEffect(()=>{
         if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
             dispatch({
-                type: GET_CUSTOMER_LIST,
-                data: {page, pageNumber}
+                type: GET_PRODUCT_LIST,
+                data: {page, pageSize: pageNumber}
             });
             dispatch(setIsLoading(true))
             dispatch(setMessage({}))
@@ -39,13 +35,12 @@ export default function CustomerTable() {
     }, [search])
 
     useEffect(()=>{
-        if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
-            dispatch({
-                type: GET_CUSTOMER_LIST,
-                data: {page, pageNumber}
-            });
-            dispatch(setIsLoading(true))
-        }
+        // if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
+        //     dispatch({
+        //         type: GET_PRODUCT_LIST
+        //       });
+        //     dispatch(setIsLoading(true))
+        // }
     }, [page, pageNumber])
 
     useEffect(()=>{
@@ -71,33 +66,24 @@ export default function CustomerTable() {
     }
 
   return (
-    <div className="customer__table content">
+    <div className="customer__table content product__table">
         {showLoading()}
         <div className="table__features">
             <div className="table__features__add">
-                <h1>Quản lý khách hàng</h1>
+                <h1>Quản lý sản phẩm</h1>
                 <FcPlus onClick={()=>{
-                    // setIsShowModal(true)
-                    dispatch(setIsCreateCustomer(true))
-                    dispatch(setDataCustomer({}))
                     navigate(`${uri}/crm/customer/create`)
                 }} />
-               {/**
-                     <ModalCustomer
-                title="Khách hàng mới"
-                isShowModal={isShowModal}
-                setIsShowModal={setIsShowModal} />
-                */}
             </div>
             <div className="table__features__search">
-                <input placeholder="Tên viết tắt" type="text" 
-                    name="brief_name"
-                    onChange={handleSearchInput} />
                 <input placeholder="Tên khách hàng" type="text" 
                 name="name"
                 onChange={handleSearchInput} />
                 <input placeholder="Mã số thuế" type="text" 
                 name="tax_number"
+                onChange={handleSearchInput} />
+                <input placeholder="Tên viết tắt" type="text" 
+                name="brief_name"
                 onChange={handleSearchInput} />
                 <div className="table__features__search__btn">
                     <button onClick={()=>{
@@ -114,14 +100,14 @@ export default function CustomerTable() {
             </div>
         </div>
         <Table
-            dataSource={customerList}
+            dataSource={productList}
             pagination={{
                 position: ["bottomLeft"],
                 defaultPageSize: 10,
                 locale: { items_per_page: "" },
                 defaultCurrent: 1,
                 showSizeChanger: true,
-                total: totalCustomer,
+                total: totalProduct,
                 pageSizeOptions: [10,50,100],
                 onChange: (page, pageNumber) => {
                 setPageNumber(pageNumber);
@@ -135,13 +121,21 @@ export default function CustomerTable() {
                 },
             }}
         >
-        <Column className="customer__table__tenviettat" title="Tên viết tắt" key="brief_name" dataIndex="brief_name" />
-            <Column className="customer__table__name" title="Tên khách hàng" key="name" dataIndex="name" />
-            <Column className="customer__table__address" title="Địa chỉ" key="address" dataIndex="address" />
-            <Column className="customer__table__phone" title="Số điện thoại" key="phone" dataIndex="phone" />
-            <Column className="customer__table__masothue" title="Mã số thuế" key="masothue" dataIndex="tax_number" />
-            <Column className="customer__table__nguoiphutrach" title="Người đại diện" key="nguoiphutrach" dataIndex="representative" />
-            <Column className="customer__table__thaotac" render={(text)=>{
+            <Column className="product__table__kenhSP" title="Kênh sản phẩm" key="brief_name" render={(text)=>{
+                console.log(text)
+                return text.location_ID?.channel_ID.name
+            }} />
+            <Column className="product__table__nhomSP" title="Nhóm sản phẩm" key="name" render={text => {
+                return text.location_ID?.name
+            }} />
+            <Column className="product__table__tenSP" title="Tên sản phẩm" key="address" dataIndex="name" />
+            <Column className="product__table__loaiSP" title="Loại sản phẩm" render={text => {
+                return text.type_ID?.name
+            }} />
+            <Column className="product__table__price" title="Giá" key="masothue" render={text => {
+                return new Intl.NumberFormat("vi-VN").format(text.price?.price * 1000000) + " VNĐ"
+            }} />
+            <Column className="product__table__thaotac" render={(text)=>{
                 return <div className="table__thaotac">
                 <button onClick={()=>{
                     // Khi trước thêm khách hàng mới bằng Modal giờ làm component chứ ko dùng modal nữa khi nào xài modal lại thì mở ra 2 dòng dưới
@@ -151,20 +145,12 @@ export default function CustomerTable() {
                     // Code thêm KH bằng component
                     dispatch(setDataCustomer(text))
                     dispatch(setIsCreateCustomer(false))
-                    navigate(`${uri}/crm/customer/update/${text.id}`)
+                    navigate(`${uri}/crm/customer/update`)
                 }}>Chỉnh sửa</button>
             </div>
                 }
             } />
         </Table>
-        {/**
-                <ModalCustomer
-            title="Cập nhật khách hàng"
-            isShowModal={isShowModalUpdate}
-            setIsShowModalUpdate={setIsShowModalUpdate}
-            dataToModal={dataToModal} 
-        />
-        */}
     </div>
   )
 }

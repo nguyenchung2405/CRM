@@ -184,18 +184,8 @@ export default function TermModal(props) {
                     // disabled
                     />
                   </div>
-                  <div className="modal__field">
-                    <input type="text" placeholder="Chiết khấu"
-                    // name="real_price"
-                    // value={valueOfField("real_price")}
-                    // onChange={(e)=>{
-                    //     // let {value, name} = e.target;
-                    //     // handleChange(name, +value)
-                    // }}
-                    // disabled
-                    />
-                  </div>
-                  <div className="modal__field">
+                 {/**
+                 <div className="modal__field">
                     <RangePicker 
                     format={"DD-MM-YYYY"}
                     suffixIcon={<svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,6 +206,7 @@ export default function TermModal(props) {
                     }}
                     />
                   </div>
+                */}
                  {/**
                  <div className="modal__field">
                  <input type="text" placeholder="Nội dung"

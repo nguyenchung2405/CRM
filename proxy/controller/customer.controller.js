@@ -20,10 +20,15 @@ const getCustomerList = async (req, res)=>{
 
 const createCustomer = async (req, res)=>{
     try {
+        const newData = {...req.body};
+        newData.files = [];
+        for(let file of req.files){
+            newData.files.push(file.path)
+        }
         const result = await axios({
             url: `${local}/client/create`,
             method: "POST",
-            data: req.body
+            data: newData
         });
         res.send(result.data);
     } catch (error) {
@@ -60,9 +65,23 @@ const updateCustomer = async (req, res)=>{
     }
 };
 
+const getDetailCustomer = async (req, res)=>{
+    try {
+        const {client_id} = req.params;
+        const result = await axios({
+            url: `${local}/client/list?id=${client_id}&page_size=10&sort_by=id&asc_order=true`,
+            method: "GET"
+        });
+        res.send(result.data)
+    } catch (error) {
+        res.send(error?.response || error)
+    }
+}
+
 module.exports = {
     getCustomerList,
     createCustomer,
     searchCustomer,
-    updateCustomer
+    updateCustomer,
+    getDetailCustomer
 }
