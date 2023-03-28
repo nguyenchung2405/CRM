@@ -12,6 +12,7 @@ import ContractTable from './components/contract/ContractTable';
 import CreateContract from './components/contract/CreateContract';
 import CreateCustomer from './components/customer/CreateCustomer';
 import { checkMicroFe } from './untils/helper';
+import ProductTable from './components/product/ProductTable';
 
 function App() {
 
@@ -26,10 +27,11 @@ function App() {
               <Routes>
                 <Route path="/crm/customer" element={<CustomerTable />} />
                 <Route path="/crm/customer/create" element={<CreateCustomer />} />
-                <Route path="/crm/customer/update" element={<CreateCustomer />} />
+                <Route path="/crm/customer/update/:client_id" element={<CreateCustomer />} />
                 <Route path="/crm/contract" element={<ContractTable />} />
                 <Route path="/crm/contract/create" element={<CreateContract />} />
                 <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
+                <Route path="/crm/product" element={<ProductTable />} />
                 {/**<Route path="*" element={<PageNotFound />} /> */}
               </Routes>
             </div>
@@ -43,10 +45,11 @@ function App() {
             <Routes>
               <Route path="/crm/customer" element={<CustomerTable />} />
               <Route path="/crm/customer/create" element={<CreateCustomer />} />
-              <Route path="/crm/customer/update" element={<CreateCustomer />} />
+              <Route path="/crm/customer/update/:client_id" element={<CreateCustomer />} />
               <Route path="/crm/contract" element={<ContractTable />} />
               <Route path="/crm/contract/create" element={<CreateContract />} />
               <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
+              <Route path="/crm/product" element={<ProductTable />} />
               {/**<Route path="*" element={<PageNotFound />} /> */}
             </Routes>
           </div>

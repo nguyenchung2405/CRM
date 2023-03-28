@@ -15,6 +15,7 @@ const pathPublicDirectory = path.join(__dirname, "../crm/dist");
 
 app.use("/api",rootRouter)
 
+app.use("/proxy/resources" , express.static(path.join(__dirname, "/resources") ));
 app.use(express.static(pathPublicDirectory));
 app.get("*", (req, res) => {
     res.sendFile(path.join(pathPublicDirectory, "index.html"))

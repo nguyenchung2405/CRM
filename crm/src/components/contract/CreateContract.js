@@ -65,7 +65,8 @@ export default function CreateContract() {
       data: {page:1, pageNumber: 1000}
     });
     dispatch({
-      type: GET_PRODUCT_LIST
+      type: GET_PRODUCT_LIST,
+      data: {page:1, pageSize: 1000}
     });
     dispatch({
       type: GET_CONTRACT_TYPE_LIST
@@ -174,15 +175,9 @@ export default function CreateContract() {
           type: CREATE_CONTRACT,
           data: newData
         });
-        if(checkMicroFe()){
-          setTimeout(()=>{
-            navigate(`/contract-service/crm/contract`)
-          }, 1000)
-        }else {
-          setTimeout(()=>{
-            navigate("/crm/contract")
-          }, 1000)
-        }
+        setTimeout(()=>{
+          navigate(`${uri}/crm/contract`)
+        }, 1000)
       }}
   >Tạo</button>
     }
