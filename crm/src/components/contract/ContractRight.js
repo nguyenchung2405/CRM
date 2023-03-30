@@ -1,6 +1,9 @@
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import { removeRequestDetail, setKeyOfDetailJustAdd, setKeyOfRequestJustAdd, updateRequestDetail } from '../../redux/features/contractSlice';
 
 const EditableCell = ({
     editing,
@@ -13,10 +16,11 @@ const EditableCell = ({
     ...restProps
   }) => {
     const inputNode = inputType === 'file' ? 
-                            record.file.length > 0 ?
+                            record.file?.length > 0 ?
                                 <Input />
                             :  <input type="file" /> 
                         : <Input />;
+    const required = inputType === "file" ? false : true
     return (
       <td {...restProps}>
         {editing ? (
@@ -27,7 +31,7 @@ const EditableCell = ({
             }}
             rules={[
               {
-                required: true,
+                required: required,
                 message: `Please Input ${title}!`,
               },
             ]}
@@ -43,12 +47,14 @@ const EditableCell = ({
 
 function convertLegacyProps(data){
     try {
-        return data.map(item => {
+        return data.details.map(item => {
+          let newFromDate = moment(item.from_date, "YYYY-MM-DD").format("DD-MM-YYYY");
             return {
+                request_id: data.id,
                 desc: item.desc,
                 file: item?.file,
-                from_date: item.from_date,
-                key: uuidv4()
+                from_date: newFromDate,
+                key: item.id
             }
         })
     } catch (error) {
@@ -58,25 +64,52 @@ function convertLegacyProps(data){
 
 export default function ContractRight(props) {
     const [data, setData] = useState();
+    const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
+    const {keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer)
+    const [requestId, setRequestId] = useState();
     const isEditing = (record) => record.key === editingKey;
-
+    
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
     }, [props.data])
+    
+    useEffect(()=>{ 
+      if(keyOfDetailJustAdd !== ""){
+        form.setFieldsValue({
+          "desc": "",
+          "from_date": "",
+          "file": null,
+          "id": keyOfDetailJustAdd
+        });
+      }
+      setEditingKey(keyOfDetailJustAdd)
+    }, [keyOfDetailJustAdd])
+
+    useEffect(()=>{
+      setRequestId(keyOfRequestJustAdd)
+    }, [keyOfRequestJustAdd])
 
     const edit = (record) => {
         form.setFieldsValue({
           ...record,
         });
         setEditingKey(record.key);
-      };
+        setRequestId(record.request_id)
+    };
       const cancel = () => {
+        if((keyOfDetailJustAdd && keyOfDetailJustAdd !== "") && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")){
+          dispatch(removeRequestDetail({request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd}))
+        }
         setEditingKey('');
       };
       const save = async (key) => {
         try {
+          let newDetailJustAdd = form.getFieldsValue();
+          newDetailJustAdd.id = editingKey;
+          newDetailJustAdd.from_date = moment(newDetailJustAdd.from_date, "DD-MM-YYYY").format("YYYY-MM-DD")
+          console.log(newDetailJustAdd)
           const row = await form.validateFields();
           const newData = [...data];
           const index = newData.findIndex((item) => key === item.key);
@@ -87,7 +120,10 @@ export default function ContractRight(props) {
               ...row,
             });
             setData(newData);
+            dispatch(updateRequestDetail({request_id: requestId, detailData: newDetailJustAdd}))
             setEditingKey('');
+            dispatch(setKeyOfRequestJustAdd(""))
+            dispatch(setKeyOfDetailJustAdd(""))
           } else {
             newData.push(row);
             setData(newData);
@@ -97,6 +133,7 @@ export default function ContractRight(props) {
           console.log('Validate Failed:', errInfo);
         }
       };
+
     const columns = [
         {
           editable: true,
@@ -156,7 +193,7 @@ export default function ContractRight(props) {
           }
         };
       });
-      console.log(mergedColumns)
+      
   return (
     <Form form={form} component={false}>
         <Table

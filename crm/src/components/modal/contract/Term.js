@@ -81,8 +81,10 @@ export default function TermModal(props) {
       // valueModal.locationID = locationID;
       // valueModal.typeID = typeID;
       // valueModal.attributeID = attributeID;
+      valueModal.quality =  valueModal.quality || 0;
       if(!isUpdateModal){
         valueModal.id = uuidv4();
+        valueModal.details = []
         dispatch(addContractRequest(valueModal))
         setIsUpdateModal(false)
       } else {
@@ -113,6 +115,9 @@ export default function TermModal(props) {
   const valueOfField = (name)=>{
     
     if(valueModal[name] && valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined){
+      if(name === "real_price"){
+        return new Intl.NumberFormat("vi-VN").format(valueModal[name])
+      }
       return valueModal[name]
     } else if(name === "rangePicker" && valueModal["from_date"] && valueModal["to_date"]) {
       let newTuNgay = moment(new Date(valueModal["from_date"])).format("DD-MM-YYYY");
@@ -279,11 +284,11 @@ export default function TermModal(props) {
                             // handleChange("product_ID", value)
                             let product = productList.find(item => item.id === value);
                             // handleChange("real_price", +product.product_price[0].price)
-                            let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
+                            // let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
                             setValueModal({
                               ...valueModal,
                               product_ID: value,
-                              real_price: priceConvert,
+                              real_price: +product.price.price * 1000000,
                               price_ID: product.price.id
                             })
                         }}

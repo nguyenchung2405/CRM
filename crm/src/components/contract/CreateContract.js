@@ -6,10 +6,11 @@ import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTO
 import TermModal from "../modal/contract/Term";
 import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteContractRequest, setContractDetail } from "../../redux/features/contractSlice";
+import { addRequestDetail, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
 import { checkMicroFe, convertDate } from "../../untils/helper";
 import ContractRight from "./ContractRight";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
+import {v4 as uuidv4} from "uuid";
 
 export default function CreateContract() {
   
@@ -21,41 +22,10 @@ export default function CreateContract() {
   const navigate = useNavigate();
   const {contract_id} = useParams();
   const {customerList} = useSelector(state => state.customerReducer);
-  const {contractTypeList, contractDetail, contractRequest, contractRequestDetails} = useSelector(state => state.contractReducer);
+  const {contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer);
   const {productList, productListFull} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
-  const [dataTable, setDataTable] = useState([
-    {
-      product: "Báo điện tử - TTO - Trang chủ",
-      price: "10000000",
-      quality: 10,
-      details: [
-        {
-          key: "1",
-        "desc": "string",
-        "product_ID": {
-          "name": "Nửa trang đen trắng 24h",
-          "desc": "1 đen trắng 24h",
-          "code_indentify": "DTNUA24H",
-          "location_ID": 1,
-          "type_ID": 2,
-          "attribute_ID": 1,
-          "attribute_option_ID": null,
-          "price": null,
-          "id": 3
-        },
-        "price_ID": {
-          "product_ID": 3,
-          "price": 5.5,
-          "execute_date": "2023-03-15T02:11:52",
-          "id": 3
-        },
-        "from_date": "2023-03-15",
-        "to_date": "2023-03-15",
-        }
-      ]
-    }
-  ]);
+  const [dataTable, setDataTable] = useState();
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({});
@@ -105,6 +75,20 @@ export default function CreateContract() {
       });
     }
   }, [contract_id])
+
+  const convertContractRequest = ()=>{
+      return contractRequest.map( request => {
+          return {
+              key: request?.id,
+              id: request?.id,
+              price_ID: request.price_ID.id,
+              product_ID: request.product_ID.id,
+              quality: request.quality,
+              real_price: request.price_ID.price * 1000000,
+              details: request.details
+          }
+      })
+  }
 
   const renderOption = () => {
     return customerList?.map((customer) => {
@@ -191,6 +175,19 @@ export default function CreateContract() {
       }}
   >Tạo</button>
     }
+  }
+  
+  const addDetailWhenCreate = (request_id) => {
+    let detail = {
+      "desc": "",
+      "from_date": "",
+      "file": null,
+      "id": uuidv4()
+    }
+    if(keyOfDetailJustAdd && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")){
+      dispatch(removeRequestDetail({request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd}))
+    }
+      dispatch(addRequestDetail({request_id, detail}))
   }
 
   return (
@@ -493,7 +490,7 @@ export default function CreateContract() {
           </div>
           <Table 
           className="term__table"
-          dataSource={contractRequest} 
+          dataSource={convertContractRequest()} 
           pagination={false}
           expandable={{
               expandedRowRender: (record)=>{
@@ -506,7 +503,7 @@ export default function CreateContract() {
                     <span>{item.to_date}</span>
                   </div>
                 }) */}
-                return <ContractRight data={contractRequestDetails} />
+                return <ContractRight data={record} />
               }
           }}
           >
@@ -527,9 +524,10 @@ export default function CreateContract() {
               title="Đơn giá"
               key="price"
               render={(text) => {
+                // console.log("text", text)
                 // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                return `${text.real_price} VNĐ`;
-                // return `${new Intl.NumberFormat("vi-VN").format(text.price)} VNĐ`;
+                // return `${text.real_price} VNĐ`;
+                return `${new Intl.NumberFormat("vi-VN").format(text.real_price)} VNĐ`;
               }}
             />
             <Column
@@ -550,15 +548,20 @@ export default function CreateContract() {
               // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
               // return `${text.real_price} VNĐ`;
               // return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
-              let newPrice = Number(text.real_price.replaceAll(".",""));
-              return `${new Intl.NumberFormat("vi-VN").format(newPrice * text.quality)} VNĐ`;
+              // console.log(text)
+              // let newPrice = Number(text.real_price.replaceAll(".",""));
+              return `${new Intl.NumberFormat("vi-VN").format(text.real_price * text.quality)} VNĐ`;
             }}
           />
             <Column
               className="thaoTac"
               render={(text) => {
                 return <div>
-                      <button className="btn__green">Thêm chi tiết</button>
+                      <button className="btn__green" onClick={()=>{
+                            if(window.location.href.includes("create")){
+                                addDetailWhenCreate(text.id)
+                            }
+                      }}>Thêm chi tiết</button>
                       <MdOutlineModeEditOutline onClick={()=>{
                         setIsShowModal(true);
                         setIsUpdateModal(true)
