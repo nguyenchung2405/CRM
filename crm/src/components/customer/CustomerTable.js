@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 import { setMessage } from '../../redux/features/messageSlice';
 import { checkMicroFe } from '../../untils/helper';
+import { MdOutlineModeEditOutline } from 'react-icons/md';
 
 export default function CustomerTable() {
 
@@ -143,6 +144,7 @@ export default function CustomerTable() {
             <Column className="customer__table__nguoiphutrach" title="Người đại diện" key="nguoiphutrach" dataIndex="representative" />
             <Column className="customer__table__thaotac" render={(text)=>{
                 return <div className="table__thaotac">
+                {/**
                 <button onClick={()=>{
                     // Khi trước thêm khách hàng mới bằng Modal giờ làm component chứ ko dùng modal nữa khi nào xài modal lại thì mở ra 2 dòng dưới
                     // setIsShowModalUpdate(true);
@@ -153,6 +155,12 @@ export default function CustomerTable() {
                     dispatch(setIsCreateCustomer(false))
                     navigate(`${uri}/crm/customer/update/${text.id}`)
                 }}>Chỉnh sửa</button>
+            */}
+                <MdOutlineModeEditOutline className="style__svg" onClick={()=>{
+                    dispatch(setDataCustomer(text))
+                    dispatch(setIsCreateCustomer(false))
+                    navigate(`${uri}/crm/customer/update/${text.id}`)
+            }} />
             </div>
                 }
             } />

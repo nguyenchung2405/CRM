@@ -1306,5 +1306,48 @@ div.ant-select-dropdown div.ant-select-item {
     background-color: #F1416C;
 }
 
+svg.style__svg {
+    padding: 2px;
+    background-color: green;
+    height: 32px;
+    width: 32px;
+    color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
 /* Hết CSS create contract */
 /* ----------------------------------------------------- */
+/* ------------------------- Responsive -------------------- */
+
+@media only screen and (max-width: 1280px){
+    .customer__table .customer__table__tenviettat {
+        min-width: 116px;
+    }
+    .customer__table .customer__table__name {
+        min-width: 110px;
+    }
+    .contract__table .contract__table__loaiHopDong {
+        min-width: 137px;
+    }
+    .contract__table .contract__table__customerName {
+        min-width: 133px;
+        width: fit-content;
+    }
+    .contract__table .contract__table__time {
+        min-width: 154px;
+    }
+    .contract__table .contract__table__status {
+        min-width: 95px;
+    }
+    .contract__table .contract__table__nguoiDauMoi {
+        min-width: 126px;
+    }
+    .contract__table .contract__table__nguoiTheoDoi {
+        min-width: 126px;
+    }
+}
+
+/* ----------------------- Hêt responsive ---------------------- */

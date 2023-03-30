@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 import { setMessage } from '../../redux/features/messageSlice';
 import { checkMicroFe } from '../../untils/helper';
+import { MdOutlineModeEditOutline } from 'react-icons/md';
 
 export default function ProductTable() {
 
@@ -72,7 +73,7 @@ export default function ProductTable() {
             <div className="table__features__add">
                 <h1>Quản lý sản phẩm</h1>
                 <FcPlus onClick={()=>{
-                    navigate(`${uri}/crm/customer/create`)
+                   
                 }} />
             </div>
             <div className="table__features__search">
@@ -140,6 +141,7 @@ export default function ProductTable() {
             }} />
             <Column className="product__table__thaotac" render={(text)=>{
                 return <div className="table__thaotac">
+                {/**
                 <button onClick={()=>{
                     // Khi trước thêm khách hàng mới bằng Modal giờ làm component chứ ko dùng modal nữa khi nào xài modal lại thì mở ra 2 dòng dưới
                     // setIsShowModalUpdate(true);
@@ -150,6 +152,10 @@ export default function ProductTable() {
                     dispatch(setIsCreateCustomer(false))
                     navigate(`${uri}/crm/customer/update`)
                 }}>Chỉnh sửa</button>
+            */}
+                <MdOutlineModeEditOutline className="style__svg" onClick={()=>{
+                    
+            }} />
             </div>
                 }
             } />
