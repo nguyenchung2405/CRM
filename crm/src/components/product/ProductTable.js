@@ -76,15 +76,18 @@ export default function ProductTable() {
                 }} />
             </div>
             <div className="table__features__search">
-                <input placeholder="Tên khách hàng" type="text" 
+                <input placeholder="Kênh sản phẩm" type="text" 
                 name="name"
-                onChange={handleSearchInput} />
-                <input placeholder="Mã số thuế" type="text" 
+                // onChange={handleSearchInput} 
+                />
+                <input placeholder="Nhóm sản phẩm" type="text" 
                 name="tax_number"
-                onChange={handleSearchInput} />
-                <input placeholder="Tên viết tắt" type="text" 
+                // onChange={handleSearchInput} 
+                />
+                <input placeholder="Tên sản phẩm" type="text" 
                 name="brief_name"
-                onChange={handleSearchInput} />
+                // onChange={handleSearchInput} 
+                />
                 <div className="table__features__search__btn">
                     <button onClick={()=>{
                         if(search?.name === "" && search?.tax_number === "" && search?.brief_name === ""){
