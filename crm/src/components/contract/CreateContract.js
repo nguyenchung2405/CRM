@@ -6,9 +6,10 @@ import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTO
 import TermModal from "../modal/contract/Term";
 import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
-import { setContractDetail } from "../../redux/features/contractSlice";
+import { deleteContractRequest, setContractDetail } from "../../redux/features/contractSlice";
 import { checkMicroFe, convertDate } from "../../untils/helper";
 import ContractRight from "./ContractRight";
+import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 
 export default function CreateContract() {
   
@@ -20,8 +21,8 @@ export default function CreateContract() {
   const navigate = useNavigate();
   const {contract_id} = useParams();
   const {customerList} = useSelector(state => state.customerReducer);
-  const {contractTypeList, contractDetail} = useSelector(state => state.contractReducer);
-  const {productList} = useSelector(state => state.productReducer)
+  const {contractTypeList, contractDetail, contractRequest, contractRequestDetails} = useSelector(state => state.contractReducer);
+  const {productList, productListFull} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataTable, setDataTable] = useState([
     {
@@ -55,6 +56,8 @@ export default function CreateContract() {
       ]
     }
   ]);
+  const [dataToModal, setDataToModal] = useState();
+  const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
@@ -75,6 +78,13 @@ export default function CreateContract() {
       dispatch(setContractDetail({}))
     }
   }, []);
+
+  useEffect(()=>{
+      if(customerList.length > 0 && contract_id && typeof +contract_id === "number"){
+        let customerInfor = customerList.find(client => client.id ===  +valueForm.client_ID);
+        setCustomerInfor({...customerInfor})
+      }
+  }, [contract_id, customerList, valueForm])
 
   useEffect(()=>{
     let {dataContract, dataTable: dataOfTable} = contractDetail;
@@ -117,7 +127,7 @@ export default function CreateContract() {
       return <Option value={+item.id}>{item.name}</Option>
     });
   }
-  
+
   const valueOfField = (name)=>{
     if(name === "rangePicker"){
           // let newTuNgay = convertDate(valueForm["begin_date"]);
@@ -141,10 +151,10 @@ export default function CreateContract() {
 
   const valueOfCustomer = (name)=>{
     if(name === "daiDien"){
-      if(customerInfor["representative"] && customerInfor["represent_position"]){
+      if(customerInfor["representative"] && customerInfor["represent_position"] && customerInfor["representative"] !== null && customerInfor["represent_position"] !== null){
         return customerInfor["representative"] + " - " + customerInfor["represent_position"]
       } else {
-        return null;
+        return "";
       }
     } else {
       if(customerInfor[name]){
@@ -187,7 +197,7 @@ export default function CreateContract() {
     <div className="create__contract content">
       <div className="create__contract__content">
         <div className="create__contract__header border_bottom_3px">
-          <h2>Tạo hợp đồng</h2>
+          <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
         </div>
         <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin hợp đồng</p>
@@ -205,17 +215,19 @@ export default function CreateContract() {
                 // value={valueOfField("owner")}
               />
             */}
-              <input
-                className="style"
-                placeholder="Số hợp đồng"
-                type="text"
-                name="contract_number"
-                onChange={(e)=>{ 
-                  let {value, name} = e.target;
-                  handleChangeValue(name, +value) 
-                }}
-                value={valueOfField("contract_number")}
-              />
+              <div className="contract__field">
+                  <input
+                  className="style"
+                  type="text"
+                  name="contract_number"
+                  onChange={(e)=>{ 
+                    let {value, name} = e.target;
+                    handleChangeValue(name, +value) 
+                  }}
+                  value={valueOfField("contract_number")}
+                  />
+                  <label>Số hợp đồng</label>
+              </div>
           </div>
           <div className="field__input field__flex">
             <div className="field__input_2">
@@ -328,58 +340,71 @@ export default function CreateContract() {
             />
           </div>
           <div className="field__input field__flex two__field">
-            <input
-                className="style not__allow"
-                placeholder="Mã số thuế"
-                type="text"
-                disabled
-                value={valueOfCustomer("tax_number")}
-              />
-              <input
-                className="style not__allow"
-                placeholder="Số điện thoại"
-                type="text"
-                disabled
-                value={valueOfCustomer("phone")}
-              />
+            <div className="contract__field">
+                    <input
+                    className="style not__allow"
+                    type="text"
+                    disabled
+                    value={valueOfCustomer("tax_number")}
+                    />
+                    <label>Mã số thuế</label>
+            </div>
+            <div className="contract__field">
+                    <input
+                    className="style not__allow"
+                    type="text"
+                    disabled
+                    value={valueOfCustomer("phone")}
+                    />
+                    <label>Số điện thoại</label>
+            </div>
           </div>
           <div className="field__input field__flex two__field">
-            <input
-                className="style not__allow"
-                placeholder="Địa chỉ"
-                type="text"
-                disabled
-                value={valueOfCustomer("address")}
-              />
-              <input
-                className="style not__allow"
-                placeholder="Email"
-                type="text"
-                disabled
-                value={valueOfCustomer("email")}
-              />
+              <div className="contract__field">
+                        <input
+                        className="style not__allow"
+                        type="text"
+                        disabled
+                        value={valueOfCustomer("address")}
+                        />
+                        <label>Địa chỉ</label>
+                </div>
+                <div className="contract__field">
+                        <input
+                        className="style not__allow"
+                        type="text"
+                        disabled
+                        value={valueOfCustomer("email")}
+                        />
+                        <label>Email</label>
+                </div>
           </div>
           <div className="field__input field__flex two__field">
-            <input
-                className="style not__allow"
-                placeholder="Người đại diện và chức danh"
-                type="text"
-                disabled
-                value={valueOfCustomer("daiDien")}
-              />
-              <input
-                className="style"
-                placeholder="Người liên hệ và chức danh"
-                type="text"
-                disabled
-                // value={()=>{
-                //   if(customerInfor["representative"] && customerInfor["represent_position"]){
-                //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
-                //   } else {
-                //     return null;
-                //   }
-                // }}
-              />
+              <div className="contract__field">
+                            <input
+                            className="style not__allow"
+                            type="text"
+                            disabled
+                            value={valueOfCustomer("daiDien")}
+                            />
+                            <label>Người đại diện và chức danh</label>
+                    </div>
+                    <div className="contract__field">
+                            <input
+                            className="style"
+                            type="text"
+                            disabled
+                            value=""
+                            // value={()=>{
+                            //   if(customerInfor["representative"] && customerInfor["represent_position"]){
+                            //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
+                            //   } else {
+                            //     return null;
+                            //   }
+                            // }}
+                            />
+                            <label>Người liên hệ và chức danh</label>
+                    </div>
           </div>
         </div>
         {/* Thông tin liên hệ
@@ -468,7 +493,7 @@ export default function CreateContract() {
           </div>
           <Table 
           className="term__table"
-          dataSource={dataTable} 
+          dataSource={contractRequest} 
           pagination={false}
           expandable={{
               expandedRowRender: (record)=>{
@@ -481,7 +506,7 @@ export default function CreateContract() {
                     <span>{item.to_date}</span>
                   </div>
                 }) */}
-                return <ContractRight data={record.details} />
+                return <ContractRight data={contractRequestDetails} />
               }
           }}
           >
@@ -493,7 +518,8 @@ export default function CreateContract() {
               render={(text)=>{
                 // let product = productList?.find(product => product.id === text)
                 // return product?.name || product?.Product_name
-                return text.product
+                let product = productListFull.find(product => product.id === text.product_ID)
+                return product?.location_ID?.channel_ID?.name + " - " + product?.location_ID?.name + " - " + product?.name
               }}
             />
             <Column
@@ -502,8 +528,8 @@ export default function CreateContract() {
               key="price"
               render={(text) => {
                 // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                // return `${text.real_price} VNĐ`;
-                return `${new Intl.NumberFormat("vi-VN").format(text.price)} VNĐ`;
+                return `${text.real_price} VNĐ`;
+                // return `${new Intl.NumberFormat("vi-VN").format(text.price)} VNĐ`;
               }}
             />
             <Column
@@ -523,54 +549,78 @@ export default function CreateContract() {
             render={(text) => {
               // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
               // return `${text.real_price} VNĐ`;
-              return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
+              // return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
+              let newPrice = Number(text.real_price.replaceAll(".",""));
+              return `${new Intl.NumberFormat("vi-VN").format(newPrice * text.quality)} VNĐ`;
             }}
           />
             <Column
               className="thaoTac"
-              render={() => {
-                return <button>Xóa</button>;
+              render={(text) => {
+                return <div>
+                      <button className="btn__green">Thêm chi tiết</button>
+                      <MdOutlineModeEditOutline onClick={()=>{
+                        setIsShowModal(true);
+                        setIsUpdateModal(true)
+                        setDataToModal(text)
+                      }} />
+                      <MdDelete onClick={()=>{
+                          if(window.location.href.includes("create")){
+                            dispatch(deleteContractRequest(text.id))
+                          }
+                      }} />
+                </div>
               }}
             />
           </Table>
           <TermModal
             isShowModal={isShowModal}
             setIsShowModal={setIsShowModal}
-            setDataTable={setDataTable}
-            dataTable={dataTable}
             productList={productList}
+            dataToModal={dataToModal}
+            setDataToModal={setDataToModal}
+            isUpdateModal={isUpdateModal}
+            setIsUpdateModal={setIsUpdateModal}
           />
         </div>
         <div className="create__contract__value border_bottom_3px">
           <p>Giá trị hợp đồng</p>
           <div className="field__input_3">
-            <input className="style" placeholder="Chiết khấu (%)" type="text"
-            name="discount_by_percent" 
-            onChange={(e)=>{
-                let {value, name} = e.target;
-                handleChangeValue(name, +value)
-            }}
-            value={valueOfField("discount_by_percent")}
-            />
-            <input className="style" placeholder="Thuế GTGT(%)" type="text"
-            name="VAT" 
-            onChange={(e)=>{
-                let {value, name} = e.target;
-                handleChangeValue(name, +value)
-            }}
-            value={valueOfField("VAT")}
-            />
-            <input
-              className="style"
-              placeholder="Giá trị hợp đồng"
-              type="text"
-              name="total" 
-              onChange={(e)=>{
-                  let {value, name} = e.target;
-                  handleChangeValue(name, +value)
-              }}
-              value={valueOfField("total")}
-            />
+              <div className="contract__field">
+                  <input className="style" type="text"
+                  name="discount_by_percent" 
+                  onChange={(e)=>{
+                      let {value, name} = e.target;
+                      handleChangeValue(name, +value)
+                  }}
+                  value={valueOfField("discount_by_percent")}
+                  />
+                  <label>Chiết khấu (%)</label>
+              </div>
+              <div className="contract__field">
+                  <input className="style" type="text"
+                  name="VAT" 
+                  onChange={(e)=>{
+                      let {value, name} = e.target;
+                      handleChangeValue(name, +value)
+                  }}
+                  value={valueOfField("VAT")}
+                  />
+                  <label>Thuế GTGT (%)</label>
+              </div>
+              <div className="contract__field">
+                  <input
+                    className="style"
+                    type="text"
+                    name="total" 
+                    onChange={(e)=>{
+                        let {value, name} = e.target;
+                        handleChangeValue(name, +value)
+                    }}
+                    value={valueOfField("total")}
+                  />
+                  <label className="pink__color">Giá trị hợp đồng</label>
+              </div>
           </div>
           <textarea id="note" placeholder="Ghi chú"
             name="note" 

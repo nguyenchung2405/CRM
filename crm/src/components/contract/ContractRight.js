@@ -1,5 +1,6 @@
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
 
 const EditableCell = ({
     editing,
@@ -11,7 +12,11 @@ const EditableCell = ({
     children,
     ...restProps
   }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const inputNode = inputType === 'file' ? 
+                            record.file.length > 0 ?
+                                <Input />
+                            :  <input type="file" /> 
+                        : <Input />;
     return (
       <td {...restProps}>
         {editing ? (
@@ -41,9 +46,9 @@ function convertLegacyProps(data){
         return data.map(item => {
             return {
                 desc: item.desc,
-                price: item.price_ID.price,
+                file: item?.file,
                 from_date: item.from_date,
-                to_date: item.to_date
+                key: uuidv4()
             }
         })
     } catch (error) {
@@ -52,16 +57,17 @@ function convertLegacyProps(data){
 }
 
 export default function ContractRight(props) {
-    const [data, setData] = useState(convertLegacyProps(props.data));
+    const [data, setData] = useState();
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
     const isEditing = (record) => record.key === editingKey;
-    console.log(data)
+
+    useEffect(()=>{
+      setData(convertLegacyProps(props.data))
+    }, [props.data])
+
     const edit = (record) => {
         form.setFieldsValue({
-            desc: '',
-            from_date: '',
-            to_date: '',
           ...record,
         });
         setEditingKey(record.key);
@@ -72,7 +78,7 @@ export default function ContractRight(props) {
       const save = async (key) => {
         try {
           const row = await form.validateFields();
-          const newData = [...props.data];
+          const newData = [...data];
           const index = newData.findIndex((item) => key === item.key);
           if (index > -1) {
             const item = newData[index];
@@ -93,23 +99,21 @@ export default function ContractRight(props) {
       };
     const columns = [
         {
-            editable: true,
-            dataIndex: "desc"
+          editable: true,
+          dataIndex: "from_date",
+          title: "Ngày đăng"
         },
         {
             editable: true,
-            dataIndex: "price"
+            dataIndex: "desc",
+            title: "Mô tả"
         },
         {
             editable: true,
-            dataIndex: "from_date"
+            dataIndex: "file",
+            title: "File"
         },
         {
-            editable: true,
-            dataIndex: "to_date"
-        },
-        {
-            title: 'operation',
             render: (_, record) => {
               const editable = isEditing(record);
               return editable ? (
@@ -144,7 +148,7 @@ export default function ContractRight(props) {
           onCell: (record) => {
             return {
                 record,
-                // inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                inputType: col.dataIndex === 'file' ? 'file' : 'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
@@ -152,7 +156,7 @@ export default function ContractRight(props) {
           }
         };
       });
-
+      console.log(mergedColumns)
   return (
     <Form form={form} component={false}>
         <Table
@@ -164,7 +168,7 @@ export default function ContractRight(props) {
             }}
             dataSource={data}
             pagination={false}
-            showHeader={false}
+            showHeader={true}
             columns={mergedColumns}      
         >
            

@@ -9,6 +9,7 @@ import { checkMicroFe, convertDate } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
+import { MdOutlineModeEditOutline } from "react-icons/md";
 
 export default function ContractTable() {
 
@@ -87,9 +88,12 @@ export default function ContractTable() {
                 return `Hiển thị ${total} trong ${total}`;
                 },
             }}
+            scroll={{
+                x: "max-content",
+              }}
         >
-            <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
-            <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName"
+            <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
+            <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
             render={(text)=>{
                 return text?.client_ID?.name
             }} />
@@ -119,12 +123,12 @@ export default function ContractTable() {
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
             }} />
-            <Column className="contract__table__status" title="Người đầu mối" key="status" render={(text)=>{
+            <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text)=>{
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span>{text.id % 2 === 0 ? "Nguyễn Hoài Nam" : "Nguyễn Văn Lợi"}</span>
             }} />
-            <Column className="contract__table__status" title="Người theo dõi" key="status" render={(text)=>{
+            <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text)=>{
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
@@ -138,9 +142,14 @@ export default function ContractTable() {
             }} />
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">
+                    {/**  
                     <button onClick={()=>{
                             navigate(`${uri}/crm/detail/${text.id}`)
                     }}>Chỉnh sửa</button>
+                */}
+                    <MdOutlineModeEditOutline className="style__svg" onClick={()=>{
+                        navigate(`${uri}/crm/detail/${text.id}`)
+                }} />
                </div>
             }} />
         </Table>

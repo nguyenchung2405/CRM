@@ -2,11 +2,13 @@ import { DatePicker, Modal, Select } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
 import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function TermModal(props) {
 
-  let { isShowModal, setIsShowModal, setDataTable, dataTable, productList} = props;
+  let { isShowModal, setIsShowModal, setDataToModal, productList, dataToModal, isUpdateModal, setIsUpdateModal} = props;
   const {RangePicker} = DatePicker;
   const {Option} = Select;
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ export default function TermModal(props) {
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
   const {productChannel, productLocation, productType, productAttribute} = useSelector(state => state.productReducer);
-
+    
     useEffect(()=>{
         dispatch({
           type: GET_PRODUCT_CHANNEL,
@@ -47,21 +49,56 @@ export default function TermModal(props) {
       type: GET_PRODUCT_LIST,
       data: {page:1, pageSize: 1000, locationID, typeID, attributeID, channelID}
     });
+    setValueModal({...valueModal, product_ID: null, real_price: ""})
   }, [locationID, typeID, attributeID, channelID])
-
+  
+  useEffect(()=>{
+      if(isShowModal){
+        setValueModal({...dataToModal})
+        // setChannelID(dataToModal?.channelID)
+        // setLocationID(dataToModal?.locationID)
+        // setTypeID(dataToModal?.typeID)
+        // setAttributeID(dataToModal?.attributeID)
+      }
+  }, [dataToModal, isShowModal])
+  
   const handleCancel = () => {
     setIsShowModal(false);
     setValueModal({})
+    setDataToModal({})
     setChannelID(null)
     setLocationID(null)
+    setTypeID(null)
+    setAttributeID(null)
   };
 
   const handleOK = ()=>{
     // let newDataTable = [...dataTable];
     // newDataTable.push(valueModal)
     // setDataTable([...newDataTable])
+    if(window.location.href.includes("create")){
+      // valueModal.channelID = channelID;
+      // valueModal.locationID = locationID;
+      // valueModal.typeID = typeID;
+      // valueModal.attributeID = attributeID;
+      if(!isUpdateModal){
+        valueModal.id = uuidv4();
+        dispatch(addContractRequest(valueModal))
+        setIsUpdateModal(false)
+      } else {
+        dispatch(updateContractRequest(valueModal))
+        setIsUpdateModal(false)
+      }
+    } else {
+
+    }
     setIsShowModal(false);
     setValueModal({})
+    setDataToModal({})
+    setChannelID(null)
+    setLocationID(null)
+    setTypeID(null)
+    setAttributeID(null)
   }
 
   const handleChange = (name, value)=>{
@@ -74,14 +111,15 @@ export default function TermModal(props) {
   };
 
   const valueOfField = (name)=>{
-    if(valueModal[name] && valueModal[name] !== "" && name !== "rangePicker"){
+    
+    if(valueModal[name] && valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined){
       return valueModal[name]
     } else if(name === "rangePicker" && valueModal["from_date"] && valueModal["to_date"]) {
       let newTuNgay = moment(new Date(valueModal["from_date"])).format("DD-MM-YYYY");
       let newDenNgay = moment(new Date(valueModal["to_date"])).format("DD-MM-YYYY");
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if(name === "desc" || name === "real_price"){
+      if(name === "desc" || name === "real_price" || name === "quality"){
         return ""
       }
       return null
@@ -152,9 +190,10 @@ export default function TermModal(props) {
                   */}
                   <div className="modal__field field__select">
                   <div>
+                    <label className="term__label">Chọn kênh sản phẩm</label>
                     <Select
                       className="style"
-                      placeholder="Chọn kênh sản phẩm"
+                      // placeholder="Chọn kênh sản phẩm"
                       showSearch
                       filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -170,9 +209,10 @@ export default function TermModal(props) {
                 </div>
                   <div className="modal__field field__select">
                     <div>
+                      <label className="term__label">Chọn nhóm sản phẩm</label>
                       <Select
                         className="style"
-                        placeholder="Chọn nhóm sản phẩm"
+                        // placeholder="Chọn nhóm sản phẩm"
                         showSearch
                         filterOption={(input, option) =>
                           (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -188,9 +228,10 @@ export default function TermModal(props) {
                   </div>
                   <div className="modal__field field__select">
                     <div>
+                      <label className="term__label">Chọn loại sản phẩm</label>
                       <Select
                         className="style"
-                        placeholder="Chọn loại sản phẩm"
+                        // placeholder="Chọn loại sản phẩm"
                         showSearch
                         filterOption={(input, option) =>
                           (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -206,9 +247,10 @@ export default function TermModal(props) {
                   </div>
                   <div className="modal__field field__select">
                     <div>
+                      <label className="term__label">Chọn thuôc tính sản phẩm</label>
                       <Select
                         className="style"
-                        placeholder="Chọn thuôc tính sản phẩm"
+                        // placeholder="Chọn thuôc tính sản phẩm"
                         showSearch
                         filterOption={(input, option) =>
                           (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -224,10 +266,11 @@ export default function TermModal(props) {
                   </div>
                   <div className="modal__field field__select">
                     <div>
+                      <label className="term__label">Chọn sản phẩm</label>
                       <Select
                         className="style"
                         showSearch
-                        placeholder="Chọn sản phẩm"
+                        // placeholder="Chọn sản phẩm"
                         filterOption={(input, option) =>
                           (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
@@ -240,7 +283,8 @@ export default function TermModal(props) {
                             setValueModal({
                               ...valueModal,
                               product_ID: value,
-                              real_price: priceConvert
+                              real_price: priceConvert,
+                              price_ID: product.price.id
                             })
                         }}
                       >
@@ -249,7 +293,7 @@ export default function TermModal(props) {
                     </div>
                   </div>
                   <div className="modal__field">
-                    <input type="text" placeholder="Đơn giá"
+                    <input type="text"
                     name="real_price"
                     value={valueOfField("real_price")}
                     onChange={(e)=>{
@@ -258,17 +302,19 @@ export default function TermModal(props) {
                     }}
                     disabled
                     />
+                    <label>Đơn giá</label>
                   </div>
                   <div className="modal__field">
-                    <input type="text" placeholder="Số lượng"
-                    // name="real_price"
-                    // value={valueOfField("real_price")}
-                    // onChange={(e)=>{
-                    //     // let {value, name} = e.target;
-                    //     // handleChange(name, +value)
-                    // }}
+                    <input type="text"
+                    name="quality"
+                    value={valueOfField("quality")}
+                    onChange={(e)=>{
+                        let {value, name} = e.target;
+                        handleChange(name, +value)
+                    }}
                     // disabled
                     />
+                    <label>Số lượng</label>
                   </div>
                  {/**
                  <div className="modal__field">

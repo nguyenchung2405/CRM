@@ -918,11 +918,96 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     color: #666666;
 }
 
-.create__contract .create__contract__inforCustomer .field__input>div {
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field {
     width: 432px;
     display: flex;
     align-items: center;
     margin-right: 54px;
+    position: relative;
+}
+
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field input {
+    margin: 0;
+    transition-property: border, border-radius;
+    transition-duration: 0.5s;
+    padding-top: 9px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field input:not([value=""]),
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field input:focus {
+    outline: none;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+}
+
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field input:not([value=""]) ~ label,
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field input:focus ~ label {
+    top: -12px;
+    background-color: #fff;
+}
+
+.create__contract .create__contract__inforCustomer .field__input>div.contract__field label {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    color: #666666;
+    font-size: 15px;
+    transition: all 0.5s;
+    pointer-events: none;
+}
+
+.create__contract .create__contract__inforCustomer .field__input>div:not(.contract__field) {
+    width: 432px;
+    display: flex;
+    align-items: center;
+    margin-right: 54px;
+}
+
+.create__contract__value .field__input_3 .contract__field {
+    width: 265px;
+    margin-right: 59.05px;
+    position: relative;
+    display: inline-block;
+}
+
+.create__contract__value .field__input_3 .contract__field input {
+    width: 100%;
+    transition-property: border, border-radius;
+    transition-duration: 0.5s;
+    padding-top: 9px;
+}
+
+.create__contract__value .field__input_3 .contract__field label {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    color: #666666;
+    font-size: 15px;
+    transition: all 0.5s;
+    pointer-events: none;
+}
+
+.create__contract__value .field__input_3 .contract__field input:focus,
+.create__contract__value .field__input_3 .contract__field input:not([value=""]){
+    outline: none;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+}
+
+.create__contract__value .field__input_3 .contract__field input:focus ~ label,
+.create__contract__value .field__input_3 .contract__field input:not([value=""]) ~ label {
+    top: -12px;
+    background-color: #fff;
+}
+
+.create__contract__value .field__input_3 .contract__field label.pink__color {
+    color: #F1416C;
+}
+
+.term__label {
+    display: inherit;
+    text-align: left;
+    padding-left: 9px;
 }
 
 .create__contract .create__contract__inforCustomer .field__input>div .ant-select-selection-search input {
@@ -998,14 +1083,9 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     align-items: center;
 }
 
-.create__contract .create__contract__contactInfor .field__input_3 input,
-.create__contract .create__contract__value .field__input_3 input {
+.create__contract .create__contract__contactInfor .field__input_3 input {
     width: 265px;
     margin-right: 59.05px;
-}
-
-.field__input_3 input[placeholder$="đồng"]::placeholder {
-    color: #F1416C;
 }
 
 .create__contract .create__contract__contactInfor .field__input_3,
@@ -1083,11 +1163,20 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract .create__contract__term table .donGia {
-    width: 150px;
+    width: fit-content;
 }
 
 .create__contract .create__contract__term table .quality {
-    width: 100px;
+    width: fit-content;
+}
+
+.create__contract .create__contract__term table .item {
+    max-width: 250px;
+}
+
+.create__contract .create__contract__term table .thaoTac div {
+    display: flex;
+    justify-content: space-between;
 }
 
 .create__contract .create__contract__term table .price {
@@ -1100,10 +1189,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract .create__contract__term table .thaoTac {
-    min-width: 92px;
+   width: fit-content;
 }
 
-.create__contract .create__contract__term table .thaoTac>button {
+.create__contract .create__contract__term table .thaoTac>button:not(.btn__green) {
     background: #FFEEF3;
     border-radius: 4px;
     color: #F1416C;
@@ -1114,7 +1203,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     transition: all 0.5s;
 }
 
-.create__contract .create__contract__term table .thaoTac>button:hover {
+.create__contract .create__contract__term table .thaoTac>button:not(.btn__green):hover {
     border: 1px solid #F1416C;
     background-color: white;
     color: #F1416C;
@@ -1192,5 +1281,73 @@ div.ant-select-dropdown div.ant-select-item {
     cursor: not-allowed;
 }
 
+.btn__green {
+    background: green;
+    color: white;
+    padding: 3px 6px;
+    width: max-content;
+    height: 32px;
+    cursor: pointer;
+}
+
+.create__contract__term .term__table .thaoTac svg {
+    padding: 2px;
+    background-color: green;
+    height: 32px;
+    width: 32px;
+    color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.create__contract__term .term__table .thaoTac svg:last-child {
+    background-color: #F1416C;
+}
+
+svg.style__svg {
+    padding: 2px;
+    background-color: green;
+    height: 32px;
+    width: 32px;
+    color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
 /* Hết CSS create contract */
 /* ----------------------------------------------------- */
+/* ------------------------- Responsive -------------------- */
+
+@media only screen and (max-width: 1280px){
+    .customer__table .customer__table__tenviettat {
+        min-width: 116px;
+    }
+    .customer__table .customer__table__name {
+        min-width: 110px;
+    }
+    .contract__table .contract__table__loaiHopDong {
+        min-width: 137px;
+    }
+    .contract__table .contract__table__customerName {
+        min-width: 133px;
+        width: fit-content;
+    }
+    .contract__table .contract__table__time {
+        min-width: 154px;
+    }
+    .contract__table .contract__table__status {
+        min-width: 95px;
+    }
+    .contract__table .contract__table__nguoiDauMoi {
+        min-width: 126px;
+    }
+    .contract__table .contract__table__nguoiTheoDoi {
+        min-width: 126px;
+    }
+}
+
+/* ----------------------- Hêt responsive ---------------------- */
