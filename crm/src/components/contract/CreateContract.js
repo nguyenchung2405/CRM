@@ -10,6 +10,8 @@ import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import {v4 as uuidv4} from "uuid";
+import Loading from "../Loading";
+import { setIsLoading } from "../../redux/features/loadingSlice";
 
 export default function CreateContract() {
   
@@ -20,6 +22,7 @@ export default function CreateContract() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {contract_id} = useParams();
+  const {isLoading} = useSelector(state => state.loadingReducer);
   const {customerList} = useSelector(state => state.customerReducer);
   const {contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer);
   const {productList, productListFull} = useSelector(state => state.productReducer)
@@ -29,7 +32,7 @@ export default function CreateContract() {
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
-  console.log(valueForm)
+
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -72,6 +75,7 @@ export default function CreateContract() {
         type: GET_CONTRACT_DETAIL,
         contract_id
       });
+      dispatch(setIsLoading(true))
     }
   }, [contract_id])
 
@@ -192,8 +196,15 @@ export default function CreateContract() {
       dispatch(addRequestDetail({request_id, detail}))
   }
 
+  const showLoading = () => {
+    if (isLoading) {
+        return <Loading />
+    }
+}
+
   return (
     <div className="create__contract content">
+        {showLoading()}
       <div className="create__contract__content">
         <div className="create__contract__header border_bottom_3px">
           <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
