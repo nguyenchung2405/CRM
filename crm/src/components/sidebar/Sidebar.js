@@ -112,6 +112,9 @@ export default function Sidebar() {
                             <li>
                                 <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/crm/product">Sản phẩm</NavLink>
+                            </li>
                         </ul>
                     </div>
                     <SubMenu />
