@@ -104,7 +104,7 @@ const initialState = {
     //   }
     ],
     keyOfDetailJustAdd: "",
-    keyOfRequestJustAdd: ""
+    keyOfRequestJustAdd: "",
 };
 
 const contractSlice = createSlice({
@@ -127,6 +127,9 @@ const contractSlice = createSlice({
         },
         setKeyOfDetailJustAdd: (state, action)=>{
             state.keyOfDetailJustAdd = action.payload
+        },
+        setContractRequest: (state, action)=>{
+            state.contractRequest = action.payload
         },
         addContractRequest: (state, action)=>{
             let newRequest = {
@@ -180,5 +183,5 @@ const contractSlice = createSlice({
 
 export const {setContractList, setContractTypeList, setContractDetail, addContractRequest
 ,updateContractRequest, deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd,
-setKeyOfDetailJustAdd, updateRequestDetail} = contractSlice.actions;
+setKeyOfDetailJustAdd, updateRequestDetail, setContractRequest} = contractSlice.actions;
 export default contractSlice.reducer;

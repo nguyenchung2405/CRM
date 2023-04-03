@@ -16,6 +16,7 @@ export default function CreateCustomer(props) {
     let [valueRadio, setValueRadio] = useState(false);
     let [valueForm, setValueForm] = useState({is_company: false});
     let [isShowModal, setIsShowModal] = useState(false);
+    let [file, setFile] = useState("");
     let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
     const {isCreateCustomer, dataCustomer} = useSelector(state => state.customerReducer)
     
@@ -319,13 +320,14 @@ export default function CreateCustomer(props) {
                         return <>
                             <button onClick={()=>{
                               setIsShowModal(true)
+                              setFile(uri_file + file)
                             }}>Xem PDF</button>
-                            <ViewPDF pdf={uri_file + file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
                         </>
                       } else {
                         return <Image src={uri_file + file} />
                       }
                     }) }
+                    <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
                 </div>
             </div>
             <div className="contract__service__footer">

@@ -36,7 +36,7 @@ const getContractTypeList = async (req, res)=>{
 
 const createContract = async (req,res)=>{
     try {
-        // console.log("creat contract proxy", req.body)
+        // console.log("creat contract proxy", req.body.request[0])
         let {headers: {authorization}} = req;
         const result = await axios({
             url: `${local}/contract/create`,
@@ -48,8 +48,11 @@ const createContract = async (req,res)=>{
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error.response)
-        // res.send(error)
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -70,9 +73,41 @@ const getContractDetail = async (req, res)=>{
     }
 };
 
+const uploadFileDetailResponse = async (req, res)=>{
+    try {
+       let {file} = req;
+       res.send(file.path)
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+const getContractRequest = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {contract_id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/request/list?contract_id=${contract_id}&page_size=100&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
     createContract,
-    getContractDetail
+    getContractDetail,
+    uploadFileDetailResponse,
+    getContractRequest
 }

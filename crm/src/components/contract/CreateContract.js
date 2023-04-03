@@ -2,12 +2,11 @@ import { DatePicker, Table, Select, Progress } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_PRODUCT_LIST, GET_PRODUCT_TYPE_LIST, TOKEN } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST } from "../../title/title";
 import TermModal from "../modal/contract/Term";
-import jwtdecode from "jwt-decode"
 import { useNavigate, useParams } from "react-router-dom";
-import { addRequestDetail, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
-import { checkMicroFe, convertDate } from "../../untils/helper";
+import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
+import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import {v4 as uuidv4} from "uuid";
@@ -25,7 +24,6 @@ export default function CreateContract() {
   const {contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer);
   const {productList, productListFull} = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
-  const [dataTable, setDataTable] = useState();
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({});
@@ -46,6 +44,7 @@ export default function CreateContract() {
     });
     return ()=>{
       dispatch(setContractDetail({}))
+      dispatch(setContractRequest([]));
     }
   }, []);
 
@@ -77,7 +76,7 @@ export default function CreateContract() {
   }, [contract_id])
 
   const convertContractRequest = ()=>{
-      return contractRequest.map( request => {
+      return contractRequest?.map( request => {
           return {
               key: request?.id,
               id: request?.id,
@@ -161,14 +160,17 @@ export default function CreateContract() {
       return <button className="footer__btn btn__create"
       onClick={()=>{
         // let creater = +jwtdecode(TOKEN)?.id;
+        console.log(valueForm, ",", contractRequest)
         let newData = {
-          contract: {...valueForm},
+          contract: {...valueForm },
+          request: contractRequest
           // details: [...dataTable]
         };
         dispatch({
           type: CREATE_CONTRACT,
           data: newData
         });
+        dispatch(setContractRequest([]));
         setTimeout(()=>{
           navigate(`${uri}/crm/contract`)
         }, 1000)

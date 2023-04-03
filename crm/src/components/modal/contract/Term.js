@@ -61,6 +61,18 @@ export default function TermModal(props) {
         // setAttributeID(dataToModal?.attributeID)
       }
   }, [dataToModal, isShowModal])
+
+  useEffect(()=>{
+    if(productList.length === 1){
+      console.log(productList)
+      setValueModal({
+        ...valueModal,
+        product_ID: productList[0].id,
+        real_price: +productList[0].price.price * 1000000,
+        price_ID: productList[0].price.id
+      })
+    }
+  }, [productList])
   
   const handleCancel = () => {
     setIsShowModal(false);
@@ -131,11 +143,11 @@ export default function TermModal(props) {
     }
   }
 
-  const renderOptionProduct = ()=>{
-    return productList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
-    });
-  }
+  // const renderOptionProduct = ()=>{
+  //   return productList?.map((item)=>{
+  //     return <Option value={item.id}>{item.name}</Option>
+  //   });
+  // }
 
   const renderOptionProductChannel = ()=>{
     return productChannel.map( channel => {
@@ -195,7 +207,7 @@ export default function TermModal(props) {
                   */}
                   <div className="modal__field field__select">
                   <div>
-                    <label className="term__label">Chọn kênh sản phẩm</label>
+                    <label className="term__label">Kênh sản phẩm</label>
                     <Select
                       className="style"
                       // placeholder="Chọn kênh sản phẩm"
@@ -214,7 +226,7 @@ export default function TermModal(props) {
                 </div>
                   <div className="modal__field field__select">
                     <div>
-                      <label className="term__label">Chọn nhóm sản phẩm</label>
+                      <label className="term__label">Nhóm sản phẩm</label>
                       <Select
                         className="style"
                         // placeholder="Chọn nhóm sản phẩm"
@@ -233,7 +245,7 @@ export default function TermModal(props) {
                   </div>
                   <div className="modal__field field__select">
                     <div>
-                      <label className="term__label">Chọn loại sản phẩm</label>
+                      <label className="term__label">Loại sản phẩm</label>
                       <Select
                         className="style"
                         // placeholder="Chọn loại sản phẩm"
@@ -252,7 +264,7 @@ export default function TermModal(props) {
                   </div>
                   <div className="modal__field field__select">
                     <div>
-                      <label className="term__label">Chọn thuôc tính sản phẩm</label>
+                      <label className="term__label">Thuôc tính sản phẩm</label>
                       <Select
                         className="style"
                         // placeholder="Chọn thuôc tính sản phẩm"
@@ -269,10 +281,21 @@ export default function TermModal(props) {
                       </Select>
                     </div>
                   </div>
+                  <div className="modal__field">
+                      <input type="text"
+                        name="real_price"
+                        value={productList.length === 1 ? productList[0].name : ""}
+                        disabled
+                        />
+                        <label>Sản phẩm</label>
+                  </div>
+                  {/**
                   <div className="modal__field field__select">
                     <div>
                       <label className="term__label">Chọn sản phẩm</label>
-                      <Select
+                        Ngày xưa cho chọn sản phẩm theo kênh, location, type, attribute
+                        giờ bỏ đi khi nào xài lại thì mở lại code bên dưới này đỡ phải code lại
+                          <Select
                         className="style"
                         showSearch
                         // placeholder="Chọn sản phẩm"
@@ -295,8 +318,10 @@ export default function TermModal(props) {
                       >
                         {renderOptionProduct()}
                       </Select>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
+                    */}
+                  
                   <div className="modal__field">
                     <input type="text"
                     name="real_price"
