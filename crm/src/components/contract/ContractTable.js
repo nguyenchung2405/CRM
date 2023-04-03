@@ -134,11 +134,11 @@ export default function ContractTable() {
                 return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
             }} />
             <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text)=>{
-                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total)
+                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total > 1000000 ? +text.total : +text.total *1000000)
                 return total + " VNĐ"
             }}  />
             <Column className="contract__table__no" title="Nợ" key="total" render={(text)=>{
-                return <span>{text.id % 2 === 0 ? "100.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
+                return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
             }} />
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">
