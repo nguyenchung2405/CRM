@@ -299,6 +299,7 @@ p.required__field {
     margin-right: 15px;
     font-weight: bold;
     margin-bottom: 0;
+    font-size: 28px;
 }
 
 .customer__table .table__features .table__features__add svg {
@@ -326,6 +327,7 @@ p.required__field {
     font-size: 16px;
     border-style: none;
     transition: all .5s;
+    cursor: pointer;
 }
 
 .customer__table .table__features .table__features__search__btn button:hover {
@@ -640,6 +642,7 @@ div.modal__content .modal__field input:not([value=""]) ~ label {
     top: -12px;
     font-size: 15px;
     background-color: #fff;
+    font-weight: bold;
 }
 
 div.modal__content .modal__two__field > .field__input {
@@ -680,6 +683,7 @@ div.modal__content .modal__two__field > .field__input input:not([value=""]) ~ la
     top: -12px;
     font-size: 15px;
     background-color: #fff;
+    font-weight: bold;
 }
 
 div.modal__content .modal__two__field > input,
@@ -960,6 +964,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__inforCustomer .field__input>div.contract__field input:focus ~ label {
     top: -12px;
     background-color: #fff;
+    font-weight: bold;
 }
 
 .create__contract .create__contract__inforCustomer .field__input>div.contract__field label {
@@ -1014,6 +1019,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract__value .field__input_3 .contract__field input:not([value=""]) ~ label {
     top: -12px;
     background-color: #fff;
+    font-weight: bold;
 }
 
 .create__contract__value .field__input_3 .contract__field label.pink__color {
@@ -1062,6 +1068,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     padding: 0;
     box-shadow: none;
     width: 100%;
+    background-color: transparent;
 }
 
 .create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector .ant-select-selection-search {

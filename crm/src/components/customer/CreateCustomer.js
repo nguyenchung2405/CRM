@@ -9,7 +9,10 @@ import ViewPDF from '../ViewPDF';
 export default function CreateCustomer(props) {
 
     let uri = checkMicroFe() === true ? "/contract-service" : "";
-    let uri_file = checkMicroFe() === true ? "https://crmservice-dev.tuoitre.vn/" : "http://localhost:3003/";
+    let uri_file = checkMicroFe() === true ? 
+                                    window.location.href.includes("dev") ?
+                                    "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
+                                    : "http://localhost:3003/";
     const {client_id} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
