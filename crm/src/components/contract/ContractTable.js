@@ -119,7 +119,6 @@ export default function ContractTable() {
                 return `${batDau} - ${ketThuc}`
             }} />
             <Column className="contract__table__status" title="Trạng thái" key="status" render={(text)=>{
-                console.log(text)
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
