@@ -16,6 +16,7 @@ function mappingDataOfTable(data){
 
 export function dataOfContractMapping(data){
     try {
+        console.log(data)
         const dataContract = {
                 client_ID: data.client_ID.id,
                 owner: data.owner,
@@ -25,7 +26,7 @@ export function dataOfContractMapping(data){
                 contract_type_id: data.contract_type_id,
                 discount_by_percent: data.discount_by_percent,
                 VAT: data.VAT,
-                total: data.total,
+                total: data.total < 1000000 ? data.total * 1000000 : data.total,
                 note: data.note,
                 creater: data.creater
         };

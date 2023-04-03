@@ -1,54 +1,21 @@
-import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd'
+import { Form, Input, Popconfirm, Table, Typography } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid';
-
-const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-  }) => {
-    const inputNode = inputType === 'file' ? 
-                            record.file.length > 0 ?
-                                <Input />
-                            :  <input type="file" /> 
-                        : <Input />;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={dataIndex}
-            style={{
-              margin: 0,
-            }}
-            rules={[
-              {
-                required: true,
-                message: `Please Input ${title}!`,
-              },
-            ]}
-          >
-            {inputNode}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
+import { useDispatch, useSelector } from 'react-redux';
+import { removeRequestDetail, setKeyOfDetailJustAdd, setKeyOfRequestJustAdd, updateRequestDetail } from '../../redux/features/contractSlice';
+import axios from "axios"
+import { local } from '../../title/title';
 
 function convertLegacyProps(data){
     try {
-        return data.map(item => {
+        return data.details.map(item => {
+          let newFromDate = moment(item.from_date, "YYYY-MM-DD").format("DD-MM-YYYY");
             return {
+                request_id: data.id,
                 desc: item.desc,
                 file: item?.file,
-                from_date: item.from_date,
-                key: uuidv4()
+                from_date: newFromDate,
+                key: item.id
             }
         })
     } catch (error) {
@@ -56,27 +23,122 @@ function convertLegacyProps(data){
     }
 }
 
+let pathOfFile = "";
+
 export default function ContractRight(props) {
     const [data, setData] = useState();
+    const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
+    const {keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer)
+    const [requestId, setRequestId] = useState();
     const isEditing = (record) => record.key === editingKey;
-
+    
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
     }, [props.data])
+    
+    useEffect(()=>{ 
+      if(keyOfDetailJustAdd !== ""){
+        form.setFieldsValue({
+          "desc": "",
+          "from_date": "",
+          "file": null,
+          "id": keyOfDetailJustAdd
+        });
+      }
+      setEditingKey(keyOfDetailJustAdd)
+    }, [keyOfDetailJustAdd])
+
+    useEffect(()=>{
+      setRequestId(keyOfRequestJustAdd)
+    }, [keyOfRequestJustAdd])
+
+    const EditableCell = ({
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      children,
+      ...restProps
+    }) => {
+      const inputNode = inputType === 'file' ? 
+                              record?.file?.length > 0 ?
+                                  <> 
+                                      <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
+                                  </>
+                              :  <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
+                          : <Input />;
+                         
+      const required = ()=>{
+        if(inputType === 'upload' || inputType === "file"){
+          return false
+        } else {
+          return true
+        }
+      }
+      return (
+        <td {...restProps}>
+          {editing ? (
+            <Form.Item
+              name={dataIndex}
+              style={{
+                margin: 0,
+              }}
+              rules={[
+                {
+                  required: required(),
+                  message: `Please Input ${title}!`,
+                },
+              ]}
+            >
+              
+              {inputNode}
+            </Form.Item>
+          ) : (
+            children
+          )}
+        </td>
+      );
+    };
+
+    async function uploadFileDetail(file, detail_id, inputTag){
+        try {
+            let formData = new FormData();
+            formData.append("detailFile", file);
+            const upload = await axios({
+              url: `${local}/api/contract/upload/detail`,
+              method: "POST",
+              data: formData
+            });
+            pathOfFile = upload.data;
+        } catch (error) {
+          console.log("uploadFileDetail", error)
+        }
+    }
 
     const edit = (record) => {
         form.setFieldsValue({
           ...record,
         });
         setEditingKey(record.key);
-      };
+        setRequestId(record.request_id)
+        pathOfFile = record.file;
+    };
       const cancel = () => {
+        if((keyOfDetailJustAdd && keyOfDetailJustAdd !== "") && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")){
+          dispatch(removeRequestDetail({request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd}))
+        }
         setEditingKey('');
       };
       const save = async (key) => {
         try {
+          let newDetailJustAdd = form.getFieldsValue();
+          newDetailJustAdd.id = editingKey;
+          newDetailJustAdd.from_date = moment(newDetailJustAdd.from_date, "DD-MM-YYYY").format("YYYY-MM-DD")
+          newDetailJustAdd.file = pathOfFile;
           const row = await form.validateFields();
           const newData = [...data];
           const index = newData.findIndex((item) => key === item.key);
@@ -87,7 +149,11 @@ export default function ContractRight(props) {
               ...row,
             });
             setData(newData);
+            dispatch(updateRequestDetail({request_id: requestId, detailData: newDetailJustAdd}))
             setEditingKey('');
+            dispatch(setKeyOfRequestJustAdd(""))
+            dispatch(setKeyOfDetailJustAdd(""))
+            pathOfFile = "";
           } else {
             newData.push(row);
             setData(newData);
@@ -97,6 +163,7 @@ export default function ContractRight(props) {
           console.log('Validate Failed:', errInfo);
         }
       };
+
     const columns = [
         {
           editable: true,
@@ -111,9 +178,10 @@ export default function ContractRight(props) {
         {
             editable: true,
             dataIndex: "file",
-            title: "File"
+            title: "File",
         },
         {
+            className: "thaoTac",
             render: (_, record) => {
               const editable = isEditing(record);
               return editable ? (
@@ -124,16 +192,21 @@ export default function ContractRight(props) {
                       marginRight: 8,
                     }}
                   >
-                    Save
+                    Lưu
                   </Typography.Link>
-                  <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                    <a>Cancel</a>
+                  <Popconfirm title="Bạn có muốn hủy?" onConfirm={cancel} okText="Có" cancelText="Không">
+                    <a>Hủy</a>
                   </Popconfirm>
                 </span>
               ) : (
+                <>
                 <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                  Edit
+                  Sửa
                 </Typography.Link>
+                <Typography.Link onClick={()=>{
+                  console.log(record)
+                }}>Xem</Typography.Link>
+                </>
               );
             }
         }
@@ -156,7 +229,7 @@ export default function ContractRight(props) {
           }
         };
       });
-      console.log(mergedColumns)
+      
   return (
     <Form form={form} component={false}>
         <Table

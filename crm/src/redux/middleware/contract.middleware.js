@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST } from "../../title/title";
 import { dataOfContractMapping } from "../../untils/mapping";
-import { createContractAPI, getContractDetailAPI, getContractListAPI, getContractTypeListAPI } from "../API/contractAPI";
-import { setContractDetail, setContractList, setContractTypeList } from "../features/contractSlice";
+import { createContractAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI } from "../API/contractAPI";
+import { setContractDetail, setContractList, setContractRequest, setContractTypeList } from "../features/contractSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -36,13 +36,15 @@ function* getContractDetail(payload){
     let {contract_id} = payload;
     let result = yield call(getContractDetailAPI, contract_id);
     let {code, data} = result;
+    let responseRequest = yield call(getContractRequestAPI, contract_id);
     if(+code === 200 || result.data.contract.length > 0){
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         yield put(setContractDetail(dataAfterMapping))
+        yield put(setContractRequest(responseRequest.data.contract_request))
     } else {
         yield put(setContractDetail({}))
     }
-}
+};
 
 export default function* contractMiddleware(){
     yield takeLatest(GET_CONTRACT_LIST, getContractList)

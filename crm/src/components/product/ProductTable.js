@@ -126,7 +126,6 @@ export default function ProductTable() {
             }}
         >
             <Column className="product__table__kenhSP" title="Kênh sản phẩm" key="brief_name" render={(text)=>{
-                console.log(text)
                 return text.location_ID?.channel_ID.name
             }} />
             <Column className="product__table__nhomSP" title="Nhóm sản phẩm" key="name" render={text => {

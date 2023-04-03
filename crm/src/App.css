@@ -337,7 +337,7 @@ p.required__field {
 
 .customer__table .table__features .table__features__search input:first-child {
     margin-right: 37px;
-    width: 410px;
+    width: 200px;
 }
 
 .customer__table .table__features .table__features__search input:nth-child(3) {
@@ -538,6 +538,12 @@ div.ant-radio-group {
 
 .modal__hidden .ant-modal-content .ant-modal-body {
     height: 100%;
+}
+
+.create__customer .client__files {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 div.modal__content {
@@ -766,11 +772,12 @@ div.contract__table .table__features .table__features__search input:first-child 
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(2) {
-    width: 410px;
+    width: 200px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(3) {
     width: 251px;
+    margin-left: 0;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(4) {
@@ -1316,6 +1323,14 @@ svg.style__svg {
     border-radius: 4px;
     display: inline-block;
     margin-left: 5px;
+}
+
+.expand__table .ant-table-cell > a:first-child {
+    margin-right: 10px;
+}
+
+.expand__table .ant-table-cell.thaoTac {
+    padding: 0;
 }
 
 /* Hết CSS create contract */
