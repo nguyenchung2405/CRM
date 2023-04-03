@@ -609,7 +609,7 @@ div.modal__content .modal__two__field > .field__input input {
     transition-duration: 0.5s;
 }
 
-div.modal__content .modal__field > input {
+div.modal__content div.modal__field > input {
     border: none;
     border-bottom: 1px solid #CCCCCC;
     width: 525px;
@@ -617,6 +617,7 @@ div.modal__content .modal__field > input {
     outline: none;
     color: #666666;
     font-size: 15px;
+    background-color: transparent;
 }
 
 div.modal__content .modal__field input:focus,
