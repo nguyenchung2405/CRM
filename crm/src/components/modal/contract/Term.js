@@ -64,7 +64,6 @@ export default function TermModal(props) {
 
   useEffect(()=>{
     if(productList.length === 1){
-      console.log(productList)
       setValueModal({
         ...valueModal,
         product_ID: productList[0].id,

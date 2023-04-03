@@ -1,10 +1,12 @@
-import { Form, Input, Popconfirm, Table, Typography } from 'antd'
+import { Form, Image, Input, Popconfirm, Table, Typography } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { removeRequestDetail, setKeyOfDetailJustAdd, setKeyOfRequestJustAdd, updateRequestDetail } from '../../redux/features/contractSlice';
 import axios from "axios"
 import { local } from '../../title/title';
+import ViewPDF from '../ViewPDF';
+import { checkMicroFe } from '../../untils/helper';
 
 function convertLegacyProps(data){
     try {
@@ -26,12 +28,20 @@ function convertLegacyProps(data){
 let pathOfFile = "";
 
 export default function ContractRight(props) {
+
+  let uri_file = checkMicroFe() === true ? 
+                                    window.location.href.includes("dev") ?
+                                    "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
+                                    : "http://localhost:3003/";
     const [data, setData] = useState();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
     const {keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer)
     const [requestId, setRequestId] = useState();
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [file, setFile] = useState("");
+    const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
     
     useEffect(()=>{
@@ -204,18 +214,15 @@ export default function ContractRight(props) {
                   Sửa
                 </Typography.Link>
                 <Typography.Link onClick={()=>{
-                  // if(record.file.includes("doc") || record.file.includes("docx")){
-                  //   return <a className="dowload__file" href={uri_file + file}>Tải file word</a>
-                  // } else if((record.file.includes("pdf")) {
-                  //   return <>
-                  //       <button onClick={()=>{
-                  //         setIsShowModal(true)
-                  //       }}>Xem PDF</button>
-                  //       <ViewPDF pdf={uri_file + file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
-                  //   </>
-                  // } else {
-                  //   return <Image src={uri_file + file} />
-                  // }
+                  if(record.file.includes("doc") || record.file.includes("docx")){
+                    // return <a className="dowload__file" href={uri_file + record.file}>Tải file word</a>
+                  } else if(record.file.includes("pdf")) {
+                        setIsShowModal(true)
+                        setFile(uri_file + record.file)
+                  } else {
+                      setFile(uri_file + record.file)
+                      setImageVisible(true)
+                  }
                 }}>Xem</Typography.Link>
                 </>
               );
@@ -257,6 +264,19 @@ export default function ContractRight(props) {
         >
            
         </Table>
+        <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+        <Image 
+          style={{
+            display: 'none',
+          }} 
+          preview={{ 
+            visible: imageVisible, 
+            src: file, 
+            onVisibleChange: (value) => {
+              setImageVisible(value);
+            }, 
+          }} 
+        />
     </Form>
   )
 }

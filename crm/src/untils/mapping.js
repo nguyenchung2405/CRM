@@ -16,7 +16,6 @@ function mappingDataOfTable(data){
 
 export function dataOfContractMapping(data){
     try {
-        console.log(data)
         const dataContract = {
                 client_ID: data.client_ID.id,
                 owner: data.owner,

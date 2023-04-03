@@ -41,6 +41,7 @@ function* getContractDetail(payload){
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         yield put(setContractDetail(dataAfterMapping))
         yield put(setContractRequest(responseRequest.data.contract_request))
+        yield put(setIsLoading(false))
     } else {
         yield put(setContractDetail({}))
     }
