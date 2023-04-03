@@ -29,7 +29,7 @@ export default function CreateContract() {
   const [valueForm, setValueForm] = useState({});
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
-  
+  console.log(valueForm)
   useEffect(()=>{
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -115,8 +115,8 @@ export default function CreateContract() {
     if(name === "rangePicker"){
           // let newTuNgay = convertDate(valueForm["begin_date"]);
           // let newDenNgay = convertDate(valueForm["end_date"]);
-          let newTuNgay = moment(valueForm["begin_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
-          let newDenNgay = moment(valueForm["end_date"], "YYYY-MM-DD").format("DD-MM-YYYY");
+          let newTuNgay = moment(new Date(valueForm["begin_date"])).format("DD-MM-YYYY");
+          let newDenNgay = moment(new Date(valueForm["end_date"])).format("DD-MM-YYYY");
           // if(newTuNgay === undefined && newDenNgay === undefined){
           //   return [null, null]
           // }

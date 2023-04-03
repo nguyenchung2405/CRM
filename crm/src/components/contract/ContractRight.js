@@ -204,7 +204,18 @@ export default function ContractRight(props) {
                   Sửa
                 </Typography.Link>
                 <Typography.Link onClick={()=>{
-                  console.log(record)
+                  // if(record.file.includes("doc") || record.file.includes("docx")){
+                  //   return <a className="dowload__file" href={uri_file + file}>Tải file word</a>
+                  // } else if((record.file.includes("pdf")) {
+                  //   return <>
+                  //       <button onClick={()=>{
+                  //         setIsShowModal(true)
+                  //       }}>Xem PDF</button>
+                  //       <ViewPDF pdf={uri_file + file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                  //   </>
+                  // } else {
+                  //   return <Image src={uri_file + file} />
+                  // }
                 }}>Xem</Typography.Link>
                 </>
               );
