@@ -119,6 +119,7 @@ export default function ContractTable() {
                 return `${batDau} - ${ketThuc}`
             }} />
             <Column className="contract__table__status" title="Trạng thái" key="status" render={(text)=>{
+                console.log(text)
                 // fake dữ liệu để đi demo, khi nào làm thì sửa lại
                 // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
                 return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
@@ -134,11 +135,11 @@ export default function ContractTable() {
                 return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
             }} />
             <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text)=>{
-                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total)
+                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total > 1000000 ? +text.total : +text.total *1000000)
                 return total + " VNĐ"
             }}  />
             <Column className="contract__table__no" title="Nợ" key="total" render={(text)=>{
-                return <span>{text.id % 2 === 0 ? "100.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
+                return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
             }} />
             <Column className="contract__table__thaotac" render={(text)=>{
                return <div className="table__thaotac">
