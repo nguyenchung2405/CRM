@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
-import { createProduceAPI, deleteProductAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
+import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
+import { createProduceAPI, createProductAttributeAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
-import { removeProduct, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductType, updateProductWithID } from "../features/productSlice";
+import { removeProduct, removeProductAttribute, removeProductType, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductType, updateProductAttribute, updateProductType, updateProductWithID } from "../features/productSlice";
 
 function* getProductList(payload) {
     let { page, pageSize, locationID, typeID, attributeID, channelID } = payload.data;
@@ -59,6 +59,7 @@ function* getProductAttribute(payload) {
         const result = yield call(getProductAttributeAPI, page, page_size);
         if (result.data.data.length > 0) {
             yield put(setProductAttribute(result.data.data))
+            yield put(setTotalProductAttribute(result.data.total))
         }
     } catch (error) {
         console.log(error)
@@ -89,12 +90,67 @@ function* deleteProduct(payload) {
     }
 }
 
+function* createProductType(payload){
+    try {
+        const result = yield call(createProductTypeAPI, payload.data);
+        if(result.data.result){
+            yield put(updateProductType({type_id: payload.data.id, data: result.data.data.product_type}))
+        } else {
+            yield put(removeProductType(payload.data.id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+function* deleteProductType(payload){
+    try {
+        const result = yield call(deleteProductTypeAPI, payload.type_id);
+        if(result.data.result){
+            yield put(removeProductType(payload.type_id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* createProductAttribute(payload){
+    try {
+        const result = yield call(createProductAttributeAPI, payload.data);
+        if(result.data.result){
+            yield put(updateProductAttribute({attribute_id: payload.data.id, data: result.data.data.product_attribute}));
+        } else {
+            yield put(removeProductAttribute(payload.data.id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+function* deleteProductAttribute(payload){
+    try {
+        const result = yield call(deleteProductAttributeAPI , payload.attribute_id);
+        console.log(result.data);
+        if(result.data.result){
+            yield put(removeProductAttribute(payload.attribute_id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* productMiddleware() {
     yield takeLatest(GET_PRODUCT_LIST, getProductList);
     yield takeLatest(GET_PRODUCT_CHANNEL, getProductChannel);
     yield takeLatest(GET_PRODUCT_LOCATION, getProductLocation);
-    yield takeLatest(GET_PRODUCT_TYPE, getProductType);
-    yield takeLatest(GET_PRODUCT_ATTRIBUTE, getProductAttribute);
     yield takeLatest(CREATE_PRODUCT, createProduct);
     yield takeLatest(DELETE_PRODUCT, deleteProduct);
+    // Product TYPE
+    yield takeLatest(GET_PRODUCT_TYPE, getProductType);
+    yield takeLatest(CREATE_PRODUCT_TYPE, createProductType)
+    yield takeLatest(DELETE_PRODUCT_TYPE, deleteProductType)
+    // Product Attribute
+    yield takeLatest(GET_PRODUCT_ATTRIBUTE, getProductAttribute);
+    yield takeLatest(CREATE_PRODUCT_ATTRIBUTE, createProductAttribute);
+    yield takeLatest(DELETE_PRODUCT_ATTRIBUTE, deleteProductAttribute)
 }
