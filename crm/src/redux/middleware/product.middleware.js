@@ -2,7 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
 import { createProduceAPI, deleteProductAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
-import { removeProduct, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, updateProductWithID } from "../features/productSlice";
+import { removeProduct, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductType, updateProductWithID } from "../features/productSlice";
 
 function* getProductList(payload) {
     let { page, pageSize, locationID, typeID, attributeID, channelID } = payload.data;
@@ -46,6 +46,7 @@ function* getProductType(payload) {
         const result = yield call(getProductTypeAPI, page, page_size);
         if (result.data.data.length > 0) {
             yield put(setProductType(result.data.data))
+            yield put(setTotalProductType(result.data.total))
         }
     } catch (error) {
         console.log(error)

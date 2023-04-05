@@ -7,7 +7,8 @@ const initialState = {
     productLocation: [],
     productType: [],
     productAttribute: [],
-    productListFull: []
+    productListFull: [],
+    totalProductType: ""
 };
 
 const productSlice = createSlice({
@@ -20,7 +21,10 @@ const productSlice = createSlice({
         setTotalProduct: (state, action) => {
             state.totalProduct = action.payload;
         },
-        setProductChannel: (state, action) => {
+        setTotalProductType: (state, action)=>{
+            state.totalProductType = action.payload;
+        },
+        setProductChannel: (state, action)=>{
             state.productChannel = action.payload;
         },
         setProductLocation: (state, action) => {
@@ -51,6 +55,6 @@ const productSlice = createSlice({
 });
 
 export const { setProductList, setTotalProduct, setProductChannel, setProductType,
-    setProductLocation, setProductAttribute, setProductListFull, addProduct, removeProduct,
-    updateProductWithID } = productSlice.actions;
+setProductLocation, setProductAttribute, setProductListFull, addProduct, removeProduct,
+updateProductWithID, setTotalProductType} = productSlice.actions;
 export default productSlice.reducer;
