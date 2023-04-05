@@ -1350,7 +1350,26 @@ svg.style__svg {
 }
 
 .width__50 {
-    width: 50%;
+    width: 47%;
+    margin: 0 auto;
+}
+
+.product__TypeAndAtt__table .display__inline__flex {
+    width: 100%;
+    
+}
+
+.display__inline__flex {
+    display: inline-flex;
+    background-color: white;
+    border-radius: 12px;
+}
+
+.product__TypeAndAtt__table {
+    width: calc(100% - 265px );
+    margin-left: 265px;
+    padding: 35px 40px 0 40px;
+    margin-right: 0;
 }
 
 /* Hết CSS create contract */

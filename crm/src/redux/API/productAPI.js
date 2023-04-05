@@ -128,3 +128,69 @@ export async function deleteProductAPI(product_id) {
         return "Thât bại"
     }
 };
+
+export async function createProductTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+};
+
+export async function deleteProductTypeAPI(type_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/delete?type_id=${type_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
+export async function createProductAttributeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+};
+
+export async function deleteProductAttributeAPI(attribute_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/delete?attribute_id=${attribute_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+};

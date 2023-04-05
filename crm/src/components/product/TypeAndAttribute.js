@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_TYPE } from '../../title/title';
-import Loading from '../Loading';
+import ProductAttributeEditTable from './ProductAttributeEditTable';
 import ProductTypeEditTable from './ProductTypeEditTable';
 
 export default function TypeAndAttribute() {
@@ -20,16 +20,12 @@ export default function TypeAndAttribute() {
         })
     }, [])
 
-    const showLoading = () => {
-        if (isLoading) {
-            return <Loading />
-        }
-    }
-
   return (
-    <div className="customer__table content product__table">
-        {showLoading()}
-        <ProductTypeEditTable />
+    <div className="customer__table product__table product__TypeAndAtt__table">
+        <div className="display__inline__flex">
+            <ProductTypeEditTable />
+            <ProductAttributeEditTable />
+        </div>
     </div>
   )
 }
