@@ -14,6 +14,7 @@ import CreateCustomer from './components/customer/CreateCustomer';
 import { checkMicroFe } from './untils/helper';
 import ProductTable from './components/product/ProductTable';
 import ProductEditableTable from './components/product/ProductEditableTable';
+import TypeAndAttribute from './components/product/TypeAndAttribute';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/crm/contract/create" element={<CreateContract />} />
                 <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
                 <Route path="/crm/product" element={<ProductEditableTable />} />
+                <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
                 {/**<Route path="*" element={<PageNotFound />} /> */}
               </Routes>
             </div>
@@ -51,6 +53,7 @@ function App() {
               <Route path="/crm/contract/create" element={<CreateContract />} />
               <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
               <Route path="/crm/product" element={<ProductEditableTable />} />
+              <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
               {/**<Route path="*" element={<PageNotFound />} /> */}
             </Routes>
           </div>
