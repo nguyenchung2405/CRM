@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
-import { getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
+import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
+import { createProduceAPI, deleteProductAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
-import { setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct } from "../features/productSlice";
+import { removeProduct, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, updateProductWithID } from "../features/productSlice";
 
 function* getProductList(payload){
     let {page, pageSize, locationID, typeID, attributeID ,channelID} = payload.data;
@@ -64,10 +64,36 @@ function* getProductAttribute(payload){
     }
 }
 
+function* createProduct(payload){
+    try {
+        const result = yield call(createProduceAPI, payload.data);
+        if(result.data.product.length > 0){
+            yield put(updateProductWithID({product_id: payload.data.id, data: result.data.product[0]}))
+        } else {
+            yield put(removeProduct(payload.data.id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+function* deleteProduct(payload){
+    try {
+        const result = yield call(deleteProductAPI ,payload.product_id);
+        if(result.data.result){
+            yield put(removeProduct(payload.product_id))
+        }
+    } catch (error) {
+        console.log("lỗi ở deleteProduct", error)
+    }
+}
+
 export default function* productMiddleware(){
     yield takeLatest(GET_PRODUCT_LIST, getProductList);
     yield takeLatest(GET_PRODUCT_CHANNEL, getProductChannel);
     yield takeLatest(GET_PRODUCT_LOCATION, getProductLocation);
     yield takeLatest(GET_PRODUCT_TYPE, getProductType);
     yield takeLatest(GET_PRODUCT_ATTRIBUTE, getProductAttribute);
+    yield takeLatest(CREATE_PRODUCT, createProduct);
+    yield takeLatest(DELETE_PRODUCT, deleteProduct);
 }
