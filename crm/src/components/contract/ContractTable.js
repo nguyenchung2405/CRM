@@ -48,56 +48,56 @@ export default function ContractTable() {
         }
     }
 
-  return (
-    <div className="content contract__table customer__table">
-        {showLoading()}
-        <div className="table__features">
-            <div className="table__features__add">
-                <h1>Quản lý hợp đồng</h1>
-                <FcPlus onClick={()=>{
+    return (
+        <div className="content contract__table customer__table">
+            {showLoading()}
+            <div className="table__features">
+                <div className="table__features__add">
+                    <h1>Quản lý hợp đồng</h1>
+                    <FcPlus onClick={() => {
                         navigate(`${uri}/crm/contract/create`)
-                }} />
-            </div>
-            <div className="table__features__search">
-                <input placeholder="Tên khách hàng" type="text" />
-                <input placeholder="Loại hợp đồng" type="text" />
-                <input placeholder="Người đầu mối" type="text" />
-                <div className="table__features__search__btn">
-                    <button>Tìm kiếm</button>
+                    }} />
                 </div>
-            </div>
-        </div>
-        <Table
-            dataSource={contractList}
-            pagination={{
-                position: ["bottomLeft"],
-                defaultPageSize: 10,
-                locale: { items_per_page: "" },
-                defaultCurrent: 1,
-                showSizeChanger: true,
-                total: total,
-                pageSizeOptions: [10,50,100],
-                onChange: (page, pageNumber) => {
-                setPageNumber(pageNumber);
-                setPage(page);
-                },
-                showTotal: (total) => {
-                if (pageNumber * page < total) {
-                    return `Hiển thị ${pageNumber * page} trong ${total}`;
-                }
-                return `Hiển thị ${total} trong ${total}`;
-                },
-            }}
-            scroll={{
-                x: "max-content",
-              }}
-        >
-            <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text)=>{ return text.contract_type_id.toUpperCase()}} />
-            <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
-            render={(text)=>{
-                return text?.client_ID?.name
-            }} />
-            {/**
+                <div className="table__features__search">
+                    <input placeholder="Tên khách hàng" type="text" />
+                    <input placeholder="Loại hợp đồng" type="text" />
+                    <input placeholder="Người đầu mối" type="text" />
+                    <div className="table__features__search__btn">
+                        <button>Tìm kiếm</button>
+                    </div>
+                </div>
+            </div >
+            <Table
+                dataSource={contractList}
+                pagination={{
+                    position: ["bottomLeft"],
+                    defaultPageSize: 10,
+                    locale: { items_per_page: "" },
+                    defaultCurrent: 1,
+                    showSizeChanger: true,
+                    total: total,
+                    pageSizeOptions: [10, 50, 100],
+                    onChange: (page, pageNumber) => {
+                        setPageNumber(pageNumber);
+                        setPage(page);
+                    },
+                    showTotal: (total) => {
+                        if (pageNumber * page < total) {
+                            return `Hiển thị ${pageNumber * page} trong ${total}`;
+                        }
+                        return `Hiển thị ${total} trong ${total}`;
+                    },
+                }}
+                scroll={{
+                    x: "max-content",
+                }}
+            >
+                <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.toUpperCase() }} />
+                <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
+                    render={(text) => {
+                        return text?.client_ID?.name
+                    }} />
+                {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{
                 // fake tên người phụ trách để đi demo
@@ -110,49 +110,49 @@ export default function ContractTable() {
                 }
             }} />
             */}
-            <Column className="contract__table__time" title="Thời gian thực hiện" key="time"
-            render={(text)=>{
-                // let batDau = convertDate(text.begin_date);
-                // let ketThuc = convertDate(text.end_date);
-                let batDau = moment(text.begin_date).format("DD/MM/YYYY");
-                let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
-                return `${batDau} - ${ketThuc}`
-            }} />
-            <Column className="contract__table__status" title="Trạng thái" key="status" render={(text)=>{
-                // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
-            }} />
-            <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text)=>{
-                // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                return <span>{text.id % 2 === 0 ? "Nguyễn Hoài Nam" : "Nguyễn Văn Lợi"}</span>
-            }} />
-            <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text)=>{
-                // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
-            }} />
-            <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text)=>{
-                let total = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+text.total > 1000000 ? +text.total : +text.total *1000000)
-                return total + " VNĐ"
-            }}  />
-            <Column className="contract__table__no" title="Nợ" key="total" render={(text)=>{
-                return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
-            }} />
-            <Column className="contract__table__thaotac" render={(text)=>{
-               return <div className="table__thaotac">
-                    {/**  
+                <Column className="contract__table__time" title="Thời gian thực hiện" key="time"
+                    render={(text) => {
+                        // let batDau = convertDate(text.begin_date);
+                        // let ketThuc = convertDate(text.end_date);
+                        let batDau = moment(text.begin_date).format("DD/MM/YYYY");
+                        let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
+                        return `${batDau} - ${ketThuc}`
+                    }} />
+                <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
+                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
+                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                    return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
+                }} />
+                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text) => {
+                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
+                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                    return <span>{text.id % 2 === 0 ? "Nguyễn Hoài Nam" : "Nguyễn Văn Lợi"}</span>
+                }} />
+                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text) => {
+                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
+                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
+                    return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
+                }} />
+                <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
+                    let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
+                    return total + " VNĐ"
+                }} />
+                <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
+                    return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
+                }} />
+                <Column className="contract__table__thaotac" render={(text) => {
+                    return <div className="table__thaotac">
+                        {/**  
                     <button onClick={()=>{
                             navigate(`${uri}/crm/detail/${text.id}`)
                     }}>Chỉnh sửa</button>
                 */}
-                    <MdOutlineModeEditOutline className="style__svg" onClick={()=>{
-                        navigate(`${uri}/crm/detail/${text.id}`)
+                        <MdOutlineModeEditOutline className="style__svg" onClick={() => {
+                            navigate(`${uri}/crm/detail/${text.id}`)
+                        }} />
+                    </div>
                 }} />
-               </div>
-            }} />
-        </Table>
-    </div>
-  )
+            </Table>
+        </div >
+    )
 }

@@ -2,7 +2,7 @@ import axios from "axios"
 import moment from "moment";
 import { local, TOKEN } from "../../title/title";
 
-export async function getContractListAPI(page, pageNumber){
+export async function getContractListAPI(page, pageNumber) {
     try {
         const result = await axios({
             url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&sort_by=id&order=desc`,
@@ -18,7 +18,7 @@ export async function getContractListAPI(page, pageNumber){
     }
 }
 
-export async function getContractTypeListAPI(){
+export async function getContractTypeListAPI() {
     try {
         const result = await axios({
             url: `${local}/api/contract/type/list?page_size=10&page=1&sort_by=id&order=desc`,
@@ -34,7 +34,7 @@ export async function getContractTypeListAPI(){
     }
 };
 
-export async function createContractAPI(data){
+export async function createContractAPI(data) {
     try {
         let convertBeginDate = moment(data.contract.begin_date).format("YYYY-MM-DD");
         let convertEndDate = moment(data.contract.end_date).format("YYYY-MM-DD");
@@ -53,13 +53,13 @@ export async function createContractAPI(data){
         })
         data = {
             contract: {
-                ...data.contract, 
-                begin_date: convertBeginDate, 
+                ...data.contract,
+                begin_date: convertBeginDate,
                 end_date: convertEndDate
             },
             request: [...newRequest]
         }
-        const newData = {...data, payment: [{total_value: 100000000}]}
+        const newData = { ...data, payment: [{ total_value: 100000000 }] }
         console.log(newData)
         const result = await axios({
             url: `${local}/api/contract/create`,
@@ -77,7 +77,7 @@ export async function createContractAPI(data){
     }
 }
 
-export async function getContractDetailAPI(contract_id){
+export async function getContractDetailAPI(contract_id) {
     try {
         const result = await axios({
             url: `${local}/api/contract/detail?id=${contract_id}`,
@@ -93,7 +93,7 @@ export async function getContractDetailAPI(contract_id){
     }
 };
 
-export async function getContractRequestAPI(contract_id){
+export async function getContractRequestAPI(contract_id) {
     try {
         const result = await axios({
             url: `${local}/api/contract/request/list?contract_id=${contract_id}`,

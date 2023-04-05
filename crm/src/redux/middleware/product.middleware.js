@@ -4,23 +4,23 @@ import { createProduceAPI, deleteProductAPI, getProductAttributeAPI, getProductC
 import { setIsLoading } from "../features/loadingSlice";
 import { removeProduct, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductType, updateProductWithID } from "../features/productSlice";
 
-function* getProductList(payload){
-    let {page, pageSize, locationID, typeID, attributeID ,channelID} = payload.data;
+function* getProductList(payload) {
+    let { page, pageSize, locationID, typeID, attributeID, channelID } = payload.data;
     let result = yield call(getProductListAPI, page, pageSize, locationID, typeID, attributeID, channelID);
     yield put(setProductList(result.data.product))
-    if(!locationID && !typeID && !attributeID  && !channelID){
+    if (!locationID && !typeID && !attributeID && !channelID) {
         yield put(setProductListFull(result.data.product))
     }
     yield put(setTotalProduct(result.data.total_data))
     yield put(setIsLoading(false))
 }
-    
 
-function* getProductChannel(payload){
+
+function* getProductChannel(payload) {
     try {
-        let {page, page_size} = payload.data;
+        let { page, page_size } = payload.data;
         let result = yield call(getProductChannelAPI, page, page_size);
-        if(result.data.data.length > 0 ){
+        if (result.data.data.length > 0) {
             yield put(setProductChannel(result.data.data))
         }
     } catch (error) {
@@ -28,11 +28,11 @@ function* getProductChannel(payload){
     }
 };
 
-function* getProductLocation(payload){
+function* getProductLocation(payload) {
     try {
-        let {page, page_size, channelID} = payload.data;
+        let { page, page_size, channelID } = payload.data;
         let result = yield call(getProductLocationAPI, page, page_size, channelID);
-        if(result.data.product_location.length > 0){
+        if (result.data.product_location.length > 0) {
             yield put(setProductLocation(result.data.product_location))
         }
     } catch (error) {
@@ -40,11 +40,11 @@ function* getProductLocation(payload){
     }
 };
 
-function* getProductType(payload){
+function* getProductType(payload) {
     try {
-        let {page, page_size} = payload.data;
+        let { page, page_size } = payload.data;
         const result = yield call(getProductTypeAPI, page, page_size);
-        if(result.data.data.length > 0){
+        if (result.data.data.length > 0) {
             yield put(setProductType(result.data.data))
             yield put(setTotalProductType(result.data.total))
         }
@@ -53,11 +53,11 @@ function* getProductType(payload){
     }
 };
 
-function* getProductAttribute(payload){
+function* getProductAttribute(payload) {
     try {
-        let {page, page_size} = payload.data;
+        let { page, page_size } = payload.data;
         const result = yield call(getProductAttributeAPI, page, page_size);
-        if(result.data.data.length > 0){
+        if (result.data.data.length > 0) {
             yield put(setProductAttribute(result.data.data))
         }
     } catch (error) {
@@ -65,11 +65,11 @@ function* getProductAttribute(payload){
     }
 }
 
-function* createProduct(payload){
+function* createProduct(payload) {
     try {
         const result = yield call(createProduceAPI, payload.data);
-        if(result.data.product.length > 0){
-            yield put(updateProductWithID({product_id: payload.data.id, data: result.data.product[0]}))
+        if (result.data.product.length > 0) {
+            yield put(updateProductWithID({ product_id: payload.data.id, data: result.data.product[0] }))
         } else {
             yield put(removeProduct(payload.data.id))
         }
@@ -78,10 +78,10 @@ function* createProduct(payload){
     }
 };
 
-function* deleteProduct(payload){
+function* deleteProduct(payload) {
     try {
-        const result = yield call(deleteProductAPI ,payload.product_id);
-        if(result.data.result){
+        const result = yield call(deleteProductAPI, payload.product_id);
+        if (result.data.result) {
             yield put(removeProduct(payload.product_id))
         }
     } catch (error) {
@@ -89,7 +89,7 @@ function* deleteProduct(payload){
     }
 }
 
-export default function* productMiddleware(){
+export default function* productMiddleware() {
     yield takeLatest(GET_PRODUCT_LIST, getProductList);
     yield takeLatest(GET_PRODUCT_CHANNEL, getProductChannel);
     yield takeLatest(GET_PRODUCT_LOCATION, getProductLocation);

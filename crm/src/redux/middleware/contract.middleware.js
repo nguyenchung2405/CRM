@@ -6,38 +6,38 @@ import { setContractDetail, setContractList, setContractRequest, setContractType
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
-function* getContractList(payload){
-    let {page, pageNumber} = payload.data;
+function* getContractList(payload) {
+    let { page, pageNumber } = payload.data;
     let result = yield call(getContractListAPI, page, pageNumber);
-    let {total_data: total, contract: data} = result.data;
-    yield put(setContractList({total, contractList: data}));
+    let { total_data: total, contract: data } = result.data;
+    yield put(setContractList({ total, contractList: data }));
     yield put(setIsLoading(false))
 
 }
 
-function* getContractTypeList(){
+function* getContractTypeList() {
     let result = yield call(getContractTypeListAPI);
-    let {contract_type } = result.data;
+    let { contract_type } = result.data;
     yield put(setContractTypeList(contract_type))
 };
 
-function* createContract(payload){
-    let {data} = payload;
+function* createContract(payload) {
+    let { data } = payload;
     let result = yield call(createContractAPI, data);
-    let {code} = result;
-    if(+code === 200 || result.data?.idcontract){
-        yield put(setMessage({type: "thành công", msg:"Tạo hợp đồng thành công."}))
+    let { code } = result;
+    if (+code === 200 || result.data?.idcontract) {
+        yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
     } else {
-        yield put(setMessage({type: "thất bại", msg:"Tạo hợp đồng thất bại."}))
+        yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
     }
 };
 
-function* getContractDetail(payload){
-    let {contract_id} = payload;
+function* getContractDetail(payload) {
+    let { contract_id } = payload;
     let result = yield call(getContractDetailAPI, contract_id);
-    let {code, data} = result;
+    let { code, data } = result;
     let responseRequest = yield call(getContractRequestAPI, contract_id);
-    if(+code === 200 || result.data.contract.length > 0){
+    if (+code === 200 || result.data.contract.length > 0) {
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         yield put(setContractDetail(dataAfterMapping))
         yield put(setContractRequest(responseRequest.data.contract_request))
@@ -47,7 +47,7 @@ function* getContractDetail(payload){
     }
 };
 
-export default function* contractMiddleware(){
+export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
     yield takeLatest(CREATE_CONTRACT, createContract)

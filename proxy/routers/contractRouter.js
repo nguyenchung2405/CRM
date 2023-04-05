@@ -8,7 +8,7 @@ contractRouter.post("/create", createContract)
 contractRouter.get("/detail", getContractDetail)
 contractRouter.get("/type/list", getContractTypeList)
 contractRouter.get("/request/list", getContractRequest)
-contractRouter.post("/upload/detail" , uploadFileDetail(), uploadFileDetailResponse)
+contractRouter.post("/upload/detail", uploadFileDetail(), uploadFileDetailResponse)
 
 module.exports = {
     contractRouter

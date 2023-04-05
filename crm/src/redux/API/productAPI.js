@@ -1,8 +1,8 @@
 import axios from "axios"
 import { local, TOKEN } from "../../title/title";
-import {v1 as uuidv1, v3, v4, v5} from "uuid"
+import { v1 as uuidv1, v3, v4, v5 } from "uuid"
 
-export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID, channelID){
+export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID, channelID) {
     try {
         let location_id = locationID === null ? "" : locationID;
         let type_id = typeID === null ? "" : typeID;
@@ -22,7 +22,7 @@ export async function getProductListAPI(page, pageSize, locationID, typeID, attr
     }
 };
 
-export async function getProductChannelAPI(page, pageSize){
+export async function getProductChannelAPI(page, pageSize) {
     try {
         const result = await axios({
             url: `${local}/api/product/channel/list?page_size=${pageSize}&page=${page}`,
@@ -38,7 +38,7 @@ export async function getProductChannelAPI(page, pageSize){
     }
 };
 
-export async function getProductLocationAPI(page, page_size, channelID){
+export async function getProductLocationAPI(page, page_size, channelID) {
     try {
         const result = await axios({
             url: `${local}/api/product/location/list?page_size=${page_size}&page=${page}&channel_id=${channelID}`,
@@ -54,7 +54,7 @@ export async function getProductLocationAPI(page, page_size, channelID){
     }
 };
 
-export async function getProductTypeAPI(page, page_size){
+export async function getProductTypeAPI(page, page_size) {
     try {
         const result = await axios({
             url: `${local}/api/product/type/list?page_size=${page_size}&page=${page}`,
@@ -70,7 +70,7 @@ export async function getProductTypeAPI(page, page_size){
     }
 };
 
-export async function getProductAttributeAPI(page, page_size){
+export async function getProductAttributeAPI(page, page_size) {
     try {
         const result = await axios({
             url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}`,
@@ -86,7 +86,7 @@ export async function getProductAttributeAPI(page, page_size){
     }
 }
 
-export async function createProduceAPI(data){
+export async function createProduceAPI(data) {
     try {
         let product = {
             "name": data.product_name,
@@ -95,7 +95,7 @@ export async function createProduceAPI(data){
             "attribute_ID": data.attribute_id,
             "code_indentify": uuidv1().slice(0, 10),
             "price": {
-              "price": +data.price / 1000000,
+                "price": +data.price / 1000000,
             }
         };
         const result = await axios({
@@ -113,7 +113,7 @@ export async function createProduceAPI(data){
     }
 };
 
-export async function deleteProductAPI(product_id){
+export async function deleteProductAPI(product_id) {
     try {
         const result = await axios({
             url: `${local}/api/product/delete?product_id=${product_id}`,
