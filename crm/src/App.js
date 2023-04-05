@@ -13,6 +13,7 @@ import CreateContract from './components/contract/CreateContract';
 import CreateCustomer from './components/customer/CreateCustomer';
 import { checkMicroFe } from './untils/helper';
 import ProductTable from './components/product/ProductTable';
+import ChanelGContainer from '../src/container/ChanelGContainer';
 import ProductEditableTable from './components/product/ProductEditableTable';
 
 function App() {
@@ -32,6 +33,8 @@ function App() {
                 <Route path="/crm/contract" element={<ContractTable />} />
                 <Route path="/crm/contract/create" element={<CreateContract />} />
                 <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
+                {/* <Route path="/crm/product" element={<ProductTable />} /> */}
+                <Route path="/crm/channel" element={<ChanelGContainer />} />
                 <Route path="/crm/product" element={<ProductEditableTable />} />
                 {/**<Route path="*" element={<PageNotFound />} /> */}
               </Routes>

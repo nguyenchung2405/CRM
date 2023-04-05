@@ -1,0 +1,16 @@
+.channel .thaoTac {
+    display: flex;
+    align-items: center;
+}
+
+.channel .thaoTac svg {
+    padding: 2px;
+    background-color: green;
+    height: 32px;
+    width: 32px;
+    color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 5px;
+}

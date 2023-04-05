@@ -1,10 +1,10 @@
 import { checkMicroFe, getTokenInCookie } from "../untils/helper";
 
-export const local = checkMicroFe() === true ? 
-                        window.location.href.includes("staging")
-                        ? "https://crmservice-staging.tuoitre.vn"
-                        : "https://crmservice-dev.tuoitre.vn" 
-                    : ""
+export const local = checkMicroFe() === true ?
+    window.location.href.includes("staging")
+        ? "https://crmservice-staging.tuoitre.vn"
+        : "https://crmservice-dev.tuoitre.vn"
+    : ""
 
 export const TOKEN = getTokenInCookie();
 
@@ -25,5 +25,8 @@ export const GET_PRODUCT_CHANNEL = "GET_PRODUCT_CHANNEL";
 export const GET_PRODUCT_LOCATION = "GET_PRODUCT_LOCATION";
 export const GET_PRODUCT_TYPE = "GET_PRODUCT_TYPE";
 export const GET_PRODUCT_ATTRIBUTE = "GET_PRODUCT_ATTRIBUTE";
+
+// 
+export const GET_GROUP_CHANNEL = "GET_GROUP_CHANNEL"
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
