@@ -158,9 +158,7 @@ const contractSlice = createSlice({
             state.contractRequest.splice(indexReq, 1);
         },
         addRequestDetail: (state, action) => {
-            console.log("add req", action.payload)
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload.request_id);
-            console.log(current(state.contractRequest[indexReq]))
             state.contractRequest[indexReq].details.unshift(action.payload.detail)
             state.keyOfDetailJustAdd = action.payload.detail.id
             state.keyOfRequestJustAdd = action.payload.request_id

@@ -33,7 +33,7 @@ const getProductList = async (req, res) => {
             }
         }
         const result = await axios({
-            url: `${local}/product/list?sort_by=id&asc_order=true&page=${page}&page_size=${page_size}${queryString}`,
+            url: `${local}/product/list?sort_by=id&asc_order=false&page=${page}&page_size=${page_size}${queryString}`,
             method: "GET",
             headers: {
                 Authorization: authorization
@@ -96,10 +96,54 @@ const getProductType = async (req, res) => {
     }
 }
 
+const createProduct = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        const result = await axios({
+            url: `${local}/product/item/create`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const deleteProduct = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {product_id} = req.query;
+        const result = await axios({
+            url: `${local}/product/item/disable?product_id=${product_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
 module.exports = {
     getProductTypeList,
     getProductList,
     getProductChannel,
     getProductLocation,
-    getProductType
+    getProductType,
+    createProduct,
+    deleteProduct
 }

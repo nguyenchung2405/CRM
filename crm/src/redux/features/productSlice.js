@@ -34,10 +34,23 @@ const productSlice = createSlice({
         },
         setProductListFull: (state, action) => {
             state.productListFull = action.payload;
+        },
+        addProduct: (state, action) => {
+            state.productList.unshift(action.payload);
+        },
+        removeProduct: (state, action) => {
+            let indexOfProduct = state.productList.findIndex(product => product.id === action.payload);
+            state.productList.splice(indexOfProduct, 1);
+        },
+        updateProductWithID: (state, action) => {
+            let { product_id, data } = action.payload;
+            let productIndex = state.productList.findIndex(product => product.id === product_id);
+            state.productList[productIndex] = data;
         }
     }
 });
 
 export const { setProductList, setTotalProduct, setProductChannel, setProductType,
-    setProductLocation, setProductAttribute, setProductListFull } = productSlice.actions;
+    setProductLocation, setProductAttribute, setProductListFull, addProduct, removeProduct,
+    updateProductWithID } = productSlice.actions;
 export default productSlice.reducer;
