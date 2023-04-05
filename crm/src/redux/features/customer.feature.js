@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    customerList: []
+    customerList: [],
+    isCreateCustomer: null,
+    dataCustomer: null,
+    totalCustomer: null
 }
 
 const customerSlice = createSlice({
@@ -18,9 +21,18 @@ const customerSlice = createSlice({
             let {id} = action.payload;
             let index = state.customerList.findIndex(client => client.id === id);
             state.customerList[index] = action.payload;
+        },
+        setDataCustomer: (state, action)=>{
+            state.dataCustomer = action.payload;
+        },
+        setIsCreateCustomer: (state, action)=>{
+            state.isCreateCustomer = action.payload;
+        },
+        setTotalCustomer: (state, action)=>{
+            state.totalCustomer = action.payload;
         }
     }
 })
 
-export const {setCustomerList, addCustomer, updateCusomer} = customerSlice.actions;
+export const {setCustomerList, addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer} = customerSlice.actions;
 export default customerSlice.reducer;

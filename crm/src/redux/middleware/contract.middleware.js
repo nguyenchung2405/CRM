@@ -1,29 +1,55 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST } from "../../title/title";
-import { createContractAPI, getContractListAPI, getContractTypeListAPI } from "../API/contractAPI";
-import { setContractList, setContractTypeList } from "../features/contractSlice";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST } from "../../title/title";
+import { dataOfContractMapping } from "../../untils/mapping";
+import { createContractAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI } from "../API/contractAPI";
+import { setContractDetail, setContractList, setContractRequest, setContractTypeList } from "../features/contractSlice";
+import { setIsLoading } from "../features/loadingSlice";
+import { setMessage } from "../features/messageSlice";
 
-function* getContractList(payload){
-    let {page, pageNumber} = payload.data;
+function* getContractList(payload) {
+    let { page, pageNumber } = payload.data;
     let result = yield call(getContractListAPI, page, pageNumber);
-    let {total, data} = result;
-    yield put(setContractList({total, contractList: data}));
+    let { total_data: total, contract: data } = result.data;
+    yield put(setContractList({ total, contractList: data }));
+    yield put(setIsLoading(false))
+
 }
 
-function* getContractTypeList(){
+function* getContractTypeList() {
     let result = yield call(getContractTypeListAPI);
-    let {data } = result;
-    yield put(setContractTypeList(data))
+    let { contract_type } = result.data;
+    yield put(setContractTypeList(contract_type))
 };
 
-function* createContract(payload){
-    let {data} = payload;
+function* createContract(payload) {
+    let { data } = payload;
     let result = yield call(createContractAPI, data);
-    console.log(result)
-}
+    let { code } = result;
+    if (+code === 200 || result.data?.idcontract) {
+        yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
+    } else {
+        yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
+    }
+};
 
-export default function* contractMiddleware(){
+function* getContractDetail(payload) {
+    let { contract_id } = payload;
+    let result = yield call(getContractDetailAPI, contract_id);
+    let { code, data } = result;
+    let responseRequest = yield call(getContractRequestAPI, contract_id);
+    if (+code === 200 || result.data.contract.length > 0) {
+        let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
+        yield put(setContractDetail(dataAfterMapping))
+        yield put(setContractRequest(responseRequest.data.contract_request))
+        yield put(setIsLoading(false))
+    } else {
+        yield put(setContractDetail({}))
+    }
+};
+
+export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
     yield takeLatest(CREATE_CONTRACT, createContract)
+    yield takeLatest(GET_CONTRACT_DETAIL, getContractDetail);
 }

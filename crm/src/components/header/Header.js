@@ -7,6 +7,8 @@ export default function Header() {
     const location = useLocation();
     const breadcrumbNameMap = {
         '/crm/customer': 'Quản lý khách hàng',
+        '/crm/customer/create': 'Thêm khách hàng',
+        '/crm/customer/update': 'Cập nhật khách hàng',
         '/crm/contract': 'Quản lý hợp đồng',
         '/crm/contract/create': 'Tạo hợp đồng',
     };
@@ -22,7 +24,7 @@ export default function Header() {
       });
       const breadcrumbItems = [
         <Breadcrumb.Item key="home">
-          <NavLink to="/">Hóa đơn</NavLink>
+          <NavLink to="/">Hợp đồng</NavLink>
         </Breadcrumb.Item>,
       ].concat(extraBreadcrumbItems);
 

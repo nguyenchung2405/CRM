@@ -1,14 +1,8 @@
 import React from 'react'
-import { FaRegUser } from "react-icons/fa";
-import { BiBriefcase } from "react-icons/bi";
 import { BsReceiptCutoff } from "react-icons/bs"
-import { HiOutlineDocumentDuplicate } from "react-icons/hi"
-import SubMenu from './SubMenu';
-import { Menu } from "antd"
 import { NavLink, Link } from 'react-router-dom';
 import { checkMicroFe } from '../../untils/helper';
 import { MdPeopleOutline } from "react-icons/md"
-import { useNavigate } from "react-router-dom";
 import { BsFileEarmarkFill } from "react-icons/bs"
 import { FcDepartment } from "react-icons/fc"
 
@@ -29,16 +23,16 @@ export default function Sidebar() {
     //     ])
     // ]
     const items = [
-        getItem("Hoá đơn", "sub1", <MdPeopleOutline />, [
-            getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "1", <BsFileEarmarkFill />),
-            getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "2", <FcDepartment />),
+        getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
+            getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />),
+            getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
+            getItem(<Link to={`${uri}/crm/product`}>Quản lý sản phẩm</Link>, "12", <FcDepartment />),
         ])
     ]
 
     const renderSubMenu = () => {
         if (checkMicroFe() === false) {
             return (
-
                 <div className="sidebar">
                     <div className="sidebar__logo bg_pri_blue">
                         <svg width="131" height="49" viewBox="0 0 131 49" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -53,55 +47,8 @@ export default function Sidebar() {
                     </div>
                     <div className="sidebar__personal__information bg_pri_blue">
                         <p>
-                            <FaRegUser />
-                            Công việc của tôi
-                        </p>
-                    </div>
-                    <div className="sidebar__sub__menu">
-                        <ul>
-                            <li>
-                                <a href="#">Thông báo phòng ban</a>
-                            </li>
-                            <li>
-                                <a href="#">Việc của tôi</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="sidebar__personal__information bg_pri_blue">
-                        <p>
-                            <HiOutlineDocumentDuplicate />
-                            Tài liệu của tôi
-                        </p>
-                    </div>
-                    <div className="sidebar__sub__menu">
-                        <ul>
-                            <li>
-                                <a href="#">Cá nhân</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                    <div className="sidebar__personal__information bg_pri_blue">
-                        <p>
-                            <BiBriefcase />
-                            Đánh giá lao động
-                        </p>
-                    </div>
-                    <div className="sidebar__sub__menu">
-                        <ul>
-                            <li>
-                                <a href="#">Tự đánh giá</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                    {/* <Menu
-                        items={items}
-                    /> */}
-                    <div className="sidebar__personal__information bg_pri_blue">
-                        <p>
                             <BsReceiptCutoff />
-                            Hóa đơn
+                            Hợp đồng
                         </p>
                     </div>
                     <div className="sidebar__sub__menu">
@@ -113,18 +60,23 @@ export default function Sidebar() {
                                 <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
                             </li>
                             <li>
-                                <NavLink to="/crm/product">Sản phẩm</NavLink>
+                                <NavLink to="/crm/product">Quản lý sản phẩm</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/channel">Quản lý kênh </NavLink>
                             </li>
                         </ul>
                     </div>
-                    <SubMenu />
                 </div>
             )
         } else {
-            return items;
+            return items
         }
     }
+
     return (
-        <>{renderSubMenu()}</>
+        <>
+            {renderSubMenu()}
+        </>
     )
 }

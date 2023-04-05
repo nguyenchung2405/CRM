@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { rootRouter } = require("./routers/rootRouter");
@@ -10,11 +11,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // set up static file
-const pathPublicDirectory = path.join(__dirname, "/public");
-app.use("/proxy/public", express.static(pathPublicDirectory));
+const pathPublicDirectory = path.join(__dirname, "../crm/dist");
 
 app.use("/api",rootRouter)
 
+app.use("/proxy/resources" , express.static(path.join(__dirname, "/resources") ));
+app.use(express.static(pathPublicDirectory));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(pathPublicDirectory, "index.html"))
+    // res.sendFile("index.html", { root: "dist" })
+})
 
 const port = process.env.PORT || 3003;
 app.listen(port, ()=>{
