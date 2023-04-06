@@ -71,11 +71,8 @@ const ChanelGContainer = () => {
                 data: newData
             });
             if (result?.status === 200) {
-                alert("tao thanh cong")
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
+                message.success("tao thanh cong")
+                handleClose()
             } else {
                 message.error("tao that bai")
                 let arrayForAdd = groupChanne.filter((item) => {
@@ -101,11 +98,8 @@ const ChanelGContainer = () => {
                 data: newData
             });
             if (result?.status === 200) {
-                alert("cap nhat thanh cong")
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
+                message.success("cap nhat thanh cong")
+                handleClose()
                 // setgroupChanne(arrayForAdd)
             } else {
                 let arrayForAdd = groupChanne.filter((item) => {
@@ -135,17 +129,10 @@ const ChanelGContainer = () => {
                 data: newData
             });
             if (result?.status === 200) {
-                alert("tao thanh cong")
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
-
+                message.success("tao thanh cong")
+                handleClose()
             } else {
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
+                handleClose()
                 // let arrayForAdd = groupChanne.filter((item) => {
                 //     return Item.idAdd !== 1
                 // })
@@ -170,17 +157,11 @@ const ChanelGContainer = () => {
                 data: newData
             });
             if (result?.status === 200) {
-                alert("cap nhat thanh cong")
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
+                message.success("cap nhat thanh cong")
+                handleClose()
                 // setgroupChanne(arrayForAdd)
             } else {
-                dispatch({
-                    type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-                })
+                handleClose()
                 // let arrayForAdd = groupChanne.filter((item) => {
                 //     return Item.idAdd !== 1
                 // })
@@ -260,10 +241,7 @@ const ChanelGContainer = () => {
         });
         if (result.status === 200) {
             message.success("Xoa thanh cong")
-            dispatch({
-                type: GET_GROUP_CHANNEL,
-                data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-            })
+            handleClose()
         } else {
             message.error("Xoa that bai")
         }
@@ -282,10 +260,7 @@ const ChanelGContainer = () => {
         });
         if (result.status === 200) {
             message.success("Xoa thanh cong")
-            dispatch({
-                type: GET_GROUP_CHANNEL,
-                data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-            })
+            handleClose()
         } else {
             message.error("Xoa that bai")
         }
@@ -331,11 +306,7 @@ const ChanelGContainer = () => {
         setgroupChanne(newDataAdd);
     }
     const handleSearch = () => {
-        dispatch({
-            type: GET_GROUP_CHANNEL,
-            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
-        })
-        setIsAdd(false)
+        handleClose()
     }
     const handleClose = () => {
         dispatch({
