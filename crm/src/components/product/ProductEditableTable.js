@@ -14,6 +14,7 @@ import { addProduct, removeProduct } from '../../redux/features/productSlice';
 
 const convertData = (productList) => {
     return productList.map(product => {
+        console.log(product)
         return {
             key: product.id,
             product_id: product.id,
@@ -22,7 +23,7 @@ const convertData = (productList) => {
             attribute_name: product.attribute_ID.name,
             location_id: product.location_ID.id,
             location_name: product.location_ID.name,
-            channel_id: product.location_ID.channel_ID.id,
+            channel_id: product.location_ID.channel_ID?.id,
             channel_name: product.location_ID.channel_ID.name,
             type_id: product.type_ID.id,
             type_name: product.type_ID.name,
