@@ -27,9 +27,9 @@ export default function Sidebar() {
             getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
             getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
-                getItem(<Link to={`${uri}/crm/product`}>Quản lý sản phẩm</Link>, "14", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/product/type-att`}>Quản lý loại, thuộc tính</Link>, "13", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/channel`}>Quản lý kênh, nhóm</Link>, "15", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product`}>sản phẩm</Link>, "14", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/channel`}>kênh, nhóm</Link>, "15", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/type-att`}>loại, thuộc tính</Link>, "13", <FcDepartment />),
             ]),
         ])
     ]
