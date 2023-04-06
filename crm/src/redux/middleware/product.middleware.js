@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from "../../title/title";
-import { createProduceAPI, createProductAttributeAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI } from "../API/productAPI";
+import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
+import { createProduceAPI, createProductAttributeAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductTypeAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
 import { removeProduct, removeProductAttribute, removeProductType, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductType, updateProductAttribute, updateProductType, updateProductWithID } from "../features/productSlice";
 
@@ -114,6 +114,17 @@ function* deleteProductType(payload){
     }
 }
 
+function* updateProductTypeMiddlewart(payload){
+    try {
+        const result = yield call(updateProductTypeAPI, payload.data);
+        if(result.data.result){
+            yield put(updateProductType({type_id: result.data.data.id, data: result.data.data}))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 function* createProductAttribute(payload){
     try {
         const result = yield call(createProductAttributeAPI, payload.data);
@@ -139,6 +150,17 @@ function* deleteProductAttribute(payload){
     }
 }
 
+function* updateProductAttributeMiddleware(payload){
+    try {
+        const result = yield call(updateProductAttributeAPI, payload.data);
+        if(result.data.result){
+            yield put(updateProductAttribute({attribute_id: payload.data.data.id, data: result.data.data}));
+        }
+    } catch (error) {
+
+    }
+}
+
 export default function* productMiddleware() {
     yield takeLatest(GET_PRODUCT_LIST, getProductList);
     yield takeLatest(GET_PRODUCT_CHANNEL, getProductChannel);
@@ -149,8 +171,10 @@ export default function* productMiddleware() {
     yield takeLatest(GET_PRODUCT_TYPE, getProductType);
     yield takeLatest(CREATE_PRODUCT_TYPE, createProductType)
     yield takeLatest(DELETE_PRODUCT_TYPE, deleteProductType)
+    yield takeLatest(UPDATE_PRODUCT_TYPE, updateProductTypeMiddlewart)
     // Product Attribute
     yield takeLatest(GET_PRODUCT_ATTRIBUTE, getProductAttribute);
     yield takeLatest(CREATE_PRODUCT_ATTRIBUTE, createProductAttribute);
-    yield takeLatest(DELETE_PRODUCT_ATTRIBUTE, deleteProductAttribute)
+    yield takeLatest(DELETE_PRODUCT_ATTRIBUTE, deleteProductAttribute);
+    yield takeLatest(UPDATE_PRODUCT_ATTRIBUTE, updateProductAttributeMiddleware);
 }
