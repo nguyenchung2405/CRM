@@ -179,6 +179,22 @@ export async function updateProductTypeAPI(data){
     }
 }
 
+export async function searchProductTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/list?name=${data}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
 export async function createProductAttributeAPI(data){
     try {
         const result = await axios({
@@ -221,6 +237,22 @@ export async function updateProductAttributeAPI(data){
                 Authorization: "Bearer " + TOKEN
             },
             data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
+export async function searchProductAttributeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/list?name=${data}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         });
         return result.data;
     } catch (error) {

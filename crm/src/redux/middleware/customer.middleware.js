@@ -41,7 +41,7 @@ function* searchCustomer(payload){
     let {searchData} = payload;
     let result = yield call(searchCustomerAPI, searchData);
     // let {code, data: dataResponse} = result;
-    if(result.code === 200 || result.data.client.length > 0){
+    if(result.code === 200 || result?.data?.client?.length > 0){
         yield put(setCustomerList(result.data.client))
         yield put(setTotalCustomer(result.data.total_data))
         yield put(setMessage({type: "thành công", msg:"Thao tác thành công."}))
