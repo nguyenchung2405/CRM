@@ -162,6 +162,23 @@ export async function deleteProductTypeAPI(type_id){
     }
 }
 
+export async function updateProductTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/update?type_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
 export async function createProductAttributeAPI(data){
     try {
         const result = await axios({
@@ -194,3 +211,20 @@ export async function deleteProductAttributeAPI(attribute_id){
         return "Thât bại"
     }
 };
+
+export async function updateProductAttributeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/update?attribute_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}

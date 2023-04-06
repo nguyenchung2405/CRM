@@ -26,8 +26,10 @@ export default function Sidebar() {
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
             getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
-            getItem(<Link to={`${uri}/crm/product`}>Quản lý sản phẩm</Link>, "12", <FcDepartment />, [
-                getItem(<Link to={`${uri}/crm/product/type-att`}>Quản lý loại, thuộc tính</Link>, "12", <FcDepartment />),
+            getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
+                getItem(<Link to={`${uri}/crm/product`}>Quản lý sản phẩm</Link>, "14", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/type-att`}>Quản lý loại, thuộc tính</Link>, "13", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/channel`}>Quản lý kênh, nhóm</Link>, "15", <FcDepartment />),
             ]),
         ])
     ]
@@ -67,30 +69,11 @@ export default function Sidebar() {
                             <li>
                                 <NavLink to="/crm/product/type-att">Quản lý loại, thuộc tính sản phẩm</NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/crm/channel">Quản lý kênh </NavLink>
+                            </li>
                         </ul>
                     </div>
-                </div>
-                <div className="sidebar__personal__information bg_pri_blue">
-                    <p>
-                        <BsReceiptCutoff />
-                        Hợp đồng
-                    </p>
-                </div>
-                <div className="sidebar__sub__menu">
-                    <ul>
-                        <li>
-                            <NavLink to="/crm/customer">Quản lý khách hàng</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/product">Quản lý sản phẩm</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/channel">Quản lý kênh </NavLink>
-                        </li>
-                    </ul>
                 </div>
             </>
         } else {

@@ -5,7 +5,7 @@ import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import {v4 as uuidv4} from "uuid";
 import { addProductType, removeProductType  } from '../../redux/features/productSlice';
-import { CREATE_PRODUCT_TYPE, DELETE_PRODUCT_TYPE } from '../../title/title';
+import { CREATE_PRODUCT_TYPE, DELETE_PRODUCT_TYPE, UPDATE_PRODUCT_TYPE } from '../../title/title';
 
 function convertTypeData(data){
     try {
@@ -33,7 +33,6 @@ export default function ProductTypeEditTable() {
     const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
     const isEditing = (record) => record.key === editingKey;
-    console.log(productType, editingKey)
 
     useEffect(()=>{
         setData(convertTypeData(productType))
@@ -105,6 +104,11 @@ export default function ProductTypeEditTable() {
                 if(isCreate && !isUpdate){
                     dispatch({
                         type: CREATE_PRODUCT_TYPE,
+                        data: type
+                    })
+                } else if(!isCreate && isUpdate){
+                    dispatch({
+                        type: UPDATE_PRODUCT_TYPE,
                         data: type
                     })
                 }

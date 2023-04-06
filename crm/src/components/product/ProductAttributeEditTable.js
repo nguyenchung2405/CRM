@@ -5,7 +5,7 @@ import { FcPlus } from "react-icons/fc"
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import {v4 as uuidv4} from "uuid";
 import { addProductAttribute, removeProductAttribute } from '../../redux/features/productSlice';
-import { CREATE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_ATTRIBUTE } from '../../title/title';
+import { CREATE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_ATTRIBUTE } from '../../title/title';
 
 function convertAttributeData(data){
     try {
@@ -107,6 +107,11 @@ export default function ProductAttributeEditTable() {
                 if(isCreate && !isUpdate){
                     dispatch({
                         type: CREATE_PRODUCT_ATTRIBUTE,
+                        data: attribute
+                    })
+                } else if(!isCreate && isUpdate){
+                    dispatch({
+                        type: UPDATE_PRODUCT_ATTRIBUTE,
                         data: attribute
                     })
                 }

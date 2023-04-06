@@ -180,6 +180,29 @@ const deleteProductType = async (req, res)=>{
     }
 }
 
+const updateProductType = async (req, res)=>{
+    try {
+        console.log("updateProductType")
+        let {headers: {authorization}} = req;
+        let {type_id} = req.query;
+        const result = await axios({
+            url: `${local}/product/type/update?id=${type_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
 const createProductAttribute = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
@@ -222,6 +245,29 @@ const deleteProductAttribute = async (req, res)=>{
     }
 }
 
+const updateProductAttribute = async (req, res)=>{
+    try {
+        console.log("updateProductAttribute")
+        let {headers: {authorization}} = req;
+        let {attribute_id} = req.query;
+        const result = await axios({
+            url: `${local}/product/attribute/update?id=${attribute_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
 module.exports = {
     getProductTypeList,
     getProductList,
@@ -233,5 +279,7 @@ module.exports = {
     createProductType,
     deleteProductType,
     createProductAttribute,
-    deleteProductAttribute
+    deleteProductAttribute,
+    updateProductType,
+    updateProductAttribute
 }
