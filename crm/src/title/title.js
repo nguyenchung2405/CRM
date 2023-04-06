@@ -6,7 +6,8 @@ export const local = checkMicroFe() === true ?
         : "https://crmservice-dev.tuoitre.vn"
     : ""
 
-export const TOKEN = getTokenInCookie();
+// export const TOKEN = getTokenInCookie();
+export const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJwYXJ0X2lkIjoxLCJwb3NpdGlvbl9pZCI6MSwiZXhwaXJlcyI6MTY4MDY2ODk1MC4xNTM4OTJ9.0KojOXS_Iv7nhW_zv2dOQzL-i3harT6oVzCV7wB5b74";
 
 export const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 export const regexPhone = /(84[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8}|[0-9]{9})\b/;
