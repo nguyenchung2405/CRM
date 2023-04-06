@@ -4,77 +4,19 @@ const getGroupChannel = async (req, res) => {
     const config = {
         headers: { Authorization: req.headers.authorization },
     };
-    console.log(`${req.headers.authorization}`)
+    let { name, location_name } = req.query
+    console.log(req.query)
+    console.log(req.params)
     try {
         const { data } = await axios.get(
-            `${local}/product/groupchannel/list?page_size=10&page=1&sort_by=id&order=desc`,
+            // `${local}/product/groupchannel/list?page_size=10&page=1&sort_by=id&order=desc`,
+            `${local}/product/channel/list?page_size=20&page=1&sort_by=id&order=desc&name=${name}&location_name=${location_name}`,
             config
         );
         res.send(data);
     } catch (error) {
         res.send(error);
     }
-    // let data = {
-    //     "data": {
-    //         "product_group_channel": [
-    //             {
-    //                 "name": "giấy",
-    //                 "desc": "mô tả báo giấy",
-    //                 "id": 1,
-    //                 "channels": [
-    //                     {
-    //                         "name": "Nhật báo",
-    //                         "desc": "mô tả báo ngày",
-    //                         "group_channel_ID": 1,
-    //                         "id": 1
-    //                     }
-    //                 ]
-    //             },
-    //             {
-    //                 "name": "điện tử",
-    //                 "desc": "mô tả báo điện tử",
-    //                 "id": 2,
-    //                 "channels": [
-    //                     {
-    //                         "name": "TTO",
-    //                         "desc": "mô tả báo TTO",
-    //                         "group_channel_ID": 2,
-    //                         "id": 2
-    //                     },
-    //                     {
-    //                         "name": "TTCO",
-    //                         "desc": "mô tả báo TTCO",
-    //                         "group_channel_ID": 2,
-    //                         "id": 3
-    //                     }
-    //                 ]
-    //             },
-    //             {
-    //                 "name": "string",
-    //                 "desc": "string",
-    //                 "id": 3,
-    //                 "channels": []
-    //             },
-    //             {
-    //                 "name": "string",
-    //                 "desc": "string",
-    //                 "id": 4,
-    //                 "channels": []
-    //             },
-    //             {
-    //                 "name": "string",
-    //                 "desc": "string",
-    //                 "id": 5,
-    //                 "channels": []
-    //             }
-    //         ],
-    //         "page": 1,
-    //         "page_size": 10,
-    //         "total_data": 5,
-    //         "total_page": 1
-    //     }
-    // }
-    // res.send(data)
 };
 
 const createGroupChannel = async (req, res) => {
@@ -84,11 +26,12 @@ const createGroupChannel = async (req, res) => {
     let { name } = req.body;
     let params = {
         name,
-        desc: "mo ta"
+        desc: "mo ta",
+        group_channel_ID: "1"
     }
     try {
         const { data } = await axios.post(
-            `${local}/product/groupchannel/create`, params,
+            `${local}/product/channel/create`, params,
             config
         );
         res.send(data);
@@ -103,11 +46,12 @@ const updateGroupChannel = async (req, res) => {
     let { name, id } = req.body;
     let params = {
         name,
-        desc: "mo ta"
+        desc: "mo ta",
+        group_channel_ID: "1"
     }
     try {
         const { data } = await axios.put(
-            `${local}/product/groupchannel/update?id=${id}`, params,
+            `${local}/product/channel/update?id=${id}`, params,
             config
         );
         res.send(data);
@@ -122,7 +66,7 @@ const deleteGroupChannel = async (req, res) => {
     let { id } = req.body;
     try {
         const { data } = await axios.delete(
-            `${local}/product/groupchannel/disable?id=${id}`,
+            `${local}/product/channel/disable?id=${id}`,
             config
         );
         res.send(data);
@@ -136,16 +80,16 @@ const createGroup = async (req, res) => {
     const config = {
         headers: { Authorization: req.headers.authorization },
     };
-    let { name, group_channel_ID } = req.body;
+    let { name, channel_ID } = req.body;
     let params = {
         name,
         desc: "mo ta",
-        group_channel_ID
+        channel_ID
     }
     try {
 
         const { data } = await axios.post(
-            `${local}/product/channel/create`, params,
+            `${local}/product/location/create`, params,
             config
         );
         res.send(data);
@@ -157,15 +101,15 @@ const updateGroup = async (req, res) => {
     const config = {
         headers: { Authorization: req.headers.authorization },
     };
-    let { name, id, group_channel_ID } = req.body;
+    let { name, id, channel_ID } = req.body;
     let params = {
         name,
         desc: "mo ta",
-        group_channel_ID
+        channel_ID
     }
     try {
         const { data } = await axios.put(
-            `${local}/product/channel/update?id=${id}`, params,
+            `${local}/product/location/update?id=${id}`, params,
             config
         );
         res.send(data);
@@ -180,7 +124,7 @@ const deleteGroup = async (req, res) => {
     let { id } = req.body;
     try {
         const { data } = await axios.delete(
-            `${local}/product/channel/disable?id=${id}`,
+            `${local}/product/location/disable?id=${id}`,
             config
         );
         res.send(data);
