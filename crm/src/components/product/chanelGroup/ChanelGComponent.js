@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Table, Badge, Dropdown, Button } from 'antd';
-import { Input } from 'antd';
+import { Input, Icon } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import ChanelGChild from "./ChanelGChild"
 import "./ChanelGComponent.css"
+import CustomExpandIcon from "./CustomExpandIcon"
 const ChanelGComponent = (props) => {
     let { handleAdd, formatDataChannelList, groupChannelList, handleSearchInput,
         isAdd, onPressEnter, onChange, groupChannelName,
-        handleEditChannelG
+        handleEditChannelG,
+        handleDeleteChannelG,
 
+        handleAddGroup,
+        rowKeys,
+        setRowKeys,
+        onTableRowExpand,
+        groupName,
+        onChangeChild,
+        onPressEnterChild,
+        handleEditG,
+        handleDeleteG
     } = props
     const columns = [
         {
@@ -36,11 +47,11 @@ const ChanelGComponent = (props) => {
             key: 'id',
             render: (_, record) => (
                 <div className="thaoTac">
-                    <button className="btn__green">Thêm nhóm</button>
+                    <button className="btn__green" onClick={() => handleAddGroup(_)}>Thêm nhóm</button>
                     <MdOutlineModeEditOutline
                         onClick={() => handleEditChannelG(_)}
                     />
-                    <MdDelete />
+                    <MdDelete onClick={() => handleDeleteChannelG(_)} />
                 </div>
             ),
         },
@@ -72,14 +83,26 @@ const ChanelGComponent = (props) => {
                 </div>
                 <div className='ant-table-wrapper'>
                     <Table
+                        expandedRowKeys={rowKeys}
+                        onExpand={onTableRowExpand}
                         rowkey="id"
                         dataSource={formatDataChannelList(groupChannelList)} columns={columns}
                         expandable={{
                             expandedRowRender: (record) => {
-                                return <ChanelGChild data={record} />
+                                return <ChanelGChild data={record} isAdd={isAdd}
+                                    onChangeChild={onChangeChild} onPressEnterChild={onPressEnterChild}
+                                    groupName={groupName}
+                                    handleEditG={handleEditG}
+                                    handleDeleteG={handleDeleteG}
+                                />
                             },
                             rowExpandable: (record) => record.channels.length != 0,
+                            defaultExpandAllRows: true
                         }}
+                    // expandIcon={p => <CustomExpandIcon
+                    //     {...p}
+                    //     setRowKeys={setRowKeys}
+                    // />}
                     />
                 </div>
             </div>
