@@ -24,7 +24,7 @@ export default function ProductAttributeEditTable() {
 
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
-    const [pageNumber, setPageNumber] = useState(10);
+    const [pageNumber, setPageNumber] = useState(5);
     const { productAttribute, totalProductAttribute } = useSelector(state => state.productReducer);
     // edit table
     const [form] = Form.useForm();

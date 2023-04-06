@@ -25,7 +25,7 @@ export default function ProductTypeEditTable() {
     const dispatch = useDispatch();
     const { productType, totalProductType } = useSelector(state => state.productReducer);
     const [page, setPage] = useState(1);
-    const [pageNumber, setPageNumber] = useState(10);
+    const [pageNumber, setPageNumber] = useState(5);
     const [isCreate, setIsCreate] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
     // edit table
@@ -202,7 +202,7 @@ export default function ProductTypeEditTable() {
           <Form form={form} component={false}>
               <div className="table__features">
                   <div className="table__features__add">
-                      <h1>Quản lý loại tính sản phẩm</h1>
+                      <h1>Quản lý loại sản phẩm</h1>
                       <FcPlus onClick={createProductType} />
                   </div>
               </div>
@@ -217,7 +217,7 @@ export default function ProductTypeEditTable() {
                   rowClassName="editable-row"
                   pagination={{
                       position: ["bottomLeft"],
-                      defaultPageSize: 10,
+                      defaultPageSize: 5,
                       locale: { items_per_page: "" },
                       defaultCurrent: 1,
                       showSizeChanger: true,
