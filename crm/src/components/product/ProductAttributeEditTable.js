@@ -88,7 +88,6 @@ export default function ProductAttributeEditTable() {
         }
         setEditingKey('');
         setIsCreate(false);
-        setIsCreate(false);
         setIsUpdate(false);
     };
 
@@ -113,6 +112,8 @@ export default function ProductAttributeEditTable() {
                 }
                 setData(newData);
                 setEditingKey('');
+                setIsCreate(false);
+                setIsUpdate(false);
             } else {
                 newData.push(row);
                 setData(newData);
