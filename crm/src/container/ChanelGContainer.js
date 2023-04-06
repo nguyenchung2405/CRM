@@ -7,6 +7,7 @@ import { message } from 'antd';
 const ChanelGContainer = () => {
     const dispatch = useDispatch();
     let { groupChannelList } = useSelector((state) => state.groupChannelReducer)
+    console.log(groupChannelList)
     const [search, setSearch] = useState({ name: "", tax_number: "" })
     let [groupChanne, setgroupChanne] = useState([])
     const [groupChannelName, setGroupChannelName] = useState("");
@@ -14,11 +15,13 @@ const ChanelGContainer = () => {
     const [isAdd, setIsAdd] = useState(false)
     const [isAddChild, setIsAddChild] = useState(false)
     const [rowKeys, setRowKeys] = useState([])
+    const [searchChannel, setSearchChannel] = useState("")
+    const [searchGroup, setSearchGroup] = useState("")
 
     useEffect(() => {
         dispatch({
             type: GET_GROUP_CHANNEL,
-            data: { page: 1, pageNumber: 1000 }
+            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
         })
     }, [dispatch]);
     useEffect(() => {
@@ -40,15 +43,15 @@ const ChanelGContainer = () => {
             id: count,
             key: count,
             name: groupChannelName,
-            desc: '32',
-            channels: []
+            create_date: getNow(),
+            locations: []
         };
-        setgroupChanne([newData, ...groupChanne]);
+        if (groupChanne[0].id !== 1000) {
+            setgroupChanne([newData, ...groupChanne]);
+        }
         //   setCount(count + 1);
     }
     const onPressEnter = async (id) => {
-        alert(id);
-        return;
         if (id === -1) {
             let count = 1000;
             let newData = {
@@ -57,7 +60,7 @@ const ChanelGContainer = () => {
                 key: count,
                 name: groupChannelName,
                 desc: 'mo ta',
-                channels: []
+                locations: []
             }
             const result = await axios({
                 url: `${local}/api/cgc`,
@@ -69,15 +72,14 @@ const ChanelGContainer = () => {
             });
             if (result?.status === 200) {
                 alert("tao thanh cong")
-                let id = getIDNumber(result?.data?.data.data)
-                let arrayForAdd = [...groupChanne]
-                arrayForAdd[0] = newData;
-                arrayForAdd[0].id = id;
-                arrayForAdd[0].key = id;
-                setgroupChanne(arrayForAdd)
+                dispatch({
+                    type: GET_GROUP_CHANNEL,
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
+                })
             } else {
+                message.error("tao that bai")
                 let arrayForAdd = groupChanne.filter((item) => {
-                    return Item.idAdd !== 1
+                    return item.idAdd !== 1
                 })
                 setgroupChanne(arrayForAdd)
             }
@@ -88,7 +90,7 @@ const ChanelGContainer = () => {
                 key: id,
                 name: groupChannelName,
                 desc: 'mo ta',
-                channels: []
+                locations: []
             }
             const result = await axios({
                 url: `${local}/api/ugc`,
@@ -102,7 +104,7 @@ const ChanelGContainer = () => {
                 alert("cap nhat thanh cong")
                 dispatch({
                     type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000 }
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
                 })
                 // setgroupChanne(arrayForAdd)
             } else {
@@ -113,7 +115,7 @@ const ChanelGContainer = () => {
             }
         }
     }
-    const onPressEnterChild = async (id, group_channel_ID) => {
+    const onPressEnterChild = async (id, channel_ID) => {
         if (id === -1) {
             let count = 1000;
             let newData = {
@@ -122,7 +124,7 @@ const ChanelGContainer = () => {
                 key: count,
                 name: groupName,
                 desc: 'mo ta',
-                group_channel_ID,
+                channel_ID,
             }
             const result = await axios({
                 url: `${local}/api/cg`,
@@ -136,13 +138,13 @@ const ChanelGContainer = () => {
                 alert("tao thanh cong")
                 dispatch({
                     type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000 }
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
                 })
 
             } else {
                 dispatch({
                     type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000 }
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
                 })
                 // let arrayForAdd = groupChanne.filter((item) => {
                 //     return Item.idAdd !== 1
@@ -156,8 +158,8 @@ const ChanelGContainer = () => {
                 key: id,
                 name: groupName,
                 desc: 'mo ta',
-                channels: [],
-                group_channel_ID,
+                locations: [],
+                channel_ID,
             }
             const result = await axios({
                 url: `${local}/api/ug`,
@@ -171,13 +173,13 @@ const ChanelGContainer = () => {
                 alert("cap nhat thanh cong")
                 dispatch({
                     type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000 }
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
                 })
                 // setgroupChanne(arrayForAdd)
             } else {
                 dispatch({
                     type: GET_GROUP_CHANNEL,
-                    data: { page: 1, pageNumber: 1000 }
+                    data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
                 })
                 // let arrayForAdd = groupChanne.filter((item) => {
                 //     return Item.idAdd !== 1
@@ -195,6 +197,10 @@ const ChanelGContainer = () => {
     }
 
     const handleEditChannelG = (id) => {
+        if (isAdd === true) {
+            message.warning("Bạn hãy đóng form hiện tại")
+            return;
+        }
         setIsAdd(true)
         let dataStateEdit = groupChanne.map((item) => {
             if (item.id === id) {
@@ -204,18 +210,26 @@ const ChanelGContainer = () => {
                     idAdd: item.id
                 }
 
+            } else {
+                return {
+                    ...item,
+                    idAdd: 0
+                }
             }
-            return item
         })
         setgroupChanne(dataStateEdit)
     }
-    const handleEditG = (id, group_channel_ID) => {
+    const handleEditG = (id, channel_ID) => {
+        if (isAdd === true) {
+            message.warning("Bạn hãy đóng form hiện tại")
+            return;
+        }
         setIsAdd(true)
-        console.log(id, group_channel_ID)
+        console.log(id, channel_ID)
         let dataStateEdit = groupChanne.map((item) => {
-            if (item.id === group_channel_ID) {
+            if (item.id === channel_ID) {
                 return {
-                    ...item, channels: item.channels.map((itemChild) => {
+                    ...item, locations: item.locations.map((itemChild) => {
                         if (itemChild.id === id) {
                             setGroupName(itemChild.name)
                             return {
@@ -248,7 +262,7 @@ const ChanelGContainer = () => {
             message.success("Xoa thanh cong")
             dispatch({
                 type: GET_GROUP_CHANNEL,
-                data: { page: 1, pageNumber: 1000 }
+                data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
             })
         } else {
             message.error("Xoa that bai")
@@ -270,7 +284,7 @@ const ChanelGContainer = () => {
             message.success("Xoa thanh cong")
             dispatch({
                 type: GET_GROUP_CHANNEL,
-                data: { page: 1, pageNumber: 1000 }
+                data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
             })
         } else {
             message.error("Xoa that bai")
@@ -289,6 +303,10 @@ const ChanelGContainer = () => {
 
     // child
     const handleAddGroup = (id) => {
+        if (isAdd === true) {
+            message.warning("Bạn hãy đóng form hiện tại")
+            return;
+        }
         setIsAdd(true)
         let count = 1000;
         setIsAddChild(true)
@@ -300,19 +318,46 @@ const ChanelGContainer = () => {
                     idAdd: -1,
                     id: count,
                     key: count,
-                    // name: "",
                     name: groupName,
-                    desc: '32',
-                    group_channel_ID: id
+                    create_date: getNow(),
+                    channel_ID: id
                 };
-                item.channels = [newData, ...item.channels]
+                item.locations = [newData, ...item.locations]
                 return item
             } else {
                 return item;
             }
         })
-        console.log(newDataAdd)
         setgroupChanne(newDataAdd);
+    }
+    const handleSearch = () => {
+        dispatch({
+            type: GET_GROUP_CHANNEL,
+            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
+        })
+        setIsAdd(false)
+    }
+    const handleClose = () => {
+        dispatch({
+            type: GET_GROUP_CHANNEL,
+            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
+        })
+        setIsAdd(false)
+    }
+    const handleSearchInputChannel = (e) => {
+        setSearchChannel(e.target.value)
+        if (e.target.value === "") {
+            alert("Empty")
+            handleSearch()
+        }
+    }
+    const handleSearchInputGroup = (e) => {
+        if (e.target.value === "") {
+            handleSearch()
+        }
+    }
+    const getNow = () => {
+        return new Date().getFullYear() + '-' + ("0" + (new Date().getMonth() + 1)).slice(-2) + '-' + ("0" + new Date().getDate()).slice(-2)
     }
     function getIDNumber(str) {
         // Tìm vị trí của kí tự "ID" trong chuỗi
@@ -359,6 +404,11 @@ const ChanelGContainer = () => {
                 onPressEnterChild={onPressEnterChild}
                 handleEditG={handleEditG}
                 handleDeleteG={handleDeleteG}
+                handleClose={handleClose}
+
+                handleSearchInputChannel={handleSearchInputChannel}
+                handleSearchInputGroup={handleSearchInputGroup}
+                handleSearch={handleSearch}
 
 
             />

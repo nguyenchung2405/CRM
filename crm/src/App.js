@@ -57,6 +57,7 @@ function App() {
               <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
               <Route path="/crm/product" element={<ProductEditableTable />} />
               <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
+              <Route path="/crm/channel" element={<ChanelGContainer />} />
               {/**<Route path="*" element={<PageNotFound />} /> */}
             </Routes>
           </div>
