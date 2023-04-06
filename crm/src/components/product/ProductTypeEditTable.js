@@ -5,7 +5,7 @@ import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import {v4 as uuidv4} from "uuid";
 import { addProductType, removeProductType  } from '../../redux/features/productSlice';
-import { CREATE_PRODUCT_TYPE, DELETE_PRODUCT_TYPE, UPDATE_PRODUCT_TYPE } from '../../title/title';
+import { CREATE_PRODUCT_TYPE, DELETE_PRODUCT_TYPE, GET_PRODUCT_TYPE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT_TYPE } from '../../title/title';
 
 function convertTypeData(data){
     try {
@@ -28,6 +28,7 @@ export default function ProductTypeEditTable() {
     const [pageNumber, setPageNumber] = useState(5);
     const [isCreate, setIsCreate] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
+    const [search, setSearch] = useState(null);
     // edit table
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
@@ -37,6 +38,15 @@ export default function ProductTypeEditTable() {
     useEffect(()=>{
         setData(convertTypeData(productType))
     }, [productType])
+
+    useEffect(()=>{
+        if(search === ""){
+            dispatch({
+                type: GET_PRODUCT_TYPE,
+                data: { page: 1, page_size: 1000 }
+            })
+        }
+    }, [search])
 
     const EditableCell = ({
         editing,
@@ -131,6 +141,7 @@ export default function ProductTypeEditTable() {
             editable: true,
             title: "Loại",
             dataIndex: "name",
+            className: "type__name"
         },
         {
             render: (_, record) => {
@@ -201,6 +212,11 @@ export default function ProductTypeEditTable() {
         }
     }
 
+    const handleChangeSearch = (e)=>{
+        let {value} = e.target;
+        setSearch(value)
+    }
+
   return (
       <div className="width__50">
           <Form form={form} component={false}>
@@ -208,6 +224,24 @@ export default function ProductTypeEditTable() {
                   <div className="table__features__add">
                       <h1>Quản lý loại sản phẩm</h1>
                       <FcPlus onClick={createProductType} />
+                  </div>
+                  <div className="table__features__search">
+                      <input placeholder="Loại sản phẩm" type="text"
+                          onChange={handleChangeSearch}
+                          onKeyDown={(e) => {
+                              let { key } = e;
+                              let { value } = e.target;
+                              if (key.toLowerCase() === "enter") {
+                                  dispatch({
+                                      type: SEARCH_PRODUCT_TYPE,
+                                      data: value
+                                  })
+                              }
+                          }}
+                      />
+                      <div className="table__features__search__btn">
+                          <button>Tìm kiếm</button>
+                      </div>
                   </div>
               </div>
               <Table

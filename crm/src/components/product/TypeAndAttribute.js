@@ -21,7 +21,7 @@ export default function TypeAndAttribute() {
     }, [])
 
   return (
-    <div className="customer__table product__table product__TypeAndAtt__table">
+    <div className="customer__table content product__table product__TypeAndAtt__table">
         <div className="display__inline__flex">
             <ProductTypeEditTable />
             <ProductAttributeEditTable />

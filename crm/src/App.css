@@ -1366,11 +1366,41 @@ svg.style__svg {
 }
 
 .product__TypeAndAtt__table {
-    width: calc(100% - 265px );
-    margin-left: 265px;
     padding: 35px 40px 0 40px;
     margin-right: 0;
     margin-top: 119px;
+}
+
+.product__TypeAndAtt__table .type__name {
+    padding-left: 30px;
+}
+
+.antd__auto__complete__style {
+    height: 40px;
+    width: 200px;
+    margin-right: 37px;
+}
+
+.product__TypeAndAtt__table div.antd__auto__complete__style div.ant-select-selector {
+    width: 100%;
+    height: 100%;
+    background-color: #F0F5FA;
+}
+
+.product__TypeAndAtt__table div.antd__auto__complete__style div.ant-select-selector .ant-select-selection-placeholder {
+    line-height: 40px;
+}
+
+.antd__auto__complete__style .ant-select-selector .ant-select-selection-search {
+    
+}
+
+.antd__auto__complete__style .ant-select-selector .ant-select-selection-search input.ant-select-selection-search-input {
+    
+    border-radius: 3px;
+    border-style: none;
+    width: 100%;
+    height: 100%;
 }
 
 /* Hết CSS create contract */
