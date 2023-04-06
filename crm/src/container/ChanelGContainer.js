@@ -270,6 +270,9 @@ const ChanelGContainer = () => {
         if (expanded) {
             keys.push(record.id); // I have set my record.id as row key. Check the documentation for more details.
         }
+        if (keys.length == 0) {
+            handleClose();
+        }
         setRowKeys(keys)
         // this.setState({ expandedRowKeys: keys });
     }
@@ -313,12 +316,13 @@ const ChanelGContainer = () => {
             type: GET_GROUP_CHANNEL,
             data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
         })
+        setGroupChannelName("")
+        setGroupName("")
         setIsAdd(false)
     }
     const handleSearchInputChannel = (e) => {
         setSearchChannel(e.target.value)
         if (e.target.value === "") {
-            alert("Empty")
             handleSearch()
         }
     }
