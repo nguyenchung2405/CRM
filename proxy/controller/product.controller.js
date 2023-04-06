@@ -4,13 +4,25 @@ const { local } = require("../untils/title");
 const getProductTypeList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        const result = await axios({
-            url: `${local}/product/type/list?page_size=100&page=1&sort_by=id&order=desc`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
+        let {name, page, page_size} = req.query;
+        let result;
+        if(name && name !== ""){
+            result = await axios({
+                url: `${local}/product/type/list?page_size=100&page=1&sort_by=id&order=desc&name=${name}`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else {
+            result = await axios({
+                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        }
         res.send(result.data)
     } catch (error) {
         res.send(error)
@@ -82,17 +94,32 @@ const getProductLocation = async (req, res) => {
 const getProductType = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size } = req.query;
-        const result = await axios({
-            url: `${local}/product/attribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
+        let { page, page_size, name } = req.query;
+        let result;
+        if(name && name !== ""){
+            result = await axios({
+                url: `${local}/product/attribute/list?page_size=1000&page=1&sort_by=id&order=desc&name=${encodeURI(name)}`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else {
+            result = await axios({
+                url: `${local}/product/attribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        }
         res.send(result.data)
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -182,7 +209,6 @@ const deleteProductType = async (req, res)=>{
 
 const updateProductType = async (req, res)=>{
     try {
-        console.log("updateProductType")
         let {headers: {authorization}} = req;
         let {type_id} = req.query;
         const result = await axios({
@@ -247,7 +273,6 @@ const deleteProductAttribute = async (req, res)=>{
 
 const updateProductAttribute = async (req, res)=>{
     try {
-        console.log("updateProductAttribute")
         let {headers: {authorization}} = req;
         let {attribute_id} = req.query;
         const result = await axios({
@@ -267,6 +292,8 @@ const updateProductAttribute = async (req, res)=>{
         }
     }
 };
+
+
 
 module.exports = {
     getProductTypeList,
