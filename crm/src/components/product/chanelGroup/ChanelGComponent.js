@@ -8,20 +8,25 @@ import ChanelGChild from "./ChanelGChild"
 import "./ChanelGComponent.css"
 import CustomExpandIcon from "./CustomExpandIcon"
 const ChanelGComponent = (props) => {
-    let { handleAdd, formatDataChannelList, groupChannelList, handleSearchInput,
+    let { handleAdd, formatDataChannelList, groupChannelList,
         isAdd, onPressEnter, onChange, groupChannelName,
         handleEditChannelG,
         handleDeleteChannelG,
 
         handleAddGroup,
         rowKeys,
-        setRowKeys,
         onTableRowExpand,
         groupName,
         onChangeChild,
         onPressEnterChild,
         handleEditG,
-        handleDeleteG
+        handleDeleteG,
+        handleClose,
+
+        handleSearch,
+        handleSearchInputChannel,
+        handleSearchInputGroup
+
     } = props
     const columns = [
         {
@@ -38,8 +43,21 @@ const ChanelGComponent = (props) => {
         },
         {
             title: 'Ngày tạo',
+            dataIndex: 'create_date',
+            key: 'create_date',
+        },
+        {
+            title: '',
             dataIndex: 'desc',
             key: 'desc',
+            render: (_, record) => {
+                return (
+                    <div style={{ textAlign: "end" }}> {isAdd === true && (typeof (record.idAdd) === "number" && record.idAdd !== 0) ? <button className="btn__green" onClick={() => handleClose(_)}>
+                        Đóng
+                    </button> : ""}
+                    </div>
+                )
+            }
         },
         {
             title: 'Thao tác',
@@ -47,7 +65,7 @@ const ChanelGComponent = (props) => {
             key: 'id',
             render: (_, record) => (
                 <div className="thaoTac">
-                    <button className="btn__green" onClick={() => handleAddGroup(_)}>Thêm nhóm</button>
+                    <button className="btn__green" onClick={() => handleAddGroup(_)}>Thêm nhóm sản phẩm</button>
                     <MdOutlineModeEditOutline
                         onClick={() => handleEditChannelG(_)}
                     />
@@ -69,14 +87,15 @@ const ChanelGComponent = (props) => {
                     <div className="table__features__search">
                         <input placeholder="Tên kênh" type="text"
                             name="name"
-                            onChange={handleSearchInput} />
-                        <input placeholder="Nhóm" type="text"
+                            onChange={handleSearchInputChannel} />
+                        <input placeholder="Nhóm sản phẩm" type="text"
                             name="tax_number"
-                            onChange={handleSearchInput}
+                            onChange={handleSearchInputGroup}
                         />
                         <div className="table__features__search__btn">
                             <button
                                 onClick={() => {
+                                    handleSearch()
                                 }}>Tìm kiếm</button>
                         </div>
                     </div>
@@ -94,9 +113,10 @@ const ChanelGComponent = (props) => {
                                     groupName={groupName}
                                     handleEditG={handleEditG}
                                     handleDeleteG={handleDeleteG}
+                                    handleClose={handleClose}
                                 />
                             },
-                            rowExpandable: (record) => record.channels.length != 0,
+                            rowExpandable: (record) => record.locations.length != 0,
                             defaultExpandAllRows: true
                         }}
                     // expandIcon={p => <CustomExpandIcon
