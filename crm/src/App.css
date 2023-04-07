@@ -902,6 +902,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__inforCustomer .field__input input,
 .create__contract .create__contract__value .field__input_2 input {
     width: 430px;
+    height: 42px;
 }
 
 .create__contract .create__contract__inforCustomer .field__input .date__range__picker {
@@ -911,6 +912,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     border-bottom: 1px solid #CCCCCC;
     outline: none;
     box-shadow: none;
+    height: 42px;
 }
 
 .create__contract .create__contract__inforCustomer .field__input .date__range__picker .ant-picker-input {
@@ -975,6 +977,14 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     font-size: 15px;
     transition: all 0.5s;
     pointer-events: none;
+}
+
+.create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2 {
+    display: block;
+}
+
+.create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2 >label {
+    padding-left: 9px;
 }
 
 .create__contract .create__contract__inforCustomer .field__input>div:not(.contract__field) {
@@ -1060,7 +1070,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract.content .create__contract__content .create__contract__inforCustomer .field__input>div .ant-select {
-    width: 430px;
+    width: 408px;
 }
 
 .create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector {
