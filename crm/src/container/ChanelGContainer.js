@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios"
+import { message } from 'antd';
 import ChanelGComponent from '../components/product/chanelGroup/ChanelGComponent';
 import { GET_GROUP_CHANNEL, local, TOKEN } from "../../src/title/title";
-import { message } from 'antd';
+
+import { setIsLoading } from '../redux/features/loadingSlice';
 const ChanelGContainer = () => {
     const dispatch = useDispatch();
     let { groupChannelList } = useSelector((state) => state.groupChannelReducer)
+    const { isLoading } = useSelector(state => state.loadingReducer);
     console.log(groupChannelList)
     const [search, setSearch] = useState({ name: "", tax_number: "" })
     let [groupChanne, setgroupChanne] = useState([])
@@ -15,13 +18,14 @@ const ChanelGContainer = () => {
     const [isAdd, setIsAdd] = useState(false)
     const [isAddChild, setIsAddChild] = useState(false)
     const [rowKeys, setRowKeys] = useState([])
-    const [searchChannel, setSearchChannel] = useState("")
-    const [searchGroup, setSearchGroup] = useState("")
+    const [searchChannel, setSearchChannel] = useState(null)
+    const [searchGroup, setSearchGroup] = useState(null)
 
     useEffect(() => {
+        dispatch(setIsLoading(true))
         dispatch({
             type: GET_GROUP_CHANNEL,
-            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
+            data: { page: 1, pageNumber: 1000, name: "", location_name: "" }
         })
     }, [dispatch]);
     useEffect(() => {
@@ -52,6 +56,7 @@ const ChanelGContainer = () => {
         //   setCount(count + 1);
     }
     const onPressEnter = async (id) => {
+        dispatch(setIsLoading(true))
         if (id === -1) {
             let count = 1000;
             let newData = {
@@ -108,8 +113,10 @@ const ChanelGContainer = () => {
                 setgroupChanne(arrayForAdd)
             }
         }
+        dispatch(setIsLoading(false))
     }
     const onPressEnterChild = async (id, channel_ID) => {
+        dispatch(setIsLoading(true))
         if (id === -1) {
             let count = 1000;
             let newData = {
@@ -133,10 +140,6 @@ const ChanelGContainer = () => {
                 handleClose()
             } else {
                 handleClose()
-                // let arrayForAdd = groupChanne.filter((item) => {
-                //     return Item.idAdd !== 1
-                // })
-                // setgroupChanne(arrayForAdd)
             }
         } else {
             let newData = {
@@ -162,13 +165,9 @@ const ChanelGContainer = () => {
                 // setgroupChanne(arrayForAdd)
             } else {
                 handleClose()
-                // let arrayForAdd = groupChanne.filter((item) => {
-                //     return Item.idAdd !== 1
-                // })
-
-                // setgroupChanne(arrayForAdd)
             }
         }
+        dispatch(setIsLoading(false))
     }
     const onChange = (e) => {
         setGroupChannelName(e.target.value);
@@ -228,6 +227,7 @@ const ChanelGContainer = () => {
         setgroupChanne(dataStateEdit)
     }
     const handleDeleteChannelG = async (id) => {
+        dispatch(setIsLoading(true))
         let newData = {
             id
         }
@@ -245,8 +245,10 @@ const ChanelGContainer = () => {
         } else {
             message.error("Xoa that bai")
         }
+        dispatch(setIsLoading(false))
     }
     const handleDeleteG = async (id) => {
+        dispatch(setIsLoading(true))
         let newData = {
             id
         }
@@ -264,6 +266,7 @@ const ChanelGContainer = () => {
         } else {
             message.error("Xoa that bai")
         }
+        dispatch(setIsLoading(false))
     }
     const onTableRowExpand = (expanded, record) => {
         var keys = [];
@@ -274,13 +277,13 @@ const ChanelGContainer = () => {
             handleClose();
         }
         setRowKeys(keys)
-        // this.setState({ expandedRowKeys: keys });
     }
     // function support
 
 
     // child
     const handleAddGroup = (id) => {
+
         if (isAdd === true) {
             message.warning("Bạn hãy đóng form hiện tại")
             return;
@@ -311,25 +314,38 @@ const ChanelGContainer = () => {
     const handleSearch = () => {
         handleClose()
     }
+    useEffect(() => {
+        if (searchChannel === "") {
+            dispatch(setIsLoading(true))
+            dispatch({
+                type: GET_GROUP_CHANNEL,
+                data: { page: 1, pageNumber: 1000, name: searchChannel == null ? "" : searchChannel, location_name: searchGroup == null ? "" : searchGroup }
+            })
+        }
+    }, [searchChannel])
+    useEffect(() => {
+        if (searchGroup === "") {
+            dispatch(setIsLoading(true))
+            dispatch({
+                type: GET_GROUP_CHANNEL,
+                data: { page: 1, pageNumber: 1000, name: searchChannel == null ? "" : searchChannel, location_name: searchGroup == null ? "" : searchGroup }
+            })
+        }
+    }, [searchGroup])
+    const handleSearchInputChannel = (e) => {
+        setSearchChannel(e.target.value)
+    }
+    const handleSearchInputGroup = (e) => {
+        setSearchGroup(e.target.value)
+    }
     const handleClose = () => {
         dispatch({
             type: GET_GROUP_CHANNEL,
-            data: { page: 1, pageNumber: 1000, name: searchChannel, location_name: searchGroup }
+            data: { page: 1, pageNumber: 1000, name: searchChannel == null ? "" : searchChannel, location_name: searchGroup == null ? "" : searchGroup }
         })
         setGroupChannelName("")
         setGroupName("")
         setIsAdd(false)
-    }
-    const handleSearchInputChannel = (e) => {
-        setSearchChannel(e.target.value)
-        if (e.target.value === "") {
-            handleSearch()
-        }
-    }
-    const handleSearchInputGroup = (e) => {
-        if (e.target.value === "") {
-            handleSearch()
-        }
     }
     const getNow = () => {
         return new Date().getFullYear() + '-' + ("0" + (new Date().getMonth() + 1)).slice(-2) + '-' + ("0" + new Date().getDate()).slice(-2)
@@ -337,27 +353,37 @@ const ChanelGContainer = () => {
     function getIDNumber(str) {
         // Tìm vị trí của kí tự "ID" trong chuỗi
         const idIndex = str.indexOf("ID");
-
         // Nếu không tìm thấy kí tự "ID" thì trả về null
         if (idIndex === -1) {
             return null;
         }
-
         // Tìm vị trí đầu tiên của số sau kí tự "ID"
         const numIndex = idIndex + 3;
-
         // Tìm vị trí cuối cùng của số sau kí tự "ID"
         const endIndex = str.indexOf(")", numIndex);
-
         // Lấy chuỗi con chứa số sau kí tự "ID"
         const numStr = str.substring(numIndex, endIndex);
-
-        // Chuyển đổi chuỗi số thành số nguyên và trả về kết quả
         return parseInt(numStr, 10);
+    }
+    const toDDMMYY = (inputDateTime) => {
+
+        // Create a new Date object from the input date and time string
+        const inputDate = new Date(inputDateTime);
+
+        // Get the year, month, and day components of the input date
+        const year = inputDate.getFullYear();
+        const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+        const day = String(inputDate.getDate()).padStart(2, '0');
+
+        // Format the output date string as "dd-mm-yyyy"
+        const outputDate = `${day}-${month}-${year}`;
+        return outputDate;
     }
     return (
         <>
             <ChanelGComponent
+                isLoading={isLoading}
+                toDDMMYY={toDDMMYY}
                 handleAdd={handleAdd}
                 formatDataChannelList={formatDataChannelList}
                 groupChannelList={groupChanne}
