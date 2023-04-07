@@ -138,8 +138,10 @@ export default function CreateContract() {
       }
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (valueForm[name]) {
+      if (valueForm[name] && name !== "total") {
         return valueForm[name]
+      } else if(name === "total") {
+        return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
       }
 
     }
@@ -664,6 +666,7 @@ export default function CreateContract() {
             </div>
             <div className="contract__field">
               <input
+                disabled
                 className="style"
                 type="text"
                 name="total"
