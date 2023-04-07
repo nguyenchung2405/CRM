@@ -11,7 +11,7 @@ const getGroupChannel = async (req, res) => {
     try {
         const { data } = await axios.get(
             // `${local}/product/groupchannel/list?page_size=10&page=1&sort_by=id&order=desc`,
-            `${local}/product/channel/list?page_size=20&page=1&sort_by=id&order=desc&name=${url_name}&location_name=${url_location_name}`,
+            `${local}/product/channel/list?page_size=31&page=1&sort_by=id&order=desc&name=${url_name}&location_name=${url_location_name}`,
             config
         );
         res.send(data);
