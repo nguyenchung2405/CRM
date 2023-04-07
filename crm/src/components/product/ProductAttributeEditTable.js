@@ -142,7 +142,7 @@ export default function ProductAttributeEditTable() {
     const columns = [
         {
             editable: true,
-            title: "Loại",
+            title: "Thuộc tính",
             dataIndex: "name",
         },
         {
@@ -255,7 +255,7 @@ export default function ProductAttributeEditTable() {
                                 }
                             }
                         />
-                             */
+                        */
                         }
                         <div className="table__features__search__btn">
                             <button onClick={()=>{
