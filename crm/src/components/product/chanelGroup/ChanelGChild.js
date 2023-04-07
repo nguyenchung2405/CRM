@@ -13,11 +13,12 @@ const ChanelGChild = (props) => {
             render: (_, record) => (
 
                 <div className="thaoTac">
-                    {console.log(record)}
                     {isAdd === true && (typeof (record?.idAdd) === "number" && record.idAdd !== 0) ?
-                        <div><Input value={groupName} onChange={onChangeChild} onPressEnter={() => onPressEnterChild(record.idAdd
-                            , record.channel_ID
-                        )} placeholder="Ten kenh" /></div>
+                        <div><Input value={groupName} onChange={onChangeChild} o
+                            // nPressEnter={() => onPressEnterChild(record.idAdd
+                            //     , record.channel_ID
+                            // )}
+                            placeholder="Ten kenh" /></div>
                         : _}
                 </div>
             ),
@@ -26,6 +27,11 @@ const ChanelGChild = (props) => {
             title: 'Ngày tạo',
             dataIndex: 'create_date',
             key: 'create_date',
+            render: (_, record) => (
+                <div>
+                    {props.toDDMMYY(_)}
+                </div>
+            ),
         },
         {
             title: '',
@@ -33,9 +39,15 @@ const ChanelGChild = (props) => {
             key: 'desc',
             render: (_, record) => {
                 return (
-                    <div style={{ textAlign: "end" }}> {isAdd === true && (typeof (record?.idAdd) === "number" && record.idAdd !== 0) ? <button className="btn__green" onClick={() => handleClose(_)}>
-                        Đóng
-                    </button> : ""}
+                    <div style={{ textAlign: "end" }}> {isAdd === true && (typeof (record?.idAdd) === "number" && record.idAdd !== 0) ?
+                        <div>
+                            <button style={{ marginRight: "6px" }} className="btn__green" onClick={() => onPressEnterChild(record.idAdd, record.channel_ID)}>
+                                OK
+                            </button>
+                            <button className="btn__green" onClick={() => handleClose(_)}>
+                                Đóng
+                            </button>
+                        </div> : ""}
                     </div>
                 )
             }

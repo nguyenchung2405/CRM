@@ -1,5 +1,4 @@
-// const local = process.env.crmServer;
-const local = "http://contract.tuoitre.vn";
+const local = process.env.crmServer;
 
 module.exports = {
     local
