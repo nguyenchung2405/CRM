@@ -240,7 +240,12 @@ export default function ProductTypeEditTable() {
                           }}
                       />
                       <div className="table__features__search__btn">
-                          <button>Tìm kiếm</button>
+                          <button onClick={()=>{
+                            dispatch({
+                                type: SEARCH_PRODUCT_TYPE,
+                                data: search
+                            })
+                          }}>Tìm kiếm</button>
                       </div>
                   </div>
               </div>

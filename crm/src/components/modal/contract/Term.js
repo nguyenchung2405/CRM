@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
 import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
-import { setProductList } from '../../../redux/features/productSlice';
+import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 
 export default function TermModal(props) {
 
@@ -234,6 +234,8 @@ export default function TermModal(props) {
                   setTypeID(null)
                   setAttributeID(null)
                   dispatch(setProductList([]))
+                  dispatch(setProductType([]))
+                  dispatch(setProductAttribute([]))
                 }}
               >
                 {renderOptionProductChannel()}
@@ -256,6 +258,7 @@ export default function TermModal(props) {
                   setTypeID(null)
                   setAttributeID(null)
                   dispatch(setProductList([]))
+                  dispatch(setProductAttribute([]))
                 }}
               >
                 {renderOptionProductLocation()}
