@@ -108,3 +108,19 @@ export async function getContractRequestAPI(contract_id) {
         return "Thất bại"
     }
 }
+
+export async function getOwnerListAPI(){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/owner/list`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}

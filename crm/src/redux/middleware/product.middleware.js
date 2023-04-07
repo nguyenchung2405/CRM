@@ -5,10 +5,10 @@ import { setIsLoading } from "../features/loadingSlice";
 import { removeProduct, removeProductAttribute, removeProductType, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductType, updateProductAttribute, updateProductType, updateProductWithID } from "../features/productSlice";
 
 function* getProductList(payload) {
-    let { page, pageSize, locationID, typeID, attributeID, channelID } = payload.data;
-    let result = yield call(getProductListAPI, page, pageSize, locationID, typeID, attributeID, channelID);
+    let { page, pageSize, locationID, typeID, attributeID } = payload.data;
+    let result = yield call(getProductListAPI, page, pageSize, locationID, typeID, attributeID);
     yield put(setProductList(result.data.product))
-    if (!locationID && !typeID && !attributeID && !channelID) {
+    if (!locationID && !typeID && !attributeID) {
         yield put(setProductListFull(result.data.product))
     }
     yield put(setTotalProduct(result.data.total_data))
@@ -32,9 +32,7 @@ function* getProductLocation(payload) {
     try {
         let { page, page_size, channelID } = payload.data;
         let result = yield call(getProductLocationAPI, page, page_size, channelID);
-        if (result.data.product_location.length > 0) {
-            yield put(setProductLocation(result.data.product_location))
-        }
+        yield put(setProductLocation(result.data.product_location))
     } catch (error) {
         console.log(error)
     }
@@ -42,12 +40,10 @@ function* getProductLocation(payload) {
 
 function* getProductType(payload) {
     try {
-        let { page, page_size } = payload.data;
-        const result = yield call(getProductTypeAPI, page, page_size);
-        if (result.data.data.length > 0) {
-            yield put(setProductType(result.data.data))
-            yield put(setTotalProductType(result.data.total))
-        }
+        let { page, page_size, locationID } = payload.data;
+        const result = yield call(getProductTypeAPI, page, page_size, locationID);
+        yield put(setProductType(result.data.data))
+        yield put(setTotalProductType(result.data.total))
     } catch (error) {
         console.log(error)
     }
@@ -55,12 +51,10 @@ function* getProductType(payload) {
 
 function* getProductAttribute(payload) {
     try {
-        let { page, page_size } = payload.data;
-        const result = yield call(getProductAttributeAPI, page, page_size);
-        if (result.data.data.length > 0) {
-            yield put(setProductAttribute(result.data.data))
-            yield put(setTotalProductAttribute(result.data.total))
-        }
+        let { page, page_size, locationID, typeID } = payload.data;
+        const result = yield call(getProductAttributeAPI, page, page_size, locationID, typeID);
+        yield put(setProductAttribute(result.data.data))
+        yield put(setTotalProductAttribute(result.data.total))
     } catch (error) {
         console.log(error)
     }

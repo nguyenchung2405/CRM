@@ -14,7 +14,11 @@ const getContractList = async (req, res) => {
         });
         res.send(result.data);
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -30,7 +34,11 @@ const getContractTypeList = async (req, res) => {
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -69,7 +77,11 @@ const getContractDetail = async (req, res) => {
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -103,11 +115,32 @@ const getContractRequest = async (req, res) => {
     }
 }
 
+const getOwnerList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/info/communication-department-users`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
     createContract,
     getContractDetail,
     uploadFileDetailResponse,
-    getContractRequest
+    getContractRequest,
+    getOwnerList
 }

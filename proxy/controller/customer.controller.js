@@ -14,7 +14,11 @@ const getCustomerList = async (req, res)=>{
         });
         res.send(result.data);
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -32,7 +36,11 @@ const createCustomer = async (req, res)=>{
         });
         res.send(result.data);
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -46,8 +54,11 @@ const searchCustomer = async (req, res)=>{
         });
         res.send(result.data);
     } catch (error) {
-        // console.log(error)
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -61,7 +72,11 @@ const updateCustomer = async (req, res)=>{
         });
         res.send(result.data);
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -74,7 +89,11 @@ const getDetailCustomer = async (req, res)=>{
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error?.response || error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 

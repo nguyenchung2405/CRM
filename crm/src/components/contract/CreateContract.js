@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -24,7 +24,7 @@ export default function CreateContract() {
   const { contract_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
-  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd } = useSelector(state => state.contractReducer);
+  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
@@ -38,13 +38,16 @@ export default function CreateContract() {
       type: GET_CUSTOMER_LIST,
       data: { page: 1, pageNumber: 1000 }
     });
-    // dispatch({
-    //   type: GET_PRODUCT_LIST,
-    //   data: {page:1, pageSize: 1000}
-    // });
+    dispatch({
+      type: GET_PRODUCT_LIST,
+      data: {page:1, pageSize: 1000}
+    });
     dispatch({
       type: GET_CONTRACT_TYPE_LIST
     });
+    dispatch({
+      type: GET_OWNER_LIST
+    })
     return () => {
       dispatch(setContractDetail({}))
       dispatch(setContractRequest([]));
@@ -96,6 +99,12 @@ export default function CreateContract() {
   const renderOption = () => {
     return customerList?.map((customer) => {
       return <Option value={+customer.id}>{customer.name}</Option>;
+    });
+  };
+
+  const renderOptionOwner = () => {
+    return ownerList?.map((customer) => {
+      return <Option value={+customer.id}>{customer.user_full_name}</Option>;
     });
   };
 
@@ -241,10 +250,11 @@ export default function CreateContract() {
           </div>
           <div className="field__input field__flex">
             <div className="field__input_2">
+              {!window.location.href.includes("create") ? <label>Loại hợp đồng</label> : ""}
               <Select
                 className="style"
-                placeholder="Loại hợp đồng"
                 type="text"
+                placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
                 onChange={(value) => {
                   handleChangeValue("contract_type_id", value)
                 }}
@@ -254,42 +264,46 @@ export default function CreateContract() {
               </Select>
               {/* <input className="style" placeholder="Năm" type="text" />* */}
             </div>
-            <RangePicker
-              className="date__range__picker"
-              format={"DD-MM-YYYY"}
-              placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
-              suffixIcon={
-                <svg
-                  width="14"
-                  height="16"
-                  viewBox="0 0 14 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4.625 9H3.375C3.125 9 3 8.875 3 8.625V7.375C3 7.125 3.125 7 3.375 7H4.625C4.875 7 5 7.125 5 7.375V8.625C5 8.875 4.875 9 4.625 9ZM8 8.625C8 8.875 7.875 9 7.625 9H6.375C6.125 9 6 8.875 6 8.625V7.375C6 7.125 6.125 7 6.375 7H7.625C7.875 7 8 7.125 8 7.375V8.625ZM11 8.625C11 8.875 10.875 9 10.625 9H9.375C9.125 9 9 8.875 9 8.625V7.375C9 7.125 9.125 7 9.375 7H10.625C10.875 7 11 7.125 11 7.375V8.625ZM8 11.625C8 11.875 7.875 12 7.625 12H6.375C6.125 12 6 11.875 6 11.625V10.375C6 10.125 6.125 10 6.375 10H7.625C7.875 10 8 10.125 8 10.375V11.625ZM5 11.625C5 11.875 4.875 12 4.625 12H3.375C3.125 12 3 11.875 3 11.625V10.375C3 10.125 3.125 10 3.375 10H4.625C4.875 10 5 10.125 5 10.375V11.625ZM11 11.625C11 11.875 10.875 12 10.625 12H9.375C9.125 12 9 11.875 9 11.625V10.375C9 10.125 9.125 10 9.375 10H10.625C10.875 10 11 10.125 11 10.375V11.625ZM14 3.5V14.5C14 14.9167 13.8542 15.2708 13.5625 15.5625C13.2708 15.8542 12.9167 16 12.5 16H1.5C1.08333 16 0.729167 15.8542 0.4375 15.5625C0.145833 15.2708 0 14.9167 0 14.5V3.5C0 3.08333 0.145833 2.72917 0.4375 2.4375C0.729167 2.14583 1.08333 2 1.5 2H3V0.375C3 0.125 3.125 0 3.375 0H4.625C4.875 0 5 0.125 5 0.375V2H9V0.375C9 0.125 9.125 0 9.375 0H10.625C10.875 0 11 0.125 11 0.375V2H12.5C12.9167 2 13.2708 2.14583 13.5625 2.4375C13.8542 2.72917 14 3.08333 14 3.5ZM12.5 14.3125V5H1.5V14.3125C1.5 14.4375 1.5625 14.5 1.6875 14.5H12.3125C12.4375 14.5 12.5 14.4375 12.5 14.3125Z"
-                    fill="#666666"
-                    fillOpacity="0.6"
-                  />
-                </svg>
-              }
-              onChange={(date, dateString) => {
-                let ngayThucHien = moment(dateString[0], "DD-MM-YYYY").toISOString();
-                let ngayKetThucThucHien = moment(dateString[1], "DD-MM-YYYY").toISOString();
-                setValueForm({
-                  ...valueForm,
-                  begin_date: ngayThucHien,
-                  end_date: ngayKetThucThucHien
-                })
-              }}
-              value={valueOfField("rangePicker")}
-            />
+            <div className="field__input_2">
+              {!window.location.href.includes("create") ? <label>Ngày bắt đầu - Ngày kết thúc</label> : ""}  
+              <RangePicker
+                className="date__range__picker"
+                format={"DD-MM-YYYY"}
+                placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+                suffixIcon={
+                  <svg
+                    width="14"
+                    height="16"
+                    viewBox="0 0 14 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4.625 9H3.375C3.125 9 3 8.875 3 8.625V7.375C3 7.125 3.125 7 3.375 7H4.625C4.875 7 5 7.125 5 7.375V8.625C5 8.875 4.875 9 4.625 9ZM8 8.625C8 8.875 7.875 9 7.625 9H6.375C6.125 9 6 8.875 6 8.625V7.375C6 7.125 6.125 7 6.375 7H7.625C7.875 7 8 7.125 8 7.375V8.625ZM11 8.625C11 8.875 10.875 9 10.625 9H9.375C9.125 9 9 8.875 9 8.625V7.375C9 7.125 9.125 7 9.375 7H10.625C10.875 7 11 7.125 11 7.375V8.625ZM8 11.625C8 11.875 7.875 12 7.625 12H6.375C6.125 12 6 11.875 6 11.625V10.375C6 10.125 6.125 10 6.375 10H7.625C7.875 10 8 10.125 8 10.375V11.625ZM5 11.625C5 11.875 4.875 12 4.625 12H3.375C3.125 12 3 11.875 3 11.625V10.375C3 10.125 3.125 10 3.375 10H4.625C4.875 10 5 10.125 5 10.375V11.625ZM11 11.625C11 11.875 10.875 12 10.625 12H9.375C9.125 12 9 11.875 9 11.625V10.375C9 10.125 9.125 10 9.375 10H10.625C10.875 10 11 10.125 11 10.375V11.625ZM14 3.5V14.5C14 14.9167 13.8542 15.2708 13.5625 15.5625C13.2708 15.8542 12.9167 16 12.5 16H1.5C1.08333 16 0.729167 15.8542 0.4375 15.5625C0.145833 15.2708 0 14.9167 0 14.5V3.5C0 3.08333 0.145833 2.72917 0.4375 2.4375C0.729167 2.14583 1.08333 2 1.5 2H3V0.375C3 0.125 3.125 0 3.375 0H4.625C4.875 0 5 0.125 5 0.375V2H9V0.375C9 0.125 9.125 0 9.375 0H10.625C10.875 0 11 0.125 11 0.375V2H12.5C12.9167 2 13.2708 2.14583 13.5625 2.4375C13.8542 2.72917 14 3.08333 14 3.5ZM12.5 14.3125V5H1.5V14.3125C1.5 14.4375 1.5625 14.5 1.6875 14.5H12.3125C12.4375 14.5 12.5 14.4375 12.5 14.3125Z"
+                      fill="#666666"
+                      fillOpacity="0.6"
+                    />
+                  </svg>
+                }
+                onChange={(date, dateString) => {
+                  let ngayThucHien = moment(dateString[0], "DD-MM-YYYY").toISOString();
+                  let ngayKetThucThucHien = moment(dateString[1], "DD-MM-YYYY").toISOString();
+                  setValueForm({
+                    ...valueForm,
+                    begin_date: ngayThucHien,
+                    end_date: ngayKetThucThucHien
+                  })
+                }}
+                value={valueOfField("rangePicker")}
+              />
+            </div>
           </div>
         </div>
         <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin khách hàng</p>
           <div className="field__input field__flex">
-            <div>
+            <div className="field__input_2">
+              {!window.location.href.includes("create") ? <label>Tên khách hàng</label> : ""}  
               <Select
                 className="style"
                 showSearch
@@ -337,17 +351,41 @@ export default function CreateContract() {
                 />
               </svg>
             </div>
-            <input
-              className="style"
-              placeholder="Người đầu mối"
-              type="text"
-              name="owner"
-              onChange={(e) => {
-                let { value, name } = e.target;
-                handleChangeValue(name, +value)
-              }}
-              value={valueOfField("owner")}
-            />
+            <div className="field__input_2">
+              {!window.location.href.includes("create") ? <label>Người đầu mối</label> : ""}  
+              <Select
+                className="style"
+                showSearch
+                showArrow={false}
+                placeholder="Người đầu mối"
+                filterOption={(input, option) =>
+                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                }
+                onChange={(value, option) => {
+                  setValueForm({
+                    ...valueForm,
+                    owner: +value,
+                    owner_name:option.children
+                  })
+                }}
+                value={valueOfField("owner")}
+              >
+                {renderOptionOwner()}
+              </Select>
+              {/**
+                <input
+                className="style"
+                placeholder="Người đầu mối"
+                type="text"
+                name="owner"
+                onChange={(e) => {
+                  let { value, name } = e.target;
+                  handleChangeValue(name, +value)
+                }}
+                value={valueOfField("owner")}
+              />
+            */}
+            </div>
           </div>
           <div className="field__input field__flex two__field">
             <div className="contract__field">
@@ -729,38 +767,41 @@ export default function CreateContract() {
               <span>1,000,000,000 VNĐ</span>
             </div>
           </div>
-
-          <div className="contract__payment__total">
+              {/**
+               <div className="contract__payment__total">
             <h2 className="price">Tổng giá trị thanh toán<span>20.000.000 VNĐ</span></h2>
             <h2 className="price">Nợ còn lại<span>100.000.000 VNĐ</span></h2>
           </div>
+            */}
         </div>
+        {/**
         <div className="create__contract__value border_bottom_3px more__detail">
-          <p>Thông tin thêm</p>
-          <div className="field__input field__flex">
-            <Select
-              className="style"
-              // showSearch
-              showArrow={false}
-              placeholder="Trạng thái hợp đồng"
-            // filterOption={(input, option) =>
-            //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-            // }
-            // onChange={(value)=>{
-            //     handleChangeValue("client_ID", +value)
-            // }}
-            // value={valueOfField("client_ID")}
-            >
-              <Option value={1}>Đang chạy</Option>
-              <Option value={2}>Kết thúc</Option>
-              <Option value={3}>Chưa chạy</Option>
-              <Option value={4}>Hủy</Option>
-              <Option value={5}>Ngưng</Option>
-            </Select>
-            <Progress className="contract__complete" status="active" percent={30} type="line" strokeColor="#6aa84f" showInfo={true} />
-          </div>
-          <textarea placeholder="Ghi chú" name="" id=""></textarea>
+        <p>Thông tin thêm</p>
+        <div className="field__input field__flex">
+          <Select
+            className="style"
+            // showSearch
+            showArrow={false}
+            placeholder="Trạng thái hợp đồng"
+          // filterOption={(input, option) =>
+          //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+          // }
+          // onChange={(value)=>{
+          //     handleChangeValue("client_ID", +value)
+          // }}
+          // value={valueOfField("client_ID")}
+          >
+            <Option value={1}>Đang chạy</Option>
+            <Option value={2}>Kết thúc</Option>
+            <Option value={3}>Chưa chạy</Option>
+            <Option value={4}>Hủy</Option>
+            <Option value={5}>Ngưng</Option>
+          </Select>
+          <Progress className="contract__complete" status="active" percent={30} type="line" strokeColor="#6aa84f" showInfo={true} />
         </div>
+        <textarea placeholder="Ghi chú" name="" id=""></textarea>
+      </div>
+      */}
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/contract`, { replace: true }) }}>Hủy</button>
           {renderButtonCreateUpdate()}

@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
 import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
+import { setProductList } from '../../../redux/features/productSlice';
 
 export default function TermModal(props) {
 
-  let { isShowModal, setIsShowModal, setDataToModal, productList, dataToModal, isUpdateModal, setIsUpdateModal } = props;
+  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal } = props;
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -17,40 +18,51 @@ export default function TermModal(props) {
   const [locationID, setLocationID] = useState(null);
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
-  const { productChannel, productLocation, productType, productAttribute } = useSelector(state => state.productReducer);
+  const { productChannel, productLocation, productType, productAttribute, productList } = useSelector(state => state.productReducer);
 
   useEffect(() => {
     dispatch({
       type: GET_PRODUCT_CHANNEL,
       data: { page: 1, page_size: 1000 }
     })
-    dispatch({
-      type: GET_PRODUCT_TYPE,
-      data: { page: 1, page_size: 1000 }
-    })
-    dispatch({
-      type: GET_PRODUCT_ATTRIBUTE,
-      data: { page: 1, page_size: 1000 }
-    })
   }, [])
 
   useEffect(() => {
-    if (typeof +channelID === "number" && channelID !== null) {
+    if (typeof channelID === "number" && channelID !== null) {
       dispatch({
         type: GET_PRODUCT_LOCATION,
         data: { page: 1, page_size: 1000, channelID }
       })
-      setLocationID(null)
     }
   }, [channelID])
 
+  useEffect(()=>{
+    if (typeof locationID === "number" && locationID !== null) {
+      dispatch({
+        type: GET_PRODUCT_TYPE,
+        data: { page: 1, page_size: 1000, locationID }
+      })
+    }
+  }, [locationID])
+
+  useEffect(()=>{
+    if((typeof locationID === "number" && locationID !== null) && (typeof typeID === "number" && typeID !== null)) {
+      dispatch({
+        type: GET_PRODUCT_ATTRIBUTE,
+        data: { page: 1, page_size: 1000, locationID, typeID }
+      })
+    }
+  }, [locationID, typeID])
+  
   useEffect(() => {
-    dispatch({
-      type: GET_PRODUCT_LIST,
-      data: { page: 1, pageSize: 1000, locationID, typeID, attributeID, channelID }
-    });
-    setValueModal({ ...valueModal, product_ID: null, real_price: "" })
-  }, [locationID, typeID, attributeID, channelID])
+    if( typeof locationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
+      dispatch({
+        type: GET_PRODUCT_LIST,
+        data: { page: 1, pageSize: 1000, locationID, typeID, attributeID }
+      });
+    }
+    setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null })
+  }, [locationID, typeID, attributeID])
 
   useEffect(() => {
     if (isShowModal) {
@@ -63,13 +75,14 @@ export default function TermModal(props) {
   }, [dataToModal, isShowModal])
 
   useEffect(() => {
-    if (productList.length === 1) {
+    if(productList.length === 1){
       setValueModal({
-        ...valueModal,
-        product_ID: productList[0].id,
-        real_price: +productList[0].price.price * 1000000,
-        price_ID: productList[0].price.id
-      })
+            ...valueModal,
+            product_ID: productList[0].id,
+            real_price: productList[0].price.price * 1000000,
+            price_ID: productList[0].price.id,
+            product_name: productList[0].name
+          })
     }
   }, [productList])
 
@@ -135,7 +148,7 @@ export default function TermModal(props) {
       let newDenNgay = moment(new Date(valueModal["to_date"])).format("DD-MM-YYYY");
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (name === "desc" || name === "real_price" || name === "quality") {
+      if (name === "desc" || name === "real_price" || name === "quality" || name === "product_name") {
         return ""
       }
       return null
@@ -217,6 +230,10 @@ export default function TermModal(props) {
                 value={channelID}
                 onChange={(value) => {
                   setChannelID(value)
+                  setLocationID(null)
+                  setTypeID(null)
+                  setAttributeID(null)
+                  dispatch(setProductList([]))
                 }}
               >
                 {renderOptionProductChannel()}
@@ -236,6 +253,9 @@ export default function TermModal(props) {
                 value={locationID}
                 onChange={(value) => {
                   setLocationID(value)
+                  setTypeID(null)
+                  setAttributeID(null)
+                  dispatch(setProductList([]))
                 }}
               >
                 {renderOptionProductLocation()}
@@ -255,6 +275,8 @@ export default function TermModal(props) {
                 value={typeID}
                 onChange={(value) => {
                   setTypeID(value)
+                  setAttributeID(null)
+                  dispatch(setProductList([]))
                 }}
               >
                 {renderOptionProductType()}
@@ -283,7 +305,7 @@ export default function TermModal(props) {
           <div className="modal__field">
             <input type="text"
               name="real_price"
-              value={productList.length === 1 ? productList[0].name : ""}
+              value={valueOfField("product_name")}
               disabled
             />
             <label>Sản phẩm</label>

@@ -1,18 +1,21 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST } from "../../title/title";
+import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST } from "../../title/title";
 import { dataOfContractMapping } from "../../untils/mapping";
-import { createContractAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI } from "../API/contractAPI";
-import { setContractDetail, setContractList, setContractRequest, setContractTypeList } from "../features/contractSlice";
+import { createContractAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI } from "../API/contractAPI";
+import { setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList } from "../features/contractSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
 function* getContractList(payload) {
-    let { page, pageNumber } = payload.data;
-    let result = yield call(getContractListAPI, page, pageNumber);
-    let { total_data: total, contract: data } = result.data;
-    yield put(setContractList({ total, contractList: data }));
-    yield put(setIsLoading(false))
-
+    try {
+        let { page, pageNumber } = payload.data;
+        let result = yield call(getContractListAPI, page, pageNumber);
+        let { total_data: total, contract: data } = result.data;
+        yield put(setContractList({ total, contractList: data }));
+        yield put(setIsLoading(false))
+    } catch (error) {
+        console.log(error)
+}
 }
 
 function* getContractTypeList() {
@@ -47,9 +50,21 @@ function* getContractDetail(payload) {
     }
 };
 
+function* getOwnerList(payload){
+    try {
+        const result = yield call(getOwnerListAPI);
+        if(result.data.users.length > 0){
+            yield put(setOwnerList(result.data.users))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
     yield takeLatest(CREATE_CONTRACT, createContract)
     yield takeLatest(GET_CONTRACT_DETAIL, getContractDetail);
+    yield takeLatest(GET_OWNER_LIST, getOwnerList)
 }

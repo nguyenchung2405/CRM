@@ -29,7 +29,7 @@ export function dataOfContractMapping(data) {
             note: data.note,
             creater: data.creater
         };
-        let dataTable = mappingDataOfTable(data)
+        // let dataTable = mappingDataOfTable(data)
         return {
             dataContract,
             // dataTable
