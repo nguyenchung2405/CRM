@@ -57,9 +57,10 @@ export async function createContractAPI(data) {
                 begin_date: convertBeginDate,
                 end_date: convertEndDate
             },
-            request: [...newRequest]
+            request: [...newRequest],
+            payment: [...data.payment]
         }
-        const newData = { ...data, payment: [{ total_value: 100000000 }] }
+        const newData = { ...data }
         console.log(newData)
         const result = await axios({
             url: `${local}/api/contract/create`,
@@ -117,6 +118,71 @@ export async function getOwnerListAPI(){
             headers: {
                 Authorization: "Bearer " + TOKEN
             }
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateContractiAPI(data){
+    try {
+        let convertBeginDate = moment(data.begin_date).format("YYYY-MM-DD");
+        let convertEndDate = moment(data.end_date).format("YYYY-MM-DD");
+        data.begin_date = convertBeginDate;
+        data.end_date = convertEndDate;
+        const result = await axios({
+            url: `${local}/api/contract/update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function createRequestAPI(data){
+    try {
+        let newRequest = {
+            "contract_ID": data.contract_id,
+            "requests": [
+                {
+                    "product_ID": data.product_ID,
+                    "price_ID": data.price_ID,
+                    "quality": data.quality,
+                    "custom_price": data?.custom_price || 0,
+                }
+            ]
+        };
+        const result = await axios({
+            url: `${local}/api/contract/create-request`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function deleteRequestAPI(request_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/delete-request?request_id=${request_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         });
         return result.data;
     } catch (error) {

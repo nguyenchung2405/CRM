@@ -3,13 +3,13 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
+import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 
 export default function TermModal(props) {
 
-  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal } = props;
+  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal, contract_id } = props;
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -94,29 +94,46 @@ export default function TermModal(props) {
     setLocationID(null)
     setTypeID(null)
     setAttributeID(null)
+    setIsUpdateModal(false)
   };
 
   const handleOK = () => {
-    // let newDataTable = [...dataTable];
-    // newDataTable.push(valueModal)
-    // setDataTable([...newDataTable])
     if (window.location.href.includes("create")) {
-      // valueModal.channelID = channelID;
-      // valueModal.locationID = locationID;
-      // valueModal.typeID = typeID;
-      // valueModal.attributeID = attributeID;
+      // Khi tạo mới thì xử lý dưới local xong rồi POST 1 cục data tạo 1 thể
       valueModal.quality = valueModal.quality || 0;
       if (!isUpdateModal) {
         valueModal.id = uuidv4();
         valueModal.details = []
-        dispatch(addContractRequest(valueModal))
+        let newRequest = {
+          quality: valueModal.quality,
+          price_ID: {
+            id: valueModal.price_ID,
+            price: valueModal.real_price / 1000000
+          },
+          product_ID: {
+            id: valueModal.product_ID
+          },
+          id: valueModal.id,
+          details: valueModal.details
+        };
+        console.log(newRequest)
+        dispatch(addContractRequest(newRequest));
         setIsUpdateModal(false)
       } else {
         dispatch(updateContractRequest(valueModal))
         setIsUpdateModal(false)
       }
     } else {
+      // Khi cập nhật thì PUT riêng từng API
+      if (!isUpdateModal) {
+        valueModal.contract_id = contract_id;
+        dispatch({
+          type: CREATE_REQUEST,
+          data: valueModal
+        })
+      } else {
 
+      }
     }
     setIsShowModal(false);
     setValueModal({})

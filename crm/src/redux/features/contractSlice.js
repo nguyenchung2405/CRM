@@ -36,19 +36,7 @@ const contractSlice = createSlice({
             state.contractRequest = action.payload
         },
         addContractRequest: (state, action) => {
-            let newRequest = {
-                quality: action.payload.quality,
-                price_ID: {
-                    id: action.payload.price_ID,
-                    price: action.payload.real_price / 1000000
-                },
-                product_ID: {
-                    id: action.payload.product_ID
-                },
-                id: action.payload.id,
-                details: action.payload.details
-            }
-            state.contractRequest.push(newRequest)
+            state.contractRequest.push(action.payload)
         },
         updateContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload.id);

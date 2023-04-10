@@ -74,13 +74,13 @@ export default function ContractRight(props) {
       children,
       ...restProps
     }) => {
-      const inputNode = inputType === 'file' ? 
-                              record?.file?.length > 0 ?
-                                  <> 
-                                      <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
-                                  </>
-                              :  <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
-                          : <Input />;
+      const inputNode = inputType === 'file' ?
+        record?.file?.length > 0 ?
+          <>
+            <input type="file" onChange={(e) => { uploadFileDetail(e.target.files[0], editingKey, e) }} />
+          </>
+          : <input type="file" onChange={(e) => { uploadFileDetail(e.target.files[0], editingKey, e) }} />
+        : <Input />;
                          
       const required = ()=>{
         if(inputType === 'upload' || inputType === "file"){
