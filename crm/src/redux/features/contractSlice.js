@@ -5,106 +5,10 @@ const initialState = {
     total: 0,
     contractTypeList: [],
     contractDetail: {},
-    contractRequest: [
-        //     {
-        //     "desc": "string",
-        //     "product_ID": {
-        //       "name": "1 trang màu toàn quốc",
-        //       "desc": "1 trang màu toàn quốc",
-        //       "code_indentify": "M1TQ",
-        //       "location_ID": 2,
-        //       "type_ID": 1,
-        //       "attribute_ID": 2,
-        //       "attribute_option_ID": null,
-        //       "price": null,
-        //       "id": 1
-        //     },
-        //     "price_ID": {
-        //       "price": 20.5,
-        //       "execute_date": "2023-03-14T14:42:24",
-        //       "id": 1,
-        //       "product_ID": 1
-        //     },
-        //     "quality": 10,
-        //     "details": [{
-        //         "desc": "string",
-        //         "product_ID": {
-        //           "name": "1 trang màu toàn quốc",
-        //           "desc": "1 trang màu toàn quốc",
-        //           "code_indentify": "M1TQ",
-        //           "location_ID": 2,
-        //           "type_ID": 1,
-        //           "attribute_ID": 2,
-        //           "attribute_option_ID": null,
-        //           "price": null,
-        //           "id": 1
-        //         },
-        //         "price_ID": {
-        //           "price": 20.5,
-        //           "execute_date": "2023-03-14T14:42:24",
-        //           "id": 1,
-        //           "product_ID": 1
-        //         },
-        //         "from_date": "2023-03-30",
-        //         "to_date": "2023-03-30",
-        //         "file": null,
-        //         "id": 5,
-        //         "is_disable": false
-        //       }, {
-        //         "desc": "string",
-        //         "product_ID": {
-        //           "name": "1 trang màu toàn quốc",
-        //           "desc": "1 trang màu toàn quốc",
-        //           "code_indentify": "M1TQ",
-        //           "location_ID": 2,
-        //           "type_ID": 1,
-        //           "attribute_ID": 2,
-        //           "attribute_option_ID": null,
-        //           "price": null,
-        //           "id": 1
-        //         },
-        //         "price_ID": {
-        //           "price": 20.5,
-        //           "execute_date": "2023-03-14T14:42:24",
-        //           "id": 1,
-        //           "product_ID": 1
-        //         },
-        //         "from_date": "2023-03-30",
-        //         "to_date": "2023-03-30",
-        //         "file": null,
-        //         "id": 6,
-        //         "is_disable": false
-        //       }],
-        //     "id": 2,
-        //     "is_disable": false
-        //   },
-        //   {
-        //     "desc": "string",
-        //     "product_ID": {
-        //       "name": "top trang chủ TTO PC",
-        //       "desc": "top trang chủ TTO PC",
-        //       "code_indentify": "THETTOPC",
-        //       "location_ID": 3,
-        //       "type_ID": 3,
-        //       "attribute_ID": 3,
-        //       "attribute_option_ID": null,
-        //       "price": null,
-        //       "id": 4
-        //     },
-        //     "price_ID": {
-        //       "price": 30.7,
-        //       "execute_date": "2023-03-14T14:42:24",
-        //       "id": 4,
-        //       "product_ID": 4
-        //     },
-        //     "quality": 10,
-        //     "details": [],
-        //     "id": 3,
-        //     "is_disable": false
-        //   }
-    ],
+    contractRequest: [],
     keyOfDetailJustAdd: "",
     keyOfRequestJustAdd: "",
+    ownerList: []
 };
 
 const contractSlice = createSlice({
@@ -132,19 +36,7 @@ const contractSlice = createSlice({
             state.contractRequest = action.payload
         },
         addContractRequest: (state, action) => {
-            let newRequest = {
-                quality: action.payload.quality,
-                price_ID: {
-                    id: action.payload.price_ID,
-                    price: action.payload.real_price / 1000000
-                },
-                product_ID: {
-                    id: action.payload.product_ID
-                },
-                id: action.payload.id,
-                details: action.payload.details
-            }
-            state.contractRequest.push(newRequest)
+            state.contractRequest.push(action.payload)
         },
         updateContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload.id);
@@ -152,6 +44,7 @@ const contractSlice = createSlice({
             state.contractRequest[indexReq].price_ID.id = action.payload.price_ID;
             state.contractRequest[indexReq].product_ID.id = action.payload.product_ID;
             state.contractRequest[indexReq].price_ID.price = action.payload.real_price / 1000000;
+            state.contractRequest[indexReq].custom_price = action.payload.custom_price > 1000000 ? action.payload.custom_price / 1000000 : action.payload.custom_price;
         },
         deleteContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload);
@@ -171,15 +64,23 @@ const contractSlice = createSlice({
             state.keyOfDetailJustAdd = ""
         },
         updateRequestDetail: (state, action) => {
-            let { request_id, detailData } = action.payload;
+            let { request_id, detailData, detail_id_old } = action.payload;
+            if(detail_id_old){
+                let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
+                let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detail_id_old);
+                state.contractRequest[indexReq].details[indexDetail] = detailData;
+            }
             let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
             let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detailData.id);
             state.contractRequest[indexReq].details[indexDetail] = detailData;
+        },
+        setOwnerList: (state, action)=>{
+            state.ownerList = action.payload;
         }
     }
 });
 
 export const { setContractList, setContractTypeList, setContractDetail, addContractRequest
     , updateContractRequest, deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd,
-    setKeyOfDetailJustAdd, updateRequestDetail, setContractRequest } = contractSlice.actions;
+    setKeyOfDetailJustAdd, updateRequestDetail, setContractRequest, setOwnerList } = contractSlice.actions;
 export default contractSlice.reducer;

@@ -92,7 +92,7 @@ export default function ContractTable() {
                     x: "max-content",
                 }}
             >
-                <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.toUpperCase() }} />
+                <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.name.toUpperCase() }} />
                 <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
                     render={(text) => {
                         return text?.client_ID?.name

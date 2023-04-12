@@ -1,19 +1,53 @@
-import { Form, Popconfirm, Table, Typography } from 'antd';
-import React, { useState } from 'react'
-import { MdOutlineModeEditOutline } from 'react-icons/md';
-import { useSelector } from 'react-redux';
+import { Form, Input, Popconfirm, Table, Typography } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { FcPlus } from 'react-icons/fc';
+import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import {v4 as uuidv4} from "uuid";
+import { addProductType, removeProductType  } from '../../redux/features/productSlice';
+import { CREATE_PRODUCT_TYPE, DELETE_PRODUCT_TYPE, GET_PRODUCT_TYPE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT_TYPE } from '../../title/title';
+
+function convertTypeData(data){
+    try {
+        return data.map(type => {
+            return {
+                key: type.id,
+                name: type.name
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export default function ProductTypeEditTable() {
 
+    const dispatch = useDispatch();
     const { productType, totalProductType } = useSelector(state => state.productReducer);
     const [page, setPage] = useState(1);
-    const [pageNumber, setPageNumber] = useState(10);
+    const [pageNumber, setPageNumber] = useState(5);
+    const [isCreate, setIsCreate] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [search, setSearch] = useState(null);
     // edit table
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
     const isEditing = (record) => record.key === editingKey;
-    console.log(productType)
+
+    useEffect(()=>{
+        setData(convertTypeData(productType))
+    }, [productType])
+
+    useEffect(()=>{
+        if(search === ""){
+            dispatch({
+                type: GET_PRODUCT_TYPE,
+                data: { page: 1, page_size: 1000 }
+            })
+        }
+    }, [search])
+
     const EditableCell = ({
         editing,
         dataIndex,
@@ -24,7 +58,7 @@ export default function ProductTypeEditTable() {
         children,
         ...restProps
     }) => {
-        const inputNode = inputType = "" ? "" : "";
+        const inputNode = <Input />;
         return (
             <td {...restProps}>
                 {editing ? (
@@ -54,14 +88,20 @@ export default function ProductTypeEditTable() {
             ...record,
         });
         setEditingKey(record.key);
+        setIsCreate(false);
+        setIsUpdate(true);
     };
 
     const cancel = () => {
         setEditingKey('');
+        setIsCreate(false);
+        setIsUpdate(false);
     };
 
     const save = async (key) => {
         try {
+            const type = form.getFieldsValue();
+            type.id = editingKey;
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => key === item.key);
@@ -71,8 +111,21 @@ export default function ProductTypeEditTable() {
                     ...item,
                     ...row,
                 });
+                if(isCreate && !isUpdate){
+                    dispatch({
+                        type: CREATE_PRODUCT_TYPE,
+                        data: type
+                    })
+                } else if(!isCreate && isUpdate){
+                    dispatch({
+                        type: UPDATE_PRODUCT_TYPE,
+                        data: type
+                    })
+                }
                 setData(newData);
                 setEditingKey('');
+                setIsCreate(false);
+                setIsUpdate(false);
             } else {
                 newData.push(row);
                 setData(newData);
@@ -88,6 +141,7 @@ export default function ProductTypeEditTable() {
             editable: true,
             title: "Loại",
             dataIndex: "name",
+            className: "type__name"
         },
         {
             render: (_, record) => {
@@ -107,9 +161,23 @@ export default function ProductTypeEditTable() {
                         </Popconfirm>
                     </span>
                 ) : (
-                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                            <MdOutlineModeEditOutline className="style__svg" />
-                        </Typography.Link>
+                        <span>
+                            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                <MdOutlineModeEditOutline className="style__svg" />
+                            </Typography.Link>
+                            <Popconfirm title="Có chắc muốn xóa?"
+                                onConfirm={() => {
+                                    dispatch({
+                                        type: DELETE_PRODUCT_TYPE,
+                                        type_id: record.key
+                                    })
+                                }}
+                                okText="Có"
+                                cancelText="Không"
+                            >
+                                <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
+                            </Popconfirm>
+                        </span>
                 );
             },
         }
@@ -131,39 +199,87 @@ export default function ProductTypeEditTable() {
         };
     });
 
+    const createProductType = () => {
+        let newType = {
+            id: uuidv4(),
+            name: ""
+        };
+        if (editingKey === "") {
+            dispatch(addProductType(newType))
+            setEditingKey(newType.id);
+            setIsCreate(true)
+            form.resetFields()
+        }
+    }
+
+    const handleChangeSearch = (e)=>{
+        let {value} = e.target;
+        setSearch(value)
+    }
+
   return (
-    <Form form={form} component={false}>
-                <Table
-                    className="width__50" 
-                    components={{
-                        body: {
-                            cell: EditableCell,
-                        },
-                    }}
-                    dataSource={productType}
-                    columns={mergedColumns}
-                    rowClassName="editable-row"
-                    pagination={{
-                        position: ["bottomLeft"],
-                        defaultPageSize: 10,
-                        locale: { items_per_page: "" },
-                        defaultCurrent: 1,
-                        showSizeChanger: true,
-                        total: totalProductType,
-                        pageSizeOptions: [10, 50, 100],
-                        onChange: (page, pageNumber) => {
-                            setPageNumber(pageNumber);
-                            setPage(page);
-                            setEditingKey("")
-                        },
-                        showTotal: (total) => {
-                            if (pageNumber * page < total) {
-                                return `Hiển thị ${pageNumber * page} trong ${total}`;
-                            }
-                            return `Hiển thị ${total} trong ${total}`;
-                        },
-                    }}
-                />
-            </Form>
+      <div className="width__50">
+          <Form form={form} component={false}>
+              <div className="table__features">
+                  <div className="table__features__add">
+                      <h1>Quản lý loại sản phẩm</h1>
+                      <FcPlus onClick={createProductType} />
+                  </div>
+                  <div className="table__features__search">
+                      <input placeholder="Loại sản phẩm" type="text"
+                          onChange={handleChangeSearch}
+                          onKeyDown={(e) => {
+                              let { key } = e;
+                              let { value } = e.target;
+                              if (key.toLowerCase() === "enter") {
+                                  dispatch({
+                                      type: SEARCH_PRODUCT_TYPE,
+                                      data: value
+                                  })
+                              }
+                          }}
+                      />
+                      <div className="table__features__search__btn">
+                          <button onClick={()=>{
+                            dispatch({
+                                type: SEARCH_PRODUCT_TYPE,
+                                data: search
+                            })
+                          }}>Tìm kiếm</button>
+                      </div>
+                  </div>
+              </div>
+              <Table
+                  components={{
+                      body: {
+                          cell: EditableCell,
+                      },
+                  }}
+                  dataSource={data}
+                  columns={mergedColumns}
+                  rowClassName="editable-row"
+                  pagination={{
+                      position: ["bottomLeft"],
+                      defaultPageSize: 5,
+                      locale: { items_per_page: "" },
+                      defaultCurrent: 1,
+                      showSizeChanger: true,
+                      total: totalProductType,
+                      pageSizeOptions: [10, 50, 100],
+                      onChange: (page, pageNumber) => {
+                          setPageNumber(pageNumber);
+                          setPage(page);
+                          setEditingKey("")
+                      },
+                      showTotal: (total) => {
+                          if (pageNumber * page < total) {
+                              return `Hiển thị ${pageNumber * page} trong ${total}`;
+                          }
+                          return `Hiển thị ${total} trong ${total}`;
+                      },
+                  }}
+              />
+          </Form>
+      </div>
   )
 }

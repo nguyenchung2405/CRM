@@ -289,7 +289,7 @@ export default function CreateCustomer(props) {
                 </div>
                 { renderInforBusiness() }
                 <div className="modal__upload">
-                    <span>Giấy tờ</span>
+                    <span>Tài liệu liên quan</span>
                     {client_id && typeof +client_id === "number"
                     ? ""
                     :   <>

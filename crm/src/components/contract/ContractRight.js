@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { removeRequestDetail, setKeyOfDetailJustAdd, setKeyOfRequestJustAdd, updateRequestDetail } from '../../redux/features/contractSlice';
 import axios from "axios"
-import { local } from '../../title/title';
+import { CREATE_DETAIL, local, UPDATE_DETAIL } from '../../title/title';
 import ViewPDF from '../ViewPDF';
 import { checkMicroFe } from '../../untils/helper';
 
@@ -43,6 +43,7 @@ export default function ContractRight(props) {
     const [file, setFile] = useState("");
     const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
+    const {isUpdateDetail, setIsUpdateDetail, contract_id} = props;
     
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
@@ -74,13 +75,13 @@ export default function ContractRight(props) {
       children,
       ...restProps
     }) => {
-      const inputNode = inputType === 'file' ? 
-                              record?.file?.length > 0 ?
-                                  <> 
-                                      <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
-                                  </>
-                              :  <input type="file" onChange={(e)=>{ uploadFileDetail(e.target.files[0], editingKey, e) }} /> 
-                          : <Input />;
+      const inputNode = inputType === 'file' ?
+        record?.file?.length > 0 ?
+          <>
+            <input type="file" onChange={(e) => { uploadFileDetail(e.target.files[0], editingKey, e) }} />
+          </>
+          : <input type="file" onChange={(e) => { uploadFileDetail(e.target.files[0], editingKey, e) }} />
+        : <Input />;
                          
       const required = ()=>{
         if(inputType === 'upload' || inputType === "file"){
@@ -130,21 +131,24 @@ export default function ContractRight(props) {
     }
 
     const edit = (record) => {
-        form.setFieldsValue({
-          ...record,
-        });
-        setEditingKey(record.key);
-        setRequestId(record.request_id)
-        pathOfFile = record.file;
+      form.setFieldsValue({
+        ...record,
+      });
+      setEditingKey(record.key);
+      setRequestId(record.request_id)
+      setIsUpdateDetail(true)
+      pathOfFile = record.file;
     };
-      const cancel = () => {
-        if((keyOfDetailJustAdd && keyOfDetailJustAdd !== "") && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")){
-          dispatch(removeRequestDetail({request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd}))
-        }
-        setEditingKey('');
-      };
-      const save = async (key) => {
-        try {
+
+    const cancel = () => {
+      if ((keyOfDetailJustAdd && keyOfDetailJustAdd !== "") && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")) {
+        dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }))
+      }
+      setEditingKey('');
+    };
+
+    const save = async (key) => {
+      try {
           let newDetailJustAdd = form.getFieldsValue();
           newDetailJustAdd.id = editingKey;
           newDetailJustAdd.from_date = moment(newDetailJustAdd.from_date, "DD-MM-YYYY").format("YYYY-MM-DD")
@@ -157,22 +161,39 @@ export default function ContractRight(props) {
             newData.splice(index, 1, {
               ...item,
               ...row,
-            });
+          });
+          if(window.location.href.includes("create")){
             setData(newData);
-            dispatch(updateRequestDetail({request_id: requestId, detailData: newDetailJustAdd}))
-            setEditingKey('');
-            dispatch(setKeyOfRequestJustAdd(""))
-            dispatch(setKeyOfDetailJustAdd(""))
-            pathOfFile = "";
+            dispatch(updateRequestDetail({ request_id: requestId, detailData: newDetailJustAdd }))
           } else {
-            newData.push(row);
-            setData(newData);
-            setEditingKey('');
+            newDetailJustAdd.request_id = requestId;
+            newDetailJustAdd.contract_id = contract_id;
+            if(isUpdateDetail){
+              dispatch({
+                type: UPDATE_DETAIL,
+                data: newDetailJustAdd
+              })
+            } else {
+              dispatch({
+                type: CREATE_DETAIL,
+                data: newDetailJustAdd
+              })
+            }
+            setIsUpdateDetail(false)
           }
-        } catch (errInfo) {
-          console.log('Validate Failed:', errInfo);
+          setEditingKey('');
+          dispatch(setKeyOfRequestJustAdd(""))
+          dispatch(setKeyOfDetailJustAdd(""))
+          pathOfFile = "";
+        } else {
+          newData.push(row);
+          setData(newData);
+          setEditingKey('');
         }
-      };
+      } catch (errInfo) {
+        console.log('Validate Failed:', errInfo);
+      }
+    };
 
     const columns = [
         {

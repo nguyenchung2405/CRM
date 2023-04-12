@@ -7,21 +7,28 @@ import { useDispatch, useSelector } from "react-redux";
 import ChanelGChild from "./ChanelGChild"
 import "./ChanelGComponent.css"
 import CustomExpandIcon from "./CustomExpandIcon"
+// import Loading from "../../components/Loading"
+import Loading from "../../Loading"
 const ChanelGComponent = (props) => {
-    let { handleAdd, formatDataChannelList, groupChannelList, handleSearchInput,
+    let { handleAdd, formatDataChannelList, groupChannelList,
         isAdd, onPressEnter, onChange, groupChannelName,
         handleEditChannelG,
         handleDeleteChannelG,
 
         handleAddGroup,
         rowKeys,
-        setRowKeys,
         onTableRowExpand,
         groupName,
         onChangeChild,
         onPressEnterChild,
         handleEditG,
-        handleDeleteG
+        handleDeleteG,
+        handleClose,
+
+        handleSearch,
+        handleSearchInputChannel,
+        handleSearchInputGroup
+
     } = props
     const columns = [
         {
@@ -31,15 +38,41 @@ const ChanelGComponent = (props) => {
             render: (_, record) => (
                 <div className="thaoTac">
                     {isAdd === true && (typeof (record.idAdd) === "number" && record.idAdd !== 0) ?
-                        <div><Input value={groupChannelName} onChange={onChange} onPressEnter={() => onPressEnter(record.idAdd)} placeholder="Ten kenh" /></div>
+                        <div><Input value={groupChannelName} onChange={onChange}
+                            // onPressEnter={() => onPressEnter(record.idAdd)}
+                            placeholder="Ten kenh" /></div>
                         : _}
                 </div>
             ),
         },
         {
             title: 'Ngày tạo',
+            dataIndex: 'create_date',
+            key: 'create_date',
+            render: (_, record) => (
+                <div>
+                    {props.toDDMMYY(_)}
+                </div>
+            ),
+        },
+        {
+            title: '',
             dataIndex: 'desc',
             key: 'desc',
+            render: (_, record) => {
+                return (
+                    <div style={{ textAlign: "end" }}> {isAdd === true && (typeof (record.idAdd) === "number" && record.idAdd !== 0) ?
+                        <div>
+                            <button style={{ marginRight: "6px" }} className="btn__green" onClick={() => onPressEnter(record.idAdd)}>
+                                OK
+                            </button>
+                            <button className="btn__green" onClick={() => handleClose(_)}>
+                                Đóng
+                            </button>
+                        </div> : ""}
+                    </div>
+                )
+            }
         },
         {
             title: 'Thao tác',
@@ -47,7 +80,7 @@ const ChanelGComponent = (props) => {
             key: 'id',
             render: (_, record) => (
                 <div className="thaoTac">
-                    <button className="btn__green" onClick={() => handleAddGroup(_)}>Thêm nhóm</button>
+                    <button className="btn__green" onClick={() => handleAddGroup(_)}>Thêm nhóm sản phẩm</button>
                     <MdOutlineModeEditOutline
                         onClick={() => handleEditChannelG(_)}
                     />
@@ -56,9 +89,15 @@ const ChanelGComponent = (props) => {
             ),
         },
     ];
+    const showLoading = () => {
+        if (props.isLoading) {
+            return <Loading />
+        }
+    }
     return (
         <>
             <div className='customer__table content channel' style={{ color: "red" }}>
+                {showLoading()}
                 <div className="table__features">
                     <div className="table__features__add">
                         <h1>Quản lý kênh</h1>
@@ -69,14 +108,15 @@ const ChanelGComponent = (props) => {
                     <div className="table__features__search">
                         <input placeholder="Tên kênh" type="text"
                             name="name"
-                            onChange={handleSearchInput} />
-                        <input placeholder="Nhóm" type="text"
+                            onChange={handleSearchInputChannel} />
+                        <input placeholder="Nhóm sản phẩm" type="text"
                             name="tax_number"
-                            onChange={handleSearchInput}
+                            onChange={handleSearchInputGroup}
                         />
                         <div className="table__features__search__btn">
                             <button
                                 onClick={() => {
+                                    handleSearch()
                                 }}>Tìm kiếm</button>
                         </div>
                     </div>
@@ -94,9 +134,11 @@ const ChanelGComponent = (props) => {
                                     groupName={groupName}
                                     handleEditG={handleEditG}
                                     handleDeleteG={handleDeleteG}
+                                    handleClose={handleClose}
+                                    toDDMMYY={props.toDDMMYY}
                                 />
                             },
-                            rowExpandable: (record) => record.channels.length != 0,
+                            rowExpandable: (record) => record.locations.length != 0,
                             defaultExpandAllRows: true
                         }}
                     // expandIcon={p => <CustomExpandIcon

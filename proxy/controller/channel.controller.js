@@ -5,17 +5,22 @@ const getGroupChannel = async (req, res) => {
         headers: { Authorization: req.headers.authorization },
     };
     let { name, location_name } = req.query
-    console.log(req.query)
-    console.log(req.params)
+    let url_name = encodeURIComponent(name);
+    let url_location_name = encodeURIComponent(location_name);
+
     try {
         const { data } = await axios.get(
             // `${local}/product/groupchannel/list?page_size=10&page=1&sort_by=id&order=desc`,
-            `${local}/product/channel/list?page_size=20&page=1&sort_by=id&order=desc&name=${name}&location_name=${location_name}`,
+            `${local}/product/channel/list?page_size=31&page=1&sort_by=id&order=desc&name=${url_name}&location_name=${url_location_name}`,
             config
         );
         res.send(data);
     } catch (error) {
-        res.send(error);
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -36,7 +41,11 @@ const createGroupChannel = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send(error);
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 const updateGroupChannel = async (req, res) => {
@@ -56,7 +65,11 @@ const updateGroupChannel = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send(error);
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 const deleteGroupChannel = async (req, res) => {
@@ -71,7 +84,11 @@ const deleteGroupChannel = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send("error");
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
@@ -94,7 +111,11 @@ const createGroup = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send(error);
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 const updateGroup = async (req, res) => {
@@ -114,7 +135,11 @@ const updateGroup = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send(error);
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 const deleteGroup = async (req, res) => {
@@ -129,7 +154,11 @@ const deleteGroup = async (req, res) => {
         );
         res.send(data);
     } catch (error) {
-        res.send("error");
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 

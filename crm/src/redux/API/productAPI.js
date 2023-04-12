@@ -2,14 +2,13 @@ import axios from "axios"
 import { local, TOKEN } from "../../title/title";
 import { v1 as uuidv1, v3, v4, v5 } from "uuid"
 
-export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID, channelID) {
+export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID) {
     try {
         let location_id = locationID === null ? "" : locationID;
         let type_id = typeID === null ? "" : typeID;
         let attribute_id = attributeID === null ? "" : attributeID;
-        let channel_id = channelID === null ? "" : channelID;
         const result = await axios({
-            url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&channel_ID=${channel_id}&location_ID=${location_id}&attribute_ID=${attribute_id}`,
+            url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&location_ID=${location_id}&attribute_ID=${attribute_id}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -54,10 +53,10 @@ export async function getProductLocationAPI(page, page_size, channelID) {
     }
 };
 
-export async function getProductTypeAPI(page, page_size) {
+export async function getProductTypeAPI(page, page_size, locationID) {
     try {
         const result = await axios({
-            url: `${local}/api/product/type/list?page_size=${page_size}&page=${page}`,
+            url: `${local}/api/product/type/list?page_size=${page_size}&page=${page}&location_ID=${locationID}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -70,10 +69,10 @@ export async function getProductTypeAPI(page, page_size) {
     }
 };
 
-export async function getProductAttributeAPI(page, page_size) {
+export async function getProductAttributeAPI(page, page_size, locationID, typeID) {
     try {
         const result = await axios({
-            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}`,
+            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}&type_ID=${typeID}&location_ID=${locationID}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -162,6 +161,39 @@ export async function deleteProductTypeAPI(type_id){
     }
 }
 
+export async function updateProductTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/update?type_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
+export async function searchProductTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/list?name=${data}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
 export async function createProductAttributeAPI(data){
     try {
         const result = await axios({
@@ -194,3 +226,36 @@ export async function deleteProductAttributeAPI(attribute_id){
         return "Thât bại"
     }
 };
+
+export async function updateProductAttributeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/update?attribute_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
+export async function searchProductAttributeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/attribute/list?name=${data}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}

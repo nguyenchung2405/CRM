@@ -14,7 +14,11 @@ const getContractList = async (req, res) => {
         });
         res.send(result.data);
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -30,7 +34,11 @@ const getContractTypeList = async (req, res) => {
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -69,7 +77,11 @@ const getContractDetail = async (req, res) => {
         });
         res.send(result.data)
     } catch (error) {
-        res.send(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 };
 
@@ -103,11 +115,168 @@ const getContractRequest = async (req, res) => {
     }
 }
 
+const getOwnerList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/info/communication-department-users`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const updateContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {contract_id, ...dataContract} = req.body;
+        const result = await axios({
+            url: `${local}/contract/update?id=${contract_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: dataContract
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const createRequest = async (req, res)=>{
+    try {
+        console.log(req.body)
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/contract/add-request`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const deleteRequest = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {request_id} = req.query;
+        const result = await axios({
+            url: `${local}/contractrequest/disable?contract_request_id=${request_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const updateRequest = async (req,res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {request_id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/request/update?id=${request_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const createDetail = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/contract/add-detail`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const updateDetail = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {detail_id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/detail/update?id=${detail_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
     createContract,
     getContractDetail,
     uploadFileDetailResponse,
-    getContractRequest
+    getContractRequest,
+    getOwnerList,
+    updateContract,
+    createRequest,
+    deleteRequest,
+    updateRequest,
+    createDetail,
+    updateDetail
 }

@@ -6,9 +6,9 @@ import { setIsLoading } from "../features/loadingSlice";
 // import { setMessage } from "../features/messageSlice";
 
 function* getGroupChannelList(payload) {
-    let { page, pageNumber } = payload.data;
-    let result = yield call(getGroupChannelAPI, page, pageNumber);
-    let { total_data: total, product_group_channel: data } = result.data;
+    let { page, pageNumber, name, location_name } = payload.data;
+    let result = yield call(getGroupChannelAPI, page, pageNumber, name, location_name);
+    let { total_data: total, data: data } = result.data;
     yield put(setGroupChannelList({ total, groupChannelList: data }));
     yield put(setIsLoading(false))
 

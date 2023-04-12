@@ -22,14 +22,14 @@ export function dataOfContractMapping(data) {
             contract_number: data.contract_number,
             begin_date: data.begin_date,
             end_date: data.end_date,
-            contract_type_id: data.contract_type_id,
+            contract_type_id: data.contract_type_id.id,
             discount_by_percent: data.discount_by_percent,
             VAT: data.VAT,
             total: data.total < 1000000 ? data.total * 1000000 : data.total,
             note: data.note,
             creater: data.creater
         };
-        let dataTable = mappingDataOfTable(data)
+        // let dataTable = mappingDataOfTable(data)
         return {
             dataContract,
             // dataTable

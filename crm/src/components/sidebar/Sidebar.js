@@ -25,11 +25,15 @@ export default function Sidebar() {
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
             getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />,[
-                getItem(<Link to={`${uri}/crm/customer/type`}>Quản lý loại, thuộc tính</Link> , "13" , <FcDepartment />)
+                getItem(<Link to={`${uri}/crm/customer/type`}>Quản lý loại, thuộc tính</Link> , "18" , <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/customer`}>Loại, ngành nghề</Link>, "16", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/abc`}>Khách hàng</Link>, "17", <FcDepartment />),
             ]),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
-            getItem(<Link to={`${uri}/crm/product`}>Quản lý sản phẩm</Link>, "12", <FcDepartment />, [
-                getItem(<Link to={`${uri}/crm/product/type-att`}>Quản lý loại, thuộc tính</Link>, "12", <FcDepartment />),
+            getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
+                getItem(<Link to={`${uri}/crm/channel`}>kênh, nhóm</Link>, "15", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/type-att`}>loại, thuộc tính</Link>, "13", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product`}>sản phẩm</Link>, "14", <FcDepartment />),
             ]),
         ])
     ]
@@ -64,6 +68,9 @@ export default function Sidebar() {
                                 <NavLink to="/crm/customer/type">Quản lý loại và thuộc tính khách hàng</NavLink>
                             </li>
                             <li>
+                                <NavLink to="/crm/abc">Quản lý loại, ngành nghề</NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
                             </li>
                             <li>
@@ -72,30 +79,11 @@ export default function Sidebar() {
                             <li>
                                 <NavLink to="/crm/product/type-att">Quản lý loại, thuộc tính sản phẩm</NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/crm/channel">Quản lý kênh </NavLink>
+                            </li>
                         </ul>
                     </div>
-                </div>
-                <div className="sidebar__personal__information bg_pri_blue">
-                    <p>
-                        <BsReceiptCutoff />
-                        Hợp đồng
-                    </p>
-                </div>
-                <div className="sidebar__sub__menu">
-                    <ul>
-                        <li>
-                            <NavLink to="/crm/customer">Quản lý khách hàng</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/product">Quản lý sản phẩm</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/crm/channel">Quản lý kênh </NavLink>
-                        </li>
-                    </ul>
                 </div>
             </>
         } else {
