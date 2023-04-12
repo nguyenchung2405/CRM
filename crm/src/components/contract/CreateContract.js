@@ -33,6 +33,7 @@ export default function CreateContract() {
   const [soTien, setSoTien] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
+  const [isUpdateDetail, setIsUpdateDetail] = useState(false);
 
   useEffect(() => {
     dispatch({
@@ -71,7 +72,9 @@ export default function CreateContract() {
     if (dataContract) {
       setValueForm({ ...dataContract })
     }
-    setDotThanhToan(payments)
+    if(payments){
+      setDotThanhToan(payments)
+    }
   }, [contractDetail])
 
   useEffect(() => {
@@ -93,7 +96,8 @@ export default function CreateContract() {
         product_ID: request.product_ID.id,
         quality: request.quality,
         real_price: request.price_ID.price * 1000000,
-        details: request.details
+        details: request.details,
+        custom_price: request.custom_price * 1000000
       }
     })
   }
@@ -207,11 +211,11 @@ export default function CreateContract() {
       "from_date": "",
       "file": null,
       "id": uuidv4()
-    }
+    };
     if (keyOfDetailJustAdd && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")) {
-      dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }))
+      dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }));
     }
-    dispatch(addRequestDetail({ request_id, detail }))
+    dispatch(addRequestDetail({ request_id, detail }));
   }
 
   const showLoading = () => {
@@ -237,7 +241,7 @@ export default function CreateContract() {
         <div className="create__contract__header border_bottom_3px">
           <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
         </div>
-        <div className="create__contract__inforCustomer border_bottom_3px">
+        <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
           <p>Thông tin hợp đồng</p>
           <div className="field__input field__flex two__field">
             {/**
@@ -573,7 +577,7 @@ export default function CreateContract() {
                     <span>{item.to_date}</span>
                   </div>
                 }) */}
-                return <ContractRight data={record} />
+                return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
               },
               rowExpandable: (record)=> record.details.length > 0,
             }}
@@ -625,13 +629,19 @@ export default function CreateContract() {
               }}
             />
             <Column
+              className="price"
+              title="Giá hiệu chỉnh"
+              key="custom_price"
+              render={(text) => {
+                return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
+              }}
+            />
+            <Column
               className="thaoTac"
               render={(text) => {
                 return <div>
                   <button className="btn__green" onClick={() => {
-                    if (window.location.href.includes("create")) {
                       addDetailWhenCreate(text.id)
-                    }
                   }}>Thêm chi tiết</button>
                   <MdOutlineModeEditOutline onClick={() => {
                     setIsShowModal(true);
@@ -677,8 +687,9 @@ export default function CreateContract() {
                 value={valueOfField("discount_by_percent")}
               />
               <label>Chiết khấu (%)</label>
-            </div>
+              </div>
             <div className="contract__field">
+              {/**
               <input className="style" type="text"
                 name="VAT"
                 onChange={(e) => {
@@ -688,6 +699,7 @@ export default function CreateContract() {
                 value={valueOfField("VAT")}
               />
               <label>Thuế GTGT (%)</label>
+            */}
             </div>
             <div className="contract__field">
               <input
@@ -703,14 +715,17 @@ export default function CreateContract() {
               <label className="pink__color">Giá trị hợp đồng</label>
             </div>
           </div>
-          <textarea id="note" placeholder="Ghi chú"
-            name="note"
-            onChange={(e) => {
-              let { value, name } = e.target;
-              handleChangeValue(name, value)
-            }}
-            value={valueOfField("note")}
-          ></textarea>
+          <div className="contract__value__note">
+              <textarea id="note"
+                name="note"
+                onChange={(e) => {
+                  let { value, name } = e.target;
+                  handleChangeValue(name, value)
+                }}
+                value={valueOfField("note")}
+              ></textarea>
+              <label>Ghi chú</label>
+          </div>
         </div>
         <div className="create__contract__payment border_bottom_3px">
           <div className="display__flex">
@@ -748,7 +763,7 @@ export default function CreateContract() {
               />
             </svg>
           </div>
-          <div className="field__input_2">
+          <div className="field__input_2 display__flex">
             {/**
             <DatePicker
               suffixIcon={
@@ -781,6 +796,20 @@ export default function CreateContract() {
                 let { value } = e.target;
                 setSoTien(value)
               }} />
+            <div className="soDotThanhToan">
+              {!window.location.href.includes("create") ? <label>Tên khách hàng</label> : ""}  
+              <Select
+                className="style"
+                type="text"
+                placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
+                onChange={(value) => {
+                  handleChangeValue("contract_type_id", value)
+                }}
+                value={valueOfField("contract_type_id")}
+              >
+                {renderLoaiHopDong()}
+              </Select>
+            </div>
           </div>
           <div className="contract__payment__process">
             {dotThanhToan?.map((payment, index) => {

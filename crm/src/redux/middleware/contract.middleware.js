@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping } from "../../untils/mapping";
-import { createContractAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, updateContractiAPI } from "../API/contractAPI";
-import { addContractRequest, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList } from "../features/contractSlice";
+import { createContractAPI, createDetailAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
+import { addContractRequest, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -28,7 +28,7 @@ function* createContract(payload) {
     let { data } = payload;
     let result = yield call(createContractAPI, data);
     let { code } = result;
-    if (+code === 200 || result.data?.idcontract) {
+    if (+code === 200 || result.data?.contract?.id) {
         yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
     } else {
         yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
@@ -74,7 +74,6 @@ function* updateContract(payload){
 function* createRequest(payload){
     try {
         const result = yield call(createRequestAPI ,payload.data);
-        console.log(result)
         if(result.data.requests.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
         }
@@ -86,9 +85,42 @@ function* createRequest(payload){
 function* deleteRequest(payload){
     try {
         const result = yield call(deleteRequestAPI ,payload.request_id);
-        console.log(result)
         if(result.data.msg === "Vô hiệu yêu cầu hợp đồng thành công."){
             yield put(deleteContractRequest(payload.request_id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* updateRequest(payload){
+    try {
+        const result = yield call(updateRequestAPI, payload.data);
+        if(result.data.msg === "Updated successfully!"){
+            yield put(updateContractRequest(payload.data))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* createDetail(payload){
+    try {
+        const result = yield call(createDetailAPI, payload.data);
+        if(result.data.details.length > 0){
+            yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: result.data.details[0], detail_id_old: payload.data.id }))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* updateDetail(payload){
+    try {
+        const result = yield call(updateDetailAPI, payload.data);
+        console.log(result);
+        if(result.data.msg === "Updated successfully!"){
+            yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: payload.data }))
         }
     } catch (error) {
         console.log(error)
@@ -105,4 +137,8 @@ export default function* contractMiddleware() {
     // Request Middleware
     yield takeLatest(CREATE_REQUEST, createRequest)
     yield takeLatest(DELETE_REQUEST, deleteRequest)
+    yield takeLatest(UPDATE_REQUEST, updateRequest)
+    // Detail Middleware
+    yield takeLatest(CREATE_DETAIL, createDetail)
+    yield takeLatest(UPDATE_DETAIL, updateDetail)
 }

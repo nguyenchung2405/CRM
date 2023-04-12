@@ -43,6 +43,7 @@ export async function createContractAPI(data) {
                 ...item,
                 price_ID: item.price_ID.id,
                 product_ID: item.product_ID.id,
+                custom_price: item.custom_price / 1000000,
                 details: item.details.map(detail => {
                     return {
                         ...detail,
@@ -55,13 +56,13 @@ export async function createContractAPI(data) {
             contract: {
                 ...data.contract,
                 begin_date: convertBeginDate,
-                end_date: convertEndDate
+                end_date: convertEndDate,
+                total: data.contract.total / 1000000
             },
             request: [...newRequest],
             payment: [...data.payment]
         }
         const newData = { ...data }
-        console.log(newData)
         const result = await axios({
             url: `${local}/api/contract/create`,
             method: "POST",
@@ -150,13 +151,13 @@ export async function updateContractiAPI(data){
 export async function createRequestAPI(data){
     try {
         let newRequest = {
-            "contract_ID": data.contract_id,
+            "contract_ID": +data.contract_id,
             "requests": [
                 {
                     "product_ID": data.product_ID,
                     "price_ID": data.price_ID,
                     "quality": data.quality,
-                    "custom_price": data?.custom_price || 0,
+                    "custom_price": data.custom_price / 1000000 || 0,
                 }
             ]
         };
@@ -183,6 +184,79 @@ export async function deleteRequestAPI(request_id){
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateRequestAPI(data){
+    try {
+        let updateRequest = {
+            "quality": data.quality,
+            "custom_price": data.custom_price / 1000000
+        };
+        const result = await axios({
+            url: `${local}/api/contract/update-request?request_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: updateRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function createDetailAPI(data){
+    try {
+        let newDetail = {
+            "contract_ID": +data.contract_id,
+            "request_ID": data.request_id,
+            "details": [
+                {
+                    "desc": data.desc,
+                    "from_date": data.from_date,
+                    "to_date": data.from_date,
+                    "file": data.file
+                }
+            ]
+        };
+        const result = await axios({
+            url: `${local}/api/contract/detail-create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newDetail
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateDetailAPI(data){
+    try {
+        let newDetail = {
+            "desc": data.desc,
+            "from_date": data.from_date,
+            "to_date": data.from_date,
+            "file": data.file
+        };
+        const result = await axios({
+            url: `${local}/api/contract/detail-update?detail_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newDetail
         });
         return result.data;
     } catch (error) {

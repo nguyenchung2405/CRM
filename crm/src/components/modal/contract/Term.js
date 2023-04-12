@@ -3,7 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE } from '../../../title/title';
+import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 
@@ -114,9 +114,9 @@ export default function TermModal(props) {
             id: valueModal.product_ID
           },
           id: valueModal.id,
-          details: valueModal.details
+          details: valueModal.details,
+          custom_price: valueModal.custom_price || 0
         };
-        console.log(newRequest)
         dispatch(addContractRequest(newRequest));
         setIsUpdateModal(false)
       } else {
@@ -132,8 +132,12 @@ export default function TermModal(props) {
           data: valueModal
         })
       } else {
-
+        dispatch({
+          type: UPDATE_REQUEST,
+          data: valueModal
+        })
       }
+      setIsUpdateModal(false)
     }
     setIsShowModal(false);
     setValueModal({})
@@ -165,7 +169,7 @@ export default function TermModal(props) {
       let newDenNgay = moment(new Date(valueModal["to_date"])).format("DD-MM-YYYY");
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (name === "desc" || name === "real_price" || name === "quality" || name === "product_name") {
+      if (name === "desc" || name === "real_price" || name === "quality" || name === "product_name" || name === "custom_price") {
         return ""
       }
       return null
@@ -386,6 +390,17 @@ export default function TermModal(props) {
             // disabled
             />
             <label>Số lượng</label>
+          </div>
+          <div className="modal__field">
+            <input type="text"
+              name="custom_price"
+              value={valueOfField("custom_price")}
+              onChange={(e) => {
+                let { value, name } = e.target;
+                handleChange(name, +value)
+              }}
+            />
+            <label>Giá hiệu chỉnh</label>
           </div>
           {/**
                  <div className="modal__field">
