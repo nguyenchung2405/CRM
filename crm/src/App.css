@@ -269,6 +269,25 @@ p.required__field {
     margin-top: 119px;
     padding: 35px 40px 0 40px;
 }
+.customerType .ant-table-thead>tr>th{
+    background: #29B171 !important;
+    color: white;
+    padding: 8px;
+}
+.customerType .ant-table-tbody>tr>td{
+    padding: 8px;
+    font-weight: bold;
+}
+.customerType .ant-table-content{
+    border: 1px solid #29B171;
+}
+.customerType .ant-table-tbody>tr:nth-child(2n-1){
+    background: #f4f5f6;
+    border: 1px solid #29B171;
+}
+.customerType .ant-table-pagination-right{
+    justify-content: center;
+}
 
 .customer__table table thead tr th {
     color: #A1A5B7;
@@ -378,7 +397,10 @@ p.required__field {
     background: #fff;
     border-color: #459C60;
 }
-
+.custumer_title{
+    display: flex;
+    align-items: center;
+}
 .customer__table li.ant-pagination-item-active a {
     color: #459C60;
 }
@@ -398,6 +420,9 @@ p.required__field {
 
 ul.ant-pagination {
     padding: 0 30px;
+}
+.customerType .ant-table-thead > tr{
+    background: #459C60 !important;
 }
 
 .customer__table .customer__table__tenviettat {

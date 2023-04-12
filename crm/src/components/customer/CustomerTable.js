@@ -13,7 +13,7 @@ import { checkMicroFe } from '../../untils/helper';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 
 export default function CustomerTable() {
-
+    // console.log(process.env.crmServer)
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
