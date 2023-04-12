@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST } from "../../title/title";
+import { CREATE_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -30,8 +30,10 @@ export default function CreateContract() {
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({});
+  const [soTien, setSoTien] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
+  const [isUpdateDetail, setIsUpdateDetail] = useState(false);
 
   useEffect(() => {
     dispatch({
@@ -62,13 +64,16 @@ export default function CreateContract() {
   }, [contract_id, customerList, valueForm])
 
   useEffect(() => {
-    let { dataContract, dataTable: dataOfTable } = contractDetail;
+    let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
     // if(dataContract && dataOfTable){
     //   setValueForm({...dataContract})
     //   setDataTable([...dataOfTable])
     // }
     if (dataContract) {
       setValueForm({ ...dataContract })
+    }
+    if(payments){
+      setDotThanhToan(payments)
     }
   }, [contractDetail])
 
@@ -91,7 +96,8 @@ export default function CreateContract() {
         product_ID: request.product_ID.id,
         quality: request.quality,
         real_price: request.price_ID.price * 1000000,
-        details: request.details
+        details: request.details,
+        custom_price: request.custom_price * 1000000
       }
     })
   }
@@ -138,12 +144,12 @@ export default function CreateContract() {
       }
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (valueForm[name] && name !== "total") {
-        return valueForm[name]
-      } else if(name === "total") {
-        return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
-      }
-
+      // if (valueForm[name] && name !== "total") {
+      //   return valueForm[name]
+      // } else if(name === "total") {
+      //   return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
+      // }
+      return valueForm[name]
     }
   }
 
@@ -167,7 +173,11 @@ export default function CreateContract() {
     if (contract_id) {
       return <button className="footer__btn btn__create"
         onClick={() => {
-
+          valueForm.contract_id = +contract_id;
+          dispatch({
+            type: UPDATE_CONTRACT,
+            data: valueForm
+          })
         }}>
         Cập nhật
       </button>
@@ -178,7 +188,8 @@ export default function CreateContract() {
           console.log(valueForm, ",", contractRequest)
           let newData = {
             contract: { ...valueForm },
-            request: contractRequest
+            request: contractRequest,
+            payment: dotThanhToan
             // details: [...dataTable]
           };
           dispatch({
@@ -200,16 +211,26 @@ export default function CreateContract() {
       "from_date": "",
       "file": null,
       "id": uuidv4()
-    }
+    };
     if (keyOfDetailJustAdd && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")) {
-      dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }))
+      dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }));
     }
-    dispatch(addRequestDetail({ request_id, detail }))
+    dispatch(addRequestDetail({ request_id, detail }));
   }
 
   const showLoading = () => {
     if (isLoading) {
       return <Loading />
+    }
+  }
+
+  const handleAddPayment = ()=>{
+    if(+soTien >= 1000){
+      let newDotThanhToan = [...dotThanhToan, {
+        total_value: +soTien
+      }]
+      setDotThanhToan([...newDotThanhToan])
+      setSoTien("")
     }
   }
 
@@ -220,7 +241,7 @@ export default function CreateContract() {
         <div className="create__contract__header border_bottom_3px">
           <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
         </div>
-        <div className="create__contract__inforCustomer border_bottom_3px">
+        <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
           <p>Thông tin hợp đồng</p>
           <div className="field__input field__flex two__field">
             {/**
@@ -556,8 +577,9 @@ export default function CreateContract() {
                     <span>{item.to_date}</span>
                   </div>
                 }) */}
-                return <ContractRight data={record} />
-              }
+                return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
+              },
+              rowExpandable: (record)=> record.details.length > 0,
             }}
           >
             <Column
@@ -607,13 +629,19 @@ export default function CreateContract() {
               }}
             />
             <Column
+              className="price"
+              title="Giá hiệu chỉnh"
+              key="custom_price"
+              render={(text) => {
+                return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
+              }}
+            />
+            <Column
               className="thaoTac"
               render={(text) => {
                 return <div>
                   <button className="btn__green" onClick={() => {
-                    if (window.location.href.includes("create")) {
                       addDetailWhenCreate(text.id)
-                    }
                   }}>Thêm chi tiết</button>
                   <MdOutlineModeEditOutline onClick={() => {
                     setIsShowModal(true);
@@ -623,6 +651,11 @@ export default function CreateContract() {
                   <MdDelete onClick={() => {
                     if (window.location.href.includes("create")) {
                       dispatch(deleteContractRequest(text.id))
+                    } else {
+                      dispatch({
+                        type: DELETE_REQUEST,
+                        request_id: text.id
+                      })
                     }
                   }} />
                 </div>
@@ -637,6 +670,7 @@ export default function CreateContract() {
             setDataToModal={setDataToModal}
             isUpdateModal={isUpdateModal}
             setIsUpdateModal={setIsUpdateModal}
+            contract_id={contract_id}
           />
         </div>
         <div className="create__contract__value border_bottom_3px">
@@ -645,6 +679,7 @@ export default function CreateContract() {
             <div className="contract__field">
               <input className="style" type="text"
                 name="discount_by_percent"
+                disabled
                 onChange={(e) => {
                   let { value, name } = e.target;
                   handleChangeValue(name, +value)
@@ -652,8 +687,9 @@ export default function CreateContract() {
                 value={valueOfField("discount_by_percent")}
               />
               <label>Chiết khấu (%)</label>
-            </div>
+              </div>
             <div className="contract__field">
+              {/**
               <input className="style" type="text"
                 name="VAT"
                 onChange={(e) => {
@@ -663,10 +699,10 @@ export default function CreateContract() {
                 value={valueOfField("VAT")}
               />
               <label>Thuế GTGT (%)</label>
+            */}
             </div>
             <div className="contract__field">
               <input
-                disabled
                 className="style"
                 type="text"
                 name="total"
@@ -679,14 +715,17 @@ export default function CreateContract() {
               <label className="pink__color">Giá trị hợp đồng</label>
             </div>
           </div>
-          <textarea id="note" placeholder="Ghi chú"
-            name="note"
-            onChange={(e) => {
-              let { value, name } = e.target;
-              handleChangeValue(name, value)
-            }}
-            value={valueOfField("note")}
-          ></textarea>
+          <div className="contract__value__note">
+              <textarea id="note"
+                name="note"
+                onChange={(e) => {
+                  let { value, name } = e.target;
+                  handleChangeValue(name, value)
+                }}
+                value={valueOfField("note")}
+              ></textarea>
+              <label>Ghi chú</label>
+          </div>
         </div>
         <div className="create__contract__payment border_bottom_3px">
           <div className="display__flex">
@@ -697,6 +736,7 @@ export default function CreateContract() {
               viewBox="0 0 22 22"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              onClick={handleAddPayment}
             >
               <path
                 d="M11 7.32739V14.6537"
@@ -723,7 +763,8 @@ export default function CreateContract() {
               />
             </svg>
           </div>
-          <div className="field__input_2">
+          <div className="field__input_2 display__flex">
+            {/**
             <DatePicker
               suffixIcon={
                 <svg
@@ -748,29 +789,38 @@ export default function CreateContract() {
                 setDotThanhToan({ ...dotThanhToan, ngayThanhToan })
               }}
             />
+          */}
             <input className="style" type="text" placeholder="Số tiền"
+              value={soTien}
               onChange={(e) => {
                 let { value } = e.target;
-                setDotThanhToan({
-                  ...dotThanhToan,
-                  soTien: value
-                })
+                setSoTien(value)
               }} />
+            <div className="soDotThanhToan">
+              {!window.location.href.includes("create") ? <label>Tên khách hàng</label> : ""}  
+              <Select
+                className="style"
+                type="text"
+                placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
+                onChange={(value) => {
+                  handleChangeValue("contract_type_id", value)
+                }}
+                value={valueOfField("contract_type_id")}
+              >
+                {renderLoaiHopDong()}
+              </Select>
+            </div>
+          </div>
+          <div className="contract__payment__process">
+            {dotThanhToan?.map((payment, index) => {
+              return <div className="payment__contract">
+                <span>Đợt thanh toán {index + 1}</span>
+                <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
+              </div>
+            })}
           </div>
 
-          <div className="contract__payment__process">
-            <div className="payment__contract">
-              <span>Đợt thanh toán 1</span>
-              <span>01/02/2023</span>
-              <span>100,000 VNĐ</span>
-            </div>
-            <div className="payment__contract">
-              <span>Đợt thanh toán 2</span>
-              <span>01/03/2023</span>
-              <span>1,000,000,000 VNĐ</span>
-            </div>
-          </div>
-              {/**
+          {/**
                <div className="contract__payment__total">
             <h2 className="price">Tổng giá trị thanh toán<span>20.000.000 VNĐ</span></h2>
             <h2 className="price">Nợ còn lại<span>100.000.000 VNĐ</span></h2>

@@ -43,6 +43,7 @@ export async function createContractAPI(data) {
                 ...item,
                 price_ID: item.price_ID.id,
                 product_ID: item.product_ID.id,
+                custom_price: item.custom_price / 1000000,
                 details: item.details.map(detail => {
                     return {
                         ...detail,
@@ -55,12 +56,13 @@ export async function createContractAPI(data) {
             contract: {
                 ...data.contract,
                 begin_date: convertBeginDate,
-                end_date: convertEndDate
+                end_date: convertEndDate,
+                total: data.contract.total / 1000000
             },
-            request: [...newRequest]
+            request: [...newRequest],
+            payment: [...data.payment]
         }
-        const newData = { ...data, payment: [{ total_value: 100000000 }] }
-        console.log(newData)
+        const newData = { ...data }
         const result = await axios({
             url: `${local}/api/contract/create`,
             method: "POST",
@@ -117,6 +119,144 @@ export async function getOwnerListAPI(){
             headers: {
                 Authorization: "Bearer " + TOKEN
             }
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateContractiAPI(data){
+    try {
+        let convertBeginDate = moment(data.begin_date).format("YYYY-MM-DD");
+        let convertEndDate = moment(data.end_date).format("YYYY-MM-DD");
+        data.begin_date = convertBeginDate;
+        data.end_date = convertEndDate;
+        const result = await axios({
+            url: `${local}/api/contract/update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function createRequestAPI(data){
+    try {
+        let newRequest = {
+            "contract_ID": +data.contract_id,
+            "requests": [
+                {
+                    "product_ID": data.product_ID,
+                    "price_ID": data.price_ID,
+                    "quality": data.quality,
+                    "custom_price": data.custom_price / 1000000 || 0,
+                }
+            ]
+        };
+        const result = await axios({
+            url: `${local}/api/contract/create-request`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function deleteRequestAPI(request_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/delete-request?request_id=${request_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateRequestAPI(data){
+    try {
+        let updateRequest = {
+            "quality": data.quality,
+            "custom_price": data.custom_price / 1000000
+        };
+        const result = await axios({
+            url: `${local}/api/contract/update-request?request_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: updateRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function createDetailAPI(data){
+    try {
+        let newDetail = {
+            "contract_ID": +data.contract_id,
+            "request_ID": data.request_id,
+            "details": [
+                {
+                    "desc": data.desc,
+                    "from_date": data.from_date,
+                    "to_date": data.from_date,
+                    "file": data.file
+                }
+            ]
+        };
+        const result = await axios({
+            url: `${local}/api/contract/detail-create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newDetail
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateDetailAPI(data){
+    try {
+        let newDetail = {
+            "desc": data.desc,
+            "from_date": data.from_date,
+            "to_date": data.from_date,
+            "file": data.file
+        };
+        const result = await axios({
+            url: `${local}/api/contract/detail-update?detail_id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newDetail
         });
         return result.data;
     } catch (error) {

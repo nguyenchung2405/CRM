@@ -36,19 +36,7 @@ const contractSlice = createSlice({
             state.contractRequest = action.payload
         },
         addContractRequest: (state, action) => {
-            let newRequest = {
-                quality: action.payload.quality,
-                price_ID: {
-                    id: action.payload.price_ID,
-                    price: action.payload.real_price / 1000000
-                },
-                product_ID: {
-                    id: action.payload.product_ID
-                },
-                id: action.payload.id,
-                details: action.payload.details
-            }
-            state.contractRequest.push(newRequest)
+            state.contractRequest.push(action.payload)
         },
         updateContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload.id);
@@ -56,6 +44,7 @@ const contractSlice = createSlice({
             state.contractRequest[indexReq].price_ID.id = action.payload.price_ID;
             state.contractRequest[indexReq].product_ID.id = action.payload.product_ID;
             state.contractRequest[indexReq].price_ID.price = action.payload.real_price / 1000000;
+            state.contractRequest[indexReq].custom_price = action.payload.custom_price > 1000000 ? action.payload.custom_price / 1000000 : action.payload.custom_price;
         },
         deleteContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload);
@@ -75,7 +64,12 @@ const contractSlice = createSlice({
             state.keyOfDetailJustAdd = ""
         },
         updateRequestDetail: (state, action) => {
-            let { request_id, detailData } = action.payload;
+            let { request_id, detailData, detail_id_old } = action.payload;
+            if(detail_id_old){
+                let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
+                let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detail_id_old);
+                state.contractRequest[indexReq].details[indexDetail] = detailData;
+            }
             let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
             let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detailData.id);
             state.contractRequest[indexReq].details[indexDetail] = detailData;

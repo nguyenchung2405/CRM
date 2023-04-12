@@ -1073,6 +1073,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     width: 408px;
 }
 
+.create__contract.content .create__contract__content .create__contract__inforCustomer.create__contract__inforContract .field__input>div .ant-select  {
+    width: 100%;
+}
+
 .create__contract.content .create__contract__content .create__contract__inforCustomer div.ant-select-selector {
     border: none;
     padding: 0;
@@ -1134,7 +1138,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     width: 913px;
 }
 
-.create__contract .create__contract__value>textarea {
+.create__contract .create__contract__value .contract__value__note > textarea {
     width: 916px;
     height: 76px;
     resize: none;
@@ -1143,6 +1147,18 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-top: 33px;
     padding: 10px 0 0 15px;
     outline: none;
+}
+
+.create__contract .create__contract__value .contract__value__note {
+    position: relative;
+}
+
+.create__contract .create__contract__value .contract__value__note > label {
+    position: absolute;
+    top: 23px;
+    left: 15px;
+    background-color: white;
+    transition: all 0.5s;
 }
 
 .create__contract .create__contract__payment .ant-picker {
@@ -1176,6 +1192,38 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     font-weight: bold;
     min-width: 125px;
     text-align: right;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan {
+    width: min-content;
+    font-weight: normal;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan > label {
+    font-size: 14px;
+    padding-left: 9px;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan .ant-select .ant-select-selector {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan .ant-select .ant-select-selector .ant-select-selection-placeholder {
+    color: #666666;
+    font-weight: normal;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 {
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 916px;
+}
+
+.create__contract__payment.border_bottom_3px .field__input_2 > input {
+    /* margin-right: 15px; */
 }
 
 .create__contract .create__contract__term table {
