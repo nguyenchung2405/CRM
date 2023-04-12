@@ -1194,36 +1194,23 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     text-align: right;
 }
 
-.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan {
-    width: min-content;
-    font-weight: normal;
+#soDotThanhToan {
+    outline: none;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 15px;
 }
 
-.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan > label {
-    font-size: 14px;
-    padding-left: 9px;
-}
-
-.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan .ant-select .ant-select-selector {
-    border: none;
-    padding: 0;
-    box-shadow: none;
-    background-color: transparent;
-}
-
-.create__contract__payment.border_bottom_3px .field__input_2 .soDotThanhToan .ant-select .ant-select-selector .ant-select-selection-placeholder {
-    color: #666666;
-    font-weight: normal;
-}
-
-.create__contract__payment.border_bottom_3px .field__input_2 {
-    align-items: flex-end;
+.create__contract__payment .contract__payment {
     justify-content: space-between;
     width: 916px;
 }
 
-.create__contract__payment.border_bottom_3px .field__input_2 > input {
-    /* margin-right: 15px; */
+.create__contract__payment .soDotThanhToan > select {
+    font-size: 18px;
+    color: #666666;
+    width: 110px;
 }
 
 .create__contract .create__contract__term table {

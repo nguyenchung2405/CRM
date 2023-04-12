@@ -24,7 +24,10 @@ export default function Sidebar() {
     // ]
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
-            getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />),
+            getItem("Quản lý khách hàng", "10", <BsFileEarmarkFill />, [
+                getItem(<Link to={`${uri}/crm/customer`}>Loại, ngành nghề</Link>, "16", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/abc`}>Khách hàng</Link>, "17", <FcDepartment />),
+            ]),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
             getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/channel`}>kênh, nhóm</Link>, "15", <FcDepartment />),
@@ -59,6 +62,9 @@ export default function Sidebar() {
                         <ul>
                             <li>
                                 <NavLink to="/crm/customer">Quản lý khách hàng</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/abc">Quản lý loại, ngành nghề</NavLink>
                             </li>
                             <li>
                                 <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
