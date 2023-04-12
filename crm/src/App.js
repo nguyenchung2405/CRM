@@ -16,7 +16,7 @@ import ProductTable from './components/product/ProductTable';
 import ChanelGContainer from '../src/container/ChanelGContainer';
 import ProductEditableTable from './components/product/ProductEditableTable';
 import TypeAndAttribute from './components/product/TypeAndAttribute';
-
+import CustomerTableType from "./components/customer/CustomerTableType"
 function App() {
 
   const renderMF = () => {
@@ -29,6 +29,7 @@ function App() {
               <Header />
               <Routes>
                 <Route path="/crm/customer" element={<CustomerTable />} />
+                <Route path="/crm/customer/type" element={<CustomerTableType />} />
                 <Route path="/crm/customer/create" element={<CreateCustomer />} />
                 <Route path="/crm/customer/update/:client_id" element={<CreateCustomer />} />
                 <Route path="/crm/contract" element={<ContractTable />} />
@@ -51,6 +52,7 @@ function App() {
             <Routes>
               <Route path="/crm/customer" element={<CustomerTable />} />
               <Route path="/crm/customer/create" element={<CreateCustomer />} />
+              <Route path="/crm/customer/type" element={<CustomerTableType />} />
               <Route path="/crm/customer/update/:client_id" element={<CreateCustomer />} />
               <Route path="/crm/contract" element={<ContractTable />} />
               <Route path="/crm/contract/create" element={<CreateContract />} />
