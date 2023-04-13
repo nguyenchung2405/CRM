@@ -71,7 +71,7 @@ function CustomerTableType() {
         }
     ]
     return ( 
-        <div className="product__table product__TypeAndAtt__table">
+        <div className="product__table product__TypeAndAtt__table content">
             <Modal title="Thêm loại khách hàng" open={isModalOpen} onOk={"handleOk"} okText="Thêm" cancelText="Hủy" onCancel={()=>{setIsModalOpen(false)}}>
                     <Input style={{height:44}}></Input>
             </Modal>
