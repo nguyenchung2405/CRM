@@ -1,5 +1,5 @@
 import axios from "axios"
-import { local } from "../../title/title"
+import { local, TOKEN } from "../../title/title"
 
 export async function getCustomerListAPI(page, pageNumber){
     try {
@@ -78,5 +78,37 @@ export async function getDetailCustomerAPI(client_id){
     } catch (error) {
         console.log(error)
         return "Thất bại"
+    }
+}
+
+export async function getCustomerTypeListAPI(){
+    try {
+        const result = await axios({
+            url: `${local}/api/client/type-list`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function getJobTypeListAPI(){
+    try {
+        const result = await axios({
+            url: `${local}/api/client/job-type-list`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
     }
 }

@@ -581,6 +581,24 @@ div.ant-radio-group {
     align-items: flex-end;
 }
 
+div.modal__content .modal__field__select {
+    width: 525px;
+    margin: 0 auto;
+    text-align: left;
+    margin-bottom: 21px;
+}
+
+div.modal__content .modal__field__select label {
+    display: block;
+    padding-left: 9px;
+}
+
+.create__customer div.modal__content div.modal__field__select div.customer__select div.ant-select-selector {
+    border: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
 div.modal__content {
     text-align: center;
     margin-top: 25px;
