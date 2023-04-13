@@ -325,7 +325,47 @@ const updateProductAttribute = async (req, res)=>{
     }
 };
 
+const getProductSpecial = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {page_size, page} = req.query;
+        const result = await axios({
+            url: `${local}/product/special-discount?page_size=${page_size}&page=${page}&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
 
+const createProductSpecial = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        const result = await axios({
+            url: `${local}/product/special-discount/create`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        } 
+    }
+}
 
 module.exports = {
     getProductTypeList,
@@ -340,5 +380,7 @@ module.exports = {
     createProductAttribute,
     deleteProductAttribute,
     updateProductType,
-    updateProductAttribute
+    updateProductAttribute,
+    getProductSpecial,
+    createProductSpecial
 }

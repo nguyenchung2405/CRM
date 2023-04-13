@@ -5,7 +5,7 @@ const initialState = {
     isCreateCustomer: null,
     dataCustomer: null,
     totalCustomer: null,
-    customerTypeList: [{name: "VIP"}, {name: "UBND"}, {name: "Thành Đoàn"}, {name: "Thành Ủy"}, {name: "Chính phủ"}],
+    customerTypeList: [],
     jobTypeList: [{name: "Bất động sản", id:1}, {name: "Công nghệ thông tin", id:2}, {name: "Kiến trúc", id:3}, {name: "Marketing", id:4}]
 }
 
@@ -38,10 +38,13 @@ const customerSlice = createSlice({
         },
         setJobTypeList: (state, action)=>{
             state.jobTypeList = action.payload;
+        },
+        addCustomerType: (state, action)=>{
+            state.customerTypeList.unshift(action.payload)
         }
     }
 })
 
 export const {setCustomerList, addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
-setCustomerTypeList, setJobTypeList} = customerSlice.actions;
+setCustomerTypeList, setJobTypeList, addCustomerType} = customerSlice.actions;
 export default customerSlice.reducer;

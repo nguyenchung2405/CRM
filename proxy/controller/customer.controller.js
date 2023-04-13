@@ -100,8 +100,9 @@ const getDetailCustomer = async (req, res)=>{
 const getCustomerTypeList = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
+        let {page, page_size} = req.query;
         const result = await axios({
-            url: `${local}/`,
+            url: `${local}/client/type?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
             method: "GET",
             headers: {
                 Authorization: authorization
@@ -116,6 +117,28 @@ const getCustomerTypeList = async (req, res)=>{
         }
     }
 };
+
+const createCustomerType = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        console.log(req.body)
+        const result = await axios({
+            url: `${local}/client/type/create`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
 
 const getJobTypeList = async (req, res)=>{
     try {
@@ -144,5 +167,6 @@ module.exports = {
     updateCustomer,
     getDetailCustomer,
     getCustomerTypeList,
-    getJobTypeList
+    getJobTypeList,
+    createCustomerType
 }

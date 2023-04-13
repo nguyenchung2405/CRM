@@ -9,7 +9,9 @@ const initialState = {
     productAttribute: [],
     productListFull: [],
     totalProductType: "",
-    totalProductAttribute: ""
+    totalProductAttribute: "",
+    productSpecialList: [],
+    totalProductSpecialList: 0
 };
 
 const productSlice = createSlice({
@@ -80,6 +82,24 @@ const productSlice = createSlice({
             let { attribute_id, data } = action.payload;
             let indexOfType = state.productAttribute.findIndex( type => type.id === attribute_id);
             state.productAttribute[indexOfType] = data;
+        },
+        // Xử lý Product Special
+        setProductSpecial: (state, action)=>{
+            state.productSpecialList = action.payload;
+        },
+        setTotalProductSpecial: (state, action)=>{
+            state.totalProductSpecialList = action.payload;
+        },
+        addProductSpecial: (state, action)=>{
+            state.productSpecialList.unshift(action.payload)
+        },
+        removeProductSpecial: (state,action)=>{
+            let index = state.productSpecialList.findIndex(product => product.id === action.payload);
+            state.productSpecialList.splice(index, 1);
+        },
+        updateProductSpecial: (state, action)=>{
+            let index = state.productSpecialList.findIndex(product => product.id === action.payload.id);
+            state.productSpecialList[index] = action.payload.data;
         }
     }
 });
@@ -87,5 +107,6 @@ const productSlice = createSlice({
 export const { setProductList, setTotalProduct, setProductChannel, setProductType,
 setProductLocation, setProductAttribute, setProductListFull, addProduct, removeProduct,
 updateProductWithID, setTotalProductType, addProductType, removeProductType, updateProductType,
-setTotalProductAttribute, addProductAttribute, removeProductAttribute, updateProductAttribute} = productSlice.actions;
+setTotalProductAttribute, addProductAttribute, removeProductAttribute, updateProductAttribute,
+setProductSpecial, setTotalProductSpecial, addProductSpecial, removeProductSpecial, updateProductSpecial} = productSlice.actions;
 export default productSlice.reducer;

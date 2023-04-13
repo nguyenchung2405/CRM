@@ -81,10 +81,10 @@ export async function getDetailCustomerAPI(client_id){
     }
 }
 
-export async function getCustomerTypeListAPI(){
+export async function getCustomerTypeListAPI(page, page_size){
     try {
         const result = await axios({
-            url: `${local}/api/client/type-list`,
+            url: `${local}/api/client/type-list?page=${page}&page_size=${page_size}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -105,6 +105,25 @@ export async function getJobTypeListAPI(){
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function createCustomerTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/client/create-type`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: {
+                name: data
+            }
         });
         return result.data;
     } catch (error) {
