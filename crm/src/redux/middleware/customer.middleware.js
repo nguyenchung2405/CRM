@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
-import { createCustomerAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer, setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
+import { CREATE_CUSTOMER, CREATE_CUSTOMER_TYPE, GET_CUSTOMER_DETAIL, GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
+import { createCustomerAPI, createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
+import { addCustomer, addCustomerType, setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -57,7 +57,6 @@ function* searchCustomer(payload){
 function* updateCustomer(payload){
     let {data} = payload;
     let result = yield call(updateCustomerAPI, data);
-    console.log(result)
     let {result: code, data: dataResponse} = result.data;
     if(code){
         yield put(updateCusomer(dataResponse))
@@ -79,13 +78,11 @@ function* getDetailCustomer(payload){
     }
 }
 
-function* getCustomerTypeList(){
+function* getCustomerTypeList(payload){
     try {
-        const result = yield call(getCustomerTypeListAPI);
-        console.log(result)
-        if(result.data){
-            yield put(setCustomerTypeList([]))
-        }
+        let {page, page_size} = payload.data;
+        const result = yield call(getCustomerTypeListAPI, page, page_size);
+        yield put(setCustomerTypeList(result.data.client_type))
     } catch (error) {
         console.log(error)
     }
@@ -94,9 +91,19 @@ function* getCustomerTypeList(){
 function* getJobTypeList(){
     try {
         const result = yield call(getJobTypeListAPI);
-        console.log(result)
         if(result.data){
             yield put(setJobTypeList([]))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* createCustomerType(payload){
+    try {
+        const result = yield call(createCustomerTypeAPI, payload.data);
+        if(result.data.result){
+            yield put(addCustomerType(result.data.data.client_type))
         }
     } catch (error) {
         console.log(error)
@@ -109,6 +116,8 @@ export default function* customerMiddleware(){
     yield takeLatest(SEARCH_CUSTOMER, searchCustomer)
     yield takeLatest(UPDATE_CUSTOMER, updateCustomer)
     yield takeLatest(GET_CUSTOMER_DETAIL, getDetailCustomer)
-    yield takeLatest(GET_CUSTOMER_TYPE_LIST, getCustomerTypeList)
     yield takeLatest(GET_JOB_TYPE_LIST, getJobTypeList)
+    // Customer Type
+    yield takeLatest(GET_CUSTOMER_TYPE_LIST, getCustomerTypeList)
+    yield takeLatest(CREATE_CUSTOMER_TYPE, createCustomerType)
 }

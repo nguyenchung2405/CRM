@@ -23,10 +23,11 @@ export default function CreateCustomer(props) {
     let [file, setFile] = useState("");
     let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
     const {isCreateCustomer, dataCustomer, customerTypeList, jobTypeList} = useSelector(state => state.customerReducer)
-    console.log(customerTypeList, jobTypeList)
+    
     useEffect(()=>{
       dispatch({
-        type: GET_CUSTOMER_TYPE_LIST
+        type: GET_CUSTOMER_TYPE_LIST,
+        data: { page: 1, page_size: 100}
       })
       dispatch({
         type: GET_JOB_TYPE_LIST
@@ -264,7 +265,7 @@ export default function CreateCustomer(props) {
                 </div>
                 <div className="modal__field__select">
                     <label>Loại khách hàng</label>
-                    <SelectType list={customerTypeList} />
+                    <SelectType list={customerTypeList} valueForm={valueForm} setValueForm={setValueForm} />
                 </div>
                 <div className="modal__field__select">
                     <label>Loại ngành nghề</label>

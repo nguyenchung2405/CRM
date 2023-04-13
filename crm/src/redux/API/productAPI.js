@@ -259,3 +259,40 @@ export async function searchProductAttributeAPI(data){
         return "Thât bại"
     }
 }
+
+export async function getProductSpecialListAPI(page, page_size){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/special-discount?page_size=${page_size}&page=${page}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+};
+
+export async function createProductSpecialAPI(data){
+    try {
+        let newProduct = {
+            ...data,
+            discounted_price: data.discounted_price / 1000000
+        }
+        const result = await axios({
+            url: `${local}/api/product/special-discount/create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newProduct
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}

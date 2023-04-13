@@ -17,6 +17,7 @@ import ChanelGContainer from '../src/container/ChanelGContainer';
 import ProductEditableTable from './components/product/ProductEditableTable';
 import TypeAndAttribute from './components/product/TypeAndAttribute';
 import CustomerTableType from "./components/customer/CustomerTableType"
+import SpecialProductTable from './components/product/special/SpecialProductTable';
 function App() {
 
   const renderMF = () => {
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/crm/channel" element={<ChanelGContainer />} />
                 <Route path="/crm/product" element={<ProductEditableTable />} />
                 <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
+                <Route path="/crm/product/special" element={<SpecialProductTable />} />
                 {/**<Route path="*" element={<PageNotFound />} /> */}
               </Routes>
             </div>
@@ -59,6 +61,7 @@ function App() {
               <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
               <Route path="/crm/product" element={<ProductEditableTable />} />
               <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
+              <Route path="/crm/product/special" element={<SpecialProductTable />} />
               <Route path="/crm/channel" element={<ChanelGContainer />} />
               {/**<Route path="*" element={<PageNotFound />} /> */}
             </Routes>

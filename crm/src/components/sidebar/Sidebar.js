@@ -24,7 +24,7 @@ export default function Sidebar() {
     // ]
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
-            getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "10", <BsFileEarmarkFill />,[
+            getItem("Quản lý khách hàng", "10", <BsFileEarmarkFill />,[
                 getItem(<Link to={`${uri}/crm/customer/type`}>Loại, Ngành nghề</Link> , "18" , <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/customer`}>Khách hàng</Link>, "16", <FcDepartment />),
             ]),
@@ -33,6 +33,7 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/channel`}>kênh, nhóm</Link>, "15", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/type-att`}>loại, thuộc tính</Link>, "13", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product`}>sản phẩm</Link>, "14", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/special`}>sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
         ])
     ]
@@ -76,7 +77,10 @@ export default function Sidebar() {
                                 <NavLink to="/crm/product/type-att">Quản lý loại, thuộc tính sản phẩm</NavLink>
                             </li>
                             <li>
-                                <NavLink to="/crm/channel">Quản lý kênh </NavLink>
+                                <NavLink to="/crm/channel">Quản lý kênh</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/product/special">Quản lý sản phẩm đặc biệt</NavLink>
                             </li>
                         </ul>
                     </div>
