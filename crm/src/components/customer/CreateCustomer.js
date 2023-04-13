@@ -2,9 +2,10 @@ import { Image, Modal, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
+import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
+import SelectType from './SelectType';
 
 export default function CreateCustomer(props) {
 
@@ -21,7 +22,16 @@ export default function CreateCustomer(props) {
     let [isShowModal, setIsShowModal] = useState(false);
     let [file, setFile] = useState("");
     let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
-    const {isCreateCustomer, dataCustomer} = useSelector(state => state.customerReducer)
+    const {isCreateCustomer, dataCustomer, customerTypeList, jobTypeList} = useSelector(state => state.customerReducer)
+    console.log(customerTypeList, jobTypeList)
+    useEffect(()=>{
+      dispatch({
+        type: GET_CUSTOMER_TYPE_LIST
+      })
+      dispatch({
+        type: GET_JOB_TYPE_LIST
+      })
+    }, [])
     
     useEffect(()=>{
       if(client_id && dataCustomer === null){
@@ -252,13 +262,23 @@ export default function CreateCustomer(props) {
                         <label>Tên viết tắt</label>
                     </div>
                 </div>
-                <div className="modal__field">
-                    <input type="text" name="business_type"
-                    value={valueOfField("business_type")}
-                    onChange={handleChangeInput} 
-                    />
-                    <label>Loại ngành nghề</label>
+                <div className="modal__field__select">
+                    <label>Loại khách hàng</label>
+                    <SelectType list={customerTypeList} />
                 </div>
+                <div className="modal__field__select">
+                    <label>Loại ngành nghề</label>
+                    <SelectType list={jobTypeList} mode="multiple" />
+                </div>
+                {/**
+                  <div className="modal__field">
+                        <input type="text" name="business_type"
+                        value={valueOfField("business_type")}
+                        onChange={handleChangeInput} 
+                        />
+                    <label className="customer__select__label">Loại ngành nghề</label>
+                </div>
+              */}
                 <div className="modal__field">
                     <input type="text" name="address" 
                     value={valueOfField("address")}

@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
-import { createCustomerAPI, getCustomerListAPI, getDetailCustomerAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer, setCustomerList, setDataCustomer, setTotalCustomer, updateCusomer } from "../features/customer.feature";
+import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
+import { createCustomerAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
+import { addCustomer, setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -79,10 +79,36 @@ function* getDetailCustomer(payload){
     }
 }
 
+function* getCustomerTypeList(){
+    try {
+        const result = yield call(getCustomerTypeListAPI);
+        console.log(result)
+        if(result.data){
+            yield put(setCustomerTypeList([]))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* getJobTypeList(){
+    try {
+        const result = yield call(getJobTypeListAPI);
+        console.log(result)
+        if(result.data){
+            yield put(setJobTypeList([]))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* customerMiddleware(){
     yield takeLatest(GET_CUSTOMER_LIST, getCustomerList)
     yield takeLatest(CREATE_CUSTOMER, createCustomer)
     yield takeLatest(SEARCH_CUSTOMER, searchCustomer)
     yield takeLatest(UPDATE_CUSTOMER, updateCustomer)
     yield takeLatest(GET_CUSTOMER_DETAIL, getDetailCustomer)
+    yield takeLatest(GET_CUSTOMER_TYPE_LIST, getCustomerTypeList)
+    yield takeLatest(GET_JOB_TYPE_LIST, getJobTypeList)
 }

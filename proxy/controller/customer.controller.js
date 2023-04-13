@@ -97,10 +97,52 @@ const getDetailCustomer = async (req, res)=>{
     }
 }
 
+const getCustomerTypeList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const getJobTypeList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getCustomerList,
     createCustomer,
     searchCustomer,
     updateCustomer,
-    getDetailCustomer
+    getDetailCustomer,
+    getCustomerTypeList,
+    getJobTypeList
 }
