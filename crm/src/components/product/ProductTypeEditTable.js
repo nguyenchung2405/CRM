@@ -141,7 +141,8 @@ export default function ProductTypeEditTable() {
             editable: true,
             title: "Loại",
             dataIndex: "name",
-            className: "type__name"
+            className: "type__name",
+            width: "50%"
         },
         {
             render: (_, record) => {

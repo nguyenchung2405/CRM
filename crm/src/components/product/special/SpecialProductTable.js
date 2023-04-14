@@ -181,18 +181,22 @@ export default function SpecialProductTable() {
             title: "Sản phẩm",
             width: "30%",
             dataIndex: "product_name",
+            className: "product__name",
+            width: "30%"
         },
         {
             editable: true,
             title: "Loại khách hàng",
             width: "30%",
             dataIndex: "client_type_name",
+            width: "30%"
         },
         {
             editable: true,
             title: "Giá",
             width: "30%",
             dataIndex: "discounted_price",
+            width: "30%",
             render: (_, record)=>{
                 return new Intl.NumberFormat("vi-VN").format(record.discounted_price) + " VNĐ"
             }
