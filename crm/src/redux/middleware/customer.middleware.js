@@ -91,9 +91,7 @@ function* getCustomerTypeList(payload){
 function* getJobTypeList(){
     try {
         const result = yield call(getJobTypeListAPI);
-        if(result.data){
-            yield put(setJobTypeList([]))
-        }
+        yield put(setJobTypeList(result.data.sector))
     } catch (error) {
         console.log(error)
     }

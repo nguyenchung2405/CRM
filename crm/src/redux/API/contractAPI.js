@@ -43,7 +43,7 @@ export async function createContractAPI(data) {
                 ...item,
                 price_ID: item.price_ID.id,
                 product_ID: item.product_ID.id,
-                custom_price: item.custom_price / 1000000,
+                custom_price: item.custom_price || null,
                 details: item.details.map(detail => {
                     return {
                         ...detail,
@@ -157,7 +157,7 @@ export async function createRequestAPI(data){
                     "product_ID": data.product_ID,
                     "price_ID": data.price_ID,
                     "quality": data.quality,
-                    "custom_price": data.custom_price / 1000000 || 0,
+                    "custom_price": data.custom_price / 1000000 || null,
                 }
             ]
         };
@@ -257,6 +257,23 @@ export async function updateDetailAPI(data){
                 Authorization: "Bearer " + TOKEN
             },
             data: newDetail
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function createPaymentAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/payment-add`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
         });
         return result.data;
     } catch (error) {

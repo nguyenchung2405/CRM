@@ -159,7 +159,6 @@ const updateContract = async (req, res)=>{
 
 const createRequest = async (req, res)=>{
     try {
-        console.log(req.body)
         let { headers: { authorization } } = req;
         const result = await axios({
             url: `${local}/contract/add-request`,
@@ -265,6 +264,27 @@ const updateDetail = async (req, res)=>{
     }
 }
 
+const createPayment = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/payment/add`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -278,5 +298,6 @@ module.exports = {
     deleteRequest,
     updateRequest,
     createDetail,
-    updateDetail
+    updateDetail,
+    createPayment
 }

@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -153,7 +153,7 @@ export default function CreateContract() {
       return valueForm[name]
     }
   }
-  console.log(customerInfor)
+
   const valueOfCustomer = (name) => {
     if (name === "daiDien") {
       if (customerInfor["representative"] && customerInfor["represent_position"] && customerInfor["representative"] !== null && customerInfor["represent_position"] !== null) {
@@ -227,11 +227,23 @@ export default function CreateContract() {
 
   const handleAddPayment = ()=>{
     if(+soTien >= 1000){
-      let newDotThanhToan = [...dotThanhToan, {
-        total_value: +soTien
-      }]
-      setDotThanhToan([...newDotThanhToan])
-      setSoTien("")
+      if(!window.location.href.includes("detail")){
+        let newDotThanhToan = [...dotThanhToan, {
+          total_value: +soTien
+        }]
+        setDotThanhToan([...newDotThanhToan])
+        setSoTien("")
+      } else {
+        let newPayment = {
+          total_value: +soTien,
+          contract_ID: +contract_id
+        }
+        dispatch({
+          type: CREATE_PAYMENT,
+          data: newPayment
+        })
+        setSoTien("")
+      }
     }
   }
 
@@ -691,17 +703,16 @@ export default function CreateContract() {
               <label>Chiết khấu (%)</label>
               </div>
             <div className="contract__field">
-              {/**
               <input className="style" type="text"
                 name="VAT"
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("VAT")}
+                // onChange={(e) => {
+                //   let { value, name } = e.target;
+                //   handleChangeValue(name, +value)
+                // }}
+                // value={valueOfField("VAT")}
+                disabled
               />
-              <label>Thuế GTGT (%)</label>
-            */}
+              <label>Giá trị thực hiện</label>
             </div>
             <div className="contract__field">
               <input

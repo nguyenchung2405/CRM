@@ -1,5 +1,5 @@
 const express = require("express");
-const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial } = require("../controller/product.controller");
+const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial, getProductSpecialForClient } = require("../controller/product.controller");
 const productRouter = express.Router();
 
 productRouter.get("/item/list", getProductList)
@@ -20,6 +20,7 @@ productRouter.put("/attribute/update", updateProductAttribute)
 // Product Special
 productRouter.get("/special-discount", getProductSpecial)
 productRouter.post("/special-discount/create", createProductSpecial)
+productRouter.get("/special-discount-client", getProductSpecialForClient)
 
 module.exports = {
     productRouter

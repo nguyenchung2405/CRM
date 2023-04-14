@@ -144,7 +144,7 @@ const getJobTypeList = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         const result = await axios({
-            url: `${local}/`,
+            url: `${local}/client/sector?page_size=100&page=1&sort_by=id&asc_order=true`,
             method: "GET",
             headers: {
                 Authorization: authorization
