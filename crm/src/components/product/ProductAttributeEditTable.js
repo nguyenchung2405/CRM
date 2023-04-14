@@ -144,6 +144,8 @@ export default function ProductAttributeEditTable() {
             editable: true,
             title: "Thuộc tính",
             dataIndex: "name",
+            className: "attribute__name",
+            width: "50%"
         },
         {
             render: (_, record) => {

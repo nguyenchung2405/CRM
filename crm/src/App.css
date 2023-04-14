@@ -401,6 +401,10 @@ p.required__field {
     display: flex;
     align-items: center;
 }
+.custumer_title h2 {
+    position: inherit;
+    width: auto;
+}
 .customer__table li.ant-pagination-item-active a {
     color: #459C60;
 }
@@ -456,7 +460,7 @@ ul.ant-pagination {
     width: 100px;
 }
 
-.product__table .product__table__kenhSP {
+.product__table .product__name {
     padding-left: 30px;
 }
 
@@ -1454,12 +1458,13 @@ svg.style__svg {
 }
 
 .product__TypeAndAtt__table {
-    padding: 35px 40px 0 40px;
+    /* padding: 35px 40px 0 40px; */
     margin-right: 0;
-    margin-top: 119px;
+    /* margin-top: 119px; */
 }
 
-.product__TypeAndAtt__table .type__name {
+.product__TypeAndAtt__table .type__name,
+.product__TypeAndAtt__table .attribute__name {
     padding-left: 30px;
 }
 

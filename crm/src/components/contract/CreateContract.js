@@ -34,6 +34,7 @@ export default function CreateContract() {
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
+  const [countPayment, setCountPayment] = useState();
 
   useEffect(() => {
     dispatch({
@@ -152,7 +153,7 @@ export default function CreateContract() {
       return valueForm[name]
     }
   }
-
+  console.log(customerInfor)
   const valueOfCustomer = (name) => {
     if (name === "daiDien") {
       if (customerInfor["representative"] && customerInfor["represent_position"] && customerInfor["representative"] !== null && customerInfor["represent_position"] !== null) {
@@ -273,7 +274,7 @@ export default function CreateContract() {
           </div>
           <div className="field__input field__flex">
             <div className="field__input_2">
-              {!window.location.href.includes("create") ? <label>Loại hợp đồng</label> : ""}
+              <label>Loại hợp đồng</label>
               <Select
                 className="style"
                 type="text"
@@ -288,7 +289,7 @@ export default function CreateContract() {
               {/* <input className="style" placeholder="Năm" type="text" />* */}
             </div>
             <div className="field__input_2">
-              {!window.location.href.includes("create") ? <label>Ngày bắt đầu - Ngày kết thúc</label> : ""}  
+              <label>Ngày bắt đầu - Ngày kết thúc</label>
               <RangePicker
                 className="date__range__picker"
                 format={"DD-MM-YYYY"}
@@ -326,7 +327,7 @@ export default function CreateContract() {
           <p>Thông tin khách hàng</p>
           <div className="field__input field__flex">
             <div className="field__input_2">
-              {!window.location.href.includes("create") ? <label>Tên khách hàng</label> : ""}  
+              <label>Tên khách hàng</label>
               <Select
                 className="style"
                 showSearch
@@ -375,7 +376,7 @@ export default function CreateContract() {
               </svg>
             </div>
             <div className="field__input_2">
-              {!window.location.href.includes("create") ? <label>Người đầu mối</label> : ""}  
+              <label>Người đầu mối</label>
               <Select
                 className="style"
                 showSearch
@@ -671,6 +672,7 @@ export default function CreateContract() {
             isUpdateModal={isUpdateModal}
             setIsUpdateModal={setIsUpdateModal}
             contract_id={contract_id}
+            customerInfor={customerInfor}
           />
         </div>
         <div className="create__contract__value border_bottom_3px">
@@ -766,12 +768,13 @@ export default function CreateContract() {
             </div>
             <div className="display__flex soDotThanhToan">
               <label htmlFor="soDotThanhToan">Số đợt thanh toán</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { console.log(e.target.value) }}>
+              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
                 <option value="1">1 đợt</option>
                 <option value="2">2 đợt</option>
                 <option value="3">3 đợt</option>
                 <option value="4">nhiều đợt</option>
               </select>
+              {+countPayment === 4 ? <input type="text" style={{ width: "50px", textAlign: "center" }} /> : ""}
             </div>
           </div>
           <div className="display__flex">

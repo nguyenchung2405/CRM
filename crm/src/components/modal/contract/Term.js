@@ -9,7 +9,7 @@ import { setProductAttribute, setProductList, setProductType } from '../../../re
 
 export default function TermModal(props) {
 
-  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal, contract_id } = props;
+  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal, contract_id, customerInfor } = props;
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -19,13 +19,13 @@ export default function TermModal(props) {
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
   const { productChannel, productLocation, productType, productAttribute, productList } = useSelector(state => state.productReducer);
-
+  console.log(customerInfor, valueModal)
   useEffect(() => {
     dispatch({
       type: GET_PRODUCT_CHANNEL,
       data: { page: 1, page_size: 1000 }
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (typeof channelID === "number" && channelID !== null) {
@@ -34,7 +34,7 @@ export default function TermModal(props) {
         data: { page: 1, page_size: 1000, channelID }
       })
     }
-  }, [channelID])
+  }, [channelID, dispatch])
 
   useEffect(()=>{
     if (typeof locationID === "number" && locationID !== null) {
@@ -43,7 +43,7 @@ export default function TermModal(props) {
         data: { page: 1, page_size: 1000, locationID }
       })
     }
-  }, [locationID])
+  }, [locationID, dispatch])
 
   useEffect(()=>{
     if((typeof locationID === "number" && locationID !== null) && (typeof typeID === "number" && typeID !== null)) {
@@ -52,7 +52,7 @@ export default function TermModal(props) {
         data: { page: 1, page_size: 1000, locationID, typeID }
       })
     }
-  }, [locationID, typeID])
+  }, [locationID, typeID, dispatch])
   
   useEffect(() => {
     if( typeof locationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
@@ -62,7 +62,7 @@ export default function TermModal(props) {
       });
     }
     setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null })
-  }, [locationID, typeID, attributeID])
+  }, [locationID, typeID, attributeID, dispatch])
 
   useEffect(() => {
     if (isShowModal) {
@@ -127,6 +127,7 @@ export default function TermModal(props) {
       // Khi cập nhật thì PUT riêng từng API
       if (!isUpdateModal) {
         valueModal.contract_id = contract_id;
+        console.log(valueModal)
         dispatch({
           type: CREATE_REQUEST,
           data: valueModal
@@ -158,7 +159,6 @@ export default function TermModal(props) {
   };
 
   const valueOfField = (name) => {
-
     if (valueModal[name] && valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined) {
       if (name === "real_price") {
         return new Intl.NumberFormat("vi-VN").format(valueModal[name])
@@ -238,102 +238,106 @@ export default function TermModal(props) {
                    />
                  </div>
                   */}
-          <div className="modal__field field__select">
-            <div>
-              <label className="term__label">Kênh sản phẩm</label>
-              <Select
-                className="style"
-                // placeholder="Chọn kênh sản phẩm"
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                value={channelID}
-                onChange={(value) => {
-                  setChannelID(value)
-                  setLocationID(null)
-                  setTypeID(null)
-                  setAttributeID(null)
-                  dispatch(setProductList([]))
-                  dispatch(setProductType([]))
-                  dispatch(setProductAttribute([]))
-                }}
-              >
-                {renderOptionProductChannel()}
-              </Select>
-            </div>
-          </div>
-          <div className="modal__field field__select">
-            <div>
-              <label className="term__label">Nhóm sản phẩm</label>
-              <Select
-                className="style"
-                // placeholder="Chọn nhóm sản phẩm"
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                value={locationID}
-                onChange={(value) => {
-                  setLocationID(value)
-                  setTypeID(null)
-                  setAttributeID(null)
-                  dispatch(setProductList([]))
-                  dispatch(setProductAttribute([]))
-                }}
-              >
-                {renderOptionProductLocation()}
-              </Select>
-            </div>
-          </div>
-          <div className="modal__field field__select">
-            <div>
-              <label className="term__label">Loại sản phẩm</label>
-              <Select
-                className="style"
-                // placeholder="Chọn loại sản phẩm"
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                value={typeID}
-                onChange={(value) => {
-                  setTypeID(value)
-                  setAttributeID(null)
-                  dispatch(setProductList([]))
-                }}
-              >
-                {renderOptionProductType()}
-              </Select>
-            </div>
-          </div>
-          <div className="modal__field field__select">
-            <div>
-              <label className="term__label">Thuôc tính sản phẩm</label>
-              <Select
-                className="style"
-                // placeholder="Chọn thuôc tính sản phẩm"
-                showSearch
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                value={attributeID}
-                onChange={(value) => {
-                  setAttributeID(value)
-                }}
-              >
-                {renderOptionProductAttribute()}
-              </Select>
-            </div>
-          </div>
-          <div className="modal__field">
-            <input type="text"
-              name="real_price"
-              value={valueOfField("product_name")}
-              disabled
-            />
-            <label>Sản phẩm</label>
-          </div>
+          {isUpdateModal ? "" :
+            <>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Kênh sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn kênh sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={channelID}
+                    onChange={(value) => {
+                      setChannelID(value)
+                      setLocationID(null)
+                      setTypeID(null)
+                      setAttributeID(null)
+                      dispatch(setProductList([]))
+                      dispatch(setProductType([]))
+                      dispatch(setProductAttribute([]))
+                    }}
+                  >
+                    {renderOptionProductChannel()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Nhóm sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn nhóm sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={locationID}
+                    onChange={(value) => {
+                      setLocationID(value)
+                      setTypeID(null)
+                      setAttributeID(null)
+                      dispatch(setProductList([]))
+                      dispatch(setProductAttribute([]))
+                    }}
+                  >
+                    {renderOptionProductLocation()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Loại sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn loại sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={typeID}
+                    onChange={(value) => {
+                      setTypeID(value)
+                      setAttributeID(null)
+                      dispatch(setProductList([]))
+                    }}
+                  >
+                    {renderOptionProductType()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Thuôc tính sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn thuôc tính sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={attributeID}
+                    onChange={(value) => {
+                      setAttributeID(value)
+                    }}
+                  >
+                    {renderOptionProductAttribute()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field">
+                <input type="text"
+                  name="real_price"
+                  value={valueOfField("product_name")}
+                  disabled
+                />
+                <label>Sản phẩm</label>
+              </div>
+            </>
+          }
           {/**
                   <div className="modal__field field__select">
                     <div>
@@ -371,10 +375,6 @@ export default function TermModal(props) {
             <input type="text"
               name="real_price"
               value={valueOfField("real_price")}
-              onChange={(e) => {
-                // let {value, name} = e.target;
-                // handleChange(name, +value)
-              }}
               disabled
             />
             <label>Đơn giá</label>
@@ -387,7 +387,6 @@ export default function TermModal(props) {
                 let { value, name } = e.target;
                 handleChange(name, +value)
               }}
-            // disabled
             />
             <label>Số lượng</label>
           </div>
@@ -437,12 +436,6 @@ export default function TermModal(props) {
                  />
                </div>
                   */}
-
-          {/**
-                      <div className="modal__field">
-                    <input type="text" placeholder="Ghi chú" />
-                  </div>
-                */}
         </div>
       </Modal>
     </div>
