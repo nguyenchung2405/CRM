@@ -4,10 +4,24 @@ import { Select } from 'antd';
 export default function SelectType(props){
     let { list, mode, setValueForm, valueForm } = props;
     let {Option} = Select;
+    const [multi, setMulti] = useState([]);
+    console.log(multi)
+    useEffect(()=>{
+        if(valueForm.sectors?.length > 0){
+            let newMulti = valueForm.sectors.map(sector => {
+                if(sector.id){
+                    return sector.id
+                } else {
+                    return sector
+                }
+            });
+            setMulti(newMulti)
+        }
+    }, [valueForm])
 
     const renderList = ()=>{
         return list?.map( item => {
-            return <Option value={item.id}>{item.name}</Option>
+            return <Option key={item.id} value={item.id}>{item.name}</Option>
         })
     };
 
@@ -15,15 +29,19 @@ export default function SelectType(props){
         <Select
             className="customer__select style"
             mode={mode}
-            value={mode === "multiple" ? [] : valueForm?.client_type_ID}
+            value={mode === "multiple" ? multi : valueForm?.client_type_ID}
             showSearch
             allowClear
             filterOption={(input, option) =>
                 (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            onChange={(value)=>{
+            onChange={(value, option)=>{
                 if(mode === "multiple"){
-                    console.log(value)
+                    setMulti(value)
+                    setValueForm({
+                        ...valueForm,
+                        sectors: value
+                    })
                 } else {
                     setValueForm({
                         ...valueForm,

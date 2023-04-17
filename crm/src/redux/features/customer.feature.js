@@ -6,7 +6,7 @@ const initialState = {
     dataCustomer: null,
     totalCustomer: null,
     customerTypeList: [],
-    jobTypeList: [{name: "Bất động sản", id:1}, {name: "Công nghệ thông tin", id:2}, {name: "Kiến trúc", id:3}, {name: "Marketing", id:4}]
+    jobTypeList: []
 }
 
 const customerSlice = createSlice({

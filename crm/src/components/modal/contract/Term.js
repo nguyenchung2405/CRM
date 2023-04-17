@@ -3,9 +3,10 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
+import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
+import { getProductSpecialForClientAPI } from '../../../redux/API/productAPI';
 
 export default function TermModal(props) {
 
@@ -18,8 +19,8 @@ export default function TermModal(props) {
   const [locationID, setLocationID] = useState(null);
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
-  const { productChannel, productLocation, productType, productAttribute, productList } = useSelector(state => state.productReducer);
-  console.log(customerInfor, valueModal)
+  const { productChannel, productLocation, productType, productAttribute, productList, customPriceForClient } = useSelector(state => state.productReducer);
+
   useEffect(() => {
     dispatch({
       type: GET_PRODUCT_CHANNEL,
@@ -61,7 +62,7 @@ export default function TermModal(props) {
         data: { page: 1, pageSize: 1000, locationID, typeID, attributeID }
       });
     }
-    setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null })
+    setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null, custom_price: "" })
   }, [locationID, typeID, attributeID, dispatch])
 
   useEffect(() => {
@@ -77,14 +78,35 @@ export default function TermModal(props) {
   useEffect(() => {
     if(productList.length === 1){
       setValueModal({
-            ...valueModal,
-            product_ID: productList[0].id,
-            real_price: productList[0].price.price * 1000000,
-            price_ID: productList[0].price.id,
-            product_name: productList[0].name
-          })
+        ...valueModal,
+        product_ID: productList[0].id,
+        real_price: productList[0].price.price * 1000000,
+        price_ID: productList[0].price.id,
+        product_name: productList[0].name
+      })
     }
   }, [productList])
+
+  useEffect(()=>{
+    if(valueModal.product_ID && typeof valueModal.product_ID === "number" && !isUpdateModal){
+      dispatch({
+        type: GET_PRODUCT_SPECIAL_FOR_CLIENT,
+        data: {
+          client_type_ID: customerInfor.client_type_ID,
+          product_ID: valueModal.product_ID
+        }
+      })
+    }
+  }, [valueModal.product_ID, customerInfor.client_type_ID])
+
+  useEffect(()=>{
+    if(typeof customPriceForClient === "number" && customPriceForClient > 1){
+      setValueModal({
+        ...valueModal,
+        custom_price: customPriceForClient * 1000000
+      })
+    }
+  }, [customPriceForClient])
 
   const handleCancel = () => {
     setIsShowModal(false);
@@ -115,8 +137,9 @@ export default function TermModal(props) {
           },
           id: valueModal.id,
           details: valueModal.details,
-          custom_price: valueModal.custom_price || 0
+          custom_price: valueModal.custom_price / 1000000 || 0
         };
+        console.log(newRequest)
         dispatch(addContractRequest(newRequest));
         setIsUpdateModal(false)
       } else {
@@ -311,7 +334,7 @@ export default function TermModal(props) {
               </div>
               <div className="modal__field field__select">
                 <div>
-                  <label className="term__label">Thuôc tính sản phẩm</label>
+                  <label className="term__label">Thuộc tính sản phẩm</label>
                   <Select
                     className="style"
                     // placeholder="Chọn thuôc tính sản phẩm"

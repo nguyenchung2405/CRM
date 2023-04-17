@@ -148,7 +148,7 @@ export default function CreateCustomer(props) {
     };
 
     const showRemind = (nameOfField)=>{
-      if(validateForm[nameOfField]){
+      if(validateForm[nameOfField] && nameOfField.includes("phone")){
           return <p className="required__field">* Số điện thoại không hợp lệ. (Bắt đầu bằng 0 hoặc 84 + 9 số)</p>
       } else if(validateForm[nameOfField]){
         return <p className="required__field">* Email không hợp lệ</p>
@@ -269,7 +269,7 @@ export default function CreateCustomer(props) {
                 </div>
                 <div className="modal__field__select">
                     <label>Loại ngành nghề</label>
-                    <SelectType list={jobTypeList} mode="multiple" />
+                    <SelectType list={jobTypeList} mode="multiple" valueForm={valueForm} setValueForm={setValueForm} />
                 </div>
                 {/**
                   <div className="modal__field">
@@ -298,7 +298,7 @@ export default function CreateCustomer(props) {
                     onBlur={regexValue}
                     onChange={handleChangeInput} />
                     <label>Số điện thoại</label>
-                    {validateForm?.phone ? showRemind("phone") : ""}
+                    {validateForm?.phone ? showRemind("represent_phone") : ""}
                 </div>
                 <div className="modal__field">
                     <input type="text" name="email" 
@@ -306,7 +306,7 @@ export default function CreateCustomer(props) {
                     onBlur={regexValue}
                     onChange={handleChangeInput} />
                     <label>Email</label>
-                    {validateForm?.email ? showRemind("email") : ""}
+                    {validateForm?.email ? showRemind("represent_email") : ""}
                 </div>
                 { renderInforBusiness() }
                 <div className="modal__upload">

@@ -296,3 +296,19 @@ export async function createProductSpecialAPI(data){
         return "Thât bại"
     }
 }
+
+export async function getProductSpecialForClientAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/special-discount-client?product_ID=${data.product_ID}&client_type_ID=${data.client_type_ID}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}

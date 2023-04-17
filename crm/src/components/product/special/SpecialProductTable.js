@@ -1,4 +1,4 @@
-import { Input, Popconfirm, Select, Table, Typography, Form } from 'antd';
+import { Input, Popconfirm, Select, Table, Typography, Form, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
@@ -219,21 +219,24 @@ export default function SpecialProductTable() {
                         </Popconfirm>
                     </span>
                 ) : (
-                    <span>
-                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                            <MdOutlineModeEditOutline className="style__svg" />
-                        </Typography.Link>
-                        <Popconfirm title="Có chắc muốn xóa?" 
-                            onConfirm={()=>{
-                                console.log(record)
-                            }} 
-                            okText="Có" 
-                            cancelText="Không" 
-                        >
-                            <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
-                        </Popconfirm>
-                    
-                    </span>
+                        <span>
+                            <Tooltip title="Chỉnh sửa" color="green" >
+                                <Typography.Link style={{ display: "inline-block" }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                    <MdOutlineModeEditOutline className="style__svg" />
+                                </Typography.Link>
+                            </Tooltip>
+                            <Tooltip title="Xóa" color="red">
+                                <Popconfirm title="Có chắc muốn xóa?"
+                                    onConfirm={() => {
+                                        console.log(record)
+                                    }}
+                                    okText="Có"
+                                    cancelText="Không"
+                                >
+                                    <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
+                                </Popconfirm>
+                            </Tooltip>
+                        </span>
                 );
             },
         }
@@ -294,7 +297,9 @@ export default function SpecialProductTable() {
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý sản phẩm</h1>
-                    <FcPlus onClick={createProduct} />
+                    <Tooltip title="Tạo" color="green" >
+                        <FcPlus onClick={createProduct} />
+                    </Tooltip>
                 </div>
                 <div className="table__features__search">
                     <input placeholder="Tên sản phẩm" type="text"

@@ -1,18 +1,22 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_SPECIAL, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL, GET_PRODUCT_TYPE, SEARCH_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
-import { createProduceAPI, createProductAttributeAPI, createProductSpecialAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductSpecialListAPI, getProductTypeAPI, searchProductAttributeAPI, searchProductTypeAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
+import { call, delay, put, takeLatest } from "redux-saga/effects";
+import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_SPECIAL, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_TYPE, SEARCH_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
+import { createProduceAPI, createProductAttributeAPI, createProductSpecialAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductSpecialForClientAPI, getProductSpecialListAPI, getProductTypeAPI, searchProductAttributeAPI, searchProductTypeAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
-import { removeProduct, removeProductAttribute, removeProductType, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductSpecial, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductSpecial, setTotalProductType, updateProductAttribute, updateProductSpecial, updateProductType, updateProductWithID } from "../features/productSlice";
+import { removeProduct, removeProductAttribute, removeProductType, setCustomPriceForClient, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductSpecial, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductSpecial, setTotalProductType, updateProductAttribute, updateProductSpecial, updateProductType, updateProductWithID } from "../features/productSlice";
 
 function* getProductList(payload) {
-    let { page, pageSize, locationID, typeID, attributeID } = payload.data;
-    let result = yield call(getProductListAPI, page, pageSize, locationID, typeID, attributeID);
-    yield put(setProductList(result.data.product))
-    if (!locationID && !typeID && !attributeID) {
-        yield put(setProductListFull(result.data.product))
-    }
-    yield put(setTotalProduct(result.data.total_data))
-    yield put(setIsLoading(false))
+   try {
+       let { page, pageSize, locationID, typeID, attributeID } = payload.data;
+       let result = yield call(getProductListAPI, page, pageSize, locationID, typeID, attributeID);
+       yield put(setProductList(result.data.product))
+       if (!locationID && !typeID && !attributeID) {
+           yield put(setProductListFull(result.data.product))
+       }
+       yield put(setTotalProduct(result.data.total_data))
+       yield put(setIsLoading(false))
+   } catch (error) {
+       console.log(error)
+   }
 }
 
 
@@ -201,6 +205,19 @@ function* createProductSpecial(payload){
     }
 }
 
+function* getProductSpecialForClient(payload){
+    try {
+        const result = yield call(getProductSpecialForClientAPI, payload.data);
+        if(result.data.product_discount_by_clientType.length > 0){
+            yield put(setCustomPriceForClient(result.data.product_discount_by_clientType[0].discounted_price))
+            yield delay(1000)
+            yield put(setCustomPriceForClient(0))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* productMiddleware() {
     yield takeLatest(GET_PRODUCT_LIST, getProductList);
     yield takeLatest(GET_PRODUCT_CHANNEL, getProductChannel);
@@ -222,4 +239,5 @@ export default function* productMiddleware() {
     // Product Special
     yield takeLatest(GET_PRODUCT_SPECIAL, getProductSpecial)
     yield takeLatest(CREATE_PRODUCT_SPECIAL, createProductSpecial)
+    yield takeLatest(GET_PRODUCT_SPECIAL_FOR_CLIENT, getProductSpecialForClient)
 }

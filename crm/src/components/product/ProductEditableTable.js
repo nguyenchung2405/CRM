@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, message, Popconfirm, Select, Table, Typography } from 'antd';
+import { Form, Input, message, Popconfirm, Select, Table, Tooltip, Typography } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useDispatch, useSelector } from "react-redux"
 import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER } from '../../title/title';
@@ -339,22 +339,25 @@ export default function ProductTable() {
                     </span>
                 ) : (
                     <span>
-                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                            <MdOutlineModeEditOutline className="style__svg" />
-                        </Typography.Link>
-                        <Popconfirm title="Có chắc muốn xóa?" 
-                            onConfirm={()=>{
-                                dispatch({
-                                    type: DELETE_PRODUCT,
-                                    product_id: record.key
-                                })
-                            }} 
-                            okText="Có" 
-                            cancelText="Không" 
-                        >
-                            <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
-                        </Popconfirm>
-                    
+                            <Tooltip title="Chỉnh sửa" color="green" overlayStyle={{ top:"0px" }} >
+                                <Typography.Link style={{ display: "inline-block" }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                    <MdOutlineModeEditOutline className="style__svg" />
+                                </Typography.Link>
+                            </Tooltip>
+                            <Tooltip title="Xóa" color="red">
+                                <Popconfirm title="Có chắc muốn xóa?"
+                                    onConfirm={() => {
+                                        dispatch({
+                                            type: DELETE_PRODUCT,
+                                            product_id: record.key
+                                        })
+                                    }}
+                                    okText="Có"
+                                    cancelText="Không"
+                                >
+                                    <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
+                                </Popconfirm>
+                            </Tooltip>
                     </span>
                 );
             },
@@ -453,7 +456,9 @@ export default function ProductTable() {
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý sản phẩm</h1>
-                    <FcPlus onClick={createProduct} />
+                    <Tooltip title="Tạo" color="green">
+                        <FcPlus onClick={createProduct} />
+                    </Tooltip>
                 </div>
                 <div className="table__features__search">
                     <input placeholder="Tên sản phẩm" type="text"

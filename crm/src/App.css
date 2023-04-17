@@ -601,6 +601,7 @@ div.modal__content .modal__field__select label {
     border: none;
     border-color: transparent;
     box-shadow: none;
+    background-color: transparent;
 }
 
 div.modal__content {
@@ -636,6 +637,7 @@ div.modal__content .modal__field.field__select>div div.ant-select .ant-select-se
     padding: 0;
     box-shadow: none;
     width: 100%;
+    background-color: transparent;
 }
 
 div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector .ant-select-selection-search {
@@ -850,7 +852,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .contract__table .contract__table__customerName {
-    width: 350px;
+    width: auto;
+    max-width: 200px;
 }
 
 .contract__table .contract__table__time {
