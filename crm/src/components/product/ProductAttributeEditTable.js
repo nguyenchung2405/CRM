@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Popconfirm, Table, Typography, Input, AutoComplete } from 'antd';
+import { Form, Popconfirm, Table, Typography, Input, AutoComplete, Tooltip } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FcPlus } from "react-icons/fc"
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
@@ -166,21 +166,25 @@ export default function ProductAttributeEditTable() {
                     </span>
                 ) : (
                         <span>
-                            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                                <MdOutlineModeEditOutline className="style__svg" />
-                            </Typography.Link>
-                            <Popconfirm title="Có chắc muốn xóa?"
-                                onConfirm={() => {
-                                    dispatch({
-                                        type: DELETE_PRODUCT_ATTRIBUTE,
-                                        attribute_id: record.key
-                                    })
-                                }}
-                                okText="Có"
-                                cancelText="Không"
-                            >
-                                <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
-                            </Popconfirm>
+                            <Tooltip title="Chỉnh sửa" color="green">
+                                <Typography.Link style={{ display: "inline-block" }} disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                    <MdOutlineModeEditOutline className="style__svg" />
+                                </Typography.Link>
+                            </Tooltip>
+                            <Tooltip title="Xóa" color="red">
+                                <Popconfirm title="Có chắc muốn xóa?"
+                                    onConfirm={() => {
+                                        dispatch({
+                                            type: DELETE_PRODUCT_ATTRIBUTE,
+                                            attribute_id: record.key
+                                        })
+                                    }}
+                                    okText="Có"
+                                    cancelText="Không"
+                                >
+                                    <MdDelete className="style__svg" style={{ backgroundColor: "#F1416C" }} />
+                                </Popconfirm>
+                            </Tooltip>
                         </span>
                 );
             },
@@ -227,7 +231,9 @@ export default function ProductAttributeEditTable() {
                 <div className="table__features">
                     <div className="table__features__add">
                         <h1>Quản lý thuộc tính sản phẩm</h1>
-                        <FcPlus onClick={createProductAttribute} />
+                        <Tooltip title="Tạo" color="green">
+                            <FcPlus onClick={createProductAttribute} />
+                        </Tooltip>
                     </div>
                     <div className="table__features__search">
                         <input placeholder="Thuộc tính sản phẩm" type="text" 

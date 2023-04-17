@@ -852,7 +852,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .contract__table .contract__table__customerName {
-    width: 350px;
+    width: auto;
+    max-width: 200px;
 }
 
 .contract__table .contract__table__time {

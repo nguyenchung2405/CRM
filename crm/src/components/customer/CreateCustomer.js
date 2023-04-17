@@ -269,7 +269,7 @@ export default function CreateCustomer(props) {
                 </div>
                 <div className="modal__field__select">
                     <label>Loại ngành nghề</label>
-                    <SelectType list={jobTypeList} mode="multiple" />
+                    <SelectType list={jobTypeList} mode="multiple" valueForm={valueForm} setValueForm={setValueForm} />
                 </div>
                 {/**
                   <div className="modal__field">

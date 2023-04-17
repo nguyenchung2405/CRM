@@ -24,7 +24,7 @@ export default function CreateContract() {
   const { contract_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
-  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList } = useSelector(state => state.contractReducer);
+  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
@@ -35,7 +35,7 @@ export default function CreateContract() {
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [countPayment, setCountPayment] = useState();
-
+  
   useEffect(() => {
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -150,7 +150,7 @@ export default function CreateContract() {
       // } else if(name === "total") {
       //   return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
       // }
-      return valueForm[name]
+      return valueForm[name] || null
     }
   }
 
@@ -247,6 +247,23 @@ export default function CreateContract() {
     }
   }
 
+  const showGiaTriThucHien = ()=>{
+    let total = 0;
+    contractRequest.forEach((request) => {
+      if (request.custom_price) {
+        total += request.custom_price * request.quality;
+      } else {
+        total += request.price_ID.price * request.quality;
+      }
+    })
+    // return new Intl.NumberFormat("vi--VN").format(total) + " VNĐ";
+    if(total > 0){
+      return new Intl.NumberFormat("vi-VN").format(total * 1000000);
+    } else {
+      return null;
+    }
+  }
+
   return (
     <div className="create__contract content">
       {showLoading()}
@@ -254,107 +271,250 @@ export default function CreateContract() {
         <div className="create__contract__header border_bottom_3px">
           <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
         </div>
-        <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
-          <p>Thông tin hợp đồng</p>
-          <div className="field__input field__flex two__field">
-            {/**
-              <input
-                className="style"
-                placeholder="Số tham chiếu"
-                type="text"
-                // name="owner"
-                // onChange={(e)=>{ 
-                //   let {value, name} = e.target;
-                //   handleChangeValue(name, value) 
-                // }}
-                // value={valueOfField("owner")}
-              />
-            */}
-            <div className="contract__field">
-              <input
-                className="style"
-                type="text"
-                name="contract_number"
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("contract_number")}
-              />
-              <label>Số hợp đồng</label>
-            </div>
-          </div>
-          <div className="field__input field__flex">
-            <div className="field__input_2">
-              <label>Loại hợp đồng</label>
-              <Select
-                className="style"
-                type="text"
-                placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
-                onChange={(value) => {
-                  handleChangeValue("contract_type_id", value)
-                }}
-                value={valueOfField("contract_type_id")}
-              >
-                {renderLoaiHopDong()}
-              </Select>
-              {/* <input className="style" placeholder="Năm" type="text" />* */}
-            </div>
-            <div className="field__input_2">
-              <label>Ngày bắt đầu - Ngày kết thúc</label>
-              <RangePicker
-                className="date__range__picker"
-                format={"DD-MM-YYYY"}
-                placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
-                suffixIcon={
-                  <svg
-                    width="14"
-                    height="16"
-                    viewBox="0 0 14 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.625 9H3.375C3.125 9 3 8.875 3 8.625V7.375C3 7.125 3.125 7 3.375 7H4.625C4.875 7 5 7.125 5 7.375V8.625C5 8.875 4.875 9 4.625 9ZM8 8.625C8 8.875 7.875 9 7.625 9H6.375C6.125 9 6 8.875 6 8.625V7.375C6 7.125 6.125 7 6.375 7H7.625C7.875 7 8 7.125 8 7.375V8.625ZM11 8.625C11 8.875 10.875 9 10.625 9H9.375C9.125 9 9 8.875 9 8.625V7.375C9 7.125 9.125 7 9.375 7H10.625C10.875 7 11 7.125 11 7.375V8.625ZM8 11.625C8 11.875 7.875 12 7.625 12H6.375C6.125 12 6 11.875 6 11.625V10.375C6 10.125 6.125 10 6.375 10H7.625C7.875 10 8 10.125 8 10.375V11.625ZM5 11.625C5 11.875 4.875 12 4.625 12H3.375C3.125 12 3 11.875 3 11.625V10.375C3 10.125 3.125 10 3.375 10H4.625C4.875 10 5 10.125 5 10.375V11.625ZM11 11.625C11 11.875 10.875 12 10.625 12H9.375C9.125 12 9 11.875 9 11.625V10.375C9 10.125 9.125 10 9.375 10H10.625C10.875 10 11 10.125 11 10.375V11.625ZM14 3.5V14.5C14 14.9167 13.8542 15.2708 13.5625 15.5625C13.2708 15.8542 12.9167 16 12.5 16H1.5C1.08333 16 0.729167 15.8542 0.4375 15.5625C0.145833 15.2708 0 14.9167 0 14.5V3.5C0 3.08333 0.145833 2.72917 0.4375 2.4375C0.729167 2.14583 1.08333 2 1.5 2H3V0.375C3 0.125 3.125 0 3.375 0H4.625C4.875 0 5 0.125 5 0.375V2H9V0.375C9 0.125 9.125 0 9.375 0H10.625C10.875 0 11 0.125 11 0.375V2H12.5C12.9167 2 13.2708 2.14583 13.5625 2.4375C13.8542 2.72917 14 3.08333 14 3.5ZM12.5 14.3125V5H1.5V14.3125C1.5 14.4375 1.5625 14.5 1.6875 14.5H12.3125C12.4375 14.5 12.5 14.4375 12.5 14.3125Z"
-                      fill="#666666"
-                      fillOpacity="0.6"
+        {  
+          !isOnlyPayment ? 
+            <>
+              <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
+                <p>Thông tin hợp đồng</p>
+                <div className="field__input field__flex two__field">
+                  {/**
+                  <input
+                    className="style"
+                    placeholder="Số tham chiếu"
+                    type="text"
+                    // name="owner"
+                    // onChange={(e)=>{ 
+                    //   let {value, name} = e.target;
+                    //   handleChangeValue(name, value) 
+                    // }}
+                    // value={valueOfField("owner")}
+                  />
+                */}
+                  <div className="contract__field">
+                    <input
+                      className="style"
+                      type="text"
+                      name="contract_number"
+                      onChange={(e) => {
+                        let { value, name } = e.target;
+                        handleChangeValue(name, +value)
+                      }}
+                      value={valueOfField("contract_number")}
                     />
-                  </svg>
-                }
-                onChange={(date, dateString) => {
-                  let ngayThucHien = moment(dateString[0], "DD-MM-YYYY").toISOString();
-                  let ngayKetThucThucHien = moment(dateString[1], "DD-MM-YYYY").toISOString();
-                  setValueForm({
-                    ...valueForm,
-                    begin_date: ngayThucHien,
-                    end_date: ngayKetThucThucHien
-                  })
-                }}
-                value={valueOfField("rangePicker")}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="create__contract__inforCustomer border_bottom_3px">
-          <p>Thông tin khách hàng</p>
-          <div className="field__input field__flex">
-            <div className="field__input_2">
-              <label>Tên khách hàng</label>
-              <Select
-                className="style"
-                showSearch
-                showArrow={false}
-                placeholder="Tên khách hàng"
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(value) => {
-                  handleChangeValue("client_ID", +value)
-                }}
-                value={valueOfField("client_ID")}
-              >
-                {renderOption()}
-              </Select>
+                    <label>Số hợp đồng</label>
+                  </div>
+                </div>
+                <div className="field__input field__flex">
+                  <div className="field__input_2">
+                    <label>Loại hợp đồng</label>
+                    <Select
+                      className="style"
+                      type="text"
+                      placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
+                      onChange={(value) => {
+                        handleChangeValue("contract_type_id", value)
+                      }}
+                      value={valueOfField("contract_type_id")}
+                    >
+                      {renderLoaiHopDong()}
+                    </Select>
+                    {/* <input className="style" placeholder="Năm" type="text" />* */}
+                  </div>
+                  <div className="field__input_2">
+                    <label>Ngày bắt đầu - Ngày kết thúc</label>
+                    <RangePicker
+                      className="date__range__picker"
+                      format={"DD-MM-YYYY"}
+                      placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+                      suffixIcon={
+                        <svg
+                          width="14"
+                          height="16"
+                          viewBox="0 0 14 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M4.625 9H3.375C3.125 9 3 8.875 3 8.625V7.375C3 7.125 3.125 7 3.375 7H4.625C4.875 7 5 7.125 5 7.375V8.625C5 8.875 4.875 9 4.625 9ZM8 8.625C8 8.875 7.875 9 7.625 9H6.375C6.125 9 6 8.875 6 8.625V7.375C6 7.125 6.125 7 6.375 7H7.625C7.875 7 8 7.125 8 7.375V8.625ZM11 8.625C11 8.875 10.875 9 10.625 9H9.375C9.125 9 9 8.875 9 8.625V7.375C9 7.125 9.125 7 9.375 7H10.625C10.875 7 11 7.125 11 7.375V8.625ZM8 11.625C8 11.875 7.875 12 7.625 12H6.375C6.125 12 6 11.875 6 11.625V10.375C6 10.125 6.125 10 6.375 10H7.625C7.875 10 8 10.125 8 10.375V11.625ZM5 11.625C5 11.875 4.875 12 4.625 12H3.375C3.125 12 3 11.875 3 11.625V10.375C3 10.125 3.125 10 3.375 10H4.625C4.875 10 5 10.125 5 10.375V11.625ZM11 11.625C11 11.875 10.875 12 10.625 12H9.375C9.125 12 9 11.875 9 11.625V10.375C9 10.125 9.125 10 9.375 10H10.625C10.875 10 11 10.125 11 10.375V11.625ZM14 3.5V14.5C14 14.9167 13.8542 15.2708 13.5625 15.5625C13.2708 15.8542 12.9167 16 12.5 16H1.5C1.08333 16 0.729167 15.8542 0.4375 15.5625C0.145833 15.2708 0 14.9167 0 14.5V3.5C0 3.08333 0.145833 2.72917 0.4375 2.4375C0.729167 2.14583 1.08333 2 1.5 2H3V0.375C3 0.125 3.125 0 3.375 0H4.625C4.875 0 5 0.125 5 0.375V2H9V0.375C9 0.125 9.125 0 9.375 0H10.625C10.875 0 11 0.125 11 0.375V2H12.5C12.9167 2 13.2708 2.14583 13.5625 2.4375C13.8542 2.72917 14 3.08333 14 3.5ZM12.5 14.3125V5H1.5V14.3125C1.5 14.4375 1.5625 14.5 1.6875 14.5H12.3125C12.4375 14.5 12.5 14.4375 12.5 14.3125Z"
+                            fill="#666666"
+                            fillOpacity="0.6"
+                          />
+                        </svg>
+                      }
+                      onChange={(date, dateString) => {
+                        let ngayThucHien = moment(dateString[0], "DD-MM-YYYY").toISOString();
+                        let ngayKetThucThucHien = moment(dateString[1], "DD-MM-YYYY").toISOString();
+                        setValueForm({
+                          ...valueForm,
+                          begin_date: ngayThucHien,
+                          end_date: ngayKetThucThucHien
+                        })
+                      }}
+                      value={valueOfField("rangePicker")}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="create__contract__inforCustomer border_bottom_3px">
+                <p>Thông tin khách hàng</p>
+                <div className="field__input field__flex">
+                  <div className="field__input_2">
+                    <label>Tên khách hàng</label>
+                    <Select
+                      className="style"
+                      showSearch
+                      showArrow={false}
+                      placeholder="Tên khách hàng"
+                      filterOption={(input, option) =>
+                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={(value) => {
+                        handleChangeValue("client_ID", +value)
+                      }}
+                      value={valueOfField("client_ID")}
+                    >
+                      {renderOption()}
+                    </Select>
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 7.32739V14.6537"
+                        stroke="#35794A"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M14.6667 10.9904H7.33337"
+                        stroke="#35794A"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                        stroke="#35794A"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div className="field__input_2">
+                    <label>Người đầu mối</label>
+                    <Select
+                      className="style"
+                      showSearch
+                      showArrow={false}
+                      placeholder="Người đầu mối"
+                      filterOption={(input, option) =>
+                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={(value, option) => {
+                        setValueForm({
+                          ...valueForm,
+                          owner: +value,
+                          owner_name: option.children
+                        })
+                      }}
+                      value={valueOfField("owner")}
+                    >
+                      {renderOptionOwner()}
+                    </Select>
+                    {/**
+                    <input
+                    className="style"
+                    placeholder="Người đầu mối"
+                    type="text"
+                    name="owner"
+                    onChange={(e) => {
+                      let { value, name } = e.target;
+                      handleChangeValue(name, +value)
+                    }}
+                    value={valueOfField("owner")}
+                  />
+                */}
+                  </div>
+                </div>
+                <div className="field__input field__flex two__field">
+                  <div className="contract__field">
+                    <input
+                      className="style not__allow"
+                      type="text"
+                      disabled
+                      value={valueOfCustomer("tax_number")}
+                    />
+                    <label>Mã số thuế</label>
+                  </div>
+                  <div className="contract__field">
+                    <input
+                      className="style not__allow"
+                      type="text"
+                      disabled
+                      value={valueOfCustomer("phone")}
+                    />
+                    <label>Số điện thoại</label>
+                  </div>
+                </div>
+                <div className="field__input field__flex two__field">
+                  <div className="contract__field">
+                    <input
+                      className="style not__allow"
+                      type="text"
+                      disabled
+                      value={valueOfCustomer("address")}
+                    />
+                    <label>Địa chỉ</label>
+                  </div>
+                  <div className="contract__field">
+                    <input
+                      className="style not__allow"
+                      type="text"
+                      disabled
+                      value={valueOfCustomer("email")}
+                    />
+                    <label>Email</label>
+                  </div>
+                </div>
+                <div className="field__input field__flex two__field">
+                  <div className="contract__field">
+                    <input
+                      className="style not__allow"
+                      type="text"
+                      disabled
+                      value={valueOfCustomer("daiDien")}
+                    />
+                    <label>Người đại diện và chức danh</label>
+                  </div>
+                  <div className="contract__field">
+                    <input
+                      className="style"
+                      type="text"
+                      disabled
+                      value=""
+                    // value={()=>{
+                    //   if(customerInfor["representative"] && customerInfor["represent_position"]){
+                    //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
+                    //   } else {
+                    //     return null;
+                    //   }
+                    // }}
+                    />
+                    <label>Người liên hệ và chức danh</label>
+                  </div>
+                </div>
+              </div>
+              {/* Thông tin liên hệ
+            <div className="create__contract__contactInfor border_bottom_3px">
+            <div className="display__flex">
+              <p>Thông tin liên hệ</p>
               <svg
                 width="22"
                 height="22"
@@ -387,359 +547,226 @@ export default function CreateContract() {
                 />
               </svg>
             </div>
-            <div className="field__input_2">
-              <label>Người đầu mối</label>
-              <Select
-                className="style"
-                showSearch
-                showArrow={false}
-                placeholder="Người đầu mối"
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(value, option) => {
-                  setValueForm({
-                    ...valueForm,
-                    owner: +value,
-                    owner_name:option.children
-                  })
-                }}
-                value={valueOfField("owner")}
-              >
-                {renderOptionOwner()}
-              </Select>
-              {/**
-                <input
-                className="style"
-                placeholder="Người đầu mối"
-                type="text"
-                name="owner"
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("owner")}
-              />
+            <div className="field__input_3">
+              <input className="style" placeholder="Người liên hệ" type="text" />
+              <input className="style" placeholder="Email" type="text" />
+              <input className="style" placeholder="Số điện thoại" type="text" />
+            </div>
+            <div className="field__input">
+              <input type="text" placeholder="Địa chỉ" className="style" />
+            </div>
+          </div>
             */}
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("tax_number")}
-              />
-              <label>Mã số thuế</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("phone")}
-              />
-              <label>Số điện thoại</label>
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("address")}
-              />
-              <label>Địa chỉ</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("email")}
-              />
-              <label>Email</label>
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("daiDien")}
-              />
-              <label>Người đại diện và chức danh</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style"
-                type="text"
-                disabled
-                value=""
-              // value={()=>{
-              //   if(customerInfor["representative"] && customerInfor["represent_position"]){
-              //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
-              //   } else {
-              //     return null;
-              //   }
-              // }}
-              />
-              <label>Người liên hệ và chức danh</label>
-            </div>
-          </div>
-        </div>
-        {/* Thông tin liên hệ
-        <div className="create__contract__contactInfor border_bottom_3px">
-        <div className="display__flex">
-          <p>Thông tin liên hệ</p>
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M11 7.32739V14.6537"
-              stroke="#35794A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14.6667 10.9904H7.33337"
-              stroke="#35794A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-              stroke="#35794A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-        <div className="field__input_3">
-          <input className="style" placeholder="Người liên hệ" type="text" />
-          <input className="style" placeholder="Email" type="text" />
-          <input className="style" placeholder="Số điện thoại" type="text" />
-        </div>
-        <div className="field__input">
-          <input type="text" placeholder="Địa chỉ" className="style" />
-        </div>
-      </div>
-        */}
-        <div className="create__contract__term border_bottom_3px">
-          <div className="display__flex">
-            <p>Quyền lợi hợp đồng</p>
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => {
-                setIsShowModal(true);
-              }}
-            >
-              <path
-                d="M11 7.32739V14.6537"
-                stroke="#35794A"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M14.6667 10.9904H7.33337"
-                stroke="#35794A"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                stroke="#35794A"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          <Table
-            className="term__table"
-            dataSource={convertContractRequest()}
-            pagination={false}
-            expandable={{
-              expandedRowRender: (record) => {
-                {/**
-              return record.details.map(item => {
-                  return <div className="row__child">
-                    <span>{item.product_ID.name}</span>
-                    <span>{item.price_ID.price}</span>
-                    <span>{item.from_date}</span>
-                    <span>{item.to_date}</span>
-                  </div>
-                }) */}
-                return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
-              },
-              rowExpandable: (record)=> record.details.length > 0,
-            }}
-          >
-            <Column
-              className="item"
-              title="Sản phẩm"
-              key="item"
-              // dataIndex="product_ID"
-              render={(text) => {
-                // let product = productList?.find(product => product.id === text)
-                // return product?.name || product?.Product_name
-                let product = productListFull.find(product => product.id === text.product_ID)
-                return product?.location_ID?.channel_ID?.name + " - " + product?.location_ID?.name + " - " + product?.name
-              }}
-            />
-            <Column
-              className="donGia"
-              title="Đơn giá"
-              key="price"
-              render={(text) => {
-                // console.log("text", text)
-                // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                // return `${text.real_price} VNĐ`;
-                return `${new Intl.NumberFormat("vi-VN").format(text.real_price)} VNĐ`;
-              }}
-            />
-            <Column
-              className="quality"
-              title="Số lượng"
-              key="quality"
-              render={(text) => {
-                // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                // return `${text.real_price} VNĐ`;
-                return `${text.quality}`;
-              }}
-            />
-            <Column
-              className="price"
-              title="Thành tiền"
-              key="price"
-              render={(text) => {
-                // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
-                // return `${text.real_price} VNĐ`;
-                // return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
-                // console.log(text)
-                // let newPrice = Number(text.real_price.replaceAll(".",""));
-                return `${new Intl.NumberFormat("vi-VN").format(text.real_price * text.quality)} VNĐ`;
-              }}
-            />
-            <Column
-              className="price"
-              title="Giá hiệu chỉnh"
-              key="custom_price"
-              render={(text) => {
-                return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
-              }}
-            />
-            <Column
-              className="thaoTac"
-              render={(text) => {
-                return <div>
-                  <button className="btn__green" onClick={() => {
-                      addDetailWhenCreate(text.id)
-                  }}>Thêm chi tiết</button>
-                  <MdOutlineModeEditOutline onClick={() => {
-                    setIsShowModal(true);
-                    setIsUpdateModal(true)
-                    setDataToModal(text)
-                  }} />
-                  <MdDelete onClick={() => {
-                    if (window.location.href.includes("create")) {
-                      dispatch(deleteContractRequest(text.id))
-                    } else {
-                      dispatch({
-                        type: DELETE_REQUEST,
-                        request_id: text.id
-                      })
-                    }
-                  }} />
+              <div className="create__contract__term border_bottom_3px">
+                <div className="display__flex">
+                  <p>Quyền lợi hợp đồng</p>
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => {
+                      setIsShowModal(true);
+                    }}
+                  >
+                    <path
+                      d="M11 7.32739V14.6537"
+                      stroke="#35794A"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M14.6667 10.9904H7.33337"
+                      stroke="#35794A"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                      stroke="#35794A"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
-              }}
-            />
-          </Table>
-          <TermModal
-            isShowModal={isShowModal}
-            setIsShowModal={setIsShowModal}
-            productList={productList}
-            dataToModal={dataToModal}
-            setDataToModal={setDataToModal}
-            isUpdateModal={isUpdateModal}
-            setIsUpdateModal={setIsUpdateModal}
-            contract_id={contract_id}
-            customerInfor={customerInfor}
-          />
-        </div>
-        <div className="create__contract__value border_bottom_3px">
-          <p>Giá trị hợp đồng</p>
-          <div className="field__input_3">
-            <div className="contract__field">
-              <input className="style" type="text"
-                name="discount_by_percent"
-                disabled
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("discount_by_percent")}
-              />
-              <label>Chiết khấu (%)</label>
+                <Table
+                  className="term__table"
+                  dataSource={convertContractRequest()}
+                  pagination={false}
+                  expandable={{
+                    expandedRowRender: (record) => {
+                      {/**
+                  return record.details.map(item => {
+                      return <div className="row__child">
+                        <span>{item.product_ID.name}</span>
+                        <span>{item.price_ID.price}</span>
+                        <span>{item.from_date}</span>
+                        <span>{item.to_date}</span>
+                      </div>
+                    }) */}
+                      return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
+                    },
+                    rowExpandable: (record) => record.details.length > 0,
+                  }}
+                >
+                  <Column
+                    className="item"
+                    title="Sản phẩm"
+                    key="item"
+                    // dataIndex="product_ID"
+                    render={(text) => {
+                      // let product = productList?.find(product => product.id === text)
+                      // return product?.name || product?.Product_name
+                      let product = productListFull.find(product => product.id === text.product_ID)
+                      return product?.location_ID?.channel_ID?.name + " - " + product?.location_ID?.name + " - " + product?.name
+                    }}
+                  />
+                  <Column
+                    className="donGia"
+                    title="Đơn giá"
+                    key="price"
+                    render={(text) => {
+                      // console.log("text", text)
+                      // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+                      // return `${text.real_price} VNĐ`;
+                      return `${new Intl.NumberFormat("vi-VN").format(text.real_price)} VNĐ`;
+                    }}
+                  />
+                  <Column
+                    className="quality"
+                    title="Số lượng"
+                    key="quality"
+                    render={(text) => {
+                      // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+                      // return `${text.real_price} VNĐ`;
+                      return `${text.quality}`;
+                    }}
+                  />
+                  <Column
+                    className="price"
+                    title="Thành tiền"
+                    key="price"
+                    render={(text) => {
+                      // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
+                      // return `${text.real_price} VNĐ`;
+                      // return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
+                      // console.log(text)
+                      // let newPrice = Number(text.real_price.replaceAll(".",""));
+                      return `${new Intl.NumberFormat("vi-VN").format(text.real_price * text.quality)} VNĐ`;
+                    }}
+                  />
+                  <Column
+                    className="price"
+                    title="Giá hiệu chỉnh"
+                    key="custom_price"
+                    render={(text) => {
+                      if (text.custom_price > 0) {
+                        return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
+                      } else {
+                        return null;
+                      }
+                    }}
+                  />
+                  <Column
+                    className="thaoTac"
+                    render={(text) => {
+                      return <div>
+                        <button className="btn__green" onClick={() => {
+                          addDetailWhenCreate(text.id)
+                        }}>Thêm chi tiết</button>
+                        <MdOutlineModeEditOutline onClick={() => {
+                          setIsShowModal(true);
+                          setIsUpdateModal(true)
+                          setDataToModal(text)
+                        }} />
+                        <MdDelete onClick={() => {
+                          if (window.location.href.includes("create")) {
+                            dispatch(deleteContractRequest(text.id))
+                          } else {
+                            dispatch({
+                              type: DELETE_REQUEST,
+                              request_id: text.id
+                            })
+                          }
+                        }} />
+                      </div>
+                    }}
+                  />
+                </Table>
+                <TermModal
+                  isShowModal={isShowModal}
+                  setIsShowModal={setIsShowModal}
+                  productList={productList}
+                  dataToModal={dataToModal}
+                  setDataToModal={setDataToModal}
+                  isUpdateModal={isUpdateModal}
+                  setIsUpdateModal={setIsUpdateModal}
+                  contract_id={contract_id}
+                  customerInfor={customerInfor}
+                />
               </div>
-            <div className="contract__field">
-              <input className="style" type="text"
-                name="VAT"
-                // onChange={(e) => {
-                //   let { value, name } = e.target;
-                //   handleChangeValue(name, +value)
-                // }}
-                // value={valueOfField("VAT")}
-                disabled
-              />
-              <label>Giá trị thực hiện</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style"
-                type="text"
-                name="total"
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("total")}
-              />
-              <label className="pink__color">Giá trị hợp đồng</label>
-            </div>
-          </div>
-          <div className="contract__value__note">
-              <textarea id="note"
-                name="note"
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, value)
-                }}
-                value={valueOfField("note")}
-              ></textarea>
-              <label>Ghi chú</label>
-          </div>
-        </div>
+              <div className="create__contract__value border_bottom_3px">
+                <p>Giá trị hợp đồng</p>
+                <div className="field__input_3">
+                  <div className="contract__field">
+                    <input className="style" type="text"
+                      name="discount_by_percent"
+                      disabled
+                      onChange={(e) => {
+                        let { value, name } = e.target;
+                        handleChangeValue(name, +value)
+                      }}
+                      value={valueOfField("discount_by_percent")}
+                    />
+                    <label>Chiết khấu (%)</label>
+                  </div>
+                  <div className="contract__field">
+                    <input className="style" type="text"
+                      name="VAT"
+                      // onChange={(e) => {
+                      //   let { value, name } = e.target;
+                      //   handleChangeValue(name, +value)
+                      // }}
+                      value={showGiaTriThucHien()}
+                      disabled
+                    />
+                    <label>Giá trị thực hiện</label>
+                  </div>
+                  <div className="contract__field">
+                    <input
+                      className="style"
+                      type="text"
+                      name="total"
+                      onChange={(e) => {
+                        let { value, name } = e.target;
+                        handleChangeValue(name, +value)
+                      }}
+                      value={valueOfField("total")}
+                    />
+                    <label className="pink__color">Giá trị hợp đồng</label>
+                  </div>
+                </div>
+                <div className="contract__value__note">
+                  <textarea id="note"
+                    name="note"
+                    onChange={(e) => {
+                      let { value, name } = e.target;
+                      handleChangeValue(name, value)
+                    }}
+                    value={valueOfField("note")}
+                  ></textarea>
+                  <label>Ghi chú</label>
+                </div>
+              </div>
+            </>
+          : ""
+        }
         <div className="create__contract__payment border_bottom_3px">
           <div className="display__flex contract__payment">
             <div className="display__flex">

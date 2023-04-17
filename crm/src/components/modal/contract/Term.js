@@ -89,7 +89,6 @@ export default function TermModal(props) {
 
   useEffect(()=>{
     if(valueModal.product_ID && typeof valueModal.product_ID === "number" && !isUpdateModal){
-      console.log(valueModal.product_ID, customerInfor.client_type_ID)
       dispatch({
         type: GET_PRODUCT_SPECIAL_FOR_CLIENT,
         data: {
@@ -101,7 +100,6 @@ export default function TermModal(props) {
   }, [valueModal.product_ID, customerInfor.client_type_ID])
 
   useEffect(()=>{
-    console.log(customPriceForClient)
     if(typeof customPriceForClient === "number" && customPriceForClient > 1){
       setValueModal({
         ...valueModal,

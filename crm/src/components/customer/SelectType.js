@@ -5,6 +5,19 @@ export default function SelectType(props){
     let { list, mode, setValueForm, valueForm } = props;
     let {Option} = Select;
     const [multi, setMulti] = useState([]);
+    console.log(multi)
+    useEffect(()=>{
+        if(valueForm.sectors?.length > 0){
+            let newMulti = valueForm.sectors.map(sector => {
+                if(sector.id){
+                    return sector.id
+                } else {
+                    return sector
+                }
+            });
+            setMulti(newMulti)
+        }
+    }, [valueForm])
 
     const renderList = ()=>{
         return list?.map( item => {
@@ -25,6 +38,10 @@ export default function SelectType(props){
             onChange={(value, option)=>{
                 if(mode === "multiple"){
                     setMulti(value)
+                    setValueForm({
+                        ...valueForm,
+                        sectors: value
+                    })
                 } else {
                     setValueForm({
                         ...valueForm,
