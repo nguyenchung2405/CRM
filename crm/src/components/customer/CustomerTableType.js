@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Table , Space , Modal  , Tooltip , Input , Button , Popconfirm, message } from "antd";
 import { FcPlus } from "react-icons/fc"
 import { FaEdit,FaTrash } from "react-icons/fa"
@@ -14,7 +14,6 @@ function CustomerTableType() {
     const [isCreateTypeJob,setIsCreateTypeJob] = useState(false)
     const [typeCustomer,setTypeCustomer] = useState("")
     const [descCustomer,setDescCustomer] = useState("")
-
     const [ jobDesc ,setJobDesc] = useState("")
     const [typeJobName,setTypeJobName] = useState("")
     const [searchTypeCustomer,setSearchTypeCustomer] = useState("")
@@ -22,21 +21,18 @@ function CustomerTableType() {
     const {customerTypeList} = useSelector(state => state.customerReducer)
     const { jobTypeList } = useSelector(state => state.customerReducer)
     // Get 
-
     useEffect(()=>{
         dispatch({
             type:  GET_CUSTOMER_TYPE_LIST, 
-            data: {
-            }
+            data: {}
         })        
         dispatch({
             type: GET_JOB_TYPE_LIST,
-            data:{
-            }
+            data:{}
         })
     },[dispatch,renderDisPath])
 
-    // Create 
+    // Create type Customer
     const HandelChangeTypeNameCustomer = (e)=>{
         setTypeCustomer(e.target.value)
     }
@@ -52,10 +48,12 @@ function CustomerTableType() {
                 }
             })   
             setTypeCustomer("")
+            setIsCreateType(false)
             setRenderDisPath(!renderDisPath)
         }
     }
-    // Delete 
+
+    // Delete type Customer
     const HandelDeleteTypeNameCustomer = (id)=>{
         dispatch({
             type: DELETE_CUSTOMER_TYPE,
@@ -73,6 +71,8 @@ function CustomerTableType() {
         })
         setRenderDisPath(!renderDisPath)
     }
+
+    // Handel create List Job
     const HandelChangeTypeJobList = (e)=>{
         setTypeJobName(e.target.value)
     }
@@ -86,11 +86,14 @@ function CustomerTableType() {
                 }
             })
             setTypeJobName("")
+            setIsCreateTypeJob(false)
             setRenderDisPath(!renderDisPath)
         }else{
             message.error("Loại ngành nghề bị rỗng")
         }
     }
+
+    // Search Customer
    const HandelSearchTypeCustomer = ()=>{
         if(searchTypeCustomer  !== ""){
             dispatch({
@@ -100,25 +103,39 @@ function CustomerTableType() {
                 }
             })
         }else{
-            dispatch({
-                type: GET_CUSTOMER_TYPE_LIST,
-                data: {
-                    
-                }
-            })
+            message.error("Chưa có dữ liệu để tìm kiếm")
         }
    }
+
+   // Empty Seacrh
+   useEffect(()=>{
+        if(searchTypeCustomer === ""){
+            dispatch({
+                type: GET_CUSTOMER_TYPE_LIST,
+                data: {}
+            })
+        }
+   },[searchTypeCustomer])
    const HandelChangeSearchJob = ()=>{
-    if(searchTypeJob !== ""){
-        console.log("Chay vo day")
-        dispatch({
-            type: GET_JOB_TYPE_LIST,
-            data: {
-                name: searchTypeJob
-            }
-        })
-    }
+        if(searchTypeJob !== ""){
+            dispatch({
+                type: GET_JOB_TYPE_LIST,
+                data: {
+                    name: searchTypeJob
+                }
+            })
+        }else{
+            message.error("Chưa có dữ liệu để tìm kiếm")
+        }
    }
+   useEffect(()=>{
+        if(searchTypeJob !== ""){
+            dispatch({
+                type: GET_JOB_TYPE_LIST,
+                data: {}
+            })
+        }
+   },[searchTypeJob])
     const columns = [
         {
           key: 1,
@@ -210,6 +227,7 @@ function CustomerTableType() {
           }
         },
     ];
+
     const HandelClose = ()=>{
         setIsCreateType(false)
         setIsCreateTypeJob(false)
@@ -245,7 +263,7 @@ function CustomerTableType() {
                                     </div>
                                 </div>
                                 <div className="" style={{width: '100%'}}>
-                                    <textarea value={descCustomer} onChange={(e)=>{setDescCustomer(e.target.value)}} style={{width: "100%",marginTop: 20,height: 150, paddingLeft: 10 , paddingTop: 10}} placeholder="Mô tả" />
+                                    <textarea className="textarea-desc" value={descCustomer} onChange={(e)=>{setDescCustomer(e.target.value)}} style={{width: "100%",marginTop: 20,height: 150, paddingLeft: 10 , paddingTop: 10}} placeholder="Mô tả" />
                                 </div>
                             </>
                             
@@ -277,7 +295,7 @@ function CustomerTableType() {
                                     </div>
                                 </div>
                                 <div className="" style={{width: '100%'}}>
-                                    <textarea value={jobDesc} onChange={(e)=>{setJobDesc(e.target.value)}} style={{width: "100%",marginTop: 20,height: 150, paddingLeft: 10 , paddingTop: 10}} placeholder="Mô tả" />
+                                    <textarea className="textarea-desc" value={jobDesc} onChange={(e)=>{setJobDesc(e.target.value)}} style={{width: "100%",marginTop: 20,height: 150, paddingLeft: 10 , paddingTop: 10}} placeholder="Mô tả" />
                                 </div>
                                
                             </>
