@@ -142,7 +142,7 @@ const createCustomerType = async (req, res)=>{
 
 const getJobTypeList = async (req,res)=>{
     try {
-        // console.log("Dang chay qua dau")
+        console.log("Dang chay qua dau")
         const { headers: { authorization } } = req
         const { name , page , page_size, sort_by , asc_order } = req.query
         console.log({name,page,page_size});
