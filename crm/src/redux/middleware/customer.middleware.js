@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { CREATE_CUSTOMER, CREATE_JOB_TYPE_LIST , CREATE_CUSTOMER_TYPE, DELETE_JOB_TYPE_LIST ,GET_CUSTOMER_DETAIL, DELETE_CUSTOMER_TYPE , GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
 import { createCustomerAPI, createJobTypeListAPI ,deleteJobTypeListAPI, deleteCustomerTypeAPI ,createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer , setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
+import { addCustomer , setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, setTotalPage, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 import { message } from "antd";
@@ -82,8 +82,9 @@ function* getDetailCustomer(payload){
 function* getCustomerTypeList(payload){
     try {
         const resuft = yield call(getCustomerTypeListAPI, payload?.data)
-        if(resuft.data.client_type.length){
-            yield put(setCustomerTypeList(resuft?.data?.client_type.reverse()))
+        
+        if(resuft?.data?.client_type?.length){
+            yield put(setCustomerTypeList(resuft?.data?.client_type))
         }
     } catch (error) {
         console.log(error)   
@@ -92,14 +93,17 @@ function* getCustomerTypeList(payload){
 
 function* getJobTypeList(payload){
     try {
-        console.log(payload);
         const result = yield call(getJobTypeListAPI,payload?.data);
-        if(result.data.sector){
-            console.log("Yes")
-            yield put(setJobTypeList(result?.data?.sector.reverse()))
-        }else{
-            console.log("No")
+        console.log(result.data.sector.length)
+        if(result.data.sector.length){
+
+            yield put(setJobTypeList(result?.data?.sector))
+            yield put(setTotalPage({    
+                total_data: result?.data?.total_data,
+                total_page: result?.data?.total_page,
+            }))
         }
+
     } catch (error) {
         console.log(error)
     }
@@ -109,11 +113,12 @@ function* createCustomerType(payload){
     try {
         const resuft = yield call(createCustomerTypeAPI,payload.data)
         const { data } = resuft
+        console.log(resuft)
         if(data?.result){
             
             message.success("Tạo thành công")
         }else{
-            message.error("Tạo thất bại")
+            message.error("Loại khách hàng đã tồn tại")
         }
     } catch (error) {
         message.error(error)
@@ -136,7 +141,7 @@ function* deleteJobTypeList(payload){
     try {
         const resuft = yield call(deleteJobTypeListAPI,payload.id)
         // console.log(resuft)
-        if(resuft.resulf){
+        if(resuft.result){
             message.success(resuft.data)
         }else{
             message.error("Xóa thất bại")
@@ -148,12 +153,12 @@ function* deleteJobTypeList(payload){
 function* createJobTypeList(payload){
     try {
         const resuft = yield call(createJobTypeListAPI,payload.data)
+        console.log(resuft.data.result)
         if(resuft.data.result){
             message.success("Tạo thành công")
         }else{
-            message.error("Tạo thất bại")
+            message.error("Loại nghành nghề đã tồn tại")
         }
-        console.log(resuft)
     } catch (error) {
         console.log(error)
     }

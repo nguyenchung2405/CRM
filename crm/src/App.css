@@ -392,6 +392,13 @@ p.required__field {
     border: 1px solid #A1A5B7;
     outline: none;
 }
+.Type_Cus_loading{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 99;
+}
 .customer__table .ant-pagination-next:hover button.ant-pagination-item-link,
 .customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
     color: #459C60;

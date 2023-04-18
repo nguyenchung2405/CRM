@@ -17,7 +17,7 @@ clientRouter.post("/create-type", createCustomerType)
 clientRouter.post("/delete-type", deleteCustomerType)
 clientRouter.get("/:client_id", getDetailCustomer)
 
-clientRouter.post("/type/customer", getListTypeCustomer )
+clientRouter.get("/type/customer", getListTypeCustomer )
 
 module.exports = {
     clientRouter
