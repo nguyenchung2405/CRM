@@ -403,6 +403,10 @@ p.required__field {
     transform: translate(-50%,-50%);
     z-index: 99;
 }
+.customerType .ant-pagination-options {
+    position: absolute;
+    right: 0px;
+}
 .customer__table .ant-pagination-next:hover button.ant-pagination-item-link,
 .customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
     color: #459C60;
