@@ -181,6 +181,11 @@ const getListTypeCustomer = async (req,res)=>{
         res.send(resuft.data)
     } catch (error) {
         console.log(error)
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 
