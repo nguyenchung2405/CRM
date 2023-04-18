@@ -142,16 +142,23 @@ const createCustomerType = async (req, res)=>{
 
 const getJobTypeList = async (req,res)=>{
     try {
-        const { name } = req.body
-        console.log(name);
+        // console.log("Dang chay qua dau")
+        const { headers: { authorization } } = req
+        const { name , page , page_size, sort_by , asc_order } = req.query
+        console.log({name,page,page_size});
+        name ? `name=${req.query.name}` : ""
+        page ? `page=${req.query.page}` : ""
+        // console.log({ name , page , page_size, sort_by , asc_order })
         const resuft = await axios({
             method: "GET",
-            url: `${local}/client/sector?name=${name || ""}`,
+            url: `${local}/client/sector?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            headers: {
+                Authorization: authorization
+            },
         })
         res.send(resuft.data)
-        
     } catch (error) {
-       
+       res.send(error)
     }
 }
 
@@ -160,16 +167,19 @@ const getJobTypeList = async (req,res)=>{
 
 const getListTypeCustomer = async (req,res)=>{
     try {
-        
-        const data = req.body?.name;
-        console.log(data)
-       const { headers: { authorization } } = req
-       const resuft =  await axios({
-         url:`${local}/client/type?name=${data || ""}`,
-         method: "GET",
-         headers: {
-           Authorization : authorization
-        }
+        const { headers: { authorization } } = req
+        const { name , page , page_size, sort_by , asc_order } = req.query
+        name ? `name=${req.query.name}` : ""
+        page ? `page=${req.query.page}` : ""
+        console.log({ name , page , page_size, sort_by , asc_order })
+
+        const resuft =  await axios({
+            // url:`${"http://contract.tuoitre.vn"}/client/type?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            url:`${local}/client/type?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            method: "GET",
+            headers: {
+                Authorization : authorization
+            }
         })
         res.send(resuft.data)
     } catch (error) {

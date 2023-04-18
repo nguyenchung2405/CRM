@@ -83,14 +83,15 @@ export async function getDetailCustomerAPI(client_id){
 
 export async function getCustomerTypeListAPI(data){
     try {
+        const { page , page_size , name , sort_by , asc_order } = data
         const resuft = await axios({
-            url: `${local}/api/client/type/customer`,
-            method: "POST",
+            url: `${local}/api/client/type/customer?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
-            data: data
         })
+        // console.log(resuft)
         return resuft.data
     } catch (error) {
         console.log(error)
@@ -100,11 +101,14 @@ export async function getCustomerTypeListAPI(data){
 
 export async function getJobTypeListAPI(data){
     try {
-        console.log(data)
+        const { page , page_size , name , sort_by , asc_order } = data
+        console.log({page , page_size , name , sort_by , asc_order});
         const result = await axios({
             method: "POST",
-            url: `${local}/api/client/job-type-list`,
-            data: data,
+            url: `${local}/api/client/job-type-list?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         });
         return result.data
     } catch (error) {
@@ -166,6 +170,7 @@ export async function deleteJobTypeListAPI(id){
 }
 
 export async function createJobTypeListAPI(data){
+    console.log({data})
     try {
         const resuft = await axios({
             method: "POST",
