@@ -92,10 +92,11 @@ function* getCustomerTypeList(payload){
 
 function* getJobTypeList(payload){
     try {
-        const result = yield call(getJobTypeListAPI,payload);
+        console.log(payload);
+        const result = yield call(getJobTypeListAPI,payload?.data);
         if(result.data.sector){
             console.log("Yes")
-            yield put(setJobTypeList(result?.data?.sector))
+            yield put(setJobTypeList(result?.data?.sector.reverse()))
         }else{
             console.log("No")
         }

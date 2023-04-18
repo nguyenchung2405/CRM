@@ -385,7 +385,13 @@ p.required__field {
     right: 30px;
     margin-right: 0px;
 }
-
+.textarea-desc{
+    border: 1px solid #A1A5B7;
+}
+.textarea-desc:focus{
+    border: 1px solid #A1A5B7;
+    outline: none;
+}
 .customer__table .ant-pagination-next:hover button.ant-pagination-item-link,
 .customer__table .ant-pagination-prev:hover .ant-pagination-item-link {
     color: #459C60;

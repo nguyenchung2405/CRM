@@ -98,13 +98,13 @@ export async function getCustomerTypeListAPI(data){
 
 }
 
-export async function getJobTypeListAPI(payload){
+export async function getJobTypeListAPI(data){
     try {
-        console.log(payload)
+        console.log(data)
         const result = await axios({
-            method: "GET",
+            method: "POST",
             url: `${local}/api/client/job-type-list`,
-            data: payload
+            data: data,
         });
         return result.data
     } catch (error) {

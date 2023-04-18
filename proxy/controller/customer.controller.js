@@ -128,7 +128,7 @@ const createCustomerType = async (req, res)=>{
         const data = { name, desc }
         const resuft = await axios({
             method: "POST",
-            url: `${'http://contract.tuoitre.vn'}/client/type/create`,
+            url: `${local}/client/type/create`,
             data: data,
             headers: {
                 Authorization: `Bearer ${TOKEN}`
@@ -140,13 +140,13 @@ const createCustomerType = async (req, res)=>{
     }
 }
 
-const getJobTypeList = async (req, res)=>{
+const getJobTypeList = async (req,res)=>{
     try {
-        let { headers: { authorization } } = req;
-        const result = await axios({
-            url: `${local}/client/sector?page_size=100&page=1&sort_by=id&asc_order=true`,
+        const { name } = req.body
+        console.log(name);
+        const resuft = await axios({
             method: "GET",
-            url: `${"http://contract.tuoitre.vn"}/client/sector`,
+            url: `${local}/client/sector?name=${name || ""}`,
         })
         res.send(resuft.data)
         
@@ -160,12 +160,12 @@ const getJobTypeList = async (req, res)=>{
 
 const getListTypeCustomer = async (req,res)=>{
     try {
-        console.log("Dang")
+        
         const data = req.body?.name;
         console.log(data)
        const { headers: { authorization } } = req
        const resuft =  await axios({
-         url:`${"http://contract.tuoitre.vn"}/client/type?name=${data || ""}`,
+         url:`${local}/client/type?name=${data || ""}`,
          method: "GET",
          headers: {
            Authorization : authorization
@@ -182,7 +182,7 @@ const deleteCustomerType = async (req,res)=>{
         const { id , token } = req.body
         const resuft = await axios({
             method : "DELETE",
-            url: `${"http://contract.tuoitre.vn"}/client/type/disable?id=${id}`,
+            url: `${local}/client/type/disable?id=${id}`,
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -198,7 +198,7 @@ const deleteJobType = async (req,res)=>{
         const { id, TOKEN } = req.body
         const resuft = await axios({
             method: "DELETE",
-            url: `${"http://contract.tuoitre.vn"}/client/sector/disable?id=${id}`,
+            url: `${local}/client/sector/disable?id=${id}`,
             headers: {
                 Authorization: `Bearer ${TOKEN}`
             },
@@ -213,7 +213,7 @@ const createJobType = async (req,res)=>{
         const { data , TOKEN } = req.body
         const resuft = await axios({
             method: "POST",
-            url: `${"http://contract.tuoitre.vn"}/client/sector/create`,
+            url: `${local}/client/sector/create`,
             data: data,
             headers: {
                 Authorization: `Bearer ${TOKEN}`

@@ -9,7 +9,7 @@ clientRouter.post("/create", uploadFileCreateClient(), createCustomer)
 clientRouter.put("/update", updateCustomer)
 
 clientRouter.post("/create/job-type-list",createJobType)
-clientRouter.get("/job-type-list", getJobTypeList)
+clientRouter.post("/job-type-list", getJobTypeList)
 clientRouter.post("/delete/job-type-list", deleteJobType)
 // Customer Type
 // clientRouter.get("/type-list", getCustomerTypeList)
