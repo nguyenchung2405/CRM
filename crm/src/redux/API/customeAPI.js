@@ -81,32 +81,32 @@ export async function getDetailCustomerAPI(client_id){
     }
 }
 
-export async function getCustomerTypeListAPI(page, page_size){
+export async function getCustomerTypeListAPI(data){
     try {
-        const result = await axios({
-            url: `${local}/api/client/type-list?page=${page}&page_size=${page_size}`,
-            method: "GET",
+        const resuft = await axios({
+            url: `${local}/api/client/type/customer`,
+            method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
-        });
-        return result.data;
+            data: data
+        })
+        return resuft.data
     } catch (error) {
         console.log(error)
-        return "Fail"
     }
+
 }
 
-export async function getJobTypeListAPI(){
+export async function getJobTypeListAPI(payload){
     try {
+        console.log(payload)
         const result = await axios({
-            url: `${local}/api/client/job-type-list`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
+            url: `${local}/api/client/job-type-list`,
+            data: payload
         });
-        return result.data;
+        return result.data
     } catch (error) {
         console.log(error)
         return "Fail"
@@ -115,19 +115,68 @@ export async function getJobTypeListAPI(){
 
 export async function createCustomerTypeAPI(data){
     try {
-        const result = await axios({
-            url: `${local}/api/client/create-type`,
+        const { name, desc } = data
+    const resuft =  await axios({
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
+            url:`${local}/api/client/create-type`,
             data: {
-                name: data
+                name,
+                desc,
+                TOKEN
             }
-        });
-        return result.data;
+        })
+    return resuft.data
+    
     } catch (error) {
         console.log(error)
-        return "Fail"
+    }
+}
+
+
+export async function deleteCustomerTypeAPI(data){
+    try {
+        const result = await axios({
+            method: "POST",
+            url: `${local}/api/client/delete-type`,
+            data: {
+                id: data,
+                token : TOKEN
+            }
+        })
+        return result.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function deleteJobTypeListAPI(id){
+    try {
+        const resuft = await axios({
+            method: "POST",
+            url: `${local}/api/client/delete/job-type-list`,
+            data:{
+                id,
+                TOKEN,
+            }
+        })
+        return resuft.data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function createJobTypeListAPI(data){
+    try {
+        const resuft = await axios({
+            method: "POST",
+            url: `${local}/api/client/create/job-type-list`,
+            data:{
+                TOKEN,
+                data
+            }
+        })
+        return resuft.data
+    } catch (error) {
+        console.log(error)
     }
 }

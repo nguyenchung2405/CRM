@@ -1,9 +1,10 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CUSTOMER, CREATE_CUSTOMER_TYPE, GET_CUSTOMER_DETAIL, GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
-import { createCustomerAPI, createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer, addCustomerType, setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
+import { CREATE_CUSTOMER, CREATE_JOB_TYPE_LIST , CREATE_CUSTOMER_TYPE, DELETE_JOB_TYPE_LIST ,GET_CUSTOMER_DETAIL, DELETE_CUSTOMER_TYPE , GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
+import { createCustomerAPI, createJobTypeListAPI ,deleteJobTypeListAPI, deleteCustomerTypeAPI ,createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
+import { addCustomer , setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
+import { message } from "antd";
 
 function* getCustomerList(payload){
     let {page, pageNumber} = payload.data;
@@ -80,19 +81,23 @@ function* getDetailCustomer(payload){
 
 function* getCustomerTypeList(payload){
     try {
-        let {page, page_size} = payload.data;
-        const result = yield call(getCustomerTypeListAPI, page, page_size);
-        yield put(setCustomerTypeList(result.data.client_type))
+        const resuft = yield call(getCustomerTypeListAPI, payload?.data)
+        if(resuft.data.client_type.length){
+            yield put(setCustomerTypeList(resuft?.data?.client_type.reverse()))
+        }
     } catch (error) {
-        console.log(error)
+        console.log(error)   
     }
 }
 
-function* getJobTypeList(){
+function* getJobTypeList(payload){
     try {
-        const result = yield call(getJobTypeListAPI);
-        if(result.data){
-            yield put(setJobTypeList([]))
+        const result = yield call(getJobTypeListAPI,payload);
+        if(result.data.sector){
+            console.log("Yes")
+            yield put(setJobTypeList(result?.data?.sector))
+        }else{
+            console.log("No")
         }
     } catch (error) {
         console.log(error)
@@ -101,10 +106,53 @@ function* getJobTypeList(){
 
 function* createCustomerType(payload){
     try {
-        const result = yield call(createCustomerTypeAPI, payload.data);
-        if(result.data.result){
-            yield put(addCustomerType(result.data.data.client_type))
+        const resuft = yield call(createCustomerTypeAPI,payload.data)
+        const { data } = resuft
+        if(data?.result){
+            
+            message.success("Tạo thành công")
+        }else{
+            message.error("Tạo thất bại")
         }
+    } catch (error) {
+        message.error(error)
+    }
+}
+// delete type customer
+function* deleteCustomerType(payload){
+    try {
+       const resulf = yield call(deleteCustomerTypeAPI,payload.id)
+       if(resulf.result){
+            message.success(resulf.data)
+       }else{
+            message.error("Xóa thất bại")
+       }
+    } catch (error) {
+        console.log(error)
+    }
+}
+function* deleteJobTypeList(payload){
+    try {
+        const resuft = yield call(deleteJobTypeListAPI,payload.id)
+        // console.log(resuft)
+        if(resuft.resulf){
+            message.success(resuft.data)
+        }else{
+            message.error("Xóa thất bại")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+function* createJobTypeList(payload){
+    try {
+        const resuft = yield call(createJobTypeListAPI,payload.data)
+        if(resuft.data.result){
+            message.success("Tạo thành công")
+        }else{
+            message.error("Tạo thất bại")
+        }
+        console.log(resuft)
     } catch (error) {
         console.log(error)
     }
@@ -116,8 +164,13 @@ export default function* customerMiddleware(){
     yield takeLatest(SEARCH_CUSTOMER, searchCustomer)
     yield takeLatest(UPDATE_CUSTOMER, updateCustomer)
     yield takeLatest(GET_CUSTOMER_DETAIL, getDetailCustomer)
+
+    // Job type 
+    yield takeLatest(DELETE_JOB_TYPE_LIST, deleteJobTypeList )
     yield takeLatest(GET_JOB_TYPE_LIST, getJobTypeList)
+    yield takeLatest(CREATE_JOB_TYPE_LIST, createJobTypeList)
     // Customer Type
     yield takeLatest(GET_CUSTOMER_TYPE_LIST, getCustomerTypeList)
     yield takeLatest(CREATE_CUSTOMER_TYPE, createCustomerType)
+    yield takeLatest(DELETE_CUSTOMER_TYPE, deleteCustomerType)
 }

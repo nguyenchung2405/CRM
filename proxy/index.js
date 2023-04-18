@@ -24,5 +24,5 @@ app.get("*", (req, res) => {
 
 const port = process.env.PORT || 3003;
 app.listen(port, ()=>{
-    console.log("This is express proxy.")
+    console.log(`This is express proxy. ${port}`)
 })
