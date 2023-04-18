@@ -10,6 +10,10 @@ const initialState = {
     totalListPage: {
         total_data: "",
         total_page: "",
+    },
+    totalListPageTypeCus: {
+        total_data: "",
+        total_page: "",
     }
 }
 
@@ -19,6 +23,9 @@ const customerSlice = createSlice({
     reducers: {
         setTotalPage: (state, action)=>{
             state.totalListPage = action.payload
+        },
+        setTotalPageCus: (state,action)=>{
+            state.totalListPageTypeCus = action.payload
         },
         setCustomerList: (state, action)=>{
             state.customerList = action.payload;
@@ -53,6 +60,6 @@ const customerSlice = createSlice({
     }
 })
 
-export const {setCustomerList, setTotalPage , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
+export const {setCustomerList, setTotalPage, setTotalPageCus , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
 setCustomerTypeList, setJobTypeList, addCustomerType} = customerSlice.actions;
 export default customerSlice.reducer;

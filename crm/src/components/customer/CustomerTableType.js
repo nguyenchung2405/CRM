@@ -21,11 +21,12 @@ function CustomerTableType() {
     const {customerTypeList} = useSelector(state => state.customerReducer)
     const { jobTypeList } = useSelector(state => state.customerReducer)
     const { totalListPage } = useSelector(state => state.customerReducer)
+    const { totalListPageTypeCus } = useSelector(state => state.customerReducer)
     const [pageJobType,setPageJobType] = useState({
         pageCurrent: 1,
         pageSize: 10
     })
-    console.log(totalListPage)
+    console.log(totalListPageTypeCus)
     const [pageTypeCus, setPageTypeCus] = useState({
         pageCurrent: 1,
         pageSize: 10,
@@ -84,13 +85,13 @@ function CustomerTableType() {
         type:  GET_CUSTOMER_TYPE_LIST, 
         data: {
             page_size: pageTypeCus.pageSize,
-            page: 1,
+            page: pageTypeCus.pageCurrent,
             name: "",
             sort_by: "id",
             asc_order: false,
         }
     })    
-   },[pageTypeCus.pageSize])
+   },[pageTypeCus])
 
     useEffect(()=>{
         // console.log("Chay Lan 2");
@@ -123,20 +124,19 @@ function CustomerTableType() {
     }
 
     useEffect(()=>{
-        console.log(pageJobType.pageSize)
         dispatch(
             {
                 type: GET_JOB_TYPE_LIST,
                 data:{
                     page_size: pageJobType.pageSize,
-                    page: 1,
+                    page: pageJobType.pageCurrent,
                     name: "",
                     sort_by: "id",
                     asc_order: false,
                 }
             }
         )
-    },[pageJobType.pageSize])
+    },[pageJobType])
 
     // Handel create List Job
     const HandelChangeTypeJobList = (e)=>{
@@ -375,7 +375,9 @@ function CustomerTableType() {
                             className="customerType_table"  
                             columns={columns} 
                             pagination={{ 
-                                pageSizeOptions: [10,20,30],
+                                defaultPageSize: 10,
+                                total: totalListPageTypeCus.total_data,
+                                pageSizeOptions: [10,20,30,50,100],
                                 defaultCurrent: 1,
                                 showSizeChanger:true,
                                 position: ["bottomRight"],
@@ -421,8 +423,9 @@ function CustomerTableType() {
                         <Table 
                             className="customerType_table" 
                             pagination={{ 
-                                // defaultPageSize: 5,
-                                pageSizeOptions: [10,15,30],
+                                defaultPageSize: 10,
+                                total:totalListPage?.total_data, 
+                                pageSizeOptions: [10,20,30,50,100],
                                 defaultCurrent: 1,
                                 showSizeChanger:true,
                                 position: ["bottomRight"],
