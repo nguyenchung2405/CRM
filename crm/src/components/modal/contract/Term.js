@@ -139,7 +139,6 @@ export default function TermModal(props) {
           details: valueModal.details,
           custom_price: valueModal.custom_price / 1000000 || 0
         };
-        console.log(newRequest)
         dispatch(addContractRequest(newRequest));
         setIsUpdateModal(false)
       } else {

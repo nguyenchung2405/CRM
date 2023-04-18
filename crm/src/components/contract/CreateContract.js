@@ -1,4 +1,4 @@
-import { DatePicker, Table, Select, Progress } from "antd";
+import { DatePicker, Table, Select, Progress, message } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
+import { setMessage } from "../../redux/features/messageSlice";
 
 export default function CreateContract() {
 
@@ -26,6 +27,7 @@ export default function CreateContract() {
   const { customerList } = useSelector(state => state.customerReducer);
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
+  const { messageAlert } = useSelector(state => state.messageReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
@@ -87,6 +89,17 @@ export default function CreateContract() {
       dispatch(setIsLoading(true))
     }
   }, [contract_id])
+
+  useEffect(() => {
+    let { type, msg } = messageAlert;
+    if (type === "thành công") {
+        message.success(msg)
+        dispatch(setMessage({}))
+    } else if (type === "thất bại") {
+        message.error(msg)
+        dispatch(setMessage({}))
+    }
+}, [messageAlert])
 
   const convertContractRequest = () => {
     return contractRequest?.map(request => {
@@ -186,7 +199,6 @@ export default function CreateContract() {
       return <button className="footer__btn btn__create"
         onClick={() => {
           // let creater = +jwtdecode(TOKEN)?.id;
-          console.log(valueForm, ",", contractRequest)
           let newData = {
             contract: { ...valueForm },
             request: contractRequest,

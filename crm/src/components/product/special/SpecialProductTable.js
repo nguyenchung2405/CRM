@@ -1,9 +1,9 @@
-import { Input, Popconfirm, Select, Table, Typography, Form, Tooltip } from 'antd';
+import { Input, Popconfirm, Select, Table, Typography, Form, Tooltip, message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { CREATE_PRODUCT_SPECIAL, GET_CUSTOMER_TYPE_LIST, GET_PRODUCT_LIST, GET_PRODUCT_SPECIAL } from '../../../title/title';
+import { CREATE_PRODUCT_SPECIAL, DELETE_PRODUCT_SPECIAL, GET_CUSTOMER_TYPE_LIST, GET_PRODUCT_LIST, GET_PRODUCT_SPECIAL } from '../../../title/title';
 import {v4 as uuidv4} from "uuid";
 import { addProductSpecial, removeProductSpecial } from '../../../redux/features/productSlice';
 
@@ -32,6 +32,7 @@ export default function SpecialProductTable() {
     const [isCreate, setIsCreate] = useState(false);
     const {productSpecialList, totalProductSpecialList, productListFull} = useSelector(state => state.productReducer);
     const {customerTypeList} = useSelector(state => state.customerReducer)
+    const { messageAlert } = useSelector(state => state.messageReducer);
     // Edit Table
     const [form] = Form.useForm();
     const [data, setData] = useState();
@@ -56,6 +57,15 @@ export default function SpecialProductTable() {
     useEffect(()=>{
         setData(convertData(productSpecialList))
     }, [productSpecialList])
+
+    useEffect(() => {
+        let { type, msg } = messageAlert;
+        if (type === "thành công") {
+            message.success(msg)
+        } else if (type === "thất bại") {
+            message.error(msg)
+        }
+    }, [messageAlert])
     
     const EditableCell = ({
         editing,
@@ -228,7 +238,10 @@ export default function SpecialProductTable() {
                             <Tooltip title="Xóa" color="red">
                                 <Popconfirm title="Có chắc muốn xóa?"
                                     onConfirm={() => {
-                                        console.log(record)
+                                        dispatch({
+                                            type: DELETE_PRODUCT_SPECIAL,
+                                            data: record.key
+                                        })
                                     }}
                                     okText="Có"
                                     cancelText="Không"
@@ -296,7 +309,7 @@ export default function SpecialProductTable() {
     <div className="customer__table content product__table">
             <div className="table__features">
                 <div className="table__features__add">
-                    <h1>Quản lý sản phẩm</h1>
+                    <h1>Quản lý sản phẩm đặc biệt</h1>
                     <Tooltip title="Tạo" color="green" >
                         <FcPlus onClick={createProduct} />
                     </Tooltip>
