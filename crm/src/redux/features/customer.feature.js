@@ -41,7 +41,8 @@ const customerSlice = createSlice({
         },
         addCustomerType: (state, action)=>{
             state.customerTypeList.unshift(action.payload)
-        }
+        },
+        
     }
 })
 

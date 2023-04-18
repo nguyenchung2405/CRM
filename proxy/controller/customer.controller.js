@@ -123,23 +123,20 @@ const getCustomerTypeList = async (req, res)=>{
 
 const createCustomerType = async (req, res)=>{
     try {
-        let { headers: { authorization } } = req;
-        console.log(req.body)
-        const result = await axios({
-            url: `${local}/client/type/create`,
+        const { TOKEN } = req.body
+        const { name, desc } = req.body
+        const data = { name, desc }
+        const resuft = await axios({
             method: "POST",
+            url: `${'http://contract.tuoitre.vn'}/client/type/create`,
+            data: data,
             headers: {
-                Authorization: authorization
+                Authorization: `Bearer ${TOKEN}`
             },
-            data: req.body
-        });
-        res.send(result.data)
+        })
+        res.send(resuft.data)
     } catch (error) {
-        if(error.response?.data){
-            res.send(error.response.data)
-        } else {
-            res.send(error)
-        }
+        res.send(error)
     }
 }
 
@@ -149,17 +146,82 @@ const getJobTypeList = async (req, res)=>{
         const result = await axios({
             url: `${local}/client/sector?page_size=100&page=1&sort_by=id&asc_order=true`,
             method: "GET",
-            headers: {
-                Authorization: authorization
-            },
-        });
-        res.send(result.data)
+            url: `${"http://contract.tuoitre.vn"}/client/sector`,
+        })
+        res.send(resuft.data)
+        
     } catch (error) {
-        if(error.response?.data){
-            res.send(error.response.data)
-        } else {
-            res.send(error)
+       
+    }
+}
+
+
+
+
+const getListTypeCustomer = async (req,res)=>{
+    try {
+        console.log("Dang")
+        const data = req.body?.name;
+        console.log(data)
+       const { headers: { authorization } } = req
+       const resuft =  await axios({
+         url:`${"http://contract.tuoitre.vn"}/client/type?name=${data || ""}`,
+         method: "GET",
+         headers: {
+           Authorization : authorization
         }
+        })
+        res.send(resuft.data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const deleteCustomerType = async (req,res)=>{
+    try {
+        const { id , token } = req.body
+        const resuft = await axios({
+            method : "DELETE",
+            url: `${"http://contract.tuoitre.vn"}/client/type/disable?id=${id}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        res.send(resuft.data)
+    } catch (error) {
+        res.send(error)
+    }
+    
+}
+const deleteJobType = async (req,res)=>{
+    try {
+        const { id, TOKEN } = req.body
+        const resuft = await axios({
+            method: "DELETE",
+            url: `${"http://contract.tuoitre.vn"}/client/sector/disable?id=${id}`,
+            headers: {
+                Authorization: `Bearer ${TOKEN}`
+            },
+        })
+        res.send(resuft.data);
+    } catch (error) {
+        res.send(error)
+    }
+}
+const createJobType = async (req,res)=>{
+    try {
+        const { data , TOKEN } = req.body
+        const resuft = await axios({
+            method: "POST",
+            url: `${"http://contract.tuoitre.vn"}/client/sector/create`,
+            data: data,
+            headers: {
+                Authorization: `Bearer ${TOKEN}`
+            },
+        })
+        res.send(resuft.data)
+    } catch (error) {
+        res.send(error)
     }
 }
 
@@ -171,5 +233,9 @@ module.exports = {
     getDetailCustomer,
     getCustomerTypeList,
     getJobTypeList,
-    createCustomerType
+    createCustomerType,
+    getListTypeCustomer,
+    deleteCustomerType,
+    deleteJobType,
+    createJobType
 }
