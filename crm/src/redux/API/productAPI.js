@@ -1,6 +1,6 @@
 import axios from "axios"
 import { local, TOKEN } from "../../title/title";
-import { v1 as uuidv1, v3, v4, v5 } from "uuid"
+import { v1 as uuidv1 } from "uuid"
 
 export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID) {
     try {
@@ -310,5 +310,43 @@ export async function getProductSpecialForClientAPI(data){
     } catch (error) {
         console.log(error)
         return "Thât bại"
+    }
+}
+
+export async function updateProductAPI(data){
+    try {
+        let product = {
+           ...data,
+            "price": +data.price / 1000000,
+            "code_indentify": uuidv1().slice(0, 10),
+        };
+        const result = await axios({
+            url: `${local}/api/product/update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: product
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function deleteProductSpecialAPI(product_special_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/product/special-discount/delete?id=${product_special_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
     }
 }

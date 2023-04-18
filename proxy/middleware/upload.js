@@ -11,7 +11,7 @@ const uploadFileCreateClient = ()=>{
             }
         })
         const upload = multer({storage});
-        return upload.array("files", 4)
+        return upload.array("files", 10)
     } catch (error) {
         console.log(error)
     }

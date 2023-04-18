@@ -30,10 +30,10 @@ export default function Sidebar() {
             ]),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
             getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
-                getItem(<Link to={`${uri}/crm/channel`}>kênh, nhóm</Link>, "15", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/product/type-att`}>loại, thuộc tính</Link>, "13", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/product`}>sản phẩm</Link>, "14", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/product/special`}>sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/channel`}>Kênh, nhóm</Link>, "15", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/type-att`}>Loại, thuộc tính</Link>, "13", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product`}>Sản phẩm</Link>, "14", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
         ])
     ]

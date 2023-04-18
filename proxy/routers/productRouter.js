@@ -1,5 +1,5 @@
 const express = require("express");
-const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial, getProductSpecialForClient } = require("../controller/product.controller");
+const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial, getProductSpecialForClient, updateProduct, deleteProductSpecial } = require("../controller/product.controller");
 const productRouter = express.Router();
 
 productRouter.get("/item/list", getProductList)
@@ -7,6 +7,7 @@ productRouter.get("/channel/list", getProductChannel)
 productRouter.get("/location/list", getProductLocation)
 productRouter.post("/create", createProduct)
 productRouter.delete("/delete", deleteProduct)
+productRouter.put("/update", updateProduct)
 // Product Type
 productRouter.get("/type/list", getProductTypeList)
 productRouter.post("/type/create", createProductType)
@@ -20,6 +21,7 @@ productRouter.put("/attribute/update", updateProductAttribute)
 // Product Special
 productRouter.get("/special-discount", getProductSpecial)
 productRouter.post("/special-discount/create", createProductSpecial)
+productRouter.delete("/special-discount/delete", deleteProductSpecial)
 productRouter.get("/special-discount-client", getProductSpecialForClient)
 
 module.exports = {

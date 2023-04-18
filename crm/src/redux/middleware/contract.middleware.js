@@ -65,7 +65,11 @@ function* getOwnerList(payload){
 function* updateContract(payload){
     try {
         const result = yield call(updateContractiAPI, payload.data);
-        console.log(result)
+        if(result.data.msg === "Updated successfully!"){
+            yield put(setMessage({ type: "thành công", msg: "Cập nhật hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Cập nhật hợp đồng thất bại." }))
+        }
     } catch (error) {
         console.log(error)
     }
@@ -76,6 +80,9 @@ function* createRequest(payload){
         const result = yield call(createRequestAPI ,payload.data);
         if(result.data.requests.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
+            yield put(setMessage({ type: "thành công", msg: "Tạo quyền lợi hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Tạo quyền lợi hợp đồng thất bại." }))
         }
     } catch (error) {
         console.log(error)
@@ -87,6 +94,9 @@ function* deleteRequest(payload){
         const result = yield call(deleteRequestAPI ,payload.request_id);
         if(result.data.msg === "Vô hiệu yêu cầu hợp đồng thành công."){
             yield put(deleteContractRequest(payload.request_id))
+            yield put(setMessage({ type: "thành công", msg: "Xóa quyền lợi hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Xóa quyền lợi hợp đồng thất bại." }))
         }
     } catch (error) {
         console.log(error)
@@ -98,6 +108,9 @@ function* updateRequest(payload){
         const result = yield call(updateRequestAPI, payload.data);
         if(result.data.msg === "Updated successfully!"){
             yield put(updateContractRequest(payload.data))
+            yield put(setMessage({ type: "thành công", msg: "Cập nhật quyền lợi hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Cập nhật quyền lợi hợp đồng thất bại." }))
         }
     } catch (error) {
         console.log(error)
@@ -109,6 +122,9 @@ function* createDetail(payload){
         const result = yield call(createDetailAPI, payload.data);
         if(result.data.details.length > 0){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: result.data.details[0], detail_id_old: payload.data.id }))
+            yield put(setMessage({ type: "thành công", msg: "Thêm chi tiết quyền lợi hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Thêm chi tiết quyền lợi hợp đồng thất bại." }))
         }
     } catch (error) {
         console.log(error)
@@ -118,9 +134,11 @@ function* createDetail(payload){
 function* updateDetail(payload){
     try {
         const result = yield call(updateDetailAPI, payload.data);
-        console.log(result);
         if(result.data.msg === "Updated successfully!"){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: payload.data }))
+            yield put(setMessage({ type: "thành công", msg: "Cập nhật chi tiết quyền lợi hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Cập nhật chi tiết quyền lợi hợp đồng thất bại." }))
         }
     } catch (error) {
         console.log(error)
@@ -132,6 +150,9 @@ function* createPayment(payload){
         const result = yield call(createPaymentAPI, payload.data);
         if(result.data.payment.contract_ID){
             yield put(addPayment(result.data.payment))
+            yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
         }
     } catch (error) {
         console.log(error)

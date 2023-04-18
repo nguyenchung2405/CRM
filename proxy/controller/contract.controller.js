@@ -56,7 +56,6 @@ const createContract = async (req, res) => {
         });
         res.send(result.data)
     } catch (error) {
-        console.log("lỗi", error)
         if (error.response.data) {
             res.send(error.response.data)
         } else {

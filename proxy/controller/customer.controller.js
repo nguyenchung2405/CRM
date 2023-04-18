@@ -155,9 +155,6 @@ const getJobTypeList = async (req,res)=>{
     }
 }
 
-
-
-
 const getListTypeCustomer = async (req,res)=>{
     try {
         

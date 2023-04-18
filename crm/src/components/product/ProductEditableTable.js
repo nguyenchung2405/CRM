@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Input, message, Popconfirm, Select, Table, Tooltip, Typography } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useDispatch, useSelector } from "react-redux"
-import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER } from '../../title/title';
+import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER, UPDATE_PRODUCT } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -117,6 +117,14 @@ export default function ProductTable() {
         setData(convertData(productList))
     }, [productList])
 
+    const isDisable = ()=>{
+        if(isUpdate){
+            return true
+        } else {
+            return false
+        }
+    }
+
     const EditableCell = ({
         editing,
         dataIndex,
@@ -139,6 +147,7 @@ export default function ProductTable() {
                         setChannelID(value)
                         // record.channel_id = value;
                     }}
+                    disabled={isDisable()}
                 >
                     {renderChannelOption()}
                 </Select>
@@ -153,6 +162,7 @@ export default function ProductTable() {
                         setLocationID(value)
                         // record.location_id = value;
                     }}
+                    disabled={isDisable()}
                 >
                     {renderLocationOption()}
                 </Select>
@@ -167,6 +177,7 @@ export default function ProductTable() {
                         setTypeID(value)
                         // record.type_id = value;
                     }}
+                    disabled={isDisable()}
                 >
                     {renderTypeOption()}
                 </Select>
@@ -181,6 +192,7 @@ export default function ProductTable() {
                         setAttributeID(value)
                         // record.attribute_id = value;
                     }}
+                    disabled={isDisable()}
                 >
                     {renderAttributeOption()}
                 </Select>
@@ -262,6 +274,11 @@ export default function ProductTable() {
                 if(isCreate && !isUpdate){
                     dispatch({
                         type: CREATE_PRODUCT,
+                        data: newProduct
+                    })
+                } else {
+                    dispatch({
+                        type: UPDATE_PRODUCT,
                         data: newProduct
                     })
                 }
