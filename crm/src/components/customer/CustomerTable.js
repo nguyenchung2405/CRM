@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message, Table } from 'antd';
+import { message, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import ModalCustomer from '../modal/ModalCustomer';
 import { useDispatch, useSelector } from "react-redux"
@@ -77,12 +77,14 @@ export default function CustomerTable() {
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý khách hàng</h1>
-                    <FcPlus onClick={() => {
-                        // setIsShowModal(true)
-                        dispatch(setIsCreateCustomer(true))
-                        dispatch(setDataCustomer({}))
-                        navigate(`${uri}/crm/customer/create`)
-                    }} />
+                    <Tooltip title="Tạo" color="green">
+                        <FcPlus onClick={() => {
+                            // setIsShowModal(true)
+                            dispatch(setIsCreateCustomer(true))
+                            dispatch(setDataCustomer({}))
+                            navigate(`${uri}/crm/customer/create`)
+                        }} />
+                    </Tooltip>
                     {/**
                      <ModalCustomer
                 title="Khách hàng mới"
@@ -156,11 +158,13 @@ export default function CustomerTable() {
                     navigate(`${uri}/crm/customer/update/${text.id}`)
                 }}>Chỉnh sửa</button>
             */}
+                    <Tooltip title="Chỉnh sửa" color="green" >
                         <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                             dispatch(setDataCustomer(text))
                             dispatch(setIsCreateCustomer(false))
                             navigate(`${uri}/crm/customer/update/${text.id}`)
                         }} />
+                    </Tooltip>
                     </div>
                 }
                 } />

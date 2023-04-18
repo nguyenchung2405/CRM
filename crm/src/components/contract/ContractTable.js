@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { message, Table } from 'antd';
+import { message, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
 import moment from 'moment';
-import { checkMicroFe, convertDate } from '../../untils/helper';
+import { checkMicroFe } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
-import { MdOutlineModeEditOutline } from "react-icons/md";
+import { MdOutlineModeEditOutline, MdPayment } from "react-icons/md";
+import { setIsOnlyPayment } from '../../redux/features/contractSlice';
 
 export default function ContractTable() {
 
@@ -54,9 +55,11 @@ export default function ContractTable() {
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý hợp đồng</h1>
-                    <FcPlus onClick={() => {
-                        navigate(`${uri}/crm/contract/create`)
-                    }} />
+                    <Tooltip title="Tạo" color="green">
+                        <FcPlus onClick={() => {
+                            navigate(`${uri}/crm/contract/create`)
+                        }} />
+                    </Tooltip>
                 </div>
                 <div className="table__features__search">
                     <input placeholder="Tên khách hàng" type="text" />
@@ -119,14 +122,16 @@ export default function ContractTable() {
                         return `${batDau} - ${ketThuc}`
                     }} />
                 <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
-                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                    return <span status={text.id % 2 === 0 ? "đang chạy" : "kết thúc"}>{text.id % 2 === 0 ? "Đang chạy" : "Kết thúc"}</span>
+                    if(text.status){
+                        return <span status={"đang chạy"}>Đang chạy</span>
+                    } else if(!text.status){
+                        return <span status={"kết thúc"}>Kết thúc</span>
+                    } else {
+                        return <span status={"chưa chạy"}>Chưa chạy</span>
+                    }
                 }} />
                 <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text) => {
-                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                    return <span>{text.id % 2 === 0 ? "Nguyễn Hoài Nam" : "Nguyễn Văn Lợi"}</span>
+                    return <span>{text.owner_name}</span>
                 }} />
                 <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text) => {
                     // fake dữ liệu để đi demo, khi nào làm thì sửa lại
@@ -147,9 +152,18 @@ export default function ContractTable() {
                             navigate(`${uri}/crm/detail/${text.id}`)
                     }}>Chỉnh sửa</button>
                 */}
-                        <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-                            navigate(`${uri}/crm/detail/${text.id}`)
-                        }} />
+                        <Tooltip title="Chỉnh sửa" color="green">
+                            <MdOutlineModeEditOutline className="style__svg" onClick={() => {
+                                navigate(`${uri}/crm/detail/${text.id}`);
+                                dispatch(setIsOnlyPayment(false));
+                            }} />
+                        </Tooltip>
+                        <Tooltip title="Sửa đợt thanh toán" color="green">
+                            <MdPayment className="style__svg" onClick={() => {
+                                dispatch(setIsOnlyPayment(true));
+                                navigate(`${uri}/crm/detail/${text.id}`)
+                            }} />
+                        </Tooltip>
                     </div>
                 }} />
             </Table>

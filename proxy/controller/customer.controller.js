@@ -29,6 +29,8 @@ const createCustomer = async (req, res)=>{
         for(let file of req.files){
             newData.files.push(file.path)
         }
+        let newSectors = newData.sectors.split(',');
+        newData.sectors = newSectors;
         const result = await axios({
             url: `${local}/client/create`,
             method: "POST",
@@ -36,7 +38,8 @@ const createCustomer = async (req, res)=>{
         });
         res.send(result.data);
     } catch (error) {
-        if(error.response?.data){
+        console.log(error)
+        if(error?.response?.data){
             res.send(error.response.data)
         } else {
             res.send(error)
@@ -139,8 +142,9 @@ const createCustomerType = async (req, res)=>{
 
 const getJobTypeList = async (req, res)=>{
     try {
-        const { name } = req.body
-        const resuft = await axios({
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/client/sector?page_size=100&page=1&sort_by=id&asc_order=true`,
             method: "GET",
             url: `${"http://contract.tuoitre.vn"}/client/sector`,
         })

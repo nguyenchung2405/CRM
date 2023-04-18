@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
-import { addContractRequest, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
+import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -127,6 +127,17 @@ function* updateDetail(payload){
     }
 }
 
+function* createPayment(payload){
+    try {
+        const result = yield call(createPaymentAPI, payload.data);
+        if(result.data.payment.contract_ID){
+            yield put(addPayment(result.data.payment))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -141,4 +152,6 @@ export default function* contractMiddleware() {
     // Detail Middleware
     yield takeLatest(CREATE_DETAIL, createDetail)
     yield takeLatest(UPDATE_DETAIL, updateDetail)
+    // Payment
+    yield takeLatest(CREATE_PAYMENT, createPayment)
 }

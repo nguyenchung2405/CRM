@@ -11,7 +11,8 @@ const initialState = {
     totalProductType: "",
     totalProductAttribute: "",
     productSpecialList: [],
-    totalProductSpecialList: 0
+    totalProductSpecialList: 0,
+    customPriceForClient: ""
 };
 
 const productSlice = createSlice({
@@ -100,6 +101,9 @@ const productSlice = createSlice({
         updateProductSpecial: (state, action)=>{
             let index = state.productSpecialList.findIndex(product => product.id === action.payload.id);
             state.productSpecialList[index] = action.payload.data;
+        },
+        setCustomPriceForClient: (state, action)=>{
+            state.customPriceForClient = action.payload;
         }
     }
 });
@@ -108,5 +112,6 @@ export const { setProductList, setTotalProduct, setProductChannel, setProductTyp
 setProductLocation, setProductAttribute, setProductListFull, addProduct, removeProduct,
 updateProductWithID, setTotalProductType, addProductType, removeProductType, updateProductType,
 setTotalProductAttribute, addProductAttribute, removeProductAttribute, updateProductAttribute,
-setProductSpecial, setTotalProductSpecial, addProductSpecial, removeProductSpecial, updateProductSpecial} = productSlice.actions;
+setProductSpecial, setTotalProductSpecial, addProductSpecial, removeProductSpecial, updateProductSpecial,
+setCustomPriceForClient} = productSlice.actions;
 export default productSlice.reducer;

@@ -367,6 +367,27 @@ const createProductSpecial = async (req, res)=>{
     }
 }
 
+const getProductSpecialForClient = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {product_ID, client_type_ID} = req.query;
+        const result = await axios({
+            url: `${local}/product/special-discount?product_ID=${product_ID}&client_type_ID=${client_type_ID}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        } 
+    }
+}
+
 module.exports = {
     getProductTypeList,
     getProductList,
@@ -382,5 +403,6 @@ module.exports = {
     updateProductType,
     updateProductAttribute,
     getProductSpecial,
-    createProductSpecial
+    createProductSpecial,
+    getProductSpecialForClient
 }
