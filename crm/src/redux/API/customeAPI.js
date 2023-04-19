@@ -91,7 +91,7 @@ export async function getCustomerTypeListAPI(data){
                 Authorization: "Bearer " + TOKEN
             },
         })
-        // console.log(resuft)
+        
         return resuft.data
     } catch (error) {
         console.log(error)
