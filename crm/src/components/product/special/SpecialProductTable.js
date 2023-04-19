@@ -50,9 +50,7 @@ export default function SpecialProductTable() {
         });
         dispatch({
             type: GET_CUSTOMER_TYPE_LIST,
-            data: { page: 1, page_size: 500, name: "",
-            sort_by: "id",
-            asc_order: false,}
+            data: { page: 1, page_size: 500, name: "", sort_by: "id", asc_order: false,}
         })
     }, [])
 
