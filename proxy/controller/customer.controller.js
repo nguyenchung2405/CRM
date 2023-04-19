@@ -142,16 +142,14 @@ const createCustomerType = async (req, res)=>{
 
 const getJobTypeList = async (req,res)=>{
     try {
-        console.log("Dang chay qua dau")
         const { headers: { authorization } } = req
         const { name , page , page_size, sort_by , asc_order } = req.query
-        console.log({name,page,page_size});
-        name ? `name=${req.query.name}` : ""
-        page ? `page=${req.query.page}` : ""
+
+        const nameEndeCode = encodeURI(name)
         // console.log({ name , page , page_size, sort_by , asc_order })
         const resuft = await axios({
             method: "GET",
-            url: `${local}/client/sector?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            url: `${local}/client/sector?name=${nameEndeCode || ""}&page=${page || 0}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
             headers: {
                 Authorization: authorization
             },
@@ -169,13 +167,9 @@ const getListTypeCustomer = async (req,res)=>{
     try {
         const { headers: { authorization } } = req
         const { name , page , page_size, sort_by , asc_order } = req.query
-        name ? `name=${req.query.name}` : ""
-        page ? `page=${req.query.page}` : ""
-        console.log({ name , page , page_size, sort_by , asc_order })
-
+        const nameEncode = encodeURI(req.query.name)
         const resuft =  await axios({
-            // url:`${"http://contract.tuoitre.vn"}/client/type?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
-            url:`${local}/client/type?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
+            url:`${local}/client/type?name=${nameEncode || ""}&page=${page || ""}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
             method: "GET",
             headers: {
                 Authorization : authorization

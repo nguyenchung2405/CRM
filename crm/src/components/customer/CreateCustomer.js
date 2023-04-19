@@ -30,7 +30,8 @@ export default function CreateCustomer(props) {
         data: { page: 1, page_size: 100}
       })
       dispatch({
-        type: GET_JOB_TYPE_LIST
+        type: GET_JOB_TYPE_LIST,
+        data: { page: 1, page_size: 100}
       })
     }, [])
     

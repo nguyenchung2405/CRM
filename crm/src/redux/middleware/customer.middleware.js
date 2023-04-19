@@ -81,6 +81,7 @@ function* getDetailCustomer(payload){
 
 function* getCustomerTypeList(payload){
     try {
+        
         const resuft = yield call(getCustomerTypeListAPI, payload?.data)
         
         if(resuft?.data?.client_type?.length){

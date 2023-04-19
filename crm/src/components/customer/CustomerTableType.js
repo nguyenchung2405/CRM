@@ -33,7 +33,6 @@ function CustomerTableType() {
     })
 
     // <---------------------------------------Type Customer-------------------------------> // 
-    
     // Create type Customer
     const HandelChangeTypeNameCustomer = (e)=>{
         setTypeCustomer(e.target.value)
@@ -71,7 +70,7 @@ function CustomerTableType() {
                 data: {
                     page_size: 10,
                     page: 1,
-                    name: searchTypeCustomer,
+                    name:  encodeURI(`${searchTypeCustomer}`),
                     sort_by: "id",
                     asc_order: false,
                 }
@@ -165,7 +164,7 @@ function CustomerTableType() {
                 data:{
                     page_size: 10,
                     page: 1,
-                    name: searchTypeJob,
+                    name: encodeURI(`${searchTypeJob}`),
                     sort_by: "id",
                     asc_order: false,
                 }
