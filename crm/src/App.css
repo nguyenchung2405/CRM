@@ -57,10 +57,6 @@ p.required__field {
     transform: translateX(33%);
 }
 
-.sidebar_SubMenu__XZeb6 li.ant-menu-submenu-selected > ul > li > div.ant-menu-submenu-title {
-    opacity: 1;
-}
-
 /* loading css */
 
 .loading {

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CREATE_PRODUCT_SPECIAL, DELETE_PRODUCT_SPECIAL, GET_CUSTOMER_TYPE_LIST, GET_PRODUCT_LIST, GET_PRODUCT_SPECIAL } from '../../../title/title';
 import {v4 as uuidv4} from "uuid";
 import { addProductSpecial, removeProductSpecial } from '../../../redux/features/productSlice';
+import { setMessage } from '../../../redux/features/messageSlice';
 
 function convertData (data){
     return data.map(product => {
@@ -62,8 +63,10 @@ export default function SpecialProductTable() {
         let { type, msg } = messageAlert;
         if (type === "thành công") {
             message.success(msg)
+            dispatch(setMessage({}))
         } else if (type === "thất bại") {
             message.error(msg)
+            dispatch(setMessage({}))
         }
     }, [messageAlert])
     
