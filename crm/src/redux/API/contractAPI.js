@@ -131,15 +131,19 @@ export async function updateContractiAPI(data){
     try {
         let convertBeginDate = moment(data.begin_date).format("YYYY-MM-DD");
         let convertEndDate = moment(data.end_date).format("YYYY-MM-DD");
-        data.begin_date = convertBeginDate;
-        data.end_date = convertEndDate;
+        let newData ={
+            ...data,
+            begin_date: convertBeginDate,
+            end_date: convertEndDate,
+            total: data.total / 1000000
+        };
         const result = await axios({
             url: `${local}/api/contract/update`,
             method: "PUT",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
-            data
+            data: newData
         });
         return result.data;
     } catch (error) {
