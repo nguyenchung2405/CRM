@@ -365,6 +365,27 @@ const createProductSpecial = async (req, res)=>{
             res.send(error)
         } 
     }
+};
+
+const deleteProductSpecial = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {id} = req.query;
+        const result = await axios({
+            url: `${local}/productspecial-discount/disable?id=${id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+         if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        } 
+    }
 }
 
 const getProductSpecialForClient = async (req, res)=>{
@@ -379,6 +400,44 @@ const getProductSpecialForClient = async (req, res)=>{
             },
         });
         res.send(result.data)
+    } catch (error) {
+        if(error.response.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        } 
+    }
+}
+
+const updateProduct = async (req, res)=>{
+    try {
+        let {headers: {authorization}} = req;
+        let {product_name, code_indentify, id, price} = req.body;
+        let product = {
+            "name": product_name,
+            "code_indentify": code_indentify
+        };
+        let newPrice = {
+            "product_ID": id,
+            "price": price,
+        };
+        const resultPrice = await axios({
+            url: `${local}/product/price/create/`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: newPrice
+        });
+        const resultProduct = await axios({
+            url: `${local}/product/item/update?product_id=${id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: product
+        });
+        res.send(["Success", resultPrice.data, resultProduct.data])
     } catch (error) {
         if(error.response.data){
             res.send(error.response.data)
@@ -404,5 +463,7 @@ module.exports = {
     updateProductAttribute,
     getProductSpecial,
     createProductSpecial,
-    getProductSpecialForClient
+    getProductSpecialForClient,
+    updateProduct,
+    deleteProductSpecial
 }

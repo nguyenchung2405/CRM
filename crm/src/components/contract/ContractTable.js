@@ -58,6 +58,7 @@ export default function ContractTable() {
                     <Tooltip title="Tạo" color="green">
                         <FcPlus onClick={() => {
                             navigate(`${uri}/crm/contract/create`)
+                            dispatch(setIsOnlyPayment(false));
                         }} />
                     </Tooltip>
                 </div>
@@ -134,9 +135,7 @@ export default function ContractTable() {
                     return <span>{text.owner_name}</span>
                 }} />
                 <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text) => {
-                    // fake dữ liệu để đi demo, khi nào làm thì sửa lại
-                    // return <span status={text.status === null ? "đang làm" : text.status?.toLowerCase()} >{text.status === null ? "Đang làm" : text.status}</span>
-                    return <span>{text.id % 2 === 0 ? "Đoàn Nguyễn Chung" : "Nguyễn Văn Chương"}</span>
+                    return <span>{text.creater_name}</span>
                 }} />
                 <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
                     let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
@@ -147,11 +146,6 @@ export default function ContractTable() {
                 }} />
                 <Column className="contract__table__thaotac" render={(text) => {
                     return <div className="table__thaotac">
-                        {/**  
-                    <button onClick={()=>{
-                            navigate(`${uri}/crm/detail/${text.id}`)
-                    }}>Chỉnh sửa</button>
-                */}
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                 navigate(`${uri}/crm/detail/${text.id}`);
