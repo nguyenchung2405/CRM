@@ -33,16 +33,12 @@ export default function CreateCustomer(props) {
       })
       dispatch({
         type: GET_JOB_TYPE_LIST,
-<<<<<<< HEAD
-        data: { page: 1, page_size: 100}
-=======
         data: {
           page:1 , 
           page_size: 100,  
           name: "",
         sort_by: "id",
         asc_order: false,}
->>>>>>> 3536e6a8ac9353982a9d60b819ec47392acd9851
       })
     }, [])
     
