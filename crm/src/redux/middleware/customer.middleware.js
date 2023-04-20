@@ -157,8 +157,8 @@ function* deleteJobTypeList(payload){
 }
 function* createJobTypeList(payload){
     try {
-        const resuft = yield call(createJobTypeListAPI,payload.data)
-        console.log(resuft.data.result)
+        const resuft = yield call(createJobTypeListAPI,payload?.data)
+        // console.log(resuft.data.result)
         if(resuft.data.result){
             message.success("Tạo thành công")
         }else{

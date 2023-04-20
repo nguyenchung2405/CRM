@@ -170,7 +170,7 @@ export async function deleteJobTypeListAPI(id){
 }
 
 export async function createJobTypeListAPI(data){
-    console.log({data})
+    
     try {
         const resuft = await axios({
             method: "POST",
@@ -180,6 +180,7 @@ export async function createJobTypeListAPI(data){
                 data
             }
         })
+        // console.log(resuft.data)
         return resuft.data
     } catch (error) {
         console.log(error)

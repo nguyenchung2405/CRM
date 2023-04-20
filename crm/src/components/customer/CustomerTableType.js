@@ -3,7 +3,7 @@ import { Table , Space   , Tooltip , Input , Button , Popconfirm, message, Spin 
 import { FcPlus } from "react-icons/fc"
 import { FaEdit,FaTrash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST } from "../../title/title";
+import { CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST, SEARCH_CUSTOMER_TYPE , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST, SEARCH_CUSTOMER } from "../../title/title";
 function CustomerTableType() {
 
     const dispatch = useDispatch();
@@ -22,24 +22,41 @@ function CustomerTableType() {
     const { jobTypeList } = useSelector(state => state.customerReducer)
     const { totalListPage } = useSelector(state => state.customerReducer)
     const { totalListPageTypeCus } = useSelector(state => state.customerReducer)
+    const [render,setRender] = useState(false)
     const [pageJobType,setPageJobType] = useState({
         pageCurrent: 1,
         pageSize: 10
     })
-    console.log(totalListPageTypeCus)
+
     const [pageTypeCus, setPageTypeCus] = useState({
         pageCurrent: 1,
         pageSize: 10,
     })
+    const [dataTypeCustomer , setDataTypeCustomer] = useState({ page_size: "10", page: "1", name: "", sort_by: "id", asc_order: false,})
+    const [dataTypeJob , setDataTypeJob] = useState({ page_size: "10", page: "1", name: "", sort_by: "id", asc_order: false,})
+
+    const inputJob = useRef(null);
 
     // <---------------------------------------Type Customer-------------------------------> // 
-    // Create type Customer
+
+    // GET DATA CUSTUMER
+    const getDataCustumer = ()=>{
+        dispatch({
+            type:  GET_CUSTOMER_TYPE_LIST, 
+            data: dataTypeCustomer
+        })  
+    }
+    useEffect(()=>{
+        getDataCustumer()
+    },[renderCustomer])
+
+    // CREATE DATA CUSTUMER
     const HandelChangeTypeNameCustomer = (e)=>{
         setTypeCustomer(e.target.value)
     }
     const HandelCreateTypeNameCustomer = ()=>{
         if(typeCustomer === ""){
-            message.error("Nhập loại khách hàng!")
+            message.error("Vui lòng nhập loại khách hàng")
         }else{
             dispatch({
                 type: CREATE_CUSTOMER_TYPE,
@@ -47,146 +64,181 @@ function CustomerTableType() {
                     name: typeCustomer,
                     desc: descCustomer
                 }
-            })   
-            setRenderCustomer(!renderCustomer)
+            })
             setTypeCustomer("")
             setIsCreateType(false)
+            setRenderCustomer(!renderCustomer)
         }
+
     }
-    // Delete type Customer
+    
+    // DELETE TYPE CUSTOMER
     const HandelDeleteTypeNameCustomer = (id)=>{
-        dispatch({
-            type: DELETE_CUSTOMER_TYPE,
-            id
-        })
-        setRenderCustomer(!renderCustomer)
-    }
-
-    // Search type Customer
-    const HandelSearchTypeCustomer = ()=>{
-        if(searchTypeCustomer !== ""){
+        if(id){
             dispatch({
-                type:  GET_CUSTOMER_TYPE_LIST, 
-                data: {
-                    page_size: 10,
-                    page: 1,
-                    name:  encodeURI(`${searchTypeCustomer}`),
-                    sort_by: "id",
-                    asc_order: false,
-                }
-            })   
-        }else{
-            message.error("Chưa có dữ liệu để tìm kiếm")
-        }
-   }
-   useEffect(()=>{
-    dispatch({
-        type:  GET_CUSTOMER_TYPE_LIST, 
-        data: {
-            page_size: pageTypeCus.pageSize,
-            page: pageTypeCus.pageCurrent,
-            name: "",
-            sort_by: "id",
-            asc_order: false,
-        }
-    })    
-   },[pageTypeCus])
-
-    useEffect(()=>{
-        // console.log("Chay Lan 2");
-        if(searchTypeCustomer === ""){
-            dispatch({
-                type:  GET_CUSTOMER_TYPE_LIST, 
-                data: {
-                    page_size: pageTypeCus.pageSize,
-                    page: pageTypeCus.pageCurrent,
-                    name: "",
-                    sort_by: "id",
-                    asc_order: false,
-                }
-            })     
-            
-        }
-   },[searchTypeCustomer,renderCustomer])
-
-
-
-  //<---------------------------------------------------Type Job----------------------------------------> //
-
-    // Delete List Job
-    const HandelDeleteTypeList = (id)=>{
-        dispatch({
-            type: DELETE_JOB_TYPE_LIST,
-            id
-        })
-        setRenderTypeJobList(!renderTypeJobList)
-    }
-
-    useEffect(()=>{
-        dispatch(
-            {
-                type: GET_JOB_TYPE_LIST,
-                data:{
-                    page_size: pageJobType.pageSize,
-                    page: pageJobType.pageCurrent,
-                    name: "",
-                    sort_by: "id",
-                    asc_order: false,
-                }
+                type: DELETE_CUSTOMER_TYPE,
+                id
+            })
+            HandeSearchTypeCustomerDelete()
+            if(customerTypeList.length === 1){
+                setSearchTypeCustomer("")
+                getDataCustumer()
             }
-        )
-    },[pageJobType])
-
-    // Handel create List Job
-    const HandelChangeTypeJobList = (e)=>{
-        setTypeJobName(e.target.value)
+        }
     }
-    const HandelCreateTypeJob = ()=>{
-        if(typeJobName !== ""){
+
+    const HandeSearchTypeCustomerDelete = ()=>{
+        dispatch({
+            type: GET_CUSTOMER_TYPE_LIST,
+            data: {
+                ...dataTypeCustomer,
+                name : encodeURI(`${searchTypeCustomer}`)
+            }
+        })
+    }
+    // SEARCH TYPE CUSTUMER 
+
+    const HandelSearchTypeCustomer = ()=>{
+        if(searchTypeCustomer === ""){
+            message.error("Vui lòng nhập dữ liệu để tìm kiếm")
+        }else{
+            dispatch({
+                type: GET_CUSTOMER_TYPE_LIST,
+                data: {
+                    ...dataTypeCustomer,
+                    name : encodeURI(`${searchTypeCustomer}`)
+                }
+            })
+        }
+    }
+
+    // SEARCH WHEN NAME EMPTY
+    useEffect(()=>{
+        if(searchTypeCustomer === ""){
+            getDataCustumer()
+        }
+    },[searchTypeCustomer])
+
+    // PAGE TYPE CUSTUMER
+    useEffect(()=>{
+        dispatch({
+            type: GET_CUSTOMER_TYPE_LIST,
+            data: {
+                ...dataTypeCustomer,
+                page: pageTypeCus.pageCurrent,
+                page_size: pageTypeCus.pageSize
+            }
+        })
+    },[pageTypeCus])
+
+    const HandelKeyPressCus = (e)=>{
+        if(e.key === "Enter"){
+            HandelSearchTypeCustomer()
+        }
+    }
+  //<---------------------------------------------------TYPE JOB----------------------------------------> //
+
+   const getDataTypeJob = ()=>{
+        dispatch({
+            type: GET_JOB_TYPE_LIST,
+            data: dataTypeJob
+        })
+   }    
+
+   // GET DATA TYPE JOB
+   useEffect(()=>{
+        getDataTypeJob()
+   },[renderTypeJobList])
+
+   // CREATE DATA TYPE JOB
+   const HandelChangeTypeJobList = (e)=>{
+       setTypeJobName(e.target.value)
+   }
+   const HandelCreateTypeJob = ()=>{
+        if(typeJobName === ""){
+            message.error("Vui lòng nhập dữ liệu để tạo")
+        }else{
+            console.log("Dang chay")
             dispatch({
                 type: CREATE_JOB_TYPE_LIST,
                 data: {
-                    name: typeJobName,
+                    name: encodeURI(`${typeJobName}`),
                     desc: jobDesc
                 }
             })
-            setTypeJobName("")
             setIsCreateTypeJob(false)
+            setTypeJobName("")
             setRenderTypeJobList(!renderTypeJobList)
-        }else{
-            message.error("Loại ngành nghề bị rỗng")
         }
     }
-   const HandelChangeSearchJob = ()=>{
-        if(searchTypeJob !== ""){
+
+    // DELETE TYPE JOB
+    const HandelDeleteTypeList = (id)=>{
+        if(id){
             dispatch({
-                type: GET_JOB_TYPE_LIST,
-                data:{
-                    page_size: 10,
-                    page: 1,
-                    name: encodeURI(`${searchTypeJob}`),
-                    sort_by: "id",
-                    asc_order: false,
-                }
+                type: DELETE_JOB_TYPE_LIST,
+                id
             })
-        }else{
-            message.error("Chưa có dữ liệu để tìm kiếm")
+            HandelSearchJobDelete()
+            if(jobTypeList.length === 1){
+                getDataTypeJob()
+                setSeacrhTypeJob("")
+            }
         }
-   }
-   useEffect(()=>{
+      
+    }
+    const HandelSearchJobDelete = ()=>{
+        dispatch({
+            type: GET_JOB_TYPE_LIST,
+            data: {
+                ...dataTypeJob,
+                name: encodeURI(`${searchTypeJob}`)
+            }
+        })
+    }
+    // SEARCH TYPE JOB
+    const HandelChangeSearchJob = ()=>{
         if(searchTypeJob === ""){
+            message.warn("Vui lòng nhập thông tin để tìm kiếm")
+        }else{
             dispatch({
                 type: GET_JOB_TYPE_LIST,
-                data:{
-                    page_size: pageJobType.pageSize,
-                    page: pageJobType.pageCurrent,
-                    name: "",
-                    sort_by: "id",
-                    asc_order: false,
+                data: {
+                    ...dataTypeJob,
+                    name: encodeURI(`${searchTypeJob}`)
                 }
             })
         }
-   },[searchTypeJob,renderTypeJobList])
+
+    }
+
+    useEffect(()=>{
+        if(searchTypeJob === ""){
+            getDataTypeJob()
+        }
+    },[searchTypeJob])
+
+    // PAGE TYPE JOB
+
+    useEffect(()=>{
+        dispatch({
+            type: GET_JOB_TYPE_LIST,
+            data: {
+                ...dataTypeJob,
+                page_size: pageJobType.pageSize,
+                page: pageJobType.pageCurrent,
+            }
+        })
+    },[pageJobType])
+
+    // HANDEL ENTER
+    const HandelKeyPressJob = (e)=>{
+        if(e.key === "Enter"){
+            HandelChangeSearchJob()
+        }
+    }
+
+    
     const columns = [
         {
           key: 1,
@@ -345,11 +397,11 @@ function CustomerTableType() {
                     <div className="custumer_title" >
                         <h2>Quản lý loại khách hàng</h2>
                         <Tooltip title="Thêm loại khách hàng" >
-                            <FcPlus style={{cursor:"pointer",fontSize:20, marginLeft:5} } onClick={()=>{setIsCreateType(true); setSearchTypeCustomer("")}} />
+                            <FcPlus style={{cursor:"pointer",fontSize:20, marginLeft:5} } onClick={()=>{setIsCreateType(true);}} />
                         </Tooltip>
                     </div>
                     <div className="custumer_search" style={{display: "flex",justifyContent:""}}>
-                        <Input onChange={(e)=>(setSearchTypeCustomer(e.target.value))} placeholder="Loại khách hàng"  style={{padding: 10,boxSizing:"border-box", width:"60%"}}  />
+                        <Input ref={inputJob} onKeyPress={(e)=>HandelKeyPressCus(e)} onChange={(e)=>(setSearchTypeCustomer(e.target.value))} value={searchTypeCustomer} placeholder="Loại khách hàng"  style={{padding: 10,boxSizing:"border-box", width:"60%"}}  />
                         <Button onClick={()=>{HandelSearchTypeCustomer()}} type="ghost" style={{height: 44, marginLeft:10 ,backgroundColor:"#29B171" ,color:"white", fontWeight: "bold" ,boxSizing:"border-box", width:"18%"}} >Tìm kiếm</Button>
                     </div>
                     <div className="" >
@@ -399,7 +451,7 @@ function CustomerTableType() {
                         </Tooltip>
                     </div>
                     <div className="custumer_search" style={{display: "flex",justifyContent:""}}>
-                        <Input placeholder="Loại ngành nghề" value={searchTypeJob} onChange={(e)=>{(setSeacrhTypeJob(e.target.value))}} style={{padding: 10,boxSizing:"border-box", width:"60%"}}  />
+                        <Input onKeyPress={(e)=>{HandelKeyPressJob(e)}} placeholder="Loại ngành nghề" value={searchTypeJob} onChange={(e)=>{(setSeacrhTypeJob(e.target.value))}} style={{padding: 10,boxSizing:"border-box", width:"60%"}}  />
                         <Button onClick={()=>{HandelChangeSearchJob()}} type="ghost" style={{height: 44, marginLeft:10, backgroundColor:"#29B171" ,color:"white", fontWeight: "bold" ,boxSizing:"border-box", width:"18%"}} >Tìm kiếm</Button>
                     </div>
                     <div>
