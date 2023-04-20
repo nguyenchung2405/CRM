@@ -1,6 +1,6 @@
 const axios = require("axios");
 const {local} = require("../untils/title")
-
+// const local = "http://contract.tuoitre.vn"
 const getCustomerList = async (req, res)=>{
     try {
         // let {headers: {authorization}} = req;
@@ -217,14 +217,21 @@ const deleteJobType = async (req,res)=>{
 const createJobType = async (req,res)=>{
     try {
         const { data , TOKEN } = req.body
+        const { name , desc } = data
+        const dataEnCode = {
+            desc,
+            name : decodeURI(name)
+        }
+        console.log(dataEnCode);
         const resuft = await axios({
             method: "POST",
             url: `${local}/client/sector/create`,
-            data: data,
+            data: dataEnCode,
             headers: {
                 Authorization: `Bearer ${TOKEN}`
             },
         })
+        // console.log(resuft);
         res.send(resuft.data)
     } catch (error) {
         res.send(error)
