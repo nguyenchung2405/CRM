@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { CREATE_CUSTOMER, CREATE_JOB_TYPE_LIST , CREATE_CUSTOMER_TYPE, DELETE_JOB_TYPE_LIST ,GET_CUSTOMER_DETAIL, DELETE_CUSTOMER_TYPE , GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
 import { createCustomerAPI, createJobTypeListAPI ,deleteJobTypeListAPI, deleteCustomerTypeAPI ,createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer , setTotalPageCus , setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, setTotalPage, updateCusomer } from "../features/customer.feature";
+import { addCustomer, setJobTypeListDelete , setJobTypeListCreate ,setCustomerTypeDelete , setTotalPageCus , setCustomerTypeListCreate ,  setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, setTotalPage, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 import { message } from "antd";
@@ -84,12 +84,27 @@ function* getCustomerTypeList(payload){
         
         const resuft = yield call(getCustomerTypeListAPI, payload?.data)
         
-        if(resuft?.data?.client_type?.length){
-            yield put(setCustomerTypeList(resuft?.data?.client_type))
-            yield put(setTotalPageCus({
-                total_data: resuft?.data?.total_data,
-                total_page: resuft?.data?.total_page
-            }))
+        if(payload?.data?.name !== ""){
+            if(resuft?.data?.client_type?.length === 0){
+                message.warning("Loại khách hàng không tồn tại")
+                yield put(setCustomerTypeList([]))
+            }else{
+                if(resuft?.data?.client_type?.length > 0){
+                    yield put(setCustomerTypeList(resuft?.data?.client_type))
+                    yield put(setTotalPageCus({
+                        total_data: resuft?.data?.total_data,
+                        total_page: resuft?.data?.total_page
+                    }))
+                }
+            }
+        }else{
+            if(resuft?.data?.client_type?.length > 0){
+                yield put(setCustomerTypeList(resuft?.data?.client_type))
+                yield put(setTotalPageCus({
+                    total_data: resuft?.data?.total_data,
+                    total_page: resuft?.data?.total_page
+                }))
+            }
         }
     } catch (error) {
         console.log(error)   
@@ -99,15 +114,31 @@ function* getCustomerTypeList(payload){
 function* getJobTypeList(payload){
     try {
         const result = yield call(getJobTypeListAPI,payload?.data);
-        console.log(result.data.sector.length)
-        if(result.data.sector.length){
 
-            yield put(setJobTypeList(result?.data?.sector))
-            yield put(setTotalPage({    
-                total_data: result?.data?.total_data,
-                total_page: result?.data?.total_page,
-            }))
+        if(payload?.data?.name !== ""){
+            if(result?.data?.sector?.length === 0){
+                message.warning("Loại ngành nghề không tồn tại")
+                yield put(setJobTypeList([]))
+            }else{
+                if(result?.data?.sector?.length > 0){
+                    yield put(setJobTypeList(result?.data?.sector))
+                    yield put(setTotalPage({    
+                        total_data: result?.data?.total_data,
+                        total_page: result?.data?.total_page,
+                    }))
+                }
+            }
+
+        }else{
+            if(result?.data?.sector?.length){
+                yield put(setJobTypeList(result?.data?.sector))
+                yield put(setTotalPage({    
+                    total_data: result?.data?.total_data,
+                    total_page: result?.data?.total_page,
+                }))
+            }
         }
+        console.log(result.data.sector.length)
 
     } catch (error) {
         console.log(error)
@@ -120,7 +151,8 @@ function* createCustomerType(payload){
         const { data } = resuft
         console.log(resuft)
         if(data?.result){
-            
+            // update state
+            yield put(setCustomerTypeListCreate(data?.data?.client_type))
             message.success("Tạo thành công")
         }else{
             message.error("Loại khách hàng đã tồn tại")
@@ -134,6 +166,7 @@ function* deleteCustomerType(payload){
     try {
        const resulf = yield call(deleteCustomerTypeAPI,payload.id)
        if(resulf.result){
+            yield put(setCustomerTypeDelete(payload.id))
             message.success(resulf.data)
        }else{
             message.error("Xóa thất bại")
@@ -147,6 +180,7 @@ function* deleteJobTypeList(payload){
         const resuft = yield call(deleteJobTypeListAPI,payload.id)
         // console.log(resuft)
         if(resuft.result){
+            yield put(setJobTypeListDelete(payload.id))
             message.success(resuft.data)
         }else{
             message.error("Xóa thất bại")
@@ -157,12 +191,16 @@ function* deleteJobTypeList(payload){
 }
 function* createJobTypeList(payload){
     try {
+
         const resuft = yield call(createJobTypeListAPI,payload?.data)
-        // console.log(resuft.data.result)
-        if(resuft.data.result){
-            message.success("Tạo thành công")
+        console.log(resuft)
+        if(resuft.status === 400){
+            message.error("Loại ngành nghề đã tồn tại")
         }else{
-            message.error("Loại nghành nghề đã tồn tại")
+            if(resuft?.data?.result){
+                yield put(setJobTypeListCreate(resuft?.data?.data?.sector))
+                message.success("Tạo thành công")
+            }
         }
     } catch (error) {
         console.log(error)

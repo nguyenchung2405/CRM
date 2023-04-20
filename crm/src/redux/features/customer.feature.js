@@ -50,8 +50,25 @@ const customerSlice = createSlice({
         setCustomerTypeList: (state, action)=>{
             state.customerTypeList = action.payload;
         },
+        setCustomerTypeListCreate: (state, action)=>{
+            state.customerTypeList = [action.payload,...state.customerTypeList]
+        },
+        setCustomerTypeDelete: (state,action)=>{
+            console.log(action.payload);
+            state.customerTypeList = state.customerTypeList.filter((customerType)=>{
+                return action.payload !== customerType.id 
+            })
+        },
         setJobTypeList: (state, action)=>{
             state.jobTypeList = action.payload;
+        },
+        setJobTypeListCreate: (state,action)=>{
+            state.jobTypeList = [action.payload,...state.jobTypeList]
+        },
+        setJobTypeListDelete: (state,action)=>{
+            state.jobTypeList = state.jobTypeList.filter((JobList)=>{
+                return action.payload !== JobList.id
+            })
         },
         addCustomerType: (state, action)=>{
             state.customerTypeList.unshift(action.payload)
@@ -60,6 +77,6 @@ const customerSlice = createSlice({
     }
 })
 
-export const {setCustomerList, setTotalPage, setTotalPageCus , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
+export const {setCustomerList, setJobTypeListDelete ,setJobTypeListCreate  ,setCustomerTypeDelete , setTotalPage, setTotalPageCus, setCustomerTypeListCreate , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
 setCustomerTypeList, setJobTypeList, addCustomerType} = customerSlice.actions;
 export default customerSlice.reducer;
