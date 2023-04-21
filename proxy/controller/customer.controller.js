@@ -218,7 +218,7 @@ const createJobType = async (req,res)=>{
     try {
         const { data , TOKEN } = req.body
         const { name , desc } = data
-        // console.log({TOKEN})
+        
         const dataEnCode = {
             desc,
             name : decodeURI(name)

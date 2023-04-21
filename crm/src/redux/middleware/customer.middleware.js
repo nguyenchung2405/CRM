@@ -81,13 +81,13 @@ function* getDetailCustomer(payload){
 
 function* getCustomerTypeList(payload){
     try {
-        
         const resuft = yield call(getCustomerTypeListAPI, payload?.data)
         
         if(payload?.data?.name !== ""){
             if(resuft?.data?.client_type?.length === 0){
                 message.warning("Loại khách hàng không tồn tại")
                 yield put(setCustomerTypeList([]))
+                yield put(setIsLoading(false))
             }else{
                 if(resuft?.data?.client_type?.length > 0){
                     yield put(setCustomerTypeList(resuft?.data?.client_type))
@@ -95,6 +95,8 @@ function* getCustomerTypeList(payload){
                         total_data: resuft?.data?.total_data,
                         total_page: resuft?.data?.total_page
                     }))
+                    yield put(setIsLoading(false))
+                    
                 }
             }
         }else{
@@ -104,6 +106,7 @@ function* getCustomerTypeList(payload){
                     total_data: resuft?.data?.total_data,
                     total_page: resuft?.data?.total_page
                 }))
+                yield put(setIsLoading(false))
             }
         }
     } catch (error) {
@@ -119,6 +122,7 @@ function* getJobTypeList(payload){
             if(result?.data?.sector?.length === 0){
                 message.warning("Loại ngành nghề không tồn tại")
                 yield put(setJobTypeList([]))
+                yield put(setIsLoading(false))
             }else{
                 if(result?.data?.sector?.length > 0){
                     yield put(setJobTypeList(result?.data?.sector))
@@ -126,6 +130,7 @@ function* getJobTypeList(payload){
                         total_data: result?.data?.total_data,
                         total_page: result?.data?.total_page,
                     }))
+                    yield put(setIsLoading(false))
                 }
             }
 
@@ -136,6 +141,7 @@ function* getJobTypeList(payload){
                     total_data: result?.data?.total_data,
                     total_page: result?.data?.total_page,
                 }))
+                yield put(setIsLoading(false))
             }
         }
         console.log(result.data.sector.length)
@@ -149,12 +155,12 @@ function* createCustomerType(payload){
     try {
         const resuft = yield call(createCustomerTypeAPI,payload.data)
         const { data } = resuft
-        console.log(resuft)
         if(data?.result){
-            // update state
             yield put(setCustomerTypeListCreate(data?.data?.client_type))
+            yield put(setIsLoading(false))
             message.success("Tạo thành công")
         }else{
+            yield put(setIsLoading(false))
             message.error("Loại khách hàng đã tồn tại")
         }
     } catch (error) {
@@ -167,8 +173,10 @@ function* deleteCustomerType(payload){
        const resulf = yield call(deleteCustomerTypeAPI,payload.id)
        if(resulf.result){
             yield put(setCustomerTypeDelete(payload.id))
+            yield put(setIsLoading(false))
             message.success(resulf.data)
-       }else{
+        }else{
+           yield put(setIsLoading(false))
             message.error("Xóa thất bại")
        }
     } catch (error) {
@@ -181,8 +189,10 @@ function* deleteJobTypeList(payload){
         // console.log(resuft)
         if(resuft.result){
             yield put(setJobTypeListDelete(payload.id))
+            yield put(setIsLoading(false))
             message.success(resuft.data)
         }else{
+            yield put(setIsLoading(false))
             message.error("Xóa thất bại")
         }
     } catch (error) {
@@ -195,10 +205,13 @@ function* createJobTypeList(payload){
         const resuft = yield call(createJobTypeListAPI,payload?.data)
         console.log(resuft)
         if(resuft.status === 400){
+            yield put(setIsLoading(false))
             message.error("Loại ngành nghề đã tồn tại")
         }else{
             if(resuft?.data?.result){
+
                 yield put(setJobTypeListCreate(resuft?.data?.data?.sector))
+                yield put(setIsLoading(false))
                 message.success("Tạo thành công")
             }
         }

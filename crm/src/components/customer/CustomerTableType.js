@@ -3,13 +3,12 @@ import { Table , Space   , Tooltip , Input , Button , Popconfirm, message, Spin 
 import { FcPlus } from "react-icons/fc"
 import { FaEdit,FaTrash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST, SEARCH_CUSTOMER_TYPE , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST, SEARCH_CUSTOMER } from "../../title/title";
+import { setIsLoading } from "../../redux/features/loadingSlice";
+import { CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST } from "../../title/title";
 function CustomerTableType() {
 
     const dispatch = useDispatch();
     // Show Model
-    const [renderCustomer,setRenderCustomer] = useState(false)
-    const [renderTypeJobList,setRenderTypeJobList] = useState(false)
     const [isCreateType,setIsCreateType] = useState(false)
     const [isCreateTypeJob,setIsCreateTypeJob] = useState(false)
     const [typeCustomer,setTypeCustomer] = useState("")
@@ -22,13 +21,12 @@ function CustomerTableType() {
     const { jobTypeList } = useSelector(state => state.customerReducer)
     const { totalListPage } = useSelector(state => state.customerReducer)
     const { totalListPageTypeCus } = useSelector(state => state.customerReducer)
- 
+    const { isLoading } = useSelector(state => state.loadingReducer)
+    
     const [pageJobType,setPageJobType] = useState({
         pageCurrent: 1,
         pageSize: 10
     })
-
-   console.log({customerTypeList})
 
     const [pageTypeCus, setPageTypeCus] = useState({
         pageCurrent: 1,
@@ -36,6 +34,8 @@ function CustomerTableType() {
     })
     const [dataTypeCustomer , setDataTypeCustomer] = useState({ page_size: "10", page: "1", name: "", sort_by: "id", asc_order: false,})
     const [dataTypeJob , setDataTypeJob] = useState({ page_size: "10", page: "1", name: "", sort_by: "id", asc_order: false,})
+
+
 
     const inputJob = useRef(null);
 
@@ -70,13 +70,15 @@ function CustomerTableType() {
                 data: {
                     name: typeCustomer,
                     desc: descCustomer
-                }
+                },
             })
+            dispatch(setIsLoading(true))
             setTypeCustomer("")
             setIsCreateType(false)
+            
         }
     }
-
+    
     // DELETE TYPE CUSTOMER
     const HandelDeleteTypeNameCustomer = (id)=>{
         if(id){
@@ -84,6 +86,7 @@ function CustomerTableType() {
                 type: DELETE_CUSTOMER_TYPE,
                 id
             })
+            dispatch(setIsLoading(true))
         }
     }
 
@@ -106,6 +109,7 @@ function CustomerTableType() {
                     name : encodeURI(`${searchTypeCustomer}`)
                 }
             })
+            dispatch(setIsLoading(true))
         }
     }
     
@@ -113,6 +117,7 @@ function CustomerTableType() {
     const HandelKeyPressCus = (e)=>{
         if(e.key === "Enter"){
             HandelSearchTypeCustomer()
+            dispatch(setIsLoading(true))
         }
     }
   //<---------------------------------------------------TYPE JOB----------------------------------------> //
@@ -148,6 +153,7 @@ function CustomerTableType() {
                     desc: jobDesc
                 }
             })
+            dispatch(setIsLoading(true))
             setTypeJobName("")
             setIsCreateTypeJob(false)
         }
@@ -160,6 +166,7 @@ function CustomerTableType() {
                 type: DELETE_JOB_TYPE_LIST,
                 id
             })
+            dispatch(setIsLoading(true))
         }
     }
 
@@ -175,13 +182,15 @@ function CustomerTableType() {
                     name: encodeURI(`${searchTypeJob}`)
                 }
             })
+            dispatch(setIsLoading(true))
         }
     }
 
     // HANDEL ENTER
     const HandelKeyPressJob = (e)=>{
         if(e.key === "Enter"){
-            HandelChangeSearchJob()   
+            HandelChangeSearchJob()  
+            dispatch(setIsLoading(true)) 
         }
     }
 
@@ -340,6 +349,7 @@ function CustomerTableType() {
 
     return ( 
         <div className="product__table product__TypeAndAtt__table content" style={{position:"relative",}}>
+            <Spin spinning={isLoading}>
             <div className="" style={{backgroundColor:"white",padding: "10px", boxSizing:"border-box", display:"flex",justifyContent: "space-between"}} >
                 <div className="custumer_type" style={{width:"50%",paddingRight: 20,boxSizing: "border-box" ,borderRight: 1}}>
                     <div className="custumer_title" >
@@ -459,6 +469,7 @@ function CustomerTableType() {
                     </div>
                 </div> */}
             </div>
+            </Spin>
         </div>
      );
 }
