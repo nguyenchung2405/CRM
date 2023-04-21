@@ -45,7 +45,7 @@ const contractSlice = createSlice({
             state.contractRequest[indexReq].price_ID.id = action.payload.price_ID;
             state.contractRequest[indexReq].product_ID.id = action.payload.product_ID;
             state.contractRequest[indexReq].price_ID.price = action.payload.real_price / 1000000;
-            state.contractRequest[indexReq].custom_price = action.payload.custom_price > 1000000 ? action.payload.custom_price / 1000000 : action.payload.custom_price;
+            state.contractRequest[indexReq].custom_price = action.payload.custom_price >= 1000000 ? action.payload.custom_price / 1000000 : action.payload.custom_price;
         },
         deleteContractRequest: (state, action) => {
             let indexReq = state.contractRequest.findIndex(req => req.id === action.payload);

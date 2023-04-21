@@ -5,7 +5,7 @@ export default function SelectType(props){
     let { list, mode, setValueForm, valueForm } = props;
     let {Option} = Select;
     const [multi, setMulti] = useState([]);
-    console.log(multi)
+
     useEffect(()=>{
         if(valueForm.sectors?.length > 0){
             let newMulti = valueForm.sectors.map(sector => {
@@ -42,6 +42,9 @@ export default function SelectType(props){
                         ...valueForm,
                         sectors: value
                     })
+                } else if(mode === "tags"){
+                    console.log(value, option)
+                    setMulti(value)
                 } else {
                     setValueForm({
                         ...valueForm,

@@ -55,9 +55,15 @@ export default function ContractTable() {
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý hợp đồng</h1>
-                    <Tooltip title="Tạo" color="green">
-                        <FcPlus onClick={() => {
+                    <Tooltip title="Tạo hợp đồng" color="green">
+                        <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                             navigate(`${uri}/crm/contract/create`)
+                            dispatch(setIsOnlyPayment(false));
+                        }} />
+                    </Tooltip>
+                    <Tooltip title="Tạo hợp đồng sự kiện" color="green">
+                        <FcPlus onClick={() => {
+                            navigate(`${uri}/crm/event/create`)
                             dispatch(setIsOnlyPayment(false));
                         }} />
                     </Tooltip>
@@ -101,6 +107,10 @@ export default function ContractTable() {
                     render={(text) => {
                         return text?.client_ID?.name
                     }} />
+                <Column className="contract__table__donors" title="Nhà tài trợ" key="customerName" fixed="left"
+                    render={(text) => {
+                        return ""
+                    }} />
                 {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{
@@ -141,9 +151,9 @@ export default function ContractTable() {
                     let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
                     return total + " VNĐ"
                 }} />
-                <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
+                {/** <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
                     return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
-                }} />
+                }} /> */}
                 <Column className="contract__table__thaotac" render={(text) => {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">

@@ -18,6 +18,9 @@ import ProductEditableTable from './components/product/ProductEditableTable';
 import TypeAndAttribute from './components/product/TypeAndAttribute';
 import CustomerTableType from "./components/customer/CustomerTableType"
 import SpecialProductTable from './components/product/special/SpecialProductTable';
+import CreateEvent from './components/contract/event/CreateEvent';
+import EventTable from './components/contract/event/EventTable';
+
 function App() {
 
   const renderMF = () => {
@@ -41,6 +44,8 @@ function App() {
                 <Route path="/crm/product" element={<ProductEditableTable />} />
                 <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
                 <Route path="/crm/product/special" element={<SpecialProductTable />} />
+                <Route path="/crm/event/create" element={<CreateEvent />} />
+                <Route path="/crm/event" element={<EventTable />} />
                 {/**<Route path="*" element={<PageNotFound />} /> */}
               </Routes>
             </div>
@@ -63,6 +68,8 @@ function App() {
               <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
               <Route path="/crm/product/special" element={<SpecialProductTable />} />
               <Route path="/crm/channel" element={<ChanelGContainer />} />
+              <Route path="/crm/event/create" element={<CreateEvent />} />
+              <Route path="/crm/event" element={<EventTable />} />
               {/**<Route path="*" element={<PageNotFound />} /> */}
             </Routes>
           </div>

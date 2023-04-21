@@ -40,9 +40,11 @@ function* getContractDetail(payload) {
     let result = yield call(getContractDetailAPI, contract_id);
     let { code, data } = result;
     let responseRequest = yield call(getContractRequestAPI, contract_id);
+    console.log(result)
     if (+code === 200 || result.data.contract.length > 0) {
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         dataAfterMapping.payments = result.data.contract[0].payments || [];
+        console.log(dataAfterMapping)
         yield put(setContractDetail(dataAfterMapping))
         yield put(setContractRequest(responseRequest.data.contract_request))
         yield put(setIsLoading(false))

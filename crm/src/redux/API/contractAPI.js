@@ -200,7 +200,7 @@ export async function updateRequestAPI(data){
     try {
         let updateRequest = {
             "quality": data.quality,
-            "custom_price": data.custom_price / 1000000
+            "custom_price": data.custom_price >= 1000000 ? data.custom_price / 1000000 : null
         };
         const result = await axios({
             url: `${local}/api/contract/update-request?request_id=${data.id}`,
