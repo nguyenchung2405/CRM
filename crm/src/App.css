@@ -1062,8 +1062,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract__value .field__input_3 .contract__field {
-    width: 265px;
-    margin-right: 59.05px;
+    width: 200px;
+    margin-right: 39px;
     position: relative;
     display: inline-block;
 }
@@ -1277,7 +1277,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract__payment .soDotThanhToan > select {
     font-size: 18px;
     color: #666666;
-    width: 110px;
+    width: fit-content;
 }
 
 .create__contract .create__contract__term table {

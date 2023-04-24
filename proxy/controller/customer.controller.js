@@ -25,6 +25,8 @@ const getCustomerList = async (req, res)=>{
 const createCustomer = async (req, res)=>{
     try {
         const newData = {...req.body};
+        // nếu là upload lên server của Đăng thì mở cmt dưới
+        // newData.files = [...req.fileUpload];
         newData.files = [];
         for(let file of req.files){
             newData.files.push(file.path)

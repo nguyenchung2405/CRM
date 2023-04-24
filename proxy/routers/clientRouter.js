@@ -1,11 +1,13 @@
 const express = require("express");
 const { getCustomerList, deleteCustomerType, createJobType , deleteJobType , createCustomer, searchCustomer, updateCustomer, getDetailCustomer, getCustomerTypeList, getJobTypeList, createCustomerType , getListTypeCustomer} = require("../controller/customer.controller");
+const { uploadResourceClientToServer } = require("../middleware/client.middleware");
 const { uploadFileCreateClient } = require("../middleware/upload");
 const clientRouter = express.Router();
 
 clientRouter.get("/search", searchCustomer);
 clientRouter.get("/list", getCustomerList)
 clientRouter.post("/create", uploadFileCreateClient(), createCustomer)
+// clientRouter.post("/create", uploadFileCreateClient(), uploadResourceClientToServer, createCustomer)
 clientRouter.put("/update", updateCustomer)
 
 clientRouter.post("/create/job-type-list",createJobType)
