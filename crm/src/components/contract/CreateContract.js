@@ -1,4 +1,4 @@
-import { DatePicker, Table, Select, Progress, message, Popconfirm } from "antd";
+import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,14 +31,14 @@ export default function CreateContract() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({});
+  const [valueForm, setValueForm] = useState({deal_out: false});
   const [soTien, setSoTien] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [countPayment, setCountPayment] = useState();
   const [unlockInput, setUnlockInput] = useState(true);
-  
+
   useEffect(() => {
     dispatch({
       type: GET_CUSTOMER_LIST,
@@ -151,7 +151,7 @@ useEffect(() => {
       return <Option value={+item.id}>{item.name}</Option>
     });
   }
-
+  console.log(valueForm)
   const valueOfField = (name) => {
     if (name === "rangePicker") {
       // let newTuNgay = convertDate(valueForm["begin_date"]);
@@ -755,17 +755,30 @@ useEffect(() => {
               <div className="create__contract__value border_bottom_3px">
                 <p>Giá trị hợp đồng</p>
                 <div className="field__input_3">
+                  <div style={{ padding: " 0 0 10px 9px" }}>
+                    <label htmlFor="deal_out">Trừ ngoài </label>
+                    <Checkbox id="deal_out" type="checkbox" 
+                      onChange={(e)=>{
+                        let {checked} = e.target;
+                        setValueForm({
+                          ...valueForm,
+                          deal_out: checked
+                        })
+                      }}
+                      checked={valueForm.deal_out}
+                    />
+                  </div>
                   <div className="contract__field">
                     <input className="style" type="text"
-                      name="discount_by_percent"
+                      name="discount_over_contract"
                       // disabled
                       onChange={(e) => {
                         let { value, name } = e.target;
                         handleChangeValue(name, +value)
                       }}
-                      value={valueOfField("discount_by_percent")}
+                      value={valueOfField("discount_over_contract")}
                     />
-                    <label>Chiết khấu (%)</label>
+                    <label>Chiết khấu (VNĐ)</label>
                   </div>
                   <div className="contract__field">
                     <input className="style" type="text"
@@ -870,18 +883,18 @@ useEffect(() => {
             </div>
             <div className="display__flex soDotThanhToan">
               <label htmlFor="soDotThanhToan">Kiểu thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
-                <option value="1">Trước thực hiện</option>
-                <option value="2">Sau thực hiện</option>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
+                <option value={true}>Trước thực hiện</option>
+                <option value={false}>Sau thực hiện</option>
               </select>
             </div>
             <div className="display__flex soDotThanhToan">
               <label htmlFor="soDotThanhToan">Số đợt thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
-                <option value="1">1 đợt</option>
-                <option value="2">Nhiều đợt</option>
-                <option value="3">Theo thàng</option>
-                <option value="4">Theo quyền lợi</option>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("payment_type")} onChange={(e) => { setValueForm({ ...valueForm, payment_type: e.target.value }) }}>
+                <option value="Một đợt">1 đợt</option>
+                <option value="Nhiều đợt">Nhiều đợt</option>
+                <option value="Theo tháng">Theo thàng</option>
+                <option value="Theo yêu cầu hợp đồng">Theo quyền lợi</option>
               </select>
             </div>
           </div>

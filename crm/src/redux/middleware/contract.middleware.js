@@ -83,6 +83,7 @@ function* createRequest(payload){
         if(result.data.requests.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
             yield put(setMessage({ type: "thành công", msg: "Tạo quyền lợi hợp đồng thành công." }))
+            yield put({ type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id })
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Tạo quyền lợi hợp đồng thất bại." }))
         }

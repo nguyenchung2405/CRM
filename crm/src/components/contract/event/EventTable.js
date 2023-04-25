@@ -439,33 +439,17 @@ export default function EventTable() {
             {showLoading()}
             <div className="table__features">
                 <div className="table__features__add">
-                    <h1>Quản lý sản phẩm</h1>
+                    <h1>Quản lý sự kiện</h1>
                     <Tooltip title="Tạo" color="green">
                         <FcPlus onClick={createProduct} />
                     </Tooltip>
                 </div>
                 <div className="table__features__search">
-                    <input placeholder="Tên sản phẩm" type="text"
+                    <input placeholder="Tên sự kiện" type="text"
                         name="name"
                     // onChange={handleSearchInput} 
                     />
-                    <input placeholder="Kênh sản phẩm" type="text"
-                        name="tax_number"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Nhóm sản phẩm" type="text"
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Loại sản phẩm" type="text" style={{ marginLeft: "37px" }}
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Thuộc tính sản phẩm" type="text" style={{ marginLeft: "37px" }}
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
-                    <div className="table__features__search__btn">
+                    <div className="table__features__search__btn" style={{ width: "auto" }}>
                         <button onClick={() => {
                             if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
                                 message.warning("Dữ liệu tìm kiếm không thể để trống", 1)

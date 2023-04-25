@@ -1,6 +1,6 @@
 const axios = require("axios");
-// const {local} = require("../untils/title")
-const local = "http://contract.tuoitre.vn"
+const {local} = require("../untils/title")
+// const local = "http://contract.tuoitre.vn"
 const getCustomerList = async (req, res)=>{
     try {
         // let {headers: {authorization}} = req;

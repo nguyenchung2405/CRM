@@ -57,7 +57,8 @@ export async function createContractAPI(data) {
                 ...data.contract,
                 begin_date: convertBeginDate,
                 end_date: convertEndDate,
-                total: data.contract.total / 1000000
+                total: data.contract.total / 1000000,
+                discount_over_contract: data.contract.discount_over_contract / 1000000
             },
             request: [...newRequest],
             payment: [...data.payment]
@@ -71,7 +72,7 @@ export async function createContractAPI(data) {
             },
             data: newData
         });
-        console.log(result.data)
+        // console.log(result.data)
         return result.data;
     } catch (error) {
         console.log(error)
