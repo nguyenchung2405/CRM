@@ -30,15 +30,39 @@ export function dataOfContractMapping(data) {
             creater: data.creater,
             deal_out: data.deal_out,
             discount_over_contract: data.discount_over_contract * 1000000,
-            payall: data.payall,
+            // payall: data.payall,
             pay_before_run: data.pay_before_run,
-            payment_type: data.payment_type
+            payment_type: data.payment_type,
+            event_ID: data.event_ID,
+            owner_name: data.owner_name
         };
         // let dataTable = mappingDataOfTable(data)
         return {
             dataContract,
             // dataTable
         }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function dataOfEventMapping(data){
+    try {
+        const dataEvent = {
+            "event": {
+                id: data.id,
+              "name": data.name,
+              "from_date": data.from_date,
+              "to_date": data.to_date,
+              "value_event": data.value_event,
+              desc: data.desc
+            },
+            "requests": [
+              ...data.details
+            ],
+            contracts: [ ...data.contracts ]
+        }
+        return dataEvent;
     } catch (error) {
         console.log(error)
     }

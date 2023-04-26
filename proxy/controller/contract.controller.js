@@ -46,7 +46,6 @@ const createContract = async (req, res) => {
     try {
         // console.log("creat contract proxy", req.body.request[0])
         let { headers: { authorization } } = req;
-        console.log(req.body)
         const result = await axios({
             url: `${local}/contract/create`,
             method: "POST",

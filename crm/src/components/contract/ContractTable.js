@@ -61,12 +61,6 @@ export default function ContractTable() {
                             dispatch(setIsOnlyPayment(false));
                         }} />
                     </Tooltip>
-                    <Tooltip title="Tạo hợp đồng sự kiện" color="green">
-                        <FcPlus onClick={() => {
-                            navigate(`${uri}/crm/event/create`)
-                            dispatch(setIsOnlyPayment(false));
-                        }} />
-                    </Tooltip>
                 </div>
                 <div className="table__features__search">
                     <input placeholder="Tên khách hàng" type="text" />

@@ -1046,6 +1046,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     pointer-events: none;
 }
 
+.create__contract .create__contract__inforContract .field__input>div.contract__field label#soHD {
+    top: 31px;
+}
+
+.create__contract .create__contract__inforContract .field__input>div.contract__field input:not([value=""]) ~ label#soHD,
+.create__contract .create__contract__inforContract .field__input>div.contract__field input:focus ~ label#soHD {
+    top: 9px;
+}
+
 .create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2 {
     display: block;
 }
@@ -1518,6 +1527,13 @@ svg.style__svg {
 
 /* Hết CSS create contract */
 /* ----------------------------------------------------- */
+/* CSS event */
+
+.event__table .event__table__name {
+    padding-left: 30px;
+}
+
+/* hết Event */
 /* ------------------------- Responsive -------------------- */
 
 @media only screen and (max-width: 1280px){

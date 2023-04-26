@@ -39,14 +39,13 @@ function App() {
                 <Route path="/crm/contract" element={<ContractTable />} />
                 <Route path="/crm/contract/create" element={<CreateContract />} />
                 <Route path="/crm/detail/:contract_id" element={<CreateContract />} />
-                {/* <Route path="/crm/product" element={<ProductTable />} /> */}
                 <Route path="/crm/channel" element={<ChanelGContainer />} />
                 <Route path="/crm/product" element={<ProductEditableTable />} />
                 <Route path="/crm/product/type-att" element={<TypeAndAttribute />} />
                 <Route path="/crm/product/special" element={<SpecialProductTable />} />
                 <Route path="/crm/event/create" element={<CreateEvent />} />
                 <Route path="/crm/event" element={<EventTable />} />
-                {/**<Route path="*" element={<PageNotFound />} /> */}
+                <Route path="/crm/event/:event_id" element={<CreateEvent />} />
               </Routes>
             </div>
           </BrowserRouter>
@@ -70,7 +69,7 @@ function App() {
               <Route path="/crm/channel" element={<ChanelGContainer />} />
               <Route path="/crm/event/create" element={<CreateEvent />} />
               <Route path="/crm/event" element={<EventTable />} />
-              {/**<Route path="*" element={<PageNotFound />} /> */}
+              <Route path="/crm/event/:event_id" element={<CreateEvent />} />
             </Routes>
           </div>
         </Provider>
