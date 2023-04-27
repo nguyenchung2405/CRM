@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, message, Popconfirm, Checkbox } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_EVENT, DELETE_REQUEST, GET_EVENT_INFOR, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT, UPDATE_EVENT } from "../../../title/title";
+import { CREATE_CONTRACT, CREATE_EVENT, DELETE_REQUEST, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT, UPDATE_EVENT } from "../../../title/title";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
@@ -12,6 +12,7 @@ import Loading from "../../Loading";
 import { setIsLoading } from "../../../redux/features/loadingSlice";
 import { setMessage } from "../../../redux/features/messageSlice";
 import TermModalEvent from "../../modal/event/Term";
+import { setDonors } from "../../../redux/features/eventSlice";
 
 export default function CreateEvent() {
 
@@ -27,7 +28,7 @@ export default function CreateEvent() {
   const { contractRequest, contractDetail } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
-  const { eventList, totalEventList } = useSelector(state => state.eventReducer);
+  const { eventList, totalEventList, donors } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
@@ -46,6 +47,7 @@ export default function CreateEvent() {
     return () => {
       dispatch(setContractDetail({}))
       dispatch(setContractRequest([]));
+      dispatch(setDonors([]))
     }
   }, []);
 
@@ -106,7 +108,7 @@ export default function CreateEvent() {
       }
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (valueForm[name] && name === "total") {
+      if (valueForm[name] && name === "value_event") {
         return new Intl.NumberFormat("vi-VN").format(valueForm[name])
       }
       return valueForm[name]
@@ -117,7 +119,6 @@ export default function CreateEvent() {
     if (event_id) {
       return <button className="footer__btn btn__create"
         onClick={() => {
-          valueForm.contract_id = +event_id;
           dispatch({
             type: UPDATE_EVENT,
             data: valueForm
@@ -149,6 +150,14 @@ export default function CreateEvent() {
     if (isLoading) {
       return <Loading />
     }
+  }
+
+  const renderDonorList = ()=>{
+    return donors.map(donor =>{
+      return <a href={`${uri}/crm/detail/${donor.contract_ID}`} target="_blank">
+        <li>{donor.client_name + " - " + new Intl.NumberFormat("vi-VN").format(donor.contract_total * 1000000) + " VNĐ"}</li>
+      </a>
+    })
   }
 
   return (
@@ -289,18 +298,6 @@ export default function CreateEvent() {
               }}
             />
             <Column
-              className="price"
-              title="Giá hiệu chỉnh"
-              key="custom_price"
-              render={(text) => {
-                if (text.custom_price > 0) {
-                  return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
-                } else {
-                  return null;
-                }
-              }}
-            />
-            <Column
               className="thaoTac"
               render={(text) => {
                 return <div>
@@ -314,7 +311,7 @@ export default function CreateEvent() {
                       dispatch(deleteContractRequest(text.id))
                     } else {
                       dispatch({
-                        type: DELETE_REQUEST,
+                        type: DELETE_REQUEST_EVENT,
                         request_id: text.id
                       })
                     }
@@ -335,9 +332,11 @@ export default function CreateEvent() {
             customerInfor={customerInfor}
           />
         </div>
-        <div className="create__contract__value border_bottom_3px">
+        <div className="create__contract__value border_bottom_3px event__donors">
           <p>Nhà tài trợ</p>
-         
+          <ol>
+            {renderDonorList()}
+          </ol>
         </div>
         <div className="create__contract__payment create__contract__value border_bottom_3px create__contract__inforCustomer">
           <p>Giá trị sự kiện</p>
@@ -349,7 +348,8 @@ export default function CreateEvent() {
                 name="value_event"
                 onChange={(e) => {
                   let { value, name } = e.target;
-                  handleChangeValue(name, +value)
+                  let newValue = value.replaceAll(".", "");
+                  handleChangeValue(name, +newValue)
                 }}
                 value={valueOfField("value_event")}
               />

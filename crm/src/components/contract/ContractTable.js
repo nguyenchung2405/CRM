@@ -101,10 +101,6 @@ export default function ContractTable() {
                     render={(text) => {
                         return text?.client_ID?.name
                     }} />
-                <Column className="contract__table__donors" title="Nhà tài trợ" key="customerName" fixed="left"
-                    render={(text) => {
-                        return ""
-                    }} />
                 {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{

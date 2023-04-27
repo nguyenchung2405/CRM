@@ -3,7 +3,7 @@ import { message, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import ModalCustomer from '../../modal/ModalCustomer';
 import { useDispatch, useSelector } from "react-redux"
-import { GET_CUSTOMER_LIST, GET_EVENT_LIST, SEARCH_CUSTOMER } from '../../../title/title';
+import { GET_CUSTOMER_LIST, GET_EVENT_LIST, SEARCH_CUSTOMER, SEARCH_EVENT } from '../../../title/title';
 import Loading from "../../../components/Loading"
 import { setIsLoading } from '../../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -23,10 +23,10 @@ export default function EventTable() {
     const { eventList, totalEventList } = useSelector(state => state.eventReducer);
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({ name: "", tax_number: "", brief_name: "" })
+    const [search, setSearch] = useState({ name: ""})
 
     useEffect(() => {
-        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+        if (search?.name === "") {
             dispatch({
                 type: GET_EVENT_LIST,
                 data: { page, pageNumber }
@@ -37,7 +37,7 @@ export default function EventTable() {
     }, [search])
 
     useEffect(() => {
-        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+        if (search?.name === "") {
             dispatch({
                 type: GET_EVENT_LIST,
                 data: { page, pageNumber }
@@ -75,7 +75,7 @@ export default function EventTable() {
                 </div>
                 <div className="table__features__search">
                     <input placeholder="Tên sự kiện" type="text"
-                        name="brief_name"
+                        name="name"
                         onChange={handleSearchInput} />
                     <div className="table__features__search__btn" style={{ width: "auto" }}>
                         <button onClick={() => {
@@ -83,7 +83,7 @@ export default function EventTable() {
                                 message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
                             } else {
                                 dispatch({
-                                    type: SEARCH_CUSTOMER,
+                                    type: SEARCH_EVENT,
                                     searchData: search
                                 })
                             }

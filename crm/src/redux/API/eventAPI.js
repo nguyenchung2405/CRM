@@ -69,3 +69,87 @@ export async function getEventInforAPI(event_id){
         return "Fail"
     }
 };
+
+export async function updateEventAPI(data){
+    try {
+        let convertBeginDate = moment(data.from_date).format("YYYY-MM-DD");
+        let convertEndDate = moment(data.to_date).format("YYYY-MM-DD");
+        let newData = {
+            ...data,
+            from_date: convertBeginDate,
+            to_date: convertEndDate,
+            value_event: data.value_event / 1000000
+        }
+        const result = await axios({
+            url: `${local}/api/event/update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+};
+
+export async function createRequestAPI(data){
+    try {
+        let newData = {
+            ...data,
+            "event_ID": +data.event_ID,
+            "details": [
+                {
+                    "product_ID": data.product_ID,
+                    "quantity": data.quality
+                }
+            ],
+        };
+        const result = await axios({
+            url: `${local}/api/event/create-request`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+};
+
+export async function deleteRequestAPI(request_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/delete-request?id=${request_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+};
+
+export async function searchEventAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/search?name=${data}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
