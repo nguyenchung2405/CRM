@@ -52,16 +52,25 @@ export async function createContractAPI(data) {
                 })
             }
         })
+        let newPayment = data.payment.map(payment => {
+            let newRequestDate = moment(payment.request_date).format("YYYY-MM-DD");
+            return {
+                ...payment,
+                total_value: payment.total_value,
+                request_date: newRequestDate
+            }
+        })
         data = {
             contract: {
                 ...data.contract,
                 begin_date: convertBeginDate,
                 end_date: convertEndDate,
                 total: data.contract.total / 1000000,
-                discount_over_contract: data.contract.discount_over_contract / 1000000
+                discount_over_contract: data.contract.discount_over_contract / 1000000,
+                payment_type: data.contract.payment_type ? data.payment_type : "Một đợt"
             },
             request: [...newRequest],
-            payment: [...data.payment]
+            payment: [...newPayment]
         }
         const newData = { ...data }
         const result = await axios({
@@ -136,7 +145,8 @@ export async function updateContractiAPI(data){
             ...data,
             begin_date: convertBeginDate,
             end_date: convertEndDate,
-            total: data.total / 1000000
+            total: data.total / 1000000,
+            discount_over_contract: data.discount_over_contract / 1000000
         };
         const result = await axios({
             url: `${local}/api/contract/update`,
@@ -272,13 +282,18 @@ export async function updateDetailAPI(data){
 
 export async function createPaymentAPI(data){
     try {
+        let newRequestDate = moment(data.request_date).format("YYYY-MM-DD");
+        let newData = {
+            ...data,
+            request_date: newRequestDate
+        }
         const result = await axios({
             url: `${local}/api/contract/payment-add`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
-            data
+            data: newData
         });
         return result.data;
     } catch (error) {

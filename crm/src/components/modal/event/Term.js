@@ -3,13 +3,13 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
+import { CREATE_REQUEST_EVENT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST_EVENT } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 
 export default function TermModalEvent(props) {
 
-  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal, contract_id } = props;
+  let { isShowModal, setIsShowModal, setDataToModal, dataToModal, isUpdateModal, setIsUpdateModal, event_id } = props;
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const dispatch = useDispatch();
@@ -111,19 +111,6 @@ export default function TermModalEvent(props) {
           "value_detail": valueModal.real_price / 1000000,
           "id": valueModal.id
         }
-        // let newRequest = {
-        //   quality: valueModal.quality,
-        //   price_ID: {
-        //     id: valueModal.price_ID,
-        //     price: valueModal.real_price / 1000000
-        //   },
-        //   product_ID: {
-        //     id: valueModal.product_ID
-        //   },
-        //   id: valueModal.id,
-        //   details: valueModal.details,
-        //   custom_price: valueModal.custom_price / 1000000 || 0
-        // };
         dispatch(addContractRequest(newRequest));
         setIsUpdateModal(false)
       } else {
@@ -133,15 +120,14 @@ export default function TermModalEvent(props) {
     } else {
       // Khi cập nhật thì PUT riêng từng API
       if (!isUpdateModal) {
-        valueModal.contract_id = contract_id;
-        console.log(valueModal)
+        valueModal.event_ID = event_id;
         dispatch({
-          type: CREATE_REQUEST,
+          type: CREATE_REQUEST_EVENT,
           data: valueModal
         })
       } else {
         dispatch({
-          type: UPDATE_REQUEST,
+          type: UPDATE_REQUEST_EVENT,
           data: valueModal
         })
       }

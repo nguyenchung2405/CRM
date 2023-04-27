@@ -62,10 +62,96 @@ const getEventInfor = async (req, res)=>{
             res.send(error)
         }
     }
+};
+
+const updateEvent = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/event/update?id=${req.body.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const createRequest = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/event/detail/create`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const deleteRequest = async (req,res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/event/detail/disable?id=${req.query.id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const searchEvent = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/event/list?name=${encodeURI(req.query.name)}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
 }
 
 module.exports = {
     getEventList,
     createEvent,
-    getEventInfor
+    getEventInfor,
+    updateEvent,
+    createRequest,
+    deleteRequest,
+    searchEvent
 }

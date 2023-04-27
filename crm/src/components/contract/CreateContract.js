@@ -34,11 +34,12 @@ export default function CreateContract() {
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({deal_out: false});
   const [soTien, setSoTien] = useState(null)
+  const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
-  console.log(valueForm)
+
   useEffect(() => {
     dispatch({
       type: GET_EVENT_LIST,
@@ -173,7 +174,7 @@ useEffect(() => {
       return <Option value={item.id}>{item.name}</Option>
     })
   };
-  
+  console.log(dotThanhToan)
   const valueOfField = (name) => {
     if (name === "rangePicker") {
       // let newTuNgay = convertDate(valueForm["begin_date"]);
@@ -187,6 +188,12 @@ useEffect(() => {
         return [null, null]
       }
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
+    } else if(name === "requestDate"){
+      if(requestDate !== null){
+        let newRequestDate = moment(new Date(requestDate)).format("DD-MM-YYYY")
+        return moment(newRequestDate, "DD-MM-YYYY");
+      }
+      return null
     } else {
       if (valueForm[name] && name === "total") {
         return new Intl.NumberFormat("vi-VN").format(valueForm[name])
@@ -272,20 +279,24 @@ useEffect(() => {
     if(+soTien >= 1000){
       if(!window.location.href.includes("detail")){
         let newDotThanhToan = [...dotThanhToan, {
-          total_value: +soTien
+          total_value: +soTien,
+          request_date: requestDate
         }]
         setDotThanhToan([...newDotThanhToan])
         setSoTien("")
+        setRequestDate(null)
       } else {
         let newPayment = {
           total_value: +soTien,
-          contract_ID: +contract_id
+          contract_ID: +contract_id,
+          request_date: requestDate
         }
         dispatch({
           type: CREATE_PAYMENT,
           data: newPayment
         })
         setSoTien("")
+        setRequestDate(null)
       }
     }
   }
@@ -665,15 +676,6 @@ useEffect(() => {
                   pagination={false}
                   expandable={{
                     expandedRowRender: (record) => {
-                      {/**
-                  return record.details.map(item => {
-                      return <div className="row__child">
-                        <span>{item.product_ID.name}</span>
-                        <span>{item.price_ID.price}</span>
-                        <span>{item.from_date}</span>
-                        <span>{item.to_date}</span>
-                      </div>
-                    }) */}
                       return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
                     },
                     rowExpandable: (record) => record.details.length > 0,
@@ -922,7 +924,6 @@ useEffect(() => {
             </div>
           </div>
           <div className="display__flex">
-            {/**
             <DatePicker
               suffixIcon={
                 <svg
@@ -944,10 +945,11 @@ useEffect(() => {
               format={"DD-MM-YYYY"}
               onChange={(date, dateString) => {
                 let ngayThanhToan = moment(dateString, "DD-MM-YYYY").toISOString();
-                setDotThanhToan({ ...dotThanhToan, ngayThanhToan })
+                // setDotThanhToan({ ...dotThanhToan, request_date: ngayThanhToan})
+                setRequestDate(ngayThanhToan)
               }}
+              value={valueOfField("requestDate")}
             />
-          */}
             <input className="style" type="text" placeholder="Số tiền"
               value={soTien}
               onChange={(e) => {
@@ -957,8 +959,10 @@ useEffect(() => {
           </div>
           <div className="contract__payment__process">
             {dotThanhToan?.map((payment, index) => {
+              let convertDate = moment(new Date(payment.request_date)).format("DD-MM-YYYY");
               return <div className="payment__contract">
                 <span>Đợt thanh toán {index + 1}</span>
+                <span>{convertDate}</span>
                 <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
               </div>
             })}

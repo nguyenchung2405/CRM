@@ -1513,10 +1513,6 @@ svg.style__svg {
     line-height: 40px;
 }
 
-.antd__auto__complete__style .ant-select-selector .ant-select-selection-search {
-    
-}
-
 .antd__auto__complete__style .ant-select-selector .ant-select-selection-search input.ant-select-selection-search-input {
     
     border-radius: 3px;
@@ -1531,6 +1527,14 @@ svg.style__svg {
 
 .event__table .event__table__name {
     padding-left: 30px;
+}
+
+.event__donors > ol {
+    padding-left: 30px;
+}
+
+.event__donors > ol > a {
+    color: black;
 }
 
 /* hết Event */
