@@ -1,8 +1,8 @@
-import { DatePicker, Table, Select, Progress, message, Popconfirm } from "antd";
+import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -28,18 +28,22 @@ export default function CreateContract() {
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
+  const { eventList, totalEventList } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({});
+  const [valueForm, setValueForm] = useState({deal_out: false});
   const [soTien, setSoTien] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
-  const [countPayment, setCountPayment] = useState();
   const [unlockInput, setUnlockInput] = useState(true);
-  
+  console.log(valueForm)
   useEffect(() => {
+    dispatch({
+      type: GET_EVENT_LIST,
+      data: { page: 1, pageNumber: 1000 }
+    });
     dispatch({
       type: GET_CUSTOMER_LIST,
       data: { page: 1, pageNumber: 1000 }
@@ -141,9 +145,21 @@ useEffect(() => {
       let customerInfor = customerList.find(client => client.id === value);
       setCustomerInfor({ ...customerInfor })
     }
-    if (name !== "" && name.length > 0) {
+    if(name === "contract_type_id"){
+      if(value !== 4){
+        setValueForm({
+          ...valueForm,
+          event_ID: null,
+          [name]: value
+        })
+      } else {
+        setValueForm({ ...valueForm, [name]: value })
+      }
+    }
+    if (name !== "" && name.length > 0 && name !== "contract_type_id") {
       setValueForm({ ...valueForm, [name]: value })
     }
+    
   };
 
   const renderLoaiHopDong = () => {
@@ -152,6 +168,12 @@ useEffect(() => {
     });
   }
 
+  const renderEventOption = ()=>{
+    return eventList.map(item => {
+      return <Option value={item.id}>{item.name}</Option>
+    })
+  };
+  
   const valueOfField = (name) => {
     if (name === "rangePicker") {
       // let newTuNgay = convertDate(valueForm["begin_date"]);
@@ -172,7 +194,7 @@ useEffect(() => {
       // } else if(name === "total") {
       //   return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
       // }
-      return valueForm[name] || null
+      return valueForm[name]
     }
   }
 
@@ -318,19 +340,6 @@ useEffect(() => {
               <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
                 <p>Thông tin hợp đồng</p>
                 <div className="field__input field__flex two__field">
-                  {/**
-                  <input
-                    className="style"
-                    placeholder="Số tham chiếu"
-                    type="text"
-                    // name="owner"
-                    // onChange={(e)=>{ 
-                    //   let {value, name} = e.target;
-                    //   handleChangeValue(name, value) 
-                    // }}
-                    // value={valueOfField("owner")}
-                  />
-                */}
                   <div className="contract__field" style={{ alignItems: "flex-end" }} >
                     <input
                       className="style"
@@ -342,10 +351,8 @@ useEffect(() => {
                       }}
                       value={valueOfField("contract_number")}
                     />
-                    <label>Số hợp đồng</label>
+                    <label id="soHD">Số hợp đồng</label>
                   </div>
-                </div>
-                <div className="field__input field__flex">
                   <div className="field__input_2">
                     <label>Loại hợp đồng</label>
                     <Select
@@ -353,13 +360,29 @@ useEffect(() => {
                       type="text"
                       placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
                       onChange={(value) => {
-                        handleChangeValue("contract_type_id", value)
+                        handleChangeValue("contract_type_id", value);
                       }}
                       value={valueOfField("contract_type_id")}
                     >
                       {renderLoaiHopDong()}
                     </Select>
-                    {/* <input className="style" placeholder="Năm" type="text" />* */}
+                  </div>
+                </div>
+                <div className="field__input field__flex">
+                  <div className="field__input_2">
+                    <label>Tên sự kiện</label>
+                    <Select
+                      className="style"
+                      type="text"
+                      placeholder={window.location.href.includes("create") ? "Tên hợp đồng" : ""}
+                      onChange={(value) => {
+                        handleChangeValue("event_ID", value)
+                      }}
+                      value={valueOfField("event_ID")}
+                      disabled={valueForm.contract_type_id === 4 ? false : true}
+                    >
+                      {renderEventOption()}
+                    </Select>
                   </div>
                   <div className="field__input_2">
                     <label>Ngày bắt đầu - Ngày kết thúc</label>
@@ -755,17 +778,30 @@ useEffect(() => {
               <div className="create__contract__value border_bottom_3px">
                 <p>Giá trị hợp đồng</p>
                 <div className="field__input_3">
+                  <div style={{ padding: " 0 0 10px 9px" }}>
+                    <label htmlFor="deal_out">Trừ ngoài </label>
+                    <Checkbox id="deal_out" type="checkbox" 
+                      onChange={(e)=>{
+                        let {checked} = e.target;
+                        setValueForm({
+                          ...valueForm,
+                          deal_out: checked
+                        })
+                      }}
+                      checked={valueForm.deal_out}
+                    />
+                  </div>
                   <div className="contract__field">
                     <input className="style" type="text"
-                      name="discount_by_percent"
+                      name="discount_over_contract"
                       // disabled
                       onChange={(e) => {
                         let { value, name } = e.target;
                         handleChangeValue(name, +value)
                       }}
-                      value={valueOfField("discount_by_percent")}
+                      value={valueOfField("discount_over_contract")}
                     />
-                    <label>Chiết khấu (%)</label>
+                    <label>Chiết khấu (VNĐ)</label>
                   </div>
                   <div className="contract__field">
                     <input className="style" type="text"
@@ -870,18 +906,18 @@ useEffect(() => {
             </div>
             <div className="display__flex soDotThanhToan">
               <label htmlFor="soDotThanhToan">Kiểu thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
-                <option value="1">Trước thực hiện</option>
-                <option value="2">Sau thực hiện</option>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { console.log(e.target.value, typeof e.target.value); setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
+                <option value={true}>Trước thực hiện</option>
+                <option value={false}>Sau thực hiện</option>
               </select>
             </div>
             <div className="display__flex soDotThanhToan">
               <label htmlFor="soDotThanhToan">Số đợt thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
-                <option value="1">1 đợt</option>
-                <option value="2">Nhiều đợt</option>
-                <option value="3">Theo thàng</option>
-                <option value="4">Theo quyền lợi</option>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("payment_type")} onChange={(e) => { setValueForm({ ...valueForm, payment_type: e.target.value }) }}>
+                <option value="Một đợt">1 đợt</option>
+                <option value="Nhiều đợt">Nhiều đợt</option>
+                <option value="Theo tháng">Theo thàng</option>
+                <option value="Theo yêu cầu hợp đồng">Theo quyền lợi</option>
               </select>
             </div>
           </div>

@@ -3,12 +3,14 @@ import contractMiddleware from "./middleware/contract.middleware";
 import customerMiddleware from "./middleware/customer.middleware";
 import productMiddleware from "./middleware/product.middleware";
 import groupChannelMiddleware from "./middleware/groupChannel.middleware";
+import EventMiddleware from "./middleware/event.middleware";
 
 export default function* rootSaga() {
     yield all([
         call(customerMiddleware),
         call(contractMiddleware),
         call(productMiddleware),
-        call(groupChannelMiddleware)
+        call(groupChannelMiddleware),
+        call(EventMiddleware)
     ])
 }

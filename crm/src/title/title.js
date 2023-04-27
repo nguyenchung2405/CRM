@@ -56,3 +56,6 @@ export const CREATE_DETAIL = "CREATE_DETAIL";
 export const UPDATE_DETAIL = "UPDATE_DETAIL";
 export const CREATE_PAYMENT = "CREATE_PAYMENT";
 export const GET_EVENT_LIST = "GET_EVENT_LIST";
+export const CREATE_EVENT = "CREATE_EVENT";
+export const UPDATE_EVENT = "UPDATE_EVENT";
+export const GET_EVENT_INFOR = "GET_EVENT_INFOR";

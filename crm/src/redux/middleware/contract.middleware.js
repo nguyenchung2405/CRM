@@ -40,11 +40,9 @@ function* getContractDetail(payload) {
     let result = yield call(getContractDetailAPI, contract_id);
     let { code, data } = result;
     let responseRequest = yield call(getContractRequestAPI, contract_id);
-    console.log(result)
     if (+code === 200 || result.data.contract.length > 0) {
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
         dataAfterMapping.payments = result.data.contract[0].payments || [];
-        console.log(dataAfterMapping)
         yield put(setContractDetail(dataAfterMapping))
         yield put(setContractRequest(responseRequest.data.contract_request))
         yield put(setIsLoading(false))
@@ -83,6 +81,7 @@ function* createRequest(payload){
         if(result.data.requests.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
             yield put(setMessage({ type: "thành công", msg: "Tạo quyền lợi hợp đồng thành công." }))
+            yield put({ type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id })
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Tạo quyền lợi hợp đồng thất bại." }))
         }
