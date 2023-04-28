@@ -285,6 +285,26 @@ const createPayment = async (req, res)=>{
     }
 }
 
+const getFile = async (req, res)=>{
+    try {
+        axios.get(req.query.link,{ responseType: 'arraybuffer' })
+        .then((response)=>{
+            const type = response.headers['content-type']
+            const link = Buffer.from(response.data,"base64url").toString("base64")
+            res.send({type, link})
+        })
+        .catch((err)=>{
+            res.status(500).send(err)
+        })
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -299,5 +319,6 @@ module.exports = {
     updateRequest,
     createDetail,
     updateDetail,
-    createPayment
+    createPayment,
+    getFile
 }

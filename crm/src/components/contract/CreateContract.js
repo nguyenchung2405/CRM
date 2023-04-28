@@ -174,7 +174,7 @@ useEffect(() => {
       return <Option value={item.id}>{item.name}</Option>
     })
   };
-  console.log(dotThanhToan)
+
   const valueOfField = (name) => {
     if (name === "rangePicker") {
       // let newTuNgay = convertDate(valueForm["begin_date"]);
