@@ -39,7 +39,7 @@ export default function CreateContract() {
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
-
+  console.log("abc")
   useEffect(() => {
     dispatch({
       type: GET_EVENT_LIST,
