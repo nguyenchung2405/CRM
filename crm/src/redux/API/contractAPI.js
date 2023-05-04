@@ -67,7 +67,6 @@ export async function createContractAPI(data) {
                 end_date: convertEndDate,
                 total: data.contract.total / 1000000,
                 discount_over_contract: data.contract.discount_over_contract / 1000000,
-                payment_type: data.contract.payment_type ? data.payment_type : "Một đợt"
             },
             request: [...newRequest],
             payment: [...newPayment]
