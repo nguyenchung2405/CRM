@@ -32,7 +32,7 @@ export default function CreateContract() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({deal_out: false});
+  const [valueForm, setValueForm] = useState({deal_out: false, payment_type: "Một đợt", pay_before_run: true});
   const [soTien, setSoTien] = useState(null)
   const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
