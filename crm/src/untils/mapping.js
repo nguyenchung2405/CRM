@@ -34,7 +34,9 @@ export function dataOfContractMapping(data) {
             pay_before_run: data.pay_before_run,
             payment_type: data.payment_type,
             event_ID: data.event_ID,
-            owner_name: data.owner_name
+            owner_name: data.owner_name,
+            discount_total: data.discount_total,
+            original_total: data.original_total
         };
         // let dataTable = mappingDataOfTable(data)
         return {
