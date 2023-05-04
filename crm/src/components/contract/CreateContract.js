@@ -39,7 +39,7 @@ export default function CreateContract() {
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
-  console.log("abc")
+
   useEffect(() => {
     dispatch({
       type: GET_EVENT_LIST,
@@ -315,7 +315,8 @@ useEffect(() => {
       if(mode === "display"){
         return new Intl.NumberFormat("vi-VN").format(total * 1000000);
       } else if(mode === "number"){
-        return total;
+        // return total;
+        return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
       }
     } else {
       return null;
@@ -332,7 +333,8 @@ useEffect(() => {
       return new Intl.NumberFormat("vi-VN").format(total * 1000000);
     } else {
       if(mode === "number"){
-        return total;
+        // return total;
+        return new Intl.NumberFormat("vi-VN").format(valueForm.original_total * 1000000);
       }
       return null;
     }
@@ -812,7 +814,7 @@ useEffect(() => {
                       //   let { value, name } = e.target;
                       //   handleChangeValue(name, +value)
                       // }}
-                      value={showGiaTriGoc()}
+                      value={valueForm.original_total ? showGiaTriGoc("number") : showGiaTriGoc()}
                       disabled
                     />
                     <label>Giá trị gốc</label>
@@ -824,7 +826,7 @@ useEffect(() => {
                       //   let { value, name } = e.target;
                       //   handleChangeValue(name, +value)
                       // }}
-                      value={showGiaTriThucHien()}
+                      value={valueForm.discount_total ? showGiaTriThucHien("number") : showGiaTriThucHien()}
                       disabled
                     />
                     <label>Giá trị thực hiện</label>
