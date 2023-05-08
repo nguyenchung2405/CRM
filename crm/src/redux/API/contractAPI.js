@@ -300,3 +300,19 @@ export async function createPaymentAPI(data){
         return "Thất bại"
     }
 }
+
+export async function getRequestOfEventAPI(event_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/detail/list?id=${event_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}

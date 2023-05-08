@@ -153,3 +153,36 @@ export async function searchEventAPI(data){
         return "Fail"
     }
 }
+
+export async function getUnsetContractAPI(){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/unset_contract`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function addUnserContractToEventAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/add-unset-contract`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

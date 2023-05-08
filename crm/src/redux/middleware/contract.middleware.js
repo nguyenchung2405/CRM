@@ -1,8 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
-import { dataOfContractMapping } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
+import { dataOfContractMapping, dataOfEventMapping } from "../../untils/mapping";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
+import { setRequestOfEvent } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 
@@ -160,6 +161,16 @@ function* createPayment(payload){
     }
 }
 
+function* getRequestOfEvent(payload){
+    try {
+        const result = yield call(getRequestOfEventAPI, payload.event_id);
+        let dataMapping = dataOfEventMapping(result.data.event_management[0]);
+        yield put(setRequestOfEvent(dataMapping.requests))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -176,4 +187,7 @@ export default function* contractMiddleware() {
     yield takeLatest(UPDATE_DETAIL, updateDetail)
     // Payment
     yield takeLatest(CREATE_PAYMENT, createPayment)
+    // Event
+    // call API lấy quyền lợi chung về nếu loại HĐ là "Sự kịện"
+    yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
 }

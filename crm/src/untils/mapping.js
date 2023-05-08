@@ -57,7 +57,8 @@ export function dataOfEventMapping(data){
               "from_date": data.from_date,
               "to_date": data.to_date,
               "value_event": data.value_event * 1000000,
-              desc: data.desc
+              desc: data.desc,
+              event_cost_list: data.event_cost_list
             },
             "requests": [
               ...data.details

@@ -1,10 +1,10 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_EVENT, CREATE_REQUEST_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, SEARCH_EVENT, UPDATE_EVENT } from "../../title/title";
+import { ADD_UNSET_CONTRACT_TO_EVENT, CREATE_EVENT, CREATE_REQUEST_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_UNSET_CONTRACT, SEARCH_EVENT, UPDATE_EVENT } from "../../title/title";
 import { dataOfEventMapping } from "../../untils/mapping";
-import { createEventAPI, createRequestAPI, deleteRequestAPI, getEventInforAPI, getEventListAPI, searchEventAPI, updateEventAPI } from "../API/eventAPI";
+import { addUnserContractToEventAPI, createEventAPI, createRequestAPI, deleteRequestAPI, getEventInforAPI, getEventListAPI, getUnsetContractAPI, searchEventAPI, updateEventAPI } from "../API/eventAPI";
 import { addContractRequest, deleteContractRequest, setContractDetail, setContractRequest } from "../features/contractSlice";
-import { setDonors, setEventList, setTotalEventList } from "../features/eventSlice";
+import { setDonors, setEventList, setTotalEventList, setUnsetContract } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 
 function* getEventList(payload){
@@ -95,12 +95,36 @@ function* searchEvent(payload){
     }
 }
 
+function* getUnsetContract(){
+    try {
+        const result = yield call(getUnsetContractAPI);
+        yield put(setUnsetContract(result.data.contracts))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* addUnserContractToEvent(payload){
+    try {
+        const result = yield call(addUnserContractToEventAPI, payload.data);
+        if(result[0] === "Thành công"){
+            message.success("Thêm nhà tài trợ thành công")
+        } else {
+            message.error("Thêm nhà tài trợ thất bại")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* EventMiddleware(){
     yield takeLatest(GET_EVENT_LIST, getEventList)
     yield takeLatest(CREATE_EVENT, createEvent)
     yield takeLatest(GET_EVENT_INFOR, getEventInfor)
     yield takeLatest(UPDATE_EVENT, updateEvent)
     yield takeLatest(SEARCH_EVENT, searchEvent)
+    yield takeLatest(GET_UNSET_CONTRACT, getUnsetContract)
+    yield takeLatest(ADD_UNSET_CONTRACT_TO_EVENT, addUnserContractToEvent)
     // Request
     yield takeLatest(CREATE_REQUEST_EVENT, createRequest)
     yield takeLatest(DELETE_REQUEST_EVENT ,deleteRequest)
