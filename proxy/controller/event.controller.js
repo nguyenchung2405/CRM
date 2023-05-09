@@ -146,6 +146,66 @@ const searchEvent = async (req, res)=>{
     }
 }
 
+const getUnsetContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/event/unset_contract`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const addUnserContractToEvent = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let promiseArr = req.body.map(contract =>{
+            console.log("line 174",contract)
+            return axios({
+                url: `${local}/contract/update?id=${contract.id}`,
+                method: "PUT",
+                headers: {
+                    Authorization: authorization
+                },
+                data: contract
+            })
+        });
+        Promise.all(promiseArr)
+        .then(resolve => {
+            let result = [];
+            for(let i = 0; i < resolve.length; i++){
+                // console.log(resolve[i].data)
+                result.push(resolve[i].data)
+            }
+            result.unshift({msg: "Thành công"})
+            res.send(result)
+        })
+        .catch(err => {
+            if (err.response?.data) {
+                res.send(err.response.data)
+            } else {
+                res.send(err)
+            }
+        })
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getEventList,
     createEvent,
@@ -153,5 +213,7 @@ module.exports = {
     updateEvent,
     createRequest,
     deleteRequest,
-    searchEvent
+    searchEvent,
+    getUnsetContract,
+    addUnserContractToEvent
 }

@@ -67,6 +67,10 @@ img.file, svg.file {
     width: 100%;
 }
 
+.padding_30px {
+    padding-left: 30px;
+}
+
 /* loading css */
 
 .loading {
@@ -624,7 +628,8 @@ div.modal__content .modal__field__select label {
     padding-left: 9px;
 }
 
-.create__customer div.modal__content div.modal__field__select div.customer__select div.ant-select-selector {
+.create__customer div.modal__content div.modal__field__select div.customer__select div.ant-select-selector,
+div.modal__content div.customer__select div.ant-select-selector {
     border: none;
     border-color: transparent;
     box-shadow: none;
@@ -659,7 +664,8 @@ div.modal__content .modal__field .ant-picker .ant-picker-clear {
     top: 36%;
 }
 
-div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector {
+div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector,
+div.ant-modal-body div.modal__content div.ant-select.customer__select div.ant-select-selector {
     border: none;
     padding: 0;
     box-shadow: none;
@@ -934,7 +940,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__contactInfor,
 .create__contract .create__contract__value,
 .create__contract .create__contract__payment,
-.create__contract .create__contract__term {
+.create__contract .create__contract__term,
+.create__contract .create__contract__chiTieu {
     padding: 23px 0 36px 118px;
 }
 
@@ -942,9 +949,35 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__value p,
 .create__contract .create__contract__payment .display__flex,
-.create__contract .create__contract__term .display__flex {
+.create__contract .create__contract__term .display__flex,
+.create__contract .create__contract__chiTieu .display__flex {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex {
+    display: flex;
+    align-items: center;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > p{
+    margin-right: 14px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > input {
+    width: 262px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > input:first-child{
+    margin-right: 54px;
+}
+
+.create__contract .create__contract__value p {
+    margin-bottom: 0px;
+}
+
+.create__contract .create__contract__payment p {
     margin-bottom: 20px;
 }
 
@@ -1195,13 +1228,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 
 .create__contract .create__contract__contactInfor .display__flex>p,
 .create__contract .create__contract__payment .display__flex>p,
-.create__contract .create__contract__term .display__flex>p {
+.create__contract .create__contract__term .display__flex>p,
+.create__contract .create__contract__value .display__flex>p {
     margin-right: 14px;
 }
 
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__payment .display__flex,
-.create__contract .create__contract__term .display__flex {
+.create__contract .create__contract__term .display__flex,
+.create__contract .create__contract__value .display__flex {
     display: flex;
     align-items: center;
 }
@@ -1541,6 +1576,7 @@ svg.style__svg {
 
 .event__donors > ol {
     padding-left: 30px;
+    margin-top: 15px;
 }
 
 .event__donors > ol > a {

@@ -20,6 +20,7 @@ import CustomerTableType from "./components/customer/CustomerTableType"
 import SpecialProductTable from './components/product/special/SpecialProductTable';
 import CreateEvent from './components/contract/event/CreateEvent';
 import EventTable from './components/contract/event/EventTable';
+import ReceiptTable from './components/receipt/ReceiptTable';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/crm/event/create" element={<CreateEvent />} />
                 <Route path="/crm/event" element={<EventTable />} />
                 <Route path="/crm/event/:event_id" element={<CreateEvent />} />
+                <Route path="/crm/receipt" element={<ReceiptTable />} />
               </Routes>
             </div>
           </BrowserRouter>
@@ -70,6 +72,7 @@ function App() {
               <Route path="/crm/event/create" element={<CreateEvent />} />
               <Route path="/crm/event" element={<EventTable />} />
               <Route path="/crm/event/:event_id" element={<CreateEvent />} />
+              <Route path="/crm/receipt" element={<ReceiptTable />} />
             </Routes>
           </div>
         </Provider>

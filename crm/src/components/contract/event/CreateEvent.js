@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, message, Popconfirm, Checkbox } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_EVENT, DELETE_REQUEST, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT, UPDATE_EVENT } from "../../../title/title";
+import { CREATE_CONTRACT, CREATE_EVENT, DELETE_REQUEST, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_UNSET_CONTRACT, UPDATE_CONTRACT, UPDATE_EVENT } from "../../../title/title";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
@@ -13,6 +13,8 @@ import { setIsLoading } from "../../../redux/features/loadingSlice";
 import { setMessage } from "../../../redux/features/messageSlice";
 import TermModalEvent from "../../modal/event/Term";
 import { setDonors } from "../../../redux/features/eventSlice";
+import ModalDonor from "./ModalDonor";
+import QuanLyChi from "./QuanLyChi";
 
 export default function CreateEvent() {
 
@@ -30,10 +32,13 @@ export default function CreateEvent() {
   const { messageAlert } = useSelector(state => state.messageReducer);
   const { eventList, totalEventList, donors } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowDonorModal, setIsShowDonorModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({});
   const [customerInfor, setCustomerInfor] = useState({});
+  const [donateToTal, setDonateTotal] = useState();
+  const [quanLyChi, setQuanLyChi] = useState({})
 
   useEffect(() => {
     dispatch({
@@ -68,12 +73,25 @@ export default function CreateEvent() {
         type: GET_EVENT_INFOR,
         data: event_id
       })
+      dispatch({
+        type: GET_UNSET_CONTRACT,
+      })
     }
   }, [event_id])
 
   useEffect(()=>{
     setValueForm({...contractDetail})
+    setQuanLyChi({...contractDetail.event_cost_list})
   }, [contractDetail])
+
+  useEffect(()=>{
+    if(donors.length > 0){
+      let total = donors.reduce((pre,cur)=> {
+        return pre + cur.contract_total
+      }, 0);
+      setDonateTotal(total)
+    }
+  }, [donors])
 
   const convertContractRequest = () => {
     return contractRequest?.map(request => {
@@ -119,9 +137,10 @@ export default function CreateEvent() {
     if (event_id) {
       return <button className="footer__btn btn__create"
         onClick={() => {
+          let newValueForm = {...valueForm, event_cost_list: quanLyChi}
           dispatch({
             type: UPDATE_EVENT,
-            data: valueForm
+            data: newValueForm
           })
         }}>
         Cập nhật
@@ -130,7 +149,7 @@ export default function CreateEvent() {
       return <button className="footer__btn btn__create"
         onClick={() => {
           let newData = {
-            event: { ...valueForm },
+            event: { ...valueForm, event_cost_list: quanLyChi },
             details: contractRequest,
           };
           dispatch({
@@ -151,9 +170,13 @@ export default function CreateEvent() {
       return <Loading />
     }
   }
-
-  const renderDonorList = ()=>{
-    return donors.map(donor =>{
+  
+  const renderDonorList = () => {
+    let newDonors = [...donors]
+    let sortArr = newDonors.sort((a, b) => {
+      return b.contract_total - a.contract_total
+    })
+    return sortArr.map(donor => {
       return <a href={`${uri}/crm/detail/${donor.contract_ID}`} target="_blank">
         <li>{donor.client_name + " - " + new Intl.NumberFormat("vi-VN").format(donor.contract_total * 1000000) + " VNĐ"}</li>
       </a>
@@ -333,10 +356,63 @@ export default function CreateEvent() {
           />
         </div>
         <div className="create__contract__value border_bottom_3px event__donors">
-          <p>Nhà tài trợ</p>
+          <div className="display__flex">
+            <p>Nhà tài trợ</p>
+            {
+              !window.location.href.includes("create")
+                ?
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={() => {
+                    setIsShowDonorModal(true);
+                  }}
+                >
+                  <path
+                    d="M11 7.32739V14.6537"
+                    stroke="#35794A"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14.6667 10.9904H7.33337"
+                    stroke="#35794A"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
+                    stroke="#35794A"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                : ""
+            }
+          </div>
           <ol>
             {renderDonorList()}
           </ol>
+          <div className="donate__total padding_30px">
+            {
+              !window.location.href.includes("create") && donateToTal > 0
+                ? <b>Tổng tiền tài trợ: {new Intl.NumberFormat("vi-VN").format(donateToTal * 1000000) + " VNĐ"}</b>
+                : ""
+            }
+          </div>
+          <ModalDonor
+              isShowModal={isShowDonorModal}
+              setIsShowModal={setIsShowDonorModal}
+              event_id={event_id}
+          />
         </div>
         <div className="create__contract__payment create__contract__value border_bottom_3px create__contract__inforCustomer">
           <p>Giá trị sự kiện</p>
@@ -368,6 +444,10 @@ export default function CreateEvent() {
             <label>Ghi chú</label>
           </div>
         </div>
+        <QuanLyChi 
+          quanLyChi={quanLyChi}
+          setQuanLyChi={setQuanLyChi}
+        />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/event`, { replace: true }) }}>Hủy</button>
           {renderButtonCreateUpdate()}

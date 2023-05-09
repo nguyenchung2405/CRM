@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } fr
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
 import { setMessage } from "../../redux/features/messageSlice";
+import RequestEvent from "./RequestEvent";
 
 export default function CreateContract() {
 
@@ -28,11 +29,11 @@ export default function CreateContract() {
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
-  const { eventList, totalEventList } = useSelector(state => state.eventReducer);
+  const { eventList, totalEventList, requestOfEvent } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({deal_out: false, payment_type: "Một đợt", pay_before_run: true});
+  const [valueForm, setValueForm] = useState({deal_out: true, payment_type: "Nhiều đợt", pay_before_run: true, discount_over_contract: 0});
   const [soTien, setSoTien] = useState(null)
   const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
@@ -96,7 +97,7 @@ export default function CreateContract() {
 useEffect(()=>{
   setValueForm({
     ...valueForm,
-    total: showGiaTriThucHien("number") * 1000000
+    total: showGiaTriThucHien("total") * 1000000
   })
 }, [contractRequest])
 
@@ -113,6 +114,15 @@ useEffect(() => {
     setDotThanhToan(payments)
   }
 }, [contractDetail])
+
+useEffect(()=>{
+  if(typeof +valueForm.event_ID === "number"){
+    dispatch({
+      type: GET_REQUEST_OF_EVENT,
+      event_id: valueForm.event_ID
+    })
+  }
+}, [valueForm.event_ID])
 
   const convertContractRequest = () => {
     return contractRequest?.map(request => {
@@ -317,6 +327,8 @@ useEffect(() => {
       } else if(mode === "number"){
         // return total;
         return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
+      } else {
+        return total;
       }
     } else {
       return null;
@@ -634,6 +646,12 @@ useEffect(() => {
             </div>
           </div>
             */}
+              { valueForm.event_ID ? 
+                <RequestEvent 
+                productListFull={productListFull}
+                requestOfEvent={requestOfEvent}
+              /> : ""
+              }
               <div className="create__contract__term border_bottom_3px">
                 <div className="display__flex">
                   <p>Quyền lợi hợp đồng</p>

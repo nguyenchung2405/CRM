@@ -3,7 +3,9 @@ import {createSlice} from "@reduxjs/toolkit";
 const initialState = {
     eventList: [],
     totalEventList: "",
-    donors: []
+    donors: [],
+    requestOfEvent: [],
+    unsetContract: []
 }
 
 const eventSlice = createSlice({
@@ -18,9 +20,15 @@ const eventSlice = createSlice({
         },
         setDonors: (state, action)=>{
             state.donors = action.payload;
+        },
+        setRequestOfEvent: (state, action)=>{
+            state.requestOfEvent = action.payload;
+        },
+        setUnsetContract: (state, action)=>{
+            state.unsetContract = action.payload;
         }
     }
 });
 
-export const {setEventList, setTotalEventList, setDonors} = eventSlice.actions;
+export const {setEventList, setTotalEventList, setDonors, setRequestOfEvent, setUnsetContract} = eventSlice.actions;
 export default eventSlice.reducer;
