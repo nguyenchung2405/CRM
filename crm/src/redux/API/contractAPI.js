@@ -56,7 +56,7 @@ export async function createContractAPI(data) {
             let newRequestDate = moment(payment.request_date).format("YYYY-MM-DD");
             return {
                 ...payment,
-                total_value: payment.total_value,
+                total_value: payment.total_value / 1000000,
                 request_date: newRequestDate
             }
         })
@@ -284,7 +284,8 @@ export async function createPaymentAPI(data){
         let newRequestDate = moment(data.request_date).format("YYYY-MM-DD");
         let newData = {
             ...data,
-            request_date: newRequestDate
+            request_date: newRequestDate,
+            total_value: data.total_value / 1000000
         }
         const result = await axios({
             url: `${local}/api/contract/payment-add`,
@@ -309,6 +310,39 @@ export async function getRequestOfEventAPI(event_id){
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function selectRequestGeneralAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/select-request`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function getSelectRequestGeneralAPI(contract_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/get-select-request?contract_ID=${contract_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
         });
         return result.data;
     } catch (error) {

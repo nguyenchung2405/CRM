@@ -71,6 +71,10 @@ img.file, svg.file {
     padding-left: 30px;
 }
 
+.display__flex {
+    display: flex;
+}
+
 /* loading css */
 
 .loading {
@@ -658,6 +662,36 @@ div.modal__content .modal__field.field__select {
 
 div.modal__content .modal__field .ant-picker .ant-picker-input {
     width: 44%;
+}
+
+div.modal__report__content .modal__field .ant-radio-group {
+    width: min-content;
+}
+
+div.modal__report__content .modal__field .ant-radio-group .ant-radio input {
+    width: min-content;
+}
+
+div.modal__report__content .modal__field.modal__report__upload input {
+    width: 459.61px;
+    overflow: hidden;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker {
+    box-shadow: none;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker:hover {
+    border-color: #CCCCCC;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker .ant-picker-input {
+    width: 100%;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker .ant-picker-input input {
+    border-radius: 0;
+    border: none;
 }
 
 div.modal__content .modal__field .ant-picker .ant-picker-clear {

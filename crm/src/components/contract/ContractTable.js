@@ -49,6 +49,21 @@ export default function ContractTable() {
         }
     }
 
+    const filterStatus = [
+        {
+            text: "Đang chạy",
+            value: "Đang chạy"
+        },
+        {
+            text: "Kết thúc",
+            value: "Kết thúc"
+        },
+        {
+            text: "Chưa chạy",
+            value: "Chưa chạy"
+        },
+    ]
+
     return (
         <div className="content contract__table customer__table">
             {showLoading()}
@@ -122,15 +137,17 @@ export default function ContractTable() {
                         let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
                         return `${batDau} - ${ketThuc}`
                     }} />
-                <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
-                    if(text.status){
-                        return <span status={"đang chạy"}>Đang chạy</span>
-                    } else if(!text.status){
-                        return <span status={"kết thúc"}>Kết thúc</span>
-                    } else {
-                        return <span status={"chưa chạy"}>Chưa chạy</span>
-                    }
-                }} />
+                <Column className="contract__table__status" 
+                    filters={filterStatus}
+                    filterSearch={true}
+                    filterMode="menu"
+                    onFilter={(value, record) => { console.log(value, record) ;return record.status.toLowerCase().includes(value.toLowerCase()) }}
+                    title="Trạng thái" 
+                    key="status"
+                    render={(text) => {
+                        return <span status={text.status.toLowerCase()}>{text.status}</span>
+                    }} 
+                />
                 <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text) => {
                     return <span>{text.owner_name}</span>
                 }} />

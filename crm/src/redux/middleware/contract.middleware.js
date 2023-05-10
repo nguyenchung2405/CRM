@@ -1,11 +1,13 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
-import { dataOfContractMapping, dataOfEventMapping } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
+import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
-import { setRequestOfEvent } from "../features/eventSlice";
+import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
+import { setReceiptList, setTotalReceipt } from "../features/receiptSlice";
+import {message} from "antd"
 
 function* getContractList(payload) {
     try {
@@ -13,6 +15,8 @@ function* getContractList(payload) {
         let result = yield call(getContractListAPI, page, pageNumber);
         let { total_data: total, contract: data } = result.data;
         yield put(setContractList({ total, contractList: data }));
+        yield put(setTotalReceipt(total))
+        yield put(setReceiptList(data))
         yield put(setIsLoading(false))
     } catch (error) {
         console.log(error)
@@ -43,7 +47,7 @@ function* getContractDetail(payload) {
     let responseRequest = yield call(getContractRequestAPI, contract_id);
     if (+code === 200 || result.data.contract.length > 0) {
         let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
-        dataAfterMapping.payments = result.data.contract[0].payments || [];
+        dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
         yield put(setContractDetail(dataAfterMapping))
         yield put(setContractRequest(responseRequest.data.contract_request))
         yield put(setIsLoading(false))
@@ -151,7 +155,11 @@ function* createPayment(payload){
     try {
         const result = yield call(createPaymentAPI, payload.data);
         if(result.data.payment.contract_ID){
-            yield put(addPayment(result.data.payment))
+            let newPayment = {
+                ...result.data.payment,
+                total_value: result.data.payment.total_value * 1000000
+            }
+            yield put(addPayment(newPayment))
             yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
@@ -166,6 +174,26 @@ function* getRequestOfEvent(payload){
         const result = yield call(getRequestOfEventAPI, payload.event_id);
         let dataMapping = dataOfEventMapping(result.data.event_management[0]);
         yield put(setRequestOfEvent(dataMapping.requests))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* selectRequestGeneral(payload){
+    try {
+        const result = yield call(selectRequestGeneralAPI, payload.data);
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+function* getSelectRequestGeneral(payload){
+    try {
+        const result = yield call(getSelectRequestGeneralAPI ,payload.contract_id);
+        let selectRequest = result.data.event_detail_contract.map(request => {
+            return request.event_detail_ID
+        })
+        yield put(setSelectRequest(selectRequest))
     } catch (error) {
         console.log(error)
     }
@@ -190,4 +218,6 @@ export default function* contractMiddleware() {
     // Event
     // call API lấy quyền lợi chung về nếu loại HĐ là "Sự kịện"
     yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
+    yield takeLatest(SELECT_REQUEST_GENERAL, selectRequestGeneral)
+    yield takeLatest(GET_SELECT_REQUEST_GENERAL, getSelectRequestGeneral)
 }
