@@ -37,6 +37,10 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
             getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "20", <FcDepartment />),
+            getItem("Quản lý nghiệm thu", "21", <FcDepartment />, [
+                getItem(<Link to={`${uri}/crm/acceptance/manage`}>Quản lý</Link>, "22", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/acceptance/implementer`}>Người thực hiện</Link>, "23", <FcDepartment />),
+            ]),
         ])
     ]
 
@@ -89,6 +93,12 @@ export default function Sidebar() {
                             </li>
                             <li>
                                 <NavLink to="/crm/receipt">Quản lý hóa đơn</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/acceptance/manage">Quản lý nghiệm thu</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/acceptance/implementer">Nghiệm thu thực hiện</NavLink>
                             </li>
                         </ul>
                     </div>

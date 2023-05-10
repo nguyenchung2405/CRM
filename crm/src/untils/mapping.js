@@ -48,6 +48,20 @@ export function dataOfContractMapping(data) {
     }
 }
 
+export function dataOfPayment(data){
+    try {
+        let newPayments = data.map(payment => {
+            return {
+                ...payment,
+                total_value: payment.total_value * 1000000
+            }
+        });
+        return newPayments
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export function dataOfEventMapping(data){
     try {
         const dataEvent = {

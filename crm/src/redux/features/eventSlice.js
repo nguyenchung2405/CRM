@@ -5,7 +5,8 @@ const initialState = {
     totalEventList: "",
     donors: [],
     requestOfEvent: [],
-    unsetContract: []
+    unsetContract: [],
+    selectRequest: []
 }
 
 const eventSlice = createSlice({
@@ -26,9 +27,12 @@ const eventSlice = createSlice({
         },
         setUnsetContract: (state, action)=>{
             state.unsetContract = action.payload;
+        },
+        setSelectRequest: (state, action)=>{
+            state.selectRequest = action.payload;
         }
     }
 });
 
-export const {setEventList, setTotalEventList, setDonors, setRequestOfEvent, setUnsetContract} = eventSlice.actions;
+export const {setEventList, setTotalEventList, setDonors, setRequestOfEvent, setUnsetContract, setSelectRequest} = eventSlice.actions;
 export default eventSlice.reducer;

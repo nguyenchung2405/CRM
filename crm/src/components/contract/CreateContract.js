@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } fr
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -29,7 +29,7 @@ export default function CreateContract() {
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
-  const { eventList, totalEventList, requestOfEvent } = useSelector(state => state.eventReducer);
+  const { eventList, requestOfEvent, selectRequest } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
@@ -40,6 +40,7 @@ export default function CreateContract() {
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
+  const [selectGeneralRequest, setSelectGeneralRequest] = useState([]);
 
   useEffect(() => {
     dispatch({
@@ -79,6 +80,10 @@ export default function CreateContract() {
         type: GET_CONTRACT_DETAIL,
         contract_id
       });
+      dispatch({
+        type: GET_SELECT_REQUEST_GENERAL,
+        contract_id
+      })
       dispatch(setIsLoading(true))
     }
   }, [contract_id])
@@ -94,35 +99,39 @@ export default function CreateContract() {
     }
 }, [messageAlert])
 
-useEffect(()=>{
-  setValueForm({
-    ...valueForm,
-    total: showGiaTriThucHien("total") * 1000000
-  })
-}, [contractRequest])
-
-useEffect(() => {
-  let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
-  // if(dataContract && dataOfTable){
-  //   setValueForm({...dataContract})
-  //   setDataTable([...dataOfTable])
-  // }
-  if (dataContract) {
-    setValueForm({ ...dataContract })
-  }
-  if(payments){
-    setDotThanhToan(payments)
-  }
-}, [contractDetail])
-
-useEffect(()=>{
-  if(typeof +valueForm.event_ID === "number"){
-    dispatch({
-      type: GET_REQUEST_OF_EVENT,
-      event_id: valueForm.event_ID
+  useEffect(() => {
+    setValueForm({
+      ...valueForm,
+      total: showGiaTriThucHien("total") * 1000000
     })
-  }
-}, [valueForm.event_ID])
+  }, [contractRequest])
+
+  useEffect(() => {
+    let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
+    // if(dataContract && dataOfTable){
+    //   setValueForm({...dataContract})
+    //   setDataTable([...dataOfTable])
+    // }
+    if (dataContract) {
+      setValueForm({ ...dataContract })
+    }
+    if (payments) {
+      setDotThanhToan(payments)
+    }
+  }, [contractDetail])
+
+  useEffect(() => {
+    if (typeof valueForm.event_ID === "number") {
+      dispatch({
+        type: GET_REQUEST_OF_EVENT,
+        event_id: valueForm.event_ID
+      })
+    }
+  }, [valueForm.event_ID])
+
+  useEffect(()=>{
+    setSelectGeneralRequest([...selectRequest])
+  }, [selectRequest])
 
   const convertContractRequest = () => {
     return contractRequest?.map(request => {
@@ -239,6 +248,10 @@ useEffect(()=>{
           dispatch({
             type: UPDATE_CONTRACT,
             data: valueForm
+          })
+          dispatch({
+            type: SELECT_REQUEST_GENERAL,
+            data: {event_detail_IDs: selectGeneralRequest, contract_ID: +contract_id}
           })
         }}>
         Cập nhật
@@ -646,11 +659,13 @@ useEffect(()=>{
             </div>
           </div>
             */}
-              { valueForm.event_ID ? 
-                <RequestEvent 
-                productListFull={productListFull}
-                requestOfEvent={requestOfEvent}
-              /> : ""
+              {valueForm.event_ID ?
+                <RequestEvent
+                  productListFull={productListFull}
+                  requestOfEvent={requestOfEvent}
+                  selectGeneralRequest={selectGeneralRequest}
+                  setSelectGeneralRequest={setSelectGeneralRequest}
+                /> : ""
               }
               <div className="create__contract__term border_bottom_3px">
                 <div className="display__flex">

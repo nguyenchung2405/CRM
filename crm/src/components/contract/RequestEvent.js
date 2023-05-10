@@ -4,21 +4,29 @@ import React from 'react'
 export default function RequestEvent(props) {
 
     const { Column } = Table;
-    const {productListFull, requestOfEvent} = props;
+    const {productListFull, requestOfEvent, selectGeneralRequest, setSelectGeneralRequest} = props;
 
     const convertContractRequest = () => {
-        return requestOfEvent?.map(request => {
-          return {
-            key: request?.id,
-            id: request?.id,
-            price_ID: request.price_ID,
-            product_ID: request.product_ID,
-            quality: request.quantity,
-            real_price: request.value_detail * 1000000,
-            custom_price: 0
-          }
-        })
+      return requestOfEvent?.map(request => {
+        return {
+          key: request?.id,
+          id: request?.id,
+          price_ID: request.price_ID,
+          product_ID: request.product_ID,
+          quality: request.quantity,
+          real_price: request.value_detail * 1000000,
+          custom_price: 0
+        }
+      })
+    }
+
+    const checked = (data)=>{
+      if(selectGeneralRequest.includes(data.id)){
+        return true
+      } else {
+        return false
       }
+    }
 
   return (
       <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract create__contract__term">
@@ -62,24 +70,16 @@ export default function RequestEvent(props) {
             }}
           />
           <Column
-            className="price"
-            title="Giá hiệu chỉnh"
-            key="custom_price"
-            render={(text) => {
-              if (text.custom_price > 0) {
-                return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
-              } else {
-                return null;
-              }
-            }}
-          />
-          <Column
             className="select"
             render={(text)=>{
-                console.log(text)
-                return <input type="checkbox" checked={true} onChange={(e)=>{
-                    // console.log(e.target.checked)
-                    // e.target.checked = !e.target.checked
+                return <input type="checkbox" checked={checked(text)} onChange={()=>{
+                    if(!checked(text)){
+                      setSelectGeneralRequest([...selectGeneralRequest, text.id])
+                    } else {
+                      let newSelect = [...selectGeneralRequest];
+                      let removeSelectedInput = newSelect.filter(request => request !== text.id)
+                      setSelectGeneralRequest([...removeSelectedInput])
+                    }
                 }} />
             }}
           />
