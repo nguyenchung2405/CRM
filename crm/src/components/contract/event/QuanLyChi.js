@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
+import {v4 as uuidv4} from "uuid"
 
 export default function QuanLyChi(props) {
 
@@ -31,7 +32,7 @@ export default function QuanLyChi(props) {
     const renderChiTieu = ()=>{
         let liArr =[]
         for(let item in quanLyChi){
-            liArr.push( <li>{`${item} - ${new Intl.NumberFormat("vi-VN").format(quanLyChi[item])} VNĐ`}</li>)
+            liArr.push( <li key={uuidv4()}>{`${item} - ${new Intl.NumberFormat("vi-VN").format(quanLyChi[item])} VNĐ`}</li>)
         }
         return liArr;
     }

@@ -186,3 +186,20 @@ export async function addUnserContractToEventAPI(data){
         return "Fail"
     }
 }
+
+export async function updateRequestEventAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/update-request?id=${data.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

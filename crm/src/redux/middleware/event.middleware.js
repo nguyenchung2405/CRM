@@ -1,8 +1,8 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { ADD_UNSET_CONTRACT_TO_EVENT, CREATE_EVENT, CREATE_REQUEST_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_UNSET_CONTRACT, SEARCH_EVENT, UPDATE_EVENT } from "../../title/title";
+import { ADD_UNSET_CONTRACT_TO_EVENT, CREATE_EVENT, CREATE_REQUEST_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_UNSET_CONTRACT, SEARCH_EVENT, UPDATE_EVENT, UPDATE_REQUEST_EVENT } from "../../title/title";
 import { dataOfEventMapping } from "../../untils/mapping";
-import { addUnserContractToEventAPI, createEventAPI, createRequestAPI, deleteRequestAPI, getEventInforAPI, getEventListAPI, getUnsetContractAPI, searchEventAPI, updateEventAPI } from "../API/eventAPI";
+import { addUnserContractToEventAPI, createEventAPI, createRequestAPI, deleteRequestAPI, getEventInforAPI, getEventListAPI, getUnsetContractAPI, searchEventAPI, updateEventAPI, updateRequestEventAPI } from "../API/eventAPI";
 import { addContractRequest, deleteContractRequest, setContractDetail, setContractRequest } from "../features/contractSlice";
 import { setDonors, setEventList, setTotalEventList, setUnsetContract } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -117,6 +117,15 @@ function* addUnserContractToEvent(payload){
     }
 }
 
+function* updateRequestEvent(payload){
+    try {
+        const result = yield call(updateRequestEventAPI, payload.data)
+        console.log(result)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* EventMiddleware(){
     yield takeLatest(GET_EVENT_LIST, getEventList)
     yield takeLatest(CREATE_EVENT, createEvent)
@@ -128,4 +137,5 @@ export default function* EventMiddleware(){
     // Request
     yield takeLatest(CREATE_REQUEST_EVENT, createRequest)
     yield takeLatest(DELETE_REQUEST_EVENT ,deleteRequest)
+    yield takeLatest(UPDATE_REQUEST_EVENT, updateRequestEvent)
 }

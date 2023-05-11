@@ -672,6 +672,10 @@ div.modal__report__content .modal__field .ant-radio-group .ant-radio input {
     width: min-content;
 }
 
+.reciept__table .receipt__tabel__event__name {
+    padding-left: 30px;
+}
+
 div.modal__report__content .modal__field.modal__report__upload input {
     width: 459.61px;
     overflow: hidden;

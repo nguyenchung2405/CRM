@@ -1,4 +1,5 @@
 import { Table, Tooltip } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
@@ -65,8 +66,8 @@ export default function ReceiptTable() {
             x: "max-content",
           }}
         >
-          <Column title="Tên sự kiên" fixed="left" render={(text)=>{
-            console.log(text)
+          <Column className="receipt__tabel__event__name" title="Tên sự kiên" fixed="left" render={(text)=>{
+            return text.event_ID?.name
           }}></Column>
           <Column title="Tên khách hàng" fixed="left" render={(text)=> text.client_ID.name}></Column>
           <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
@@ -78,7 +79,14 @@ export default function ReceiptTable() {
           }}></Column>
           <Column title="Số hóa đơn đã xuất" dataIndex="receipt_count"></Column>
           {/*<Column title="Số hóa đơn đã thanh toán" dataIndex="total_completed_payment"></Column> */}
-          <Column title="Ngày xuất hóa đơn cuối" dataIndex="last_receipt_exported"></Column>
+          <Column title="Ngày xuất hóa đơn cuối" dataIndex="last_receipt_exported" render={(text)=>{
+              if (text !== null) {
+                  let newDate = moment(text).format("DD-MM-YYYY");
+                  return newDate;
+              } else {
+                  return null
+              }
+          }}></Column>
           <Column title="Ghi chú" dataIndex="note"></Column>
           <Column title="Giá trị đã thanh toán (triệu)" fixed="right" render={(text)=>{
               let total = text.total;

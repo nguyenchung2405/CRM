@@ -119,6 +119,7 @@ export default function TermModalEvent(props) {
       }
     } else {
       // Khi cập nhật thì PUT riêng từng API
+      console.log(isUpdateModal, valueModal)
       if (!isUpdateModal) {
         valueModal.event_ID = event_id;
         dispatch({
@@ -177,25 +178,25 @@ export default function TermModalEvent(props) {
 
   const renderOptionProductChannel = () => {
     return productChannel.map(channel => {
-      return <Option value={channel.id}>{channel.name}</Option>
+      return <Option key={channel.id} value={channel.id}>{channel.name}</Option>
     })
   };
 
   const renderOptionProductLocation = () => {
     return productLocation.map(location => {
-      return <Option value={location.id}>{location.name}</Option>
+      return <Option key={location.id} value={location.id}>{location.name}</Option>
     });
   }
 
   const renderOptionProductType = () => {
     return productType.map(type => {
-      return <Option value={type.id}>{type.name}</Option>
+      return <Option key={type.id} value={type.id}>{type.name}</Option>
     });
   };
 
   const renderOptionProductAttribute = () => {
     return productAttribute.map(att => {
-      return <Option value={att.id}>{att.name}</Option>
+      return <Option key={att.id} value={att.id}>{att.name}</Option>
     });
   }
 
