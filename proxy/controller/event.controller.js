@@ -247,6 +247,29 @@ const getSelectRequestGeneral = async (req, res)=>{
     }
 }
 
+const updateRequest = async (req, res)=>{
+    try {
+        console.log(req.query)
+        let { headers: { authorization } } = req;
+        let { id } = req.query;
+        const result = await axios({
+            url: `${local}/event/detail/update?id=${+id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getEventList,
     createEvent,
@@ -258,5 +281,6 @@ module.exports = {
     getUnsetContract,
     addUnserContractToEvent,
     selectRequestGeneral,
-    getSelectRequestGeneral
+    getSelectRequestGeneral,
+    updateRequest
 }

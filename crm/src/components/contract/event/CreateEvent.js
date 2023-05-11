@@ -177,7 +177,7 @@ export default function CreateEvent() {
       return b.contract_total - a.contract_total
     })
     return sortArr.map(donor => {
-      return <a href={`${uri}/crm/detail/${donor.contract_ID}`} target="_blank">
+      return <a key={uuidv4()} href={`${uri}/crm/detail/${donor.contract_ID}`} target="_self">
         <li>{donor.client_name + " - " + new Intl.NumberFormat("vi-VN").format(donor.contract_total * 1000000) + " VNĐ"}</li>
       </a>
     })
