@@ -3,7 +3,6 @@ import './App.css';
 
 import { store } from "./redux/configStore"
 import { Provider } from "react-redux"
-
 import Sidebar from './components/sidebar/Sidebar';
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Header from './components/header/Header';
@@ -19,7 +18,7 @@ import TypeAndAttribute from './components/product/TypeAndAttribute';
 import CustomerTableType from "./components/customer/CustomerTableType"
 import SpecialProductTable from './components/product/special/SpecialProductTable';
 function App() {
-
+  
   const renderMF = () => {
     if (checkMicroFe() === false) {
       return (

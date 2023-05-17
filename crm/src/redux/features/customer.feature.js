@@ -73,10 +73,22 @@ const customerSlice = createSlice({
         addCustomerType: (state, action)=>{
             state.customerTypeList.unshift(action.payload)
         },
+        setUpdateType : (state,action)=>{
+            state.customerTypeList = state.customerTypeList.map((customerType)=>{
+                return action.payload.id !== customerType.id ? customerType : {...customerType,name: action.payload.name}
+            })
+        },
+        setUpdateJobType: (state,action)=>{
+            console.log(action.payload);
+            state.jobTypeList = state.jobTypeList.map((jobType)=>{
+                return action.payload.id !== jobType.id ? jobType : {...jobType,name: action.payload.name}
+            })
+            
+        }
         
     }
 })
 
-export const {setCustomerList, setJobTypeListDelete ,setJobTypeListCreate  ,setCustomerTypeDelete , setTotalPage, setTotalPageCus, setCustomerTypeListCreate , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
+export const {setCustomerList, setUpdateJobType ,setUpdateType ,setJobTypeListDelete ,setJobTypeListCreate  ,setCustomerTypeDelete , setTotalPage, setTotalPageCus, setCustomerTypeListCreate , addCustomer, updateCusomer, setDataCustomer, setIsCreateCustomer, setTotalCustomer,
 setCustomerTypeList, setJobTypeList, addCustomerType} = customerSlice.actions;
 export default customerSlice.reducer;

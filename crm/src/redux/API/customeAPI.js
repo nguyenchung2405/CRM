@@ -184,3 +184,39 @@ export async function createJobTypeListAPI(data){
         console.log(error)
     }
 }
+
+
+export async function updateCustomerTypeAPI(data){
+    try {
+        const { name , id } = data
+        console.log({name,id});
+        const resufts = await axios({
+            method: "PUT",
+            url: `${local}/api/client/update/customer-type-list`,
+            data: {
+                name,
+                id
+            }
+        })
+
+        return resufts.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function updateJobTypeAPI(data){
+    try {
+        const result = await axios({
+            method: "PUT",
+            url: `${local}/api/client/update/job-type-list`,
+            data: { 
+                ...data,
+                token: TOKEN
+            }
+        })
+        return result.data
+    } catch (error) {
+        console.log(error);
+    }
+}
