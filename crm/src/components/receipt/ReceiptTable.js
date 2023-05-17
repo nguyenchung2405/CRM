@@ -15,32 +15,32 @@ export default function ReceiptTable() {
   
     useEffect(() => {
       dispatch({
-          type: GET_CONTRACT_LIST,
-          data: { page, pageNumber }
+        type: GET_CONTRACT_LIST,
+        data: { page, pageNumber }
       })
       // dispatch(setIsLoading(true))
-  }, [page, pageNumber, dispatch]);
+    }, [page, pageNumber, dispatch]);
 
-  return (
-    <div className="content reciept__table customer__table">
-      <div className="table__features">
-        <div className="table__features__add">
-          <h1>Quản lý hóa đơn</h1>
-          <Tooltip title="Tạo hóa đơn" color="green">
-            <FcPlus style={{ marginRight: "5px" }} onClick={() => {
+    return (
+      <div className="content reciept__table customer__table">
+        <div className="table__features">
+          <div className="table__features__add">
+            <h1>Quản lý hóa đơn</h1>
+            <Tooltip title="Tạo hóa đơn" color="green">
+              <FcPlus style={{ marginRight: "5px" }} onClick={() => {
 
-            }} />
-          </Tooltip>
-        </div>
-        <div className="table__features__search">
-          <input placeholder="Tên khách hàng" type="text" />
-          <input placeholder="Loại hợp đồng" type="text" />
-          <input placeholder="Người đầu mối" type="text" />
-          <div className="table__features__search__btn">
-            <button>Tìm kiếm</button>
+              }} />
+            </Tooltip>
           </div>
-        </div>
-      </div >
+          <div className="table__features__search">
+            <input placeholder="Tên khách hàng" type="text" />
+            <input placeholder="Loại hợp đồng" type="text" />
+            <input placeholder="Người đầu mối" type="text" />
+            <div className="table__features__search__btn">
+              <button>Tìm kiếm</button>
+            </div>
+          </div>
+        </div >
         <Table
           dataSource={recieptList}
           pagination={{
@@ -66,34 +66,34 @@ export default function ReceiptTable() {
             x: "max-content",
           }}
         >
-          <Column className="receipt__tabel__event__name" title="Tên sự kiên" fixed="left" render={(text)=>{
+          <Column className="receipt__tabel__event__name" title="Tên sự kiên" key="eventName" fixed="left" render={(text) => {
             return text.event_ID?.name
           }}></Column>
-          <Column title="Tên khách hàng" fixed="left" render={(text)=> text.client_ID.name}></Column>
-          <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
-          <Column title="Số đợt thanh toán" dataIndex="payment_count"></Column>
-          <Column title="Hình thức thanh toán" render={(text)=> {
+          <Column title="Tên khách hàng" fixed="left" key="clientName" render={(text) => text.client_ID.name}></Column>
+          <Column title="Số hợp đồng" key="soHopDong" dataIndex="contract_number"></Column>
+          <Column title="Số đợt thanh toán" key="soDotThanhToan " dataIndex="payment_count"></Column>
+          <Column title="Hình thức thanh toán" key="hinhThucThanhToan" render={(text) => {
             let soLanThanhToan = text.payment_type;
             let kieuThanhToan = text.pay_before_run ? "Trả trước" : "Trả sau";
             return `${soLanThanhToan} / ${kieuThanhToan}`
           }}></Column>
-          <Column title="Số hóa đơn đã xuất" dataIndex="receipt_count"></Column>
+          <Column title="Số hóa đơn đã xuất" key="soHoaDonDaXuat" dataIndex="receipt_count"></Column>
           {/*<Column title="Số hóa đơn đã thanh toán" dataIndex="total_completed_payment"></Column> */}
-          <Column title="Ngày xuất hóa đơn cuối" dataIndex="last_receipt_exported" render={(text)=>{
-              if (text !== null) {
-                  let newDate = moment(text).format("DD-MM-YYYY");
-                  return newDate;
-              } else {
-                  return null
-              }
+          <Column title="Ngày xuất hóa đơn cuối" key="ngayXuatHDCuoi" dataIndex="last_receipt_exported" render={(text) => {
+            if (text !== null) {
+              let newDate = moment(text).format("DD-MM-YYYY");
+              return newDate;
+            } else {
+              return null
+            }
           }}></Column>
-          <Column title="Ghi chú" dataIndex="note"></Column>
-          <Column title="Giá trị đã thanh toán (triệu)" fixed="right" render={(text)=>{
-              let total = text.total;
-              let total_completed = text.total_completed_payment;
-              return `${total_completed} / ${total}`
+          <Column title="Ghi chú" key="note" dataIndex="note"></Column>
+          <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" fixed="right" render={(text) => {
+            let total = text.total;
+            let total_completed = text.total_completed_payments;
+            return `${total_completed} / ${total}`
           }}></Column>
         </Table>
-    </div>
-  )
+      </div>
+    )
 }

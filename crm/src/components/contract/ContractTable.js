@@ -115,7 +115,8 @@ export default function ContractTable() {
                 <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
                     render={(text) => {
                         return text?.client_ID?.name
-                    }} />
+                    }} 
+                />
                 {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{
@@ -141,19 +142,15 @@ export default function ContractTable() {
                     filters={filterStatus}
                     filterSearch={true}
                     filterMode="menu"
-                    onFilter={(value, record) => { console.log(value, record) ;return record.status.toLowerCase().includes(value.toLowerCase()) }}
+                    onFilter={(value, record) => { return record.status.toLowerCase().includes(value.toLowerCase()) }}
                     title="Trạng thái" 
                     key="status"
                     render={(text) => {
                         return <span status={text.status.toLowerCase()}>{text.status}</span>
                     }} 
                 />
-                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text) => {
-                    return <span>{text.owner_name}</span>
-                }} />
-                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text) => {
-                    return <span>{text.creater_name}</span>
-                }} />
+                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="nguoiDauMoi" dataIndex="owner_name" />
+                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="nguoiTheoDoi" dataIndex="creater_name" />
                 <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
                     let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
                     return total + " VNĐ"
@@ -161,7 +158,7 @@ export default function ContractTable() {
                 {/** <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
                     return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
                 }} /> */}
-                <Column className="contract__table__thaotac" render={(text) => {
+                <Column className="contract__table__thaotac" key="thaoTac" render={(text) => {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {

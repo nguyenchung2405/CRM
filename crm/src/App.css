@@ -75,6 +75,10 @@ img.file, svg.file {
     display: flex;
 }
 
+.display__block {
+    display: block;
+}
+
 /* loading css */
 
 .loading {
@@ -1622,6 +1626,29 @@ svg.style__svg {
 }
 
 /* hết Event */
+/* ------------------------------------- */
+/* nghiệm thu */
+
+.detail__desc > div > input {
+    width: 525px;
+    padding: 9px 0 9px 9px;
+    color: #666666;
+    font-size: 15px;
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.acceptance__expand__table {
+    margin-left: 65px;
+}
+
+.acceptance__expand__table > li > div {
+    display: inline-block;
+    width: 15%;
+}
+
+
+/* Hết nghiệm thu */
 /* ------------------------- Responsive -------------------- */
 
 @media only screen and (max-width: 1280px){

@@ -1,21 +1,34 @@
 import { Modal, Radio } from 'antd'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { CREATE_ACCEPTANCE } from '../../title/title';
 import ContractContentModal from './ContractContentModal';
 import EventContentModal from './EventContentModal';
 
 export default function ReportModal(props) {
   
     const {isShowModal, setIsShowModal} = props; 
+    const dispatch = useDispatch();
     const [valueRadio, setValueRadio] = useState(false)
+    const [valueForm, setValueForm] = useState({});
+    const [isReset, setIsReset] = useState(false)
     
     const handleCancel = ()=>{
         setIsShowModal(false)
         setValueRadio(false)
+        setValueForm({});
+        setIsReset(true)
     }
 
     const handleOk = ()=>{
         setIsShowModal(false)
         setValueRadio(false)
+        dispatch({
+            type: CREATE_ACCEPTANCE,
+            data: valueForm
+        })
+        setValueForm({});
+        setIsReset(true)
     }
 
     const handleChangeRadio = (e)=>{
@@ -53,9 +66,17 @@ export default function ReportModal(props) {
                 {
                     !valueRadio
                         ?
-                        <ContractContentModal />
+                        <ContractContentModal
+                            valueForm={valueForm}
+                            setValueForm={setValueForm}
+                            isReset={isReset}
+                            setIsReset={setIsReset}
+                        />
                         :
-                        <EventContentModal />
+                        <EventContentModal
+                            valueForm={valueForm}
+                            setValueForm={setValueForm}
+                        />
                 }
             </div>
         </Modal>

@@ -1,22 +1,52 @@
 import React, { useEffect, useState } from 'react'
-import { DatePicker, Radio, Select } from 'antd'
+import { DatePicker, Radio, Select, Tooltip } from 'antd'
 import { GET_CONTRACT_LIST, GET_CONTRACT_DETAIL } from '../../title/title';
 import { useDispatch, useSelector } from 'react-redux';
+import { FcPlus } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
+import CreateDetail from './CreateDetail';
+import {AiFillMinusCircle} from "react-icons/ai"
+import moment from 'moment';
 
 export default function ContractContentModal(props) {
-
-    // const {renderContractOption, renderRequestOption} = props;
+    
+    const { valueForm, setValueForm, isReset, setIsReset} = props;
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {Option} = Select;
     const { contractList, contractRequest } = useSelector(state => state.contractReducer);
     const [valueRadio, setValueRadio] = useState(false)
-
+    const [detailList, setDetailList] = useState([]);
+    const [isCreateDetail, setIsCreateDetail] = useState(false);
+    
     useEffect(() => {
         dispatch({
             type: GET_CONTRACT_LIST,
             data: { page:1, pageNumber: 1000 }
         })
     }, [dispatch]);
+
+    useEffect(() => {
+        if (valueRadio) {
+            setValueForm({
+                ...valueForm,
+                completed_evidences: null
+            })
+        } else {
+            setValueForm({
+                ...valueForm,
+                files: null
+            })
+        }
+    }, [valueRadio]);
+
+    useEffect(()=>{
+        if(isReset){
+            setIsCreateDetail(false)
+            setValueRadio(false)
+            setIsReset(false)
+        }
+    }, [isReset])
 
     const renderContractOption = ()=>{
         return contractList.map(contract => {
@@ -29,10 +59,64 @@ export default function ContractContentModal(props) {
             return <Option key={request.id} value={request.id}>{`${request.product_ID.name}`}</Option>
         })
     }
+    
+    const renderDetailOption = ()=>{
+        return detailList.map(detail => {
+            return <Option key={detail.id} value={detail.id}>{`${detail.desc}`}</Option>
+        })
+    }
 
     const handleChangRadio = (e)=>{
         let {value} = e.target;
         setValueRadio(value)
+    }
+
+    const valueOfField = (name) => {
+        if(name === "report_date" || name === "from_date"){
+            if(valueForm[name] !== null && valueForm[name] !== undefined){
+                let newReportDate = moment(new Date(valueForm[name])).format("DD-MM-YYYY");
+                return moment(newReportDate, "DD-MM-YYYY");
+            }
+            return null;
+        }
+        if(valueForm[name] && valueForm[name] !== "" && valueForm[name] !== undefined){
+            return valueForm[name];
+        } else {
+            if(name === "completed_evidences" || name === "desc"){
+                return "";
+            }
+            return null;
+        }
+    }
+
+    const handleChangeValue = (name, value)=>{
+        setValueForm({
+            ...valueForm,
+            [name]: value
+        })
+    }
+
+    const renderInput = ()=>{
+        if (valueRadio) {
+            return <input type="file"
+                onChange={e => {
+                    let files = e.target.files;
+                    setValueForm({
+                        ...valueForm,
+                        files
+                    })
+                }}
+            />
+        } else {
+            return <input type="text"
+                name="completed_evidences"
+                value={valueOfField("completed_evidences")}
+                onChange={(e) => {
+                    let { name, value } = e.target;
+                    handleChangeValue(name, value)
+                }}
+            />
+        }
     }
 
     return (
@@ -46,12 +130,13 @@ export default function ContractContentModal(props) {
                         filterOption={(input, option) =>
                             (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
-                        // value={channelID}
+                        value={valueOfField("contract_id")}
                         onChange={(value) => {
                             dispatch({
                                 type: GET_CONTRACT_DETAIL,
                                 contract_id: value
                             });
+                            handleChangeValue("contract_id", value)
                         }}
                     >
                         {renderContractOption()}
@@ -67,15 +152,66 @@ export default function ContractContentModal(props) {
                         filterOption={(input, option) =>
                             (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
-                        // value={channelID}
+                        value={valueOfField("request_id")}
                         onChange={(value) => {
-
+                            let detailList = contractRequest.find(contract => contract.id === value);
+                            setDetailList(detailList.details)
+                            handleChangeValue("request_id", value)
                         }}
                     >
                         {renderRequestOption()}
                     </Select>
                 </div>
             </div>
+            <div className="modal__field field__select">
+                <div>
+                    <div style= {{ display: "flex", alignItems: "center" }}>
+                        <label className="term__label" style={{ marginRight: "10px" }}>Chi tiết quyền lợi</label>
+                        {!isCreateDetail
+                            ?
+                            <Tooltip title="Tạo chi tiết" color="green">
+                                <FcPlus onClick={() => {
+                                    setIsCreateDetail(true)
+                                }} />
+                            </Tooltip>
+                            :
+                            <Tooltip title="Hủy tạo chi tiết" color="red">
+                                <AiFillMinusCircle style={{ color:"red" }} onClick={() => {
+                                    setIsCreateDetail(false)
+                                }} />
+                            </Tooltip>
+                        }
+                    </div>
+                    <Select
+                        className="style"
+                        showSearch
+                        allowClear
+                        filterOption={(input, option) =>
+                            (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        value={valueOfField("detail_id")}
+                        onChange={(value) => {
+                            // handleChangeValue("detail_id", value)
+                            let detail = detailList.find(detail => detail.id === value)
+                            setValueForm({
+                                ...valueForm,
+                                ...detail,
+                                detail_id: value
+                            })
+                        }}
+                    >
+                        {renderDetailOption()}
+                    </Select>
+                </div>
+            </div>
+            {isCreateDetail
+                ?
+                <CreateDetail
+                    handleChangeValue={handleChangeValue}
+                    valueOfField={valueOfField}
+                />
+                : null
+            }
             <div className="modal__field field__select">
                 <div>
                     <label className="term__label">Ngày nghiệm thu</label>
@@ -98,9 +234,10 @@ export default function ContractContentModal(props) {
                         className="style report__date"
                         format={"DD-MM-YYYY"}
                         onChange={(date, dateString) => {
-
+                            let ngayNghiemThu = moment(dateString, "DD-MM-YYYY").toISOString();
+                            handleChangeValue("report_date", ngayNghiemThu)
                         }}
-                    // value={valueOfField("requestDate")}
+                        value={valueOfField("report_date")}
                     />
                 </div>
             </div>
@@ -109,13 +246,7 @@ export default function ContractContentModal(props) {
                     <Radio value={false}>Link</Radio>
                     <Radio value={true}>Ảnh</Radio>
                 </Radio.Group>
-                {
-                    valueRadio
-                        ?
-                        <input type="file" />
-                        :
-                        <input type="text" />
-                }
+                { renderInput() }
             </div>
         </div>
     )

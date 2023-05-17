@@ -1,7 +1,9 @@
 import { Table, Tooltip } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_ACCEPTANCE_CONTRACT_LIST } from '../../title/title';
+import ExpandTableAcceptance from './ExpandTableAcceptance';
 import ReportModal from './ReportModal';
 
 export default function Acceptance() {
@@ -11,7 +13,26 @@ export default function Acceptance() {
     const [isShowModal, setIsShowModal] = useState(false)
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
+    const [list, setList] = useState([])
+    const {requestAcceptanceList, totalRequestAccList} = useSelector(state => state.acceptanceReducer)
+    console.log(requestAcceptanceList, totalRequestAccList)
+    useEffect(()=>{
+        dispatch({
+            type: GET_ACCEPTANCE_CONTRACT_LIST,
+            data: {page, pageNumber}
+        })
+    }, [page, pageNumber])
 
+    useEffect(()=>{
+        let newList = requestAcceptanceList.map(item => {
+            return {
+                ...item,
+                key: item.id
+            }
+        });
+        setList(newList)
+    }, [requestAcceptanceList])
+    
     return (
         <div className="acceptance__table content">
             <ReportModal 
@@ -38,14 +59,22 @@ export default function Acceptance() {
                     </div>
                 </div >
                 <Table
-                    // dataSource={recieptList}
+                    dataSource={list}
+                    expandable={{
+                        showExpandColumn: true,
+                        // expandRowByClick: true,
+                        expandedRowRender: record => {
+                            return <ExpandTableAcceptance data={record.details} />
+                        },
+                        rowExpandable: (record) => record.details.length > 0,
+                    }}
                     pagination={{
                         position: ["bottomLeft"],
                         defaultPageSize: 10,
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
                         showSizeChanger: true,
-                        //   total: total,
+                        total: totalRequestAccList,
                         pageSizeOptions: [10, 50, 100],
                         onChange: (page, pageNumber) => {
                             setPageNumber(pageNumber);
@@ -62,26 +91,21 @@ export default function Acceptance() {
                         x: "max-content",
                     }}
                 >
+                    <Column title="Tên quyền lợi" fixed="left" render={(text) => {
+                        // console.log(text)
+                        return text.product_ID.name
+                    }}></Column>
                     <Column title="Tên sự kiên" fixed="left" render={(text) => {
                         console.log(text)
+                        return text.product_ID.name
                     }}></Column>
-                    <Column title="Tên khách hàng" fixed="left" render={(text) => text.client_ID.name}></Column>
-                    <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
-                    <Column title="Số đợt thanh toán" dataIndex="payment_count"></Column>
-                    <Column title="Hình thức thanh toán" render={(text) => {
-                        let soLanThanhToan = text.payment_type;
-                        let kieuThanhToan = text.pay_before_run ? "Trả trước" : "Trả sau";
-                        return `${soLanThanhToan} / ${kieuThanhToan}`
-                    }}></Column>
-                    <Column title="Số hóa đơn đã xuất" dataIndex="receipt_count"></Column>
-                    {/*<Column title="Số hóa đơn đã thanh toán" dataIndex="total_completed_payment"></Column> */}
-                    <Column title="Ngày xuất hóa đơn cuối" dataIndex="last_receipt_exported"></Column>
-                    <Column title="Ghi chú" dataIndex="note"></Column>
-                    <Column title="Giá trị đã thanh toán (triệu)" fixed="right" render={(text) => {
+                {/**
+            <Column title="Giá trị đã thanh toán (triệu)" fixed="right" render={(text) => {
                         let total = text.total;
                         let total_completed = text.total_completed_payment;
                         return `${total_completed} / ${total}`
                     }}></Column>
+                */}
                 </Table>
             </div>
         </div>

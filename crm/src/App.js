@@ -21,7 +21,6 @@ import SpecialProductTable from './components/product/special/SpecialProductTabl
 import CreateEvent from './components/contract/event/CreateEvent';
 import EventTable from './components/contract/event/EventTable';
 import ReceiptTable from './components/receipt/ReceiptTable';
-import ManageAcceptance from './components/acceptance/ManageAcceptance';
 import Acceptance from './components/acceptance/Acceptance';
 
 function App() {
@@ -50,8 +49,7 @@ function App() {
                 <Route path="/crm/event" element={<EventTable />} />
                 <Route path="/crm/event/:event_id" element={<CreateEvent />} />
                 <Route path="/crm/receipt" element={<ReceiptTable />} />
-                <Route path="/crm/acceptance/manage" element={<ManageAcceptance />} />
-                <Route path="/crm/acceptance/implementer" element={<Acceptance />} />
+                <Route path="/crm/acceptance/contract" element={<Acceptance />} />
               </Routes>
             </div>
           </BrowserRouter>
@@ -77,8 +75,7 @@ function App() {
               <Route path="/crm/event" element={<EventTable />} />
               <Route path="/crm/event/:event_id" element={<CreateEvent />} />
               <Route path="/crm/receipt" element={<ReceiptTable />} />
-              <Route path="/crm/acceptance/manage" element={<ManageAcceptance />} />
-              <Route path="/crm/acceptance/implementer" element={<Acceptance />} />
+              <Route path="/crm/acceptance/contract" element={<Acceptance />} />
             </Routes>
           </div>
         </Provider>
