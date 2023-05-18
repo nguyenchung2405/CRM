@@ -28,6 +28,32 @@ const createAcceptance = async (req, res)=>{
     }
 };
 
+const createEventAcceptance = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let newData ={
+            ...req.body,
+            "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
+            contract_IDs: req.body.contract_IDs.split(",").map(item => +item)
+        };
+        const result = await axios({
+            url: `${local}/event/executive_event_detail/update?executive_event_ID=${req.body.detail_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: newData
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 const createDetailInAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
@@ -46,6 +72,32 @@ const createDetailInAcceptance = async (req, res)=>{
         }
         const result = await axios({
             url: `${local}/contract/add-detail`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: newDetail
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const createDetailInEventAcceptance = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let newDetail = {
+            ...req.body,
+            "file": req?.file?.path,
+            "to_date": req.body.from_date
+        };
+        const result = await axios({
+            url: `${local}/event/executive_event_detail/create`,
             method: "POST",
             headers: {
                 Authorization: authorization
@@ -83,8 +135,32 @@ const getAcceptanceContractList = async (req, res)=>{
     }
 }
 
+const getAcceptanceEventList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {page, page_size} = req.query;
+        const result = await axios({
+            url: `${local}/event/detail/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     createAcceptance,
     createDetailInAcceptance,
-    getAcceptanceContractList
+    getAcceptanceContractList,
+    getAcceptanceEventList,
+    createDetailInEventAcceptance,
+    createEventAcceptance
 }

@@ -249,7 +249,6 @@ const getSelectRequestGeneral = async (req, res)=>{
 
 const updateRequest = async (req, res)=>{
     try {
-        console.log(req.query)
         let { headers: { authorization } } = req;
         let { id } = req.query;
         const result = await axios({
@@ -259,6 +258,48 @@ const updateRequest = async (req, res)=>{
                 Authorization: authorization
             },
             data: req.body
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const getEventRequestList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {id} = req.query;
+        const result = await axios({
+            url: `${local}/event/detail/list?event_ID=${id}&page_size=1000&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data);
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const getEventRequestContractList = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {event_id, detail_id} = req.query;
+        const result = await axios({
+            url: `${local}/event/list?id=${event_id}&detail_ID=${detail_id}&page_size=1000&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
         });
         res.send(result.data);
     } catch (error) {
@@ -282,5 +323,7 @@ module.exports = {
     addUnserContractToEvent,
     selectRequestGeneral,
     getSelectRequestGeneral,
-    updateRequest
+    updateRequest,
+    getEventRequestList,
+    getEventRequestContractList
 }

@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     requestAcceptanceList: [],
     totalRequestAccList: 0,
+    eventAcceptanceList: [],
+    totalEventAccList: 0,
 }
 
 const acceptanceSlice = createSlice({
@@ -14,9 +16,15 @@ const acceptanceSlice = createSlice({
         },
         setTotalRequestAccList: (state, action)=>{
             state.totalRequestAccList = action.payload;
+        },
+        setEventAccList: (state, action)=>{
+            state.eventAcceptanceList = action.payload;
+        },
+        setTotalEventAccList: (state, action)=>{
+            state.totalEventAccList = action.payload;
         }
     }
 })
 
-export const {setRequestAccList, setTotalRequestAccList} = acceptanceSlice.actions;
+export const {setRequestAccList, setTotalRequestAccList, setEventAccList, setTotalEventAccList} = acceptanceSlice.actions;
 export default acceptanceSlice.reducer;

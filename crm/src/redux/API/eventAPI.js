@@ -203,3 +203,35 @@ export async function updateRequestEventAPI(data){
         return "Fail"
     }
 }
+
+export async function getEventRequestListAPI(event_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/request-list?id=${event_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function getEventRequestContractListAPI(event_id, detail_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/request-contract?event_id=${event_id}&detail_id=${detail_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

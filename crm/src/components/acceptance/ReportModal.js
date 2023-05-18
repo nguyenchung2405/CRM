@@ -1,34 +1,49 @@
 import { Modal, Radio } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { CREATE_ACCEPTANCE } from '../../title/title';
+import { CREATE_ACCEPTANCE, CREATE_EVENT_ACCEPTANCE } from '../../title/title';
 import ContractContentModal from './ContractContentModal';
 import EventContentModal from './EventContentModal';
 
 export default function ReportModal(props) {
   
-    const {isShowModal, setIsShowModal} = props; 
+    const {isShowModal, setIsShowModal, eventMode} = props; 
     const dispatch = useDispatch();
     const [valueRadio, setValueRadio] = useState(false)
     const [valueForm, setValueForm] = useState({});
+    const [contracts, setContracts] = useState([]);
     const [isReset, setIsReset] = useState(false)
+
+    useEffect(()=>{
+        if(eventMode){
+            setValueRadio(true)
+        }
+    }, [eventMode])
     
     const handleCancel = ()=>{
         setIsShowModal(false)
-        setValueRadio(false)
         setValueForm({});
         setIsReset(true)
+        setContracts([])
     }
 
     const handleOk = ()=>{
+        if(!valueRadio){
+            dispatch({
+                type: CREATE_ACCEPTANCE,
+                data: valueForm
+            })
+        } else {
+            valueForm.contract_IDs = contracts
+            dispatch({
+                type: CREATE_EVENT_ACCEPTANCE,
+                data: valueForm
+            })
+        }
         setIsShowModal(false)
-        setValueRadio(false)
-        dispatch({
-            type: CREATE_ACCEPTANCE,
-            data: valueForm
-        })
         setValueForm({});
         setIsReset(true)
+        setContracts([])
     }
 
     const handleChangeRadio = (e)=>{
@@ -55,13 +70,15 @@ export default function ReportModal(props) {
             open={isShowModal}
             onCancel={handleCancel}
         >
-            <Radio.Group
+            { /*
+<Radio.Group
                 onChange={handleChangeRadio}
                 value={valueRadio}
             >
                 <Radio value={false}>Hợp đồng</Radio>
                 <Radio value={true}>Sự kiện</Radio>
             </Radio.Group>
+        */}
             <div className="modal__report__content modal__content">
                 {
                     !valueRadio
@@ -76,6 +93,8 @@ export default function ReportModal(props) {
                         <EventContentModal
                             valueForm={valueForm}
                             setValueForm={setValueForm}
+                            contracts={contracts}
+                            setContracts={setContracts}
                         />
                 }
             </div>

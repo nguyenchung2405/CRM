@@ -1,8 +1,8 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_ACCEPTANCE, GET_ACCEPTANCE_CONTRACT_LIST } from "../../title/title";
-import { createAcceptanceAPI, createDetailInAcceptanceAPI, getAcceptanceContractListAPI } from "../API/acceptanceAPI";
-import { setRequestAccList, setTotalRequestAccList } from "../features/acceptanceSlice";
+import { CREATE_ACCEPTANCE, CREATE_EVENT_ACCEPTANCE, GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST } from "../../title/title";
+import { createAcceptanceAPI, createDetailInAcceptanceAPI, createDetailInEventAcceptanceAPI, createEventAcceptanceAPI, getAcceptanceContractListAPI, getAcceptanceEventListAPI } from "../API/acceptanceAPI";
+import { setEventAccList, setRequestAccList, setTotalEventAccList, setTotalRequestAccList } from "../features/acceptanceSlice";
 
 function* createAcceptance(payload){
     try {
@@ -46,7 +46,43 @@ function* getAcceptanceContractList(payload){
     }
 }
 
+function* getAcceptanceEventList(payload){
+    try {
+        let {page, pageNumber} = payload.data;
+        const result = yield call(getAcceptanceEventListAPI, page, pageNumber);
+        yield put(setEventAccList(result.data.event_detail))
+        yield put(setTotalEventAccList(result.data.total_data))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* createEventAcceptance(payload){
+    try {
+        // console.log("data gôc", payload.data)
+        const resultDetail = yield call(createDetailInEventAcceptanceAPI, payload.data);
+        let newDataAcceptance = {
+            ...resultDetail.data.event_executive_detail,
+            files: payload.data.files,
+            completed_evidences: payload.data.completed_evidences,
+            contract_IDs: payload.data.contract_IDs,
+            detail_id: resultDetail.data.event_executive_detail.id,
+            report_date: payload.data.report_date
+        };
+        const result = yield call(createEventAcceptanceAPI, newDataAcceptance);
+        if(result.data.msg === "Updated successfully!"){
+            message.success("Tạo nghiệm thu thành công")
+        } else {
+            message.error("Tạo nghiệm thu thất bại")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* acceptanceMiddleware(){
     yield takeLatest(CREATE_ACCEPTANCE, createAcceptance)
     yield takeLatest(GET_ACCEPTANCE_CONTRACT_LIST, getAcceptanceContractList)
+    yield takeLatest(GET_ACCEPTANCE_EVENT_LIST, getAcceptanceEventList)
+    yield takeLatest(CREATE_EVENT_ACCEPTANCE, createEventAcceptance)
 }
