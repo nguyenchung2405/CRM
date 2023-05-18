@@ -1,24 +1,54 @@
 import { Table, Tooltip } from 'antd';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST } from '../../title/title';
+import ExpandTableAcceptance from './ExpandTableAcceptance';
+import ReportModal from './ReportModal';
 
-export default function ManageAcceptance() {
+export default function EventAcceptance() {
 
     const {Column} = Table;
     const dispatch = useDispatch();
+    const [isShowModal, setIsShowModal] = useState(false)
+    const [eventMode, setEventMode] = useState(false)
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
+    const [list, setList] = useState([])
+    const {eventAcceptanceList, totalEventAccList} = useSelector(state => state.acceptanceReducer)
+    // console.log(eventAcceptanceList, totalEventAccList)
+    useEffect(()=>{
+        dispatch({
+            type: GET_ACCEPTANCE_EVENT_LIST,
+            data: {page, pageNumber}
+        })
+    }, [page, pageNumber])
 
+    useEffect(()=>{
+        let newList = eventAcceptanceList.map(item => {
+            return {
+                ...item,
+                key: item.id
+            }
+        });
+        setList(newList)
+    }, [eventAcceptanceList])
+    
     return (
         <div className="acceptance__table content">
+            <ReportModal 
+            isShowModal={isShowModal}
+            setIsShowModal={setIsShowModal}
+            eventMode={eventMode}
+            />
             <div className="content reciept__table customer__table">
                 <div className="table__features">
                     <div className="table__features__add">
-                        <h1>Quản lý nghiệm thu</h1>
+                        <h1>Quản lý nghiệm thu sự kiện</h1>
                         <Tooltip title="Tạo nghiệm thu" color="green">
                             <FcPlus style={{ marginRight: "5px" }} onClick={() => {
-
+                                setIsShowModal(true)
+                                setEventMode(true)
                             }} />
                         </Tooltip>
                     </div>
@@ -32,14 +62,22 @@ export default function ManageAcceptance() {
                     </div>
                 </div >
                 <Table
-                    // dataSource={recieptList}
+                    dataSource={list}
+                    expandable={{
+                        showExpandColumn: true,
+                        // expandRowByClick: true,
+                        expandedRowRender: record => {
+                            return <ExpandTableAcceptance data={record.executive_details} />
+                        },
+                        rowExpandable: (record) => record.executive_details.length > 0,
+                    }}
                     pagination={{
                         position: ["bottomLeft"],
                         defaultPageSize: 10,
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
                         showSizeChanger: true,
-                        //   total: total,
+                        total: totalEventAccList,
                         pageSizeOptions: [10, 50, 100],
                         onChange: (page, pageNumber) => {
                             setPageNumber(pageNumber);
@@ -56,25 +94,12 @@ export default function ManageAcceptance() {
                         x: "max-content",
                     }}
                 >
-                    <Column title="Tên sự kiên" fixed="left" render={(text) => {
-                        console.log(text)
+                    <Column title="Tên quyền lợi" fixed="left" render={(text) => {
+                        // console.log(text)
+                        return text.product_ID
                     }}></Column>
-                    <Column title="Tên khách hàng" fixed="left" render={(text) => text.client_ID.name}></Column>
-                    <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
-                    <Column title="Số đợt thanh toán" dataIndex="payment_count"></Column>
-                    <Column title="Hình thức thanh toán" render={(text) => {
-                        let soLanThanhToan = text.payment_type;
-                        let kieuThanhToan = text.pay_before_run ? "Trả trước" : "Trả sau";
-                        return `${soLanThanhToan} / ${kieuThanhToan}`
-                    }}></Column>
-                    <Column title="Số hóa đơn đã xuất" dataIndex="receipt_count"></Column>
-                    {/*<Column title="Số hóa đơn đã thanh toán" dataIndex="total_completed_payment"></Column> */}
-                    <Column title="Ngày xuất hóa đơn cuối" dataIndex="last_receipt_exported"></Column>
-                    <Column title="Ghi chú" dataIndex="note"></Column>
-                    <Column title="Giá trị đã thanh toán (triệu)" fixed="right" render={(text) => {
-                        let total = text.total;
-                        let total_completed = text.total_completed_payment;
-                        return `${total_completed} / ${total}`
+                    <Column fixed="right" render={(text) => {
+                        
                     }}></Column>
                 </Table>
             </div>

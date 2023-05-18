@@ -119,7 +119,6 @@ export default function TermModalEvent(props) {
       }
     } else {
       // Khi cập nhật thì PUT riêng từng API
-      console.log(isUpdateModal, valueModal)
       if (!isUpdateModal) {
         valueModal.event_ID = event_id;
         dispatch({

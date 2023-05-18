@@ -5,6 +5,7 @@ import productMiddleware from "./middleware/product.middleware";
 import groupChannelMiddleware from "./middleware/groupChannel.middleware";
 import EventMiddleware from "./middleware/event.middleware";
 import receiptMiddleware from "./middleware/receipt.middleware";
+import acceptanceMiddleware from "./middleware/acceptance.middleware";
 
 export default function* rootSaga() {
     yield all([
@@ -13,6 +14,7 @@ export default function* rootSaga() {
         call(productMiddleware),
         call(groupChannelMiddleware),
         call(EventMiddleware),
-        call(receiptMiddleware)
+        call(receiptMiddleware),
+        call(acceptanceMiddleware)
     ])
 }

@@ -1,32 +1,50 @@
 import React, { useEffect, useState } from 'react'
 import { DatePicker, Radio, Select } from 'antd'
-import { GET_CONTRACT_LIST, GET_CONTRACT_DETAIL } from '../../title/title';
+import { GET_CONTRACT_DETAIL, GET_EVENT_LIST, GET_EVENT_REQUEST_CONTRACT_LIST, GET_EVENT_REQUEST_LIST, GET_REQUEST_OF_EVENT } from '../../title/title';
 import { useDispatch, useSelector } from 'react-redux';
+import CreateDetail from './CreateDetail';
+import moment from 'moment';
 
 export default function EventContentModal(props) {
 
-    // const {renderContractOption, renderRequestOption} = props;
+    const {valueForm, setValueForm, contracts, setContracts} = props;
     const dispatch = useDispatch();
     const {Option} = Select;
     const { contractList, contractRequest } = useSelector(state => state.contractReducer);
+    const { eventList, requestOfEventAcc, eventRequestContractList } = useSelector(state => state.eventReducer);
     const [valueRadio, setValueRadio] = useState(false)
-
+    
     useEffect(() => {
         dispatch({
-            type: GET_CONTRACT_LIST,
-            data: { page:1, pageNumber: 1000 }
-        })
+            type: GET_EVENT_LIST,
+            data: { page: 1, pageNumber: 1000 }
+        });
     }, [dispatch]);
 
-    const renderContractOption = ()=>{
-        return contractList.map(contract => {
-            return <Option key={contract.id} value={contract.id}>{`${contract.client_ID.name} - ${contract.contract_number}`}</Option>
+    useEffect(()=>{
+        if(valueForm.event_id && valueForm.detail_id){
+            dispatch({
+                type: GET_EVENT_REQUEST_CONTRACT_LIST,
+                data: {event_id: valueForm.event_id, detail_id: valueForm.detail_id}
+            })
+        }
+    }, [valueForm.event_id, valueForm.detail_id])
+
+    const renderEventOption = ()=>{
+        return eventList.map(event => {
+            return <Option key={event.id} value={event.id}>{`${event.name}`}</Option>
         })
     }
 
     const renderRequestOption = ()=>{
-        return contractRequest.map(request => {
-            return <Option key={request.id} value={request.id}>{`${request.product_ID.name}`}</Option>
+        return requestOfEventAcc.map(request => {
+            return <Option key={request.id} value={request.id}>{`${request.product_name}`}</Option>
+        })
+    }
+
+    const renderContractOption = ()=>{
+        return eventRequestContractList.map(contract => {
+            return <Option key={contract.contract_ID} value={contract.contract_ID}>{`${contract.client_name} - ${contract.has_detail ? "Có chọn" : "Không chọn"}`}</Option>
         })
     }
 
@@ -35,26 +53,75 @@ export default function EventContentModal(props) {
         setValueRadio(value)
     }
 
+    const renderInput = ()=>{
+        if (valueRadio) {
+            return <input type="file"
+                onChange={e => {
+                    let files = e.target.files;
+                    setValueForm({
+                        ...valueForm,
+                        files
+                    })
+                }}
+            />
+        } else {
+            return <input type="text"
+                name="completed_evidences"
+                value={valueOfField("completed_evidences")}
+                onChange={(e) => {
+                    let { name, value } = e.target;
+                    handleChangeValue(name, value)
+                }}
+            />
+        }
+    }
+
+    const handleChangeValue = (name, value)=>{
+        setValueForm({
+            ...valueForm,
+            [name]: value
+        })
+    }
+
+    const valueOfField = (name) => {
+        if(name === "report_date" || name === "from_date"){
+            if(valueForm[name] !== null && valueForm[name] !== undefined){
+                let newReportDate = moment(new Date(valueForm[name])).format("DD-MM-YYYY");
+                return moment(newReportDate, "DD-MM-YYYY");
+            }
+            return null;
+        }
+        if(valueForm[name] && valueForm[name] !== "" && valueForm[name] !== undefined){
+            return valueForm[name];
+        } else {
+            if(name === "completed_evidences" || name === "desc"){
+                return "";
+            }
+            return null;
+        }
+    }
+
     return (
         <div>
             <div className="modal__field field__select">
                 <div>
-                    <label className="term__label">Hợp đồng</label>
+                    <label className="term__label">Sự kiện</label>
                     <Select
                         className="style"
                         showSearch
                         filterOption={(input, option) =>
                             (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
-                        // value={channelID}
+                        value={valueOfField("event_id")}
                         onChange={(value) => {
                             dispatch({
-                                type: GET_CONTRACT_DETAIL,
-                                contract_id: value
+                                type: GET_EVENT_REQUEST_LIST,
+                                event_id: value
                             });
+                            handleChangeValue("event_id", value)
                         }}
                     >
-                        {renderContractOption()}
+                        {renderEventOption()}
                     </Select>
                 </div>
             </div>
@@ -67,15 +134,38 @@ export default function EventContentModal(props) {
                         filterOption={(input, option) =>
                             (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
                         }
-                        // value={channelID}
+                        value={valueOfField("detail_id")}
                         onChange={(value) => {
-
+                            handleChangeValue("detail_id", value)
                         }}
                     >
                         {renderRequestOption()}
                     </Select>
                 </div>
             </div>
+            <div className="modal__field field__select">
+                <div>
+                    <label className="term__label">Nhà tài trợ</label>
+                    <Select
+                        className="style"
+                        showSearch
+                        mode="multiple"
+                        filterOption={(input, option) =>
+                            (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                        }
+                        value={contracts}
+                        onChange={(value) => {
+                            setContracts(value)
+                        }}
+                    >
+                        {renderContractOption()}
+                    </Select>
+                </div>
+            </div>
+            <CreateDetail
+                handleChangeValue={handleChangeValue}
+                valueOfField={valueOfField}
+            />
             <div className="modal__field field__select">
                 <div>
                     <label className="term__label">Ngày nghiệm thu</label>
@@ -98,9 +188,10 @@ export default function EventContentModal(props) {
                         className="style report__date"
                         format={"DD-MM-YYYY"}
                         onChange={(date, dateString) => {
-
+                            let ngayNghiemThu = moment(dateString, "DD-MM-YYYY").toISOString();
+                            handleChangeValue("report_date", ngayNghiemThu)
                         }}
-                    // value={valueOfField("requestDate")}
+                        value={valueOfField("report_date")}
                     />
                 </div>
             </div>
@@ -109,13 +200,7 @@ export default function EventContentModal(props) {
                     <Radio value={false}>Link</Radio>
                     <Radio value={true}>Ảnh</Radio>
                 </Radio.Group>
-                {
-                    valueRadio
-                        ?
-                        <input type="file" />
-                        :
-                        <input type="text" />
-                }
+                { renderInput() }
             </div>
         </div>
     )
