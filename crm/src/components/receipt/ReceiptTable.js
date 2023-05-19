@@ -2,8 +2,11 @@ import { Table, Tooltip } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
+import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
+import ExportReceiptModal from './ExportReceiptModal';
+import HandleFeatures from './HandleFeatures';
 
 export default function ReceiptTable() {
 
@@ -12,6 +15,7 @@ export default function ReceiptTable() {
     const { total, recieptList } = useSelector(state => state.receiptReducer);
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
+    const [isShowModal, setIsShowModal] = useState(false)
   
     useEffect(() => {
       dispatch({
@@ -23,6 +27,15 @@ export default function ReceiptTable() {
 
     return (
       <div className="content reciept__table customer__table">
+        {
+          /**
+           <ExportReceiptModal
+          isShowModal={isShowModal}
+          setIsShowModal={setIsShowModal}
+        /> 
+           
+           */
+        }
         <div className="table__features">
           <div className="table__features__add">
             <h1>Quản lý hóa đơn</h1>
@@ -88,10 +101,21 @@ export default function ReceiptTable() {
             }
           }}></Column>
           <Column title="Ghi chú" key="note" dataIndex="note"></Column>
-          <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" fixed="right" render={(text) => {
+          <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" render={(text) => {
             let total = text.total;
             let total_completed = text.total_completed_payments;
             return `${total_completed} / ${total}`
+          }}></Column>
+          <Column key="thaoTac" fixed="right" render={(text) => {
+            return <div className="table__thaotac">
+              <Tooltip title="Yêu cầu thanh toán" color="green" >
+                <MdOutlineModeEditOutline className="style__svg" onClick={() => {
+
+                  // navigate(`${uri}/crm/customer/update/${text.id}`)
+                }} />
+              </Tooltip>
+              <HandleFeatures setIsShowModal={setIsShowModal} />
+            </div>
           }}></Column>
         </Table>
       </div>

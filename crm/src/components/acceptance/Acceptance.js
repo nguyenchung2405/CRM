@@ -93,10 +93,13 @@ export default function Acceptance() {
                         x: "max-content",
                     }}
                 >
+                    <Column title="Khách hàng" dataIndex="client_name"></Column>
+                    <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
                     <Column title="Tên quyền lợi" fixed="left" render={(text) => {
                         // console.log(text)
                         return text.product_ID.name
                     }}></Column>
+                    <Column title="Số lượng" dataIndex="quality"></Column>
                     <Column fixed="right" render={(text) => {
                         
                     }}></Column>
