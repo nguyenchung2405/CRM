@@ -94,10 +94,9 @@ export default function EventAcceptance() {
                         x: "max-content",
                     }}
                 >
-                    <Column title="Tên quyền lợi" fixed="left" render={(text) => {
-                        // console.log(text)
-                        return text.product_ID
-                    }}></Column>
+                    <Column title="Tên sự kiện" fixed="left" dataIndex="event_name" ></Column>
+                    <Column title="Tên quyền lợi" fixed="left" dataIndex="product_name" ></Column>
+                    <Column title="Số lượng" fixed="left" dataIndex="quantity" ></Column>
                     <Column fixed="right" render={(text) => {
                         
                     }}></Column>

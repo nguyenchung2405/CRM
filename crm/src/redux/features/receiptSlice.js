@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     total: 0,
-    recieptList: []
+    recieptList: [],
 }
 
 const receiptSlice = createSlice({
