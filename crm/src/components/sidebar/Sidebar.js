@@ -39,15 +39,12 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/product`}>Sản phẩm</Link>, "14", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
-<<<<<<< HEAD
             
-=======
             getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
             getItem("Quản lý nghiệm thu", "21", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
             ]),
->>>>>>> 412f605cacca021d786163b719270d67a253f27e
         ])
     ]
 
