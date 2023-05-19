@@ -34,7 +34,7 @@ export default function ExportReceiptModal(props) {
                         <span>Hủy</span>
                     </button>
                     <button type="button" className="ant-btn ant-btn-default btn__add" onClick={handleOk} >
-                        <span>Thêm</span>
+                        <span>Xuất</span>
                     </button>
                 </div>
             }
