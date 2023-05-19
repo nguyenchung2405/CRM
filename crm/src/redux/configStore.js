@@ -7,6 +7,9 @@ import messageSlice from "./features/messageSlice";
 import contractSlice from "./features/contractSlice";
 import productSlice from "./features/productSlice";
 import groupChannelSlice from "./features/groupChannelSlice";
+import eventSlice from "./features/eventSlice";
+import receiptSlice from "./features/receiptSlice";
+import acceptanceSlice from "./features/acceptanceSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -17,7 +20,10 @@ export const store = configureStore({
         messageReducer: messageSlice,
         contractReducer: contractSlice,
         productReducer: productSlice,
-        groupChannelReducer: groupChannelSlice
+        groupChannelReducer: groupChannelSlice,
+        eventReducer: eventSlice,
+        receiptReducer: receiptSlice,
+        acceptanceReducer: acceptanceSlice
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(sagaMiddleware)

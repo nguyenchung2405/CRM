@@ -32,13 +32,22 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/customer`}>Khách hàng</Link>, "16", <FcDepartment />),
             ]),
             getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
+            getItem(<Link to={`${uri}/crm/event`}>Quản lý sự kiện</Link>, "20", <FcDepartment />),
             getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/channel`}>Kênh, nhóm</Link>, "15", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/type-att`}>Loại, thuộc tính</Link>, "13", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product`}>Sản phẩm</Link>, "14", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
+<<<<<<< HEAD
             
+=======
+            getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
+            getItem("Quản lý nghiệm thu", "21", <FcDepartment />, [
+                getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
+            ]),
+>>>>>>> 412f605cacca021d786163b719270d67a253f27e
         ])
     ]
 
@@ -77,6 +86,9 @@ export default function Sidebar() {
                                 <NavLink to="/crm/contract">Quản lý hợp đồng</NavLink>
                             </li>
                             <li>
+                                <NavLink to="/crm/event">Quản lý sự kiện</NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/crm/product">Quản lý sản phẩm</NavLink>
                             </li>
                             <li>
@@ -89,6 +101,15 @@ export default function Sidebar() {
                                 <NavLink to="/crm/product/special">Quản lý sản phẩm đặc biệt</NavLink>
                             </li>
                             
+                            <li>
+                                <NavLink to="/crm/receipt">Quản lý hóa đơn</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/acceptance/contract">Nghiệm thu HĐ</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/crm/acceptance/event">Nghiệm thu sự kiện</NavLink>
+                            </li>
                         </ul>
                             
                     </div>

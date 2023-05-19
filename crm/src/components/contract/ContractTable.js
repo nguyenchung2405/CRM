@@ -49,14 +49,29 @@ export default function ContractTable() {
         }
     }
 
+    const filterStatus = [
+        {
+            text: "Đang chạy",
+            value: "Đang chạy"
+        },
+        {
+            text: "Kết thúc",
+            value: "Kết thúc"
+        },
+        {
+            text: "Chưa chạy",
+            value: "Chưa chạy"
+        },
+    ]
+
     return (
         <div className="content contract__table customer__table">
             {showLoading()}
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý hợp đồng</h1>
-                    <Tooltip title="Tạo" color="green">
-                        <FcPlus onClick={() => {
+                    <Tooltip title="Tạo hợp đồng" color="green">
+                        <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                             navigate(`${uri}/crm/contract/create`)
                             dispatch(setIsOnlyPayment(false));
                         }} />
@@ -100,7 +115,8 @@ export default function ContractTable() {
                 <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
                     render={(text) => {
                         return text?.client_ID?.name
-                    }} />
+                    }} 
+                />
                 {/**
             <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
             render={(text)=>{
@@ -122,29 +138,27 @@ export default function ContractTable() {
                         let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
                         return `${batDau} - ${ketThuc}`
                     }} />
-                <Column className="contract__table__status" title="Trạng thái" key="status" render={(text) => {
-                    if(text.status){
-                        return <span status={"đang chạy"}>Đang chạy</span>
-                    } else if(!text.status){
-                        return <span status={"kết thúc"}>Kết thúc</span>
-                    } else {
-                        return <span status={"chưa chạy"}>Chưa chạy</span>
-                    }
-                }} />
-                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="status" render={(text) => {
-                    return <span>{text.owner_name}</span>
-                }} />
-                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="status" render={(text) => {
-                    return <span>{text.creater_name}</span>
-                }} />
+                <Column className="contract__table__status" 
+                    filters={filterStatus}
+                    filterSearch={true}
+                    filterMode="menu"
+                    onFilter={(value, record) => { return record.status.toLowerCase().includes(value.toLowerCase()) }}
+                    title="Trạng thái" 
+                    key="status"
+                    render={(text) => {
+                        return <span status={text.status.toLowerCase()}>{text.status}</span>
+                    }} 
+                />
+                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="nguoiDauMoi" dataIndex="owner_name" />
+                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="nguoiTheoDoi" dataIndex="creater_name" />
                 <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
                     let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
                     return total + " VNĐ"
                 }} />
-                <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
+                {/** <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
                     return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
-                }} />
-                <Column className="contract__table__thaotac" render={(text) => {
+                }} /> */}
+                <Column className="contract__table__thaotac" key="thaoTac" render={(text) => {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {

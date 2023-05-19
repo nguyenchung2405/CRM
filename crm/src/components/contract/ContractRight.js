@@ -7,6 +7,10 @@ import axios from "axios"
 import { CREATE_DETAIL, local, UPDATE_DETAIL } from '../../title/title';
 import ViewPDF from '../ViewPDF';
 import { checkMicroFe } from '../../untils/helper';
+import pdf from "../../img/pdf.png";
+import {FcImageFile} from "react-icons/fc"
+import ViewDoc from '../ViewDoc';
+import word from "../../img/doc.png"
 
 function convertLegacyProps(data){
     try {
@@ -40,6 +44,7 @@ export default function ContractRight(props) {
     const {keyOfDetailJustAdd, keyOfRequestJustAdd} = useSelector(state => state.contractReducer)
     const [requestId, setRequestId] = useState();
     const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowModalWord, setIsShowModalWord] = useState(false);
     const [file, setFile] = useState("");
     const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
@@ -210,6 +215,25 @@ export default function ContractRight(props) {
             editable: true,
             dataIndex: "file",
             title: "File",
+            render: (_,record)=>{
+              if(record.file?.includes("doc") || record.file?.includes("docx")){
+                // return <a className="dowload__file" href={uri_file + record.file}>Tải file word</a>
+                return <img className="file" src={word} alt="xem word" onClick={()=>{
+                        setIsShowModalWord(true)
+                        setFile(uri_file + record.file)
+                }} />
+              } else if(record.file?.includes("pdf")) {
+                return <img className="file" src={pdf} alt="xem pdf" onClick={()=>{
+                        setIsShowModal(true)
+                        setFile(uri_file + record.file)
+                }} />
+              } else {
+                return <FcImageFile className="file" onClick={()=>{
+                  setFile(uri_file + record.file)
+                  setImageVisible(true)
+                }} />
+              }
+            }
         },
         {
             className: "thaoTac",
@@ -234,6 +258,7 @@ export default function ContractRight(props) {
                 <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                   Sửa
                 </Typography.Link>
+                {/**
                 <Typography.Link onClick={()=>{
                   if(record.file.includes("doc") || record.file.includes("docx")){
                     // return <a className="dowload__file" href={uri_file + record.file}>Tải file word</a>
@@ -245,6 +270,7 @@ export default function ContractRight(props) {
                       setImageVisible(true)
                   }
                 }}>Xem</Typography.Link>
+              */}
                 </>
               );
             }
@@ -286,6 +312,7 @@ export default function ContractRight(props) {
            
         </Table>
         <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+        <ViewDoc showModal={isShowModalWord} setIsShowModal={setIsShowModalWord} word={file} />
         <Image 
           style={{
             display: 'none',

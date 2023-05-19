@@ -57,6 +57,28 @@ p.required__field {
     transform: translateX(33%);
 }
 
+img.file, svg.file {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.view__doc .ant-modal-content {
+    width: 100%;
+}
+
+.padding_30px {
+    padding-left: 30px;
+}
+
+.display__flex {
+    display: flex;
+}
+
+.display__block {
+    display: block;
+}
+
 /* loading css */
 
 .loading {
@@ -614,7 +636,8 @@ div.modal__content .modal__field__select label {
     padding-left: 9px;
 }
 
-.create__customer div.modal__content div.modal__field__select div.customer__select div.ant-select-selector {
+.create__customer div.modal__content div.modal__field__select div.customer__select div.ant-select-selector,
+div.modal__content div.customer__select div.ant-select-selector {
     border: none;
     border-color: transparent;
     box-shadow: none;
@@ -645,11 +668,46 @@ div.modal__content .modal__field .ant-picker .ant-picker-input {
     width: 44%;
 }
 
+div.modal__report__content .modal__field .ant-radio-group {
+    width: min-content;
+}
+
+div.modal__report__content .modal__field .ant-radio-group .ant-radio input {
+    width: min-content;
+}
+
+.reciept__table .receipt__tabel__event__name {
+    padding-left: 30px;
+}
+
+div.modal__report__content .modal__field.modal__report__upload input {
+    width: 459.61px;
+    overflow: hidden;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker {
+    box-shadow: none;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker:hover {
+    border-color: #CCCCCC;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker .ant-picker-input {
+    width: 100%;
+}
+
+div.modal__content .modal__field.field__select .report__date.ant-picker .ant-picker-input input {
+    border-radius: 0;
+    border: none;
+}
+
 div.modal__content .modal__field .ant-picker .ant-picker-clear {
     top: 36%;
 }
 
-div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector {
+div.modal__content .modal__field.field__select>div div.ant-select .ant-select-selector,
+div.ant-modal-body div.modal__content div.ant-select.customer__select div.ant-select-selector {
     border: none;
     padding: 0;
     box-shadow: none;
@@ -924,7 +982,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__contactInfor,
 .create__contract .create__contract__value,
 .create__contract .create__contract__payment,
-.create__contract .create__contract__term {
+.create__contract .create__contract__term,
+.create__contract .create__contract__chiTieu {
     padding: 23px 0 36px 118px;
 }
 
@@ -932,9 +991,35 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__value p,
 .create__contract .create__contract__payment .display__flex,
-.create__contract .create__contract__term .display__flex {
+.create__contract .create__contract__term .display__flex,
+.create__contract .create__contract__chiTieu .display__flex {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex {
+    display: flex;
+    align-items: center;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > p{
+    margin-right: 14px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > input {
+    width: 262px;
+}
+
+.create__contract .create__contract__chiTieu .display__flex > input:first-child{
+    margin-right: 54px;
+}
+
+.create__contract .create__contract__value p {
+    margin-bottom: 0px;
+}
+
+.create__contract .create__contract__payment p {
     margin-bottom: 20px;
 }
 
@@ -1046,6 +1131,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     pointer-events: none;
 }
 
+.create__contract .create__contract__inforContract .field__input>div.contract__field label#soHD {
+    top: 31px;
+}
+
+.create__contract .create__contract__inforContract .field__input>div.contract__field input:not([value=""]) ~ label#soHD,
+.create__contract .create__contract__inforContract .field__input>div.contract__field input:focus ~ label#soHD {
+    top: 9px;
+}
+
 .create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2 {
     display: block;
 }
@@ -1062,8 +1156,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 .create__contract__value .field__input_3 .contract__field {
-    width: 265px;
-    margin-right: 59.05px;
+    width: 200px;
+    margin-right: 39px;
     position: relative;
     display: inline-block;
 }
@@ -1176,13 +1270,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 
 .create__contract .create__contract__contactInfor .display__flex>p,
 .create__contract .create__contract__payment .display__flex>p,
-.create__contract .create__contract__term .display__flex>p {
+.create__contract .create__contract__term .display__flex>p,
+.create__contract .create__contract__value .display__flex>p {
     margin-right: 14px;
 }
 
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__payment .display__flex,
-.create__contract .create__contract__term .display__flex {
+.create__contract .create__contract__term .display__flex,
+.create__contract .create__contract__value .display__flex {
     display: flex;
     align-items: center;
 }
@@ -1277,7 +1373,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 .create__contract__payment .soDotThanhToan > select {
     font-size: 18px;
     color: #666666;
-    width: 110px;
+    width: fit-content;
 }
 
 .create__contract .create__contract__term table {
@@ -1504,10 +1600,6 @@ svg.style__svg {
     line-height: 40px;
 }
 
-.antd__auto__complete__style .ant-select-selector .ant-select-selection-search {
-    
-}
-
 .antd__auto__complete__style .ant-select-selector .ant-select-selection-search input.ant-select-selection-search-input {
     
     border-radius: 3px;
@@ -1518,6 +1610,45 @@ svg.style__svg {
 
 /* Hết CSS create contract */
 /* ----------------------------------------------------- */
+/* CSS event */
+
+.event__table .event__table__name {
+    padding-left: 30px;
+}
+
+.event__donors > ol {
+    padding-left: 30px;
+    margin-top: 15px;
+}
+
+.event__donors > ol > a {
+    color: black;
+}
+
+/* hết Event */
+/* ------------------------------------- */
+/* nghiệm thu */
+
+.detail__desc > div > input {
+    width: 525px;
+    padding: 9px 0 9px 9px;
+    color: #666666;
+    font-size: 15px;
+    border: none;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.acceptance__expand__table {
+    margin-left: 65px;
+}
+
+.acceptance__expand__table > li > div {
+    display: inline-block;
+    width: 15%;
+}
+
+
+/* Hết nghiệm thu */
 /* ------------------------- Responsive -------------------- */
 
 @media only screen and (max-width: 1280px){

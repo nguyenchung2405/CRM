@@ -28,7 +28,8 @@ export async function createCustomerAPI(dataCustomer){
             url: `${local}/api/client/create`,
             method: "POST",
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "multipart/form-data",
+                Authorization: "Bearer " + TOKEN
             },
             data: form
         });
@@ -102,7 +103,7 @@ export async function getCustomerTypeListAPI(data){
 export async function getJobTypeListAPI(data){
     try {
         const { page , page_size , name , sort_by , asc_order } = data
-        console.log({page , page_size , name , sort_by , asc_order});
+        // console.log({page , page_size , name , sort_by , asc_order});
         const result = await axios({
             method: "POST",
             url: `${local}/api/client/job-type-list?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,

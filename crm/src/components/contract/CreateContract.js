@@ -1,8 +1,8 @@
-import { DatePicker, Table, Select, Progress, message } from "antd";
+import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
 import { setMessage } from "../../redux/features/messageSlice";
+import RequestEvent from "./RequestEvent";
 
 export default function CreateContract() {
 
@@ -28,17 +29,24 @@ export default function CreateContract() {
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, isOnlyPayment } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
+  const { eventList, requestOfEvent, selectRequest } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({});
+  const [valueForm, setValueForm] = useState({deal_out: true, payment_type: "Nhiều đợt", pay_before_run: true, discount_over_contract: 0});
   const [soTien, setSoTien] = useState(null)
+  const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
-  const [countPayment, setCountPayment] = useState();
-  
+  const [unlockInput, setUnlockInput] = useState(true);
+  const [selectGeneralRequest, setSelectGeneralRequest] = useState([]);
+
   useEffect(() => {
+    dispatch({
+      type: GET_EVENT_LIST,
+      data: { page: 1, pageNumber: 1000 }
+    });
     dispatch({
       type: GET_CUSTOMER_LIST,
       data: { page: 1, pageNumber: 1000 }
@@ -67,25 +75,15 @@ export default function CreateContract() {
   }, [contract_id, customerList, valueForm])
 
   useEffect(() => {
-    let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
-    // if(dataContract && dataOfTable){
-    //   setValueForm({...dataContract})
-    //   setDataTable([...dataOfTable])
-    // }
-    if (dataContract) {
-      setValueForm({ ...dataContract })
-    }
-    if(payments){
-      setDotThanhToan(payments)
-    }
-  }, [contractDetail])
-
-  useEffect(() => {
     if (contract_id && typeof +contract_id === "number") {
       dispatch({
         type: GET_CONTRACT_DETAIL,
         contract_id
       });
+      dispatch({
+        type: GET_SELECT_REQUEST_GENERAL,
+        contract_id
+      })
       dispatch(setIsLoading(true))
     }
   }, [contract_id])
@@ -100,6 +98,40 @@ export default function CreateContract() {
         dispatch(setMessage({}))
     }
 }, [messageAlert])
+
+  useEffect(() => {
+    setValueForm({
+      ...valueForm,
+      total: showGiaTriThucHien("total") * 1000000
+    })
+  }, [contractRequest])
+
+  useEffect(() => {
+    let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
+    // if(dataContract && dataOfTable){
+    //   setValueForm({...dataContract})
+    //   setDataTable([...dataOfTable])
+    // }
+    if (dataContract) {
+      setValueForm({ ...dataContract })
+    }
+    if (payments) {
+      setDotThanhToan(payments)
+    }
+  }, [contractDetail])
+
+  useEffect(() => {
+    if (typeof valueForm.event_ID === "number") {
+      dispatch({
+        type: GET_REQUEST_OF_EVENT,
+        event_id: valueForm.event_ID
+      })
+    }
+  }, [valueForm.event_ID])
+
+  useEffect(()=>{
+    setSelectGeneralRequest([...selectRequest])
+  }, [selectRequest])
 
   const convertContractRequest = () => {
     return contractRequest?.map(request => {
@@ -133,9 +165,21 @@ export default function CreateContract() {
       let customerInfor = customerList.find(client => client.id === value);
       setCustomerInfor({ ...customerInfor })
     }
-    if (name !== "" && name.length > 0) {
+    if(name === "contract_type_id"){
+      if(value !== 4){
+        setValueForm({
+          ...valueForm,
+          event_ID: null,
+          [name]: value
+        })
+      } else {
+        setValueForm({ ...valueForm, [name]: value })
+      }
+    }
+    if (name !== "" && name.length > 0 && name !== "contract_type_id") {
       setValueForm({ ...valueForm, [name]: value })
     }
+    
   };
 
   const renderLoaiHopDong = () => {
@@ -143,6 +187,12 @@ export default function CreateContract() {
       return <Option value={+item.id}>{item.name}</Option>
     });
   }
+
+  const renderEventOption = ()=>{
+    return eventList.map(item => {
+      return <Option value={item.id}>{item.name}</Option>
+    })
+  };
 
   const valueOfField = (name) => {
     if (name === "rangePicker") {
@@ -157,13 +207,20 @@ export default function CreateContract() {
         return [null, null]
       }
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
+    } else if(name === "requestDate"){
+      if(requestDate !== null){
+        let newRequestDate = moment(new Date(requestDate)).format("DD-MM-YYYY")
+        return moment(newRequestDate, "DD-MM-YYYY");
+      }
+      return null
     } else {
-      // if (valueForm[name] && name !== "total") {
-      //   return valueForm[name]
+      if (valueForm[name] && name === "total") {
+        return new Intl.NumberFormat("vi-VN").format(valueForm[name])
+      }
       // } else if(name === "total") {
       //   return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
       // }
-      return valueForm[name] || null
+      return valueForm[name]
     }
   }
 
@@ -191,6 +248,10 @@ export default function CreateContract() {
           dispatch({
             type: UPDATE_CONTRACT,
             data: valueForm
+          })
+          dispatch({
+            type: SELECT_REQUEST_GENERAL,
+            data: {event_detail_IDs: selectGeneralRequest, contract_ID: +contract_id}
           })
         }}>
         Cập nhật
@@ -241,37 +302,65 @@ export default function CreateContract() {
     if(+soTien >= 1000){
       if(!window.location.href.includes("detail")){
         let newDotThanhToan = [...dotThanhToan, {
-          total_value: +soTien
+          total_value: +soTien,
+          request_date: requestDate
         }]
         setDotThanhToan([...newDotThanhToan])
         setSoTien("")
+        setRequestDate(null)
       } else {
         let newPayment = {
           total_value: +soTien,
-          contract_ID: +contract_id
+          contract_ID: +contract_id,
+          request_date: requestDate
         }
         dispatch({
           type: CREATE_PAYMENT,
           data: newPayment
         })
         setSoTien("")
+        setRequestDate(null)
       }
     }
   }
 
-  const showGiaTriThucHien = ()=>{
+  const showGiaTriThucHien = (mode = "display")=>{
     let total = 0;
     contractRequest.forEach((request) => {
       if (request.custom_price) {
-        total += request.custom_price * request.quality;
+        total += request.custom_price;
       } else {
         total += request.price_ID.price * request.quality;
       }
     })
     // return new Intl.NumberFormat("vi--VN").format(total) + " VNĐ";
-    if(total > 0){
+    if(total > 0 ){
+      if(mode === "display"){
+        return new Intl.NumberFormat("vi-VN").format(total * 1000000);
+      } else if(mode === "number"){
+        // return total;
+        return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
+      } else {
+        return total;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  const showGiaTriGoc = (mode = "display")=>{
+    let total = 0;
+    contractRequest.forEach((request) => {
+      total += request.price_ID.price * request.quality;
+    })
+    // return new Intl.NumberFormat("vi--VN").format(total) + " VNĐ";
+    if(total > 0 && mode === "display"){
       return new Intl.NumberFormat("vi-VN").format(total * 1000000);
     } else {
+      if(mode === "number"){
+        // return total;
+        return new Intl.NumberFormat("vi-VN").format(valueForm.original_total * 1000000);
+      }
       return null;
     }
   }
@@ -289,20 +378,7 @@ export default function CreateContract() {
               <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
                 <p>Thông tin hợp đồng</p>
                 <div className="field__input field__flex two__field">
-                  {/**
-                  <input
-                    className="style"
-                    placeholder="Số tham chiếu"
-                    type="text"
-                    // name="owner"
-                    // onChange={(e)=>{ 
-                    //   let {value, name} = e.target;
-                    //   handleChangeValue(name, value) 
-                    // }}
-                    // value={valueOfField("owner")}
-                  />
-                */}
-                  <div className="contract__field">
+                  <div className="contract__field" style={{ alignItems: "flex-end" }} >
                     <input
                       className="style"
                       type="text"
@@ -313,10 +389,8 @@ export default function CreateContract() {
                       }}
                       value={valueOfField("contract_number")}
                     />
-                    <label>Số hợp đồng</label>
+                    <label id="soHD">Số hợp đồng</label>
                   </div>
-                </div>
-                <div className="field__input field__flex">
                   <div className="field__input_2">
                     <label>Loại hợp đồng</label>
                     <Select
@@ -324,13 +398,29 @@ export default function CreateContract() {
                       type="text"
                       placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
                       onChange={(value) => {
-                        handleChangeValue("contract_type_id", value)
+                        handleChangeValue("contract_type_id", value);
                       }}
                       value={valueOfField("contract_type_id")}
                     >
                       {renderLoaiHopDong()}
                     </Select>
-                    {/* <input className="style" placeholder="Năm" type="text" />* */}
+                  </div>
+                </div>
+                <div className="field__input field__flex">
+                  <div className="field__input_2">
+                    <label>Tên sự kiện</label>
+                    <Select
+                      className="style"
+                      type="text"
+                      placeholder={window.location.href.includes("create") ? "Tên hợp đồng" : ""}
+                      onChange={(value) => {
+                        handleChangeValue("event_ID", value)
+                      }}
+                      value={valueOfField("event_ID")}
+                      disabled={valueForm.contract_type_id === 4 ? false : true}
+                    >
+                      {renderEventOption()}
+                    </Select>
                   </div>
                   <div className="field__input_2">
                     <label>Ngày bắt đầu - Ngày kết thúc</label>
@@ -569,6 +659,14 @@ export default function CreateContract() {
             </div>
           </div>
             */}
+              {valueForm.event_ID ?
+                <RequestEvent
+                  productListFull={productListFull}
+                  requestOfEvent={requestOfEvent}
+                  selectGeneralRequest={selectGeneralRequest}
+                  setSelectGeneralRequest={setSelectGeneralRequest}
+                /> : ""
+              }
               <div className="create__contract__term border_bottom_3px">
                 <div className="display__flex">
                   <p>Quyền lợi hợp đồng</p>
@@ -613,15 +711,6 @@ export default function CreateContract() {
                   pagination={false}
                   expandable={{
                     expandedRowRender: (record) => {
-                      {/**
-                  return record.details.map(item => {
-                      return <div className="row__child">
-                        <span>{item.product_ID.name}</span>
-                        <span>{item.price_ID.price}</span>
-                        <span>{item.from_date}</span>
-                        <span>{item.to_date}</span>
-                      </div>
-                    }) */}
                       return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
                     },
                     rowExpandable: (record) => record.details.length > 0,
@@ -726,17 +815,30 @@ export default function CreateContract() {
               <div className="create__contract__value border_bottom_3px">
                 <p>Giá trị hợp đồng</p>
                 <div className="field__input_3">
+                  <div style={{ padding: " 0 0 10px 9px" }}>
+                    <label htmlFor="deal_out">Trừ ngoài </label>
+                    <Checkbox id="deal_out" type="checkbox" 
+                      onChange={(e)=>{
+                        let {checked} = e.target;
+                        setValueForm({
+                          ...valueForm,
+                          deal_out: checked
+                        })
+                      }}
+                      checked={valueForm.deal_out}
+                    />
+                  </div>
                   <div className="contract__field">
                     <input className="style" type="text"
-                      name="discount_by_percent"
-                      disabled
+                      name="discount_over_contract"
+                      // disabled
                       onChange={(e) => {
                         let { value, name } = e.target;
                         handleChangeValue(name, +value)
                       }}
-                      value={valueOfField("discount_by_percent")}
+                      value={valueOfField("discount_over_contract")}
                     />
-                    <label>Chiết khấu (%)</label>
+                    <label>Chiết khấu (VNĐ)</label>
                   </div>
                   <div className="contract__field">
                     <input className="style" type="text"
@@ -745,23 +847,46 @@ export default function CreateContract() {
                       //   let { value, name } = e.target;
                       //   handleChangeValue(name, +value)
                       // }}
-                      value={showGiaTriThucHien()}
+                      value={valueForm.original_total ? showGiaTriGoc("number") : showGiaTriGoc()}
+                      disabled
+                    />
+                    <label>Giá trị gốc</label>
+                  </div>
+                  <div className="contract__field">
+                    <input className="style" type="text"
+                      name="VAT"
+                      // onChange={(e) => {
+                      //   let { value, name } = e.target;
+                      //   handleChangeValue(name, +value)
+                      // }}
+                      value={valueForm.discount_total ? showGiaTriThucHien("number") : showGiaTriThucHien()}
                       disabled
                     />
                     <label>Giá trị thực hiện</label>
                   </div>
                   <div className="contract__field">
-                    <input
-                      className="style"
-                      type="text"
-                      name="total"
-                      onChange={(e) => {
-                        let { value, name } = e.target;
-                        handleChangeValue(name, +value)
-                      }}
-                      value={valueOfField("total")}
-                    />
-                    <label className="pink__color">Giá trị hợp đồng</label>
+                    <Popconfirm
+                      title="Bạn có muốn chỉnh sửa không?"
+                      onConfirm={()=>{ setUnlockInput(false) }}
+                      // onCancel={cancel}
+                      okText="Có"
+                      cancelText="Không"
+                      disabled={!unlockInput}
+                    >
+                      <input
+                        className="style"
+                        type="text"
+                        name="total"
+                        onChange={(e) => {
+                          let { value, name } = e.target;
+                          let newValue = value.replaceAll(".", "");
+                          handleChangeValue(name, +newValue)
+                        }}
+                        value={valueOfField("total")}
+                        disabled={unlockInput}
+                      />
+                      <label className="pink__color">Giá trị hợp đồng</label>
+                    </Popconfirm>
                   </div>
                 </div>
                 <div className="contract__value__note">
@@ -817,18 +942,23 @@ export default function CreateContract() {
               </svg>
             </div>
             <div className="display__flex soDotThanhToan">
-              <label htmlFor="soDotThanhToan">Số đợt thanh toán</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" onChange={(e) => { setCountPayment(e.target.value) }}>
-                <option value="1">1 đợt</option>
-                <option value="2">2 đợt</option>
-                <option value="3">3 đợt</option>
-                <option value="4">nhiều đợt</option>
+              <label htmlFor="soDotThanhToan">Kiểu thanh toán:</label>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { console.log(e.target.value, typeof e.target.value); setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
+                <option value={true}>Trước thực hiện</option>
+                <option value={false}>Sau thực hiện</option>
               </select>
-              {+countPayment === 4 ? <input type="text" style={{ width: "50px", textAlign: "center" }} /> : ""}
+            </div>
+            <div className="display__flex soDotThanhToan">
+              <label htmlFor="soDotThanhToan">Số đợt thanh toán:</label>
+              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("payment_type")} onChange={(e) => { setValueForm({ ...valueForm, payment_type: e.target.value }) }}>
+                <option value="Một đợt">1 đợt</option>
+                <option value="Nhiều đợt">Nhiều đợt</option>
+                <option value="Theo tháng">Theo thàng</option>
+                <option value="Theo yêu cầu hợp đồng">Theo quyền lợi</option>
+              </select>
             </div>
           </div>
           <div className="display__flex">
-            {/**
             <DatePicker
               suffixIcon={
                 <svg
@@ -850,10 +980,11 @@ export default function CreateContract() {
               format={"DD-MM-YYYY"}
               onChange={(date, dateString) => {
                 let ngayThanhToan = moment(dateString, "DD-MM-YYYY").toISOString();
-                setDotThanhToan({ ...dotThanhToan, ngayThanhToan })
+                // setDotThanhToan({ ...dotThanhToan, request_date: ngayThanhToan})
+                setRequestDate(ngayThanhToan)
               }}
+              value={valueOfField("requestDate")}
             />
-          */}
             <input className="style" type="text" placeholder="Số tiền"
               value={soTien}
               onChange={(e) => {
@@ -863,8 +994,10 @@ export default function CreateContract() {
           </div>
           <div className="contract__payment__process">
             {dotThanhToan?.map((payment, index) => {
+              let convertDate = moment(new Date(payment.request_date)).format("DD-MM-YYYY");
               return <div className="payment__contract">
                 <span>Đợt thanh toán {index + 1}</span>
+                <span>{convertDate}</span>
                 <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
               </div>
             })}

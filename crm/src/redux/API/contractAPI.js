@@ -52,15 +52,24 @@ export async function createContractAPI(data) {
                 })
             }
         })
+        let newPayment = data.payment.map(payment => {
+            let newRequestDate = moment(payment.request_date).format("YYYY-MM-DD");
+            return {
+                ...payment,
+                total_value: payment.total_value / 1000000,
+                request_date: newRequestDate
+            }
+        })
         data = {
             contract: {
                 ...data.contract,
                 begin_date: convertBeginDate,
                 end_date: convertEndDate,
-                total: data.contract.total / 1000000
+                total: data.contract.total / 1000000,
+                discount_over_contract: data.contract.discount_over_contract / 1000000,
             },
             request: [...newRequest],
-            payment: [...data.payment]
+            payment: [...newPayment]
         }
         const newData = { ...data }
         const result = await axios({
@@ -71,7 +80,7 @@ export async function createContractAPI(data) {
             },
             data: newData
         });
-        console.log(result.data)
+        // console.log(result.data)
         return result.data;
     } catch (error) {
         console.log(error)
@@ -135,7 +144,8 @@ export async function updateContractiAPI(data){
             ...data,
             begin_date: convertBeginDate,
             end_date: convertEndDate,
-            total: data.total / 1000000
+            total: data.total / 1000000,
+            discount_over_contract: data.discount_over_contract / 1000000
         };
         const result = await axios({
             url: `${local}/api/contract/update`,
@@ -200,7 +210,7 @@ export async function updateRequestAPI(data){
     try {
         let updateRequest = {
             "quality": data.quality,
-            "custom_price": data.custom_price / 1000000
+            "custom_price": data.custom_price >= 1000000 ? data.custom_price / 1000000 : null
         };
         const result = await axios({
             url: `${local}/api/contract/update-request?request_id=${data.id}`,
@@ -271,13 +281,68 @@ export async function updateDetailAPI(data){
 
 export async function createPaymentAPI(data){
     try {
+        let newRequestDate = moment(data.request_date).format("YYYY-MM-DD");
+        let newData = {
+            ...data,
+            request_date: newRequestDate,
+            total_value: data.total_value / 1000000
+        }
         const result = await axios({
             url: `${local}/api/contract/payment-add`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function getRequestOfEventAPI(event_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/detail/list?id=${event_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function selectRequestGeneralAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/select-request`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
             data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function getSelectRequestGeneralAPI(contract_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/event/get-select-request?contract_ID=${contract_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
         });
         return result.data;
     } catch (error) {
