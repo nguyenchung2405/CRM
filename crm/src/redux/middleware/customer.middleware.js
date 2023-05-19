@@ -1,7 +1,7 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CUSTOMER, CREATE_JOB_TYPE_LIST , CREATE_CUSTOMER_TYPE, DELETE_JOB_TYPE_LIST ,GET_CUSTOMER_DETAIL, DELETE_CUSTOMER_TYPE , GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
-import { createCustomerAPI, createJobTypeListAPI ,deleteJobTypeListAPI, deleteCustomerTypeAPI ,createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
-import { addCustomer, setJobTypeListDelete , setJobTypeListCreate ,setCustomerTypeDelete , setTotalPageCus , setCustomerTypeListCreate ,  setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, setTotalPage, updateCusomer } from "../features/customer.feature";
+import { UPDATE_CUSTOMER_TYPE,UPDATE_JOB_TYPE_LIST  , CREATE_CUSTOMER, CREATE_JOB_TYPE_LIST , CREATE_CUSTOMER_TYPE, DELETE_JOB_TYPE_LIST ,GET_CUSTOMER_DETAIL, DELETE_CUSTOMER_TYPE , GET_CUSTOMER_LIST, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, SEARCH_CUSTOMER, UPDATE_CUSTOMER } from "../../title/title";
+import { createCustomerAPI, updateCustomerTypeAPI,updateJobTypeAPI ,createJobTypeListAPI ,deleteJobTypeListAPI, deleteCustomerTypeAPI ,createCustomerTypeAPI, getCustomerListAPI, getCustomerTypeListAPI, getDetailCustomerAPI, getJobTypeListAPI, searchCustomerAPI, updateCustomerAPI } from "../API/customeAPI";
+import { addCustomer, setUpdateJobType ,setUpdateType ,setJobTypeListDelete , setJobTypeListCreate ,setCustomerTypeDelete , setTotalPageCus , setCustomerTypeListCreate ,  setCustomerList, setCustomerTypeList, setDataCustomer, setJobTypeList, setTotalCustomer, setTotalPage, updateCusomer } from "../features/customer.feature";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 import { message } from "antd";
@@ -220,6 +220,32 @@ function* createJobTypeList(payload){
     }
 }
 
+function* updateCustomerType(payload){
+    try {
+        console.log(payload);
+        const resuft = yield call(updateCustomerTypeAPI,payload?.data)
+        if(resuft?.data?.result){
+            yield put(setUpdateType(resuft?.data?.data))
+            message.success("Cập nhật thành công")
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function* updateJobTypeList(payload){
+    try {
+        const resuft = yield call(updateJobTypeAPI,payload?.data)
+        console.log(resuft);
+        if(resuft?.data?.result){
+            yield put(setUpdateJobType(resuft?.data?.data))
+            message.success("Cập nhật thành công")
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export default function* customerMiddleware(){
     yield takeLatest(GET_CUSTOMER_LIST, getCustomerList)
     yield takeLatest(CREATE_CUSTOMER, createCustomer)
@@ -231,8 +257,10 @@ export default function* customerMiddleware(){
     yield takeLatest(DELETE_JOB_TYPE_LIST, deleteJobTypeList )
     yield takeLatest(GET_JOB_TYPE_LIST, getJobTypeList)
     yield takeLatest(CREATE_JOB_TYPE_LIST, createJobTypeList)
+    yield takeLatest(UPDATE_JOB_TYPE_LIST,updateJobTypeList)
     // Customer Type
     yield takeLatest(GET_CUSTOMER_TYPE_LIST, getCustomerTypeList)
     yield takeLatest(CREATE_CUSTOMER_TYPE, createCustomerType)
     yield takeLatest(DELETE_CUSTOMER_TYPE, deleteCustomerType)
+    yield takeLatest(UPDATE_CUSTOMER_TYPE, updateCustomerType)
 }

@@ -3,7 +3,6 @@ import './App.css';
 
 import { store } from "./redux/configStore"
 import { Provider } from "react-redux"
-
 import Sidebar from './components/sidebar/Sidebar';
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Header from './components/header/Header';
@@ -25,7 +24,7 @@ import Acceptance from './components/acceptance/Acceptance';
 import EventAcceptance from './components/acceptance/EventAcceptance';
 
 function App() {
-
+  
   const renderMF = () => {
     if (checkMicroFe() === false) {
       return (

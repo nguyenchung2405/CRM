@@ -238,6 +238,46 @@ const createJobType = async (req,res)=>{
         res.send(error)
     }
 }
+const updateCustomerType = async (req,res)=>{
+    console.log(req.body);
+    const { name , id } = req.body
+    const resuft = await axios({
+        method: "PUT",
+        url: `${local}/client/type/update?id=${id}`,
+        data: {
+            name: name,
+            desc: ""
+        }
+    })
+    res.send(resuft.data)
+    // console.log({name,id});
+    // const resuft = await axios({
+    //     method: "PUT",
+    //     url: `${local}/client/type/update?id=${id}`,
+    //     data: {
+    //         name
+    //     }
+    // })
+    // console.log(resuft);
+}
+const updateJobType = async (req,res)=>{
+    try {
+        const { name , id } = req.body
+        console.log({name,id});
+        const result = await axios({
+            method: "PUT",
+            url: `${local}/client/sector/update?id=${id}`,
+            data:{
+                name : name,
+                desc: ""
+            }
+        })
+        res.send(result.data)
+    } catch (error) {
+        console.log(error);
+    }
+
+}
 
 module.exports = {
     getCustomerList,
@@ -251,5 +291,7 @@ module.exports = {
     getListTypeCustomer,
     deleteCustomerType,
     deleteJobType,
-    createJobType
+    createJobType,
+    updateCustomerType,
+    updateJobType
 }

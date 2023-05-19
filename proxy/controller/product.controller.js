@@ -338,7 +338,7 @@ const getProductSpecial = async (req, res)=>{
         });
         res.send(result.data)
     } catch (error) {
-        if(error.response.data){
+        if(error?.response?.data){
             res.send(error.response.data)
         } else {
             res.send(error)

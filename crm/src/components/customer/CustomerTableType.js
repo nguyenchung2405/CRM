@@ -4,7 +4,7 @@ import { FcPlus } from "react-icons/fc"
 import { FaEdit,FaTrash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoading } from "../../redux/features/loadingSlice";
-import { CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST } from "../../title/title";
+import { UPDATE_CUSTOMER_TYPE, UPDATE_JOB_TYPE_LIST ,CREATE_CUSTOMER_TYPE, CREATE_JOB_TYPE_LIST , GET_CUSTOMER_TYPE_LIST,DELETE_CUSTOMER_TYPE, GET_JOB_TYPE_LIST, DELETE_JOB_TYPE_LIST } from "../../title/title";
 function CustomerTableType() {
 
     const dispatch = useDispatch();
@@ -15,8 +15,22 @@ function CustomerTableType() {
     const [descCustomer,setDescCustomer] = useState("")
     const [ jobDesc ,setJobDesc] = useState("")
     const [typeJobName,setTypeJobName] = useState("")
+    const [editValueCustomer,setEditValueCustomer] = useState("")
+    const [editValueJob,setEditValueJob] = useState("")
     const [searchTypeCustomer,setSearchTypeCustomer] = useState("")
     const [searchTypeJob,setSeacrhTypeJob] = useState("")
+    const [editCustomer,setEditCustomer] = useState({
+        is_disable: false,
+        custumer_id: ""
+    })
+    const [editJob,setEditJob] = useState({
+        is_disable:false,
+        job_id : ""
+    })
+    const [idEdit,setIdEdit] = useState({
+        
+    })
+
     const {customerTypeList} = useSelector(state => state.customerReducer)
     const { jobTypeList } = useSelector(state => state.customerReducer)
     const { totalListPage } = useSelector(state => state.customerReducer)
@@ -201,6 +215,58 @@ function CustomerTableType() {
         }
     }
     
+
+    // HANDEL EDIT TYPE CUSTOMER
+    const HandelEditTypeCus = (item)=>{
+        setEditCustomer({
+            ...editCustomer,
+            custumer_id: item.id,
+            is_disable : true
+        })
+        setEditValueCustomer(item?.name)
+    }
+
+    // UPDATE CUSTOMER 
+    const HandelUpdateTypeCustomer = (item)=>{
+        dispatch({
+            type: UPDATE_CUSTOMER_TYPE,
+            data: {
+                ...item,
+                name: editValueCustomer
+            }
+        })
+        setEditCustomer({
+            ...editCustomer,
+            custumer_id: "",
+            is_disable : false
+        })
+        setEditValueCustomer("")
+    }
+
+    // UPDATE JOB
+    const HandelEditJob = (item)=>{
+        setEditJob({
+            ...editJob,
+            is_disable: true,
+            job_id: item.id
+        })
+        setEditValueJob(item.name)
+    }
+
+    const HandelUpdateJob = (item)=>{
+        dispatch({
+            type: UPDATE_JOB_TYPE_LIST,
+            data: {
+                ...item,
+                name: editValueJob
+            }
+        })
+        setEditJob({
+            ...editJob,
+            is_disable: false,
+            job_id: "1"
+        })
+    }
     const columns = [
         {
           key: 1,
@@ -215,7 +281,13 @@ function CustomerTableType() {
                                     <Input placeholder="Nhập loại khách hàng" onChange={(e)=>{HandelChangeTypeNameCustomer(e)}} value={typeCustomer} style={{width:"100%" , marginTop: "0", height: 40}} />
                             </div>
                         </>
-                        : (
+                        : editCustomer.is_disable && editCustomer.custumer_id === item.id ? (
+                            <div className="" style={{display:"flex",width: "100%",textAlign:"center"}} >
+                                    <Input onChange={(e)=>{setEditValueCustomer(e.target.value)}}  value={editValueCustomer} style={{width:"100%" , marginTop: "0", height: 40}} />
+                            </div>
+                        ) 
+                        :
+                        (    
                             <div className="" style={{textAlign:"center"}}>
                                 <p>{item.name}</p>
                             </div>
@@ -239,11 +311,19 @@ function CustomerTableType() {
                                 <Button style={{height: 35,border:"none", color:"red",padding:5}} onClick={()=>HandelClose()} >Hủy</Button>
                             </div>
                         </>
-                    ) : 
+                    ) : editCustomer.is_disable && editCustomer.custumer_id === item.id ? 
+                            (
+                                <div className="" style={{width:"0%" , marginTop: "0", height: 40,display: "flex", textAlign:"center" } }>
+                                    <Button style={{height: 35 , border:"none" , padding:5, marginRight: 10}} onClick={()=>{HandelUpdateTypeCustomer(item)}}  >Lưu</Button>
+                                    <Button style={{height: 35,border:"none", color:"red",padding:5}} onClick={()=>HandelClose()} >Hủy</Button>
+                                </div>
+                            )
+
+                            :
                         <div className="btn_cus_type" style={{textAlign:"center"}}>
                             <Space>
                                 <Tooltip title="Chỉnh sửa">
-                                        <Button type="ghost" style={{backgroundColor: "green"}}>
+                                        <Button type="ghost" onClick={()=>HandelEditTypeCus(item)} style={{backgroundColor: "green"}}>
                                             <FaEdit style={{color: "white"}} />
                                         </Button>
                                 </Tooltip>
@@ -284,6 +364,12 @@ function CustomerTableType() {
                                 <Input placeholder="Nhập loại ngành nghề" onChange={(e)=>{HandelChangeTypeJobList(e)}} value={typeJobName} style={{width:"100%" , marginTop: "0", height: 40}} />
                             </div>
                         )
+                        : editJob.is_disable && editJob.job_id === item.id ? 
+                        ( 
+                            <div className="" style={{display:"flex",width: "100%"}} >
+                                <Input onChange={(e)=>{setEditValueJob(e.target.value)}} value={editValueJob} style={{width:"100%" , marginTop: "0", height: 40}} />
+                            </div>
+                        )
                         :
                         (
                             <div className="" style={{textAlign:"center"}}>
@@ -310,12 +396,19 @@ function CustomerTableType() {
                                 <Button style={{height: 35,border:"none", color:"red",padding:5}} onClick={()=>HandelClose()} >Hủy</Button>
                             </div>
                         )
+                        : editJob.is_disable && editJob.job_id === item.id ? 
+                        (
+                            <div className="" style={{width:"60%" , marginTop: "0" , marginLeft: 10, height: 35,display: "flex",} }>
+                                <Button style={{height: 35 , border:"none" , padding:5, marginRight:10}} onClick={()=>HandelUpdateJob(item)} >Lưu</Button>
+                                <Button style={{height: 35,border:"none", color:"red",padding:5}} onClick={()=>HandelClose()} >Hủy</Button>
+                            </div>
+                        )
                         :
                         (
                             <div className="btn_cus_type" style={{textAlign:"center"}}>
                                 <Space>
                                     <Tooltip title="Chỉnh sửa">
-                                            <Button type="ghost" onClick={()=>{}} style={{backgroundColor: "green"}}>
+                                            <Button type="ghost" onClick={()=>{HandelEditJob(item)}} style={{backgroundColor: "green"}}>
                                                 <FaEdit style={{color: "white"}} />
                                             </Button>
                                     </Tooltip>
@@ -345,6 +438,16 @@ function CustomerTableType() {
     const HandelClose = ()=>{
         setIsCreateType(false)
         setIsCreateTypeJob(false)
+        setEditCustomer({
+            ...editCustomer,
+            is_disable: false,
+            custumer_id: ""
+        })
+        setEditJob({
+            ...editJob,
+            is_disable: false,
+            job_id: ""
+        })
     }
 
     return ( 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsReceiptCutoff } from "react-icons/bs"
 import { NavLink, Link } from 'react-router-dom';
 import { checkMicroFe } from '../../untils/helper';
@@ -7,6 +7,8 @@ import { BsFileEarmarkFill } from "react-icons/bs"
 import { FcDepartment } from "react-icons/fc"
 
 export default function Sidebar() {
+    
+
     const getItem = (label, key, icon, children) => {
         return {
             label,
@@ -22,6 +24,7 @@ export default function Sidebar() {
     //         getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "3xxx",),
     //     ])
     // ]
+
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
             getItem("Quản lý khách hàng", "10", <BsFileEarmarkFill />,[
@@ -36,14 +39,19 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/product`}>Sản phẩm</Link>, "14", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
             ]),
+<<<<<<< HEAD
+            
+=======
             getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
             getItem("Quản lý nghiệm thu", "21", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
             ]),
+>>>>>>> 412f605cacca021d786163b719270d67a253f27e
         ])
     ]
 
+    
     const renderSubMenu = () => {
         if (checkMicroFe() === false) {
             return <>
@@ -65,6 +73,7 @@ export default function Sidebar() {
                             Hợp đồng
                         </p>
                     </div>
+                    
                     <div className="sidebar__sub__menu">
                         <ul>
                             <li>
@@ -91,6 +100,7 @@ export default function Sidebar() {
                             <li>
                                 <NavLink to="/crm/product/special">Quản lý sản phẩm đặc biệt</NavLink>
                             </li>
+                            
                             <li>
                                 <NavLink to="/crm/receipt">Quản lý hóa đơn</NavLink>
                             </li>
@@ -101,6 +111,7 @@ export default function Sidebar() {
                                 <NavLink to="/crm/acceptance/event">Nghiệm thu sự kiện</NavLink>
                             </li>
                         </ul>
+                            
                     </div>
                 </div>
             </>
