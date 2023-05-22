@@ -5,6 +5,7 @@ import { FcPlus } from 'react-icons/fc';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
+import CreateReceiptModal from './CreateReceiptModal';
 import ExportReceiptModal from './ExportReceiptModal';
 import HandleFeatures from './HandleFeatures';
 
@@ -16,6 +17,7 @@ export default function ReceiptTable() {
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [isShowModal, setIsShowModal] = useState(false)
+    const [isShowCreateModal, setIsShowCreateModal] = useState(false)
   
     useEffect(() => {
       dispatch({
@@ -36,6 +38,10 @@ export default function ReceiptTable() {
            
            */
         }
+        <CreateReceiptModal
+        isShowModal={isShowCreateModal}
+        setIsShowModal={setIsShowCreateModal}
+        />
         <div className="table__features">
           <div className="table__features__add">
             <h1>Quản lý hóa đơn</h1>
@@ -110,7 +116,7 @@ export default function ReceiptTable() {
             return <div className="table__thaotac">
               <Tooltip title="Yêu cầu thanh toán" color="green" >
                 <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-
+                    setIsShowCreateModal(true)
                   // navigate(`${uri}/crm/customer/update/${text.id}`)
                 }} />
               </Tooltip>

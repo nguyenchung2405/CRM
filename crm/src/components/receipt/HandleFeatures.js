@@ -5,12 +5,14 @@ import { MdCancel, MdOutlineModeEditOutline } from 'react-icons/md'
 import {IoCheckmarkDoneCircleSharp} from "react-icons/io5"
 import { useSelector } from 'react-redux'
 import ExportReceiptModal from './ExportReceiptModal'
+import CancelReceiptModal from './CancelReceiptModal'
 
 export default function HandleFeatures(props) {
 
     // const {setIsShowModal} = props;
     const [isExportReceipt, setIsExportReceipt] = useState(false)
     const [isShowModal, setIsShowModal] = useState(false)
+    const [isShowCancelModal, setIsShowCancelModal] = useState(false)
   
     // const {isSuccess} = useSelector(state => state.receiptReducer);
 
@@ -19,7 +21,8 @@ export default function HandleFeatures(props) {
             return <>
                 <Tooltip title="Hủy hóa đơn" color="red" >
                     <MdCancel className="style__svg" style={{backgroundColor: "red"}} onClick={() => {
-                        setIsExportReceipt(false)
+                        // setIsExportReceipt(false)
+                        setIsShowCancelModal(true)
                         // navigate(`${uri}/crm/customer/update/${text.id}`)
                     }} />
                 </Tooltip>
@@ -47,6 +50,11 @@ export default function HandleFeatures(props) {
       setIsShowModal={setIsShowModal}
       setIsExportReceipt={setIsExportReceipt}
     />
+        <CancelReceiptModal
+        isShowModal={isShowCancelModal}
+        setIsShowModal={setIsShowCancelModal}
+        setIsExportReceipt={setIsExportReceipt}
+        />
         {renderContent()}
     </>
   )
