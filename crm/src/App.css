@@ -1627,7 +1627,7 @@ svg.style__svg {
 
 /* hết Event */
 /* ------------------------------------- */
-/* nghiệm thu */
+/* nghiệm thu & hóa đơn */
 
 .detail__desc > div > input {
     width: 525px;
@@ -1647,8 +1647,21 @@ svg.style__svg {
     width: 15%;
 }
 
+.receipt__modal__acceptance__list {
+    width: 525px;
+    margin: auto;
+}
 
-/* Hết nghiệm thu */
+.cancel__receipt__modal .field__select .modal__field p {
+    text-align: left;
+}
+
+.cancel__receipt__modal .field__select .modal__field textarea {
+    width: 525px;
+    resize: none;
+}
+
+/* Hết nghiệm thu & hóa đơn */
 /* ------------------------- Responsive -------------------- */
 
 @media only screen and (max-width: 1280px){

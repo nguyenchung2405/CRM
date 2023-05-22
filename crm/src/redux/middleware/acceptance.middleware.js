@@ -20,10 +20,11 @@ function* createAcceptance(payload){
             let newDataAcceptance = {
                 ...resultDetail.data.details[0],
                 detail_id,
-                files: payload.data.files
+                files: payload.data.files,
+                completed_evidences: payload.data.completed_evidences,
             }
             const result = yield call(createAcceptanceAPI, newDataAcceptance);
-            console.log("line 25",result)
+            // console.log("line 25",result)
             if (result.data.msg === "Updated successfully!") {
                 message.success("Tạo nghiệm thu thành công")
             } else {
