@@ -563,6 +563,10 @@ span.size-10 {
     text-align: center;
 }
 
+.ant-modal-footer .contract__service__footer {
+    display: block;
+}
+
 .contract__service__footer button.ant-btn {
     width: 136.5px;
     height: 44px;
