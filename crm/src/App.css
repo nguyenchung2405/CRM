@@ -1656,6 +1656,35 @@ svg.style__svg {
     margin: auto;
 }
 
+.receipt__modal__acceptance__list div {
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.receipt__modal__acceptance__list div ol {
+    margin-bottom: 0;
+    width: fit-content;
+    margin: auto;
+}
+
+
+.receipt__modal__acceptance__list div ol li {
+    text-align: left;
+}
+
+.receipt__modal__acceptance__values {
+    width: 525px;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.receipt__modal__acceptance__values h3 {
+    text-align: left;
+}
+
 .cancel__receipt__modal .field__select .modal__field p {
     text-align: left;
 }

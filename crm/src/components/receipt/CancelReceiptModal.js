@@ -1,25 +1,39 @@
-import { DatePicker, Modal, Select } from 'antd'
-import React from 'react'
+import { Modal } from 'antd'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { CREATE_EXPORT_RECEIPT } from '../../title/title';
+import { CANCEL_EXPORT_RECEIPT } from '../../title/title';
 
 export default function CancelReceiptModal(props) {
     
     // const {isShowModal, setIsShowModal} = props;
-    const {isShowModal, setIsShowModal, setIsExportReceipt} = props;
+    const {isShowModal, setIsShowModal, receipt_id, payment_ID, contract_id} = props;
     const dispatch = useDispatch();
+    const [valueModal, setValueModal] = useState({})
 
     const handleCancel = ()=>{
         setIsShowModal(false)
+        setValueModal({})
     }
 
     const handleOk = ()=>{
         setIsShowModal(false)
-        setIsExportReceipt(false)
-        // dispatch({
-        //     type: CREATE_EXPORT_RECEIPT,
-        //     data: true
-        // })
+        // setIsExportReceipt(false)
+        valueModal.id = receipt_id;
+        valueModal.contract_id = contract_id;
+        valueModal.payment_ID = payment_ID;
+        dispatch({
+            type: CANCEL_EXPORT_RECEIPT,
+            data: valueModal
+        })
+        setValueModal({})
+    }
+
+    const valueOfField = (name)=>{
+        if(valueModal[name]){
+            return valueModal[name]
+        } else {
+            return ""
+        }
     }
 
   return (
@@ -45,7 +59,16 @@ export default function CancelReceiptModal(props) {
               <div className="modal__field field__select modal__report__upload">
                   <div className="modal__field">
                       <p>Lý do</p>
-                      <textarea></textarea>
+                      <textarea
+                          onChange={(e) => {
+                              let { value } = e.target;
+                              setValueModal({
+                                  ...valueModal,
+                                  disable_note: value
+                              })
+                          }}
+                          value={valueOfField("disable_note")}
+                      ></textarea>
                   </div>
               </div>
           </div>
