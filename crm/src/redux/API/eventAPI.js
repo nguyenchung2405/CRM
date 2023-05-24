@@ -189,13 +189,19 @@ export async function addUnserContractToEventAPI(data){
 
 export async function updateRequestEventAPI(data){
     try {
+        let newData ={
+            ...data,
+            quantity: data.quality,
+            value_detail: data.real_price / 1000000,
+            desc: ""
+        }
         const result = await axios({
             url: `${local}/api/event/update-request?id=${data.id}`,
             method: "PUT",
             headers: {
                 Authorization: "Bearer " + TOKEN
             },
-            data
+            data: newData
         });
         return result.data;
     } catch (error) {

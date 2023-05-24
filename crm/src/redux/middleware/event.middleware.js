@@ -107,7 +107,7 @@ function* getUnsetContract(){
 function* addUnserContractToEvent(payload){
     try {
         const result = yield call(addUnserContractToEventAPI, payload.data);
-        if(result[0] === "Thành công"){
+        if(result[0].msg === "Thành công"){
             message.success("Thêm nhà tài trợ thành công")
         } else {
             message.error("Thêm nhà tài trợ thất bại")

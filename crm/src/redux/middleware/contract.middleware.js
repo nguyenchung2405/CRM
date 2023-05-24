@@ -6,7 +6,7 @@ import { addContractRequest, addPayment, deleteContractRequest, setContractDetai
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
-import { setReceiptList, setTotalReceipt } from "../features/receiptSlice";
+import { addPaymentToReceiptList, setReceiptList, setTotalReceipt } from "../features/receiptSlice";
 import {message} from "antd"
 
 function* getContractList(payload) {
@@ -153,13 +153,15 @@ function* updateDetail(payload){
 
 function* createPayment(payload){
     try {
+        console.log(payload.data)
         const result = yield call(createPaymentAPI, payload.data);
         if(result.data.payment.contract_ID){
             let newPayment = {
                 ...result.data.payment,
-                total_value: result.data.payment.total_value * 1000000
+                total_value: result.data.payment.total_value * 1000000,
             }
             yield put(addPayment(newPayment))
+            yield put(addPaymentToReceiptList({contract_id: payload.data.contract_ID, data: {...result.data.payment, receipts: [], total_value: result.data.payment.total_value}}))
             yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))

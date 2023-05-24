@@ -195,8 +195,10 @@ export default function ContractContentModal(props) {
                             let detail = detailList.find(detail => detail.id === value)
                             setValueForm({
                                 ...valueForm,
-                                ...detail,
-                                detail_id: value
+                                detail_id: value,
+                                from_date: detail.from_date,
+                                to_date: detail.to_date,
+                                desc: detail.desc
                             })
                         }}
                     >
