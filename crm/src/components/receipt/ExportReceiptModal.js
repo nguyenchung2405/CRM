@@ -1,25 +1,54 @@
 import { DatePicker, Modal } from 'antd'
-import React from 'react'
+import moment from 'moment';
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { CREATE_EXPORT_RECEIPT } from '../../title/title';
 
 export default function ExportReceiptModal(props) {
     
     // const {isShowModal, setIsShowModal} = props;
-    const {isShowModal, setIsShowModal, setIsExportReceipt} = props;
+    const {isShowModal, setIsShowModal, payment_ID, contract_id} = props;
     const dispatch = useDispatch();
+    const [valueModal, setValueModal] = useState({});
 
     const handleCancel = ()=>{
         setIsShowModal(false)
+        setValueModal({})
     }
 
     const handleOk = ()=>{
         setIsShowModal(false)
-        // dispatch({
-        //     type: CREATE_EXPORT_RECEIPT,
-        //     data: true
-        // })
-        setIsExportReceipt(true)
+        valueModal.payment_ID = payment_ID;
+        valueModal.contract_id = contract_id;
+        dispatch({
+            type: CREATE_EXPORT_RECEIPT,
+            data: valueModal
+        })
+        setValueModal({})
+    }
+
+    const handleChangeValue = (name, value)=>{
+        setValueModal({
+            ...valueModal,
+            [name]: value
+        })
+    }
+
+    const valueOfField = (name)=>{
+        if(name === "export_date"){
+            if(valueModal[name]){
+                let newExportDate = moment(new Date(valueModal[name])).format("DD-MM-YYYY")
+                return moment(newExportDate, "DD-MM-YYYY");
+            } else {
+                return null
+            }
+        } else {
+            if(valueModal[name]){
+                return valueModal[name]
+            } else {
+                return ""
+            }
+        }
     }
 
   return (
@@ -45,8 +74,12 @@ export default function ExportReceiptModal(props) {
               <div className="modal__field field__select modal__report__upload">
                   <div className="modal__field">
                       <input type="text"
-                          name="real_price"
-                      //   value={valueOfField("product_name")}
+                          name="receipt_number"
+                        value={valueOfField("receipt_number")}
+                        onChange={e => {
+                            let {value, name} = e.target;
+                            handleChangeValue(name, value)
+                        }}
                       />
                       <label>Số hóa đơn</label>
                   </div>
@@ -73,10 +106,10 @@ export default function ExportReceiptModal(props) {
                           className="style report__date"
                           format={"DD-MM-YYYY"}
                           onChange={(date, dateString) => {
-                              //   let ngayNghiemThu = moment(dateString, "DD-MM-YYYY").toISOString();
-                              //   handleChangeValue("report_date", ngayNghiemThu)
+                                let ngayXuat = moment(dateString, "DD-MM-YYYY").toISOString();
+                                handleChangeValue("export_date", ngayXuat)
                           }}
-                      //   value={valueOfField("report_date")}
+                        value={valueOfField("export_date")}
                       />
                   </div>
               </div>

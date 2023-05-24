@@ -1,13 +1,11 @@
 import { Table, Tooltip } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { FcPlus } from 'react-icons/fc';
-import { MdOutlineModeEditOutline } from 'react-icons/md';
+import {AiFillPlusCircle} from "react-icons/ai"
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
 import CreateReceiptModal from './CreateReceiptModal';
-import ExportReceiptModal from './ExportReceiptModal';
-import HandleFeatures from './HandleFeatures';
+import ExpandTableReceipt from './ExpandTable';
 
 export default function ReceiptTable() {
 
@@ -16,8 +14,9 @@ export default function ReceiptTable() {
     const { total, recieptList } = useSelector(state => state.receiptReducer);
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [isShowModal, setIsShowModal] = useState(false)
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
+    const [dataToCreateModal, setDataToCreateModal] = useState({})
+    const [list, setList] = useState();
   
     useEffect(() => {
       dispatch({
@@ -27,29 +26,26 @@ export default function ReceiptTable() {
       // dispatch(setIsLoading(true))
     }, [page, pageNumber, dispatch]);
 
+    useEffect(()=>{
+      let newList = recieptList.map(item => {
+        return {
+          ...item,
+          key: item.id,
+        }
+      })
+      setList(newList)
+    }, [recieptList])
+
     return (
       <div className="content reciept__table customer__table">
-        {
-          /**
-           <ExportReceiptModal
-          isShowModal={isShowModal}
-          setIsShowModal={setIsShowModal}
-        /> 
-           
-           */
-        }
         <CreateReceiptModal
         isShowModal={isShowCreateModal}
         setIsShowModal={setIsShowCreateModal}
+        dataToCreateModal={dataToCreateModal}
         />
         <div className="table__features">
           <div className="table__features__add">
             <h1>Quản lý hóa đơn</h1>
-            <Tooltip title="Tạo hóa đơn" color="green">
-              <FcPlus style={{ marginRight: "5px" }} onClick={() => {
-
-              }} />
-            </Tooltip>
           </div>
           <div className="table__features__search">
             <input placeholder="Tên khách hàng" type="text" />
@@ -61,7 +57,14 @@ export default function ReceiptTable() {
           </div>
         </div >
         <Table
-          dataSource={recieptList}
+          dataSource={list}
+          expandable={{
+            showExpandColumn: true,
+            expandedRowRender: record => {
+                return <ExpandTableReceipt data={record.payments} contract_id={record.id} />
+            },
+            rowExpandable: (record) => record.payments.length > 0,
+        }}
           pagination={{
             position: ["bottomLeft"],
             defaultPageSize: 10,
@@ -97,7 +100,7 @@ export default function ReceiptTable() {
             return `${soLanThanhToan} / ${kieuThanhToan}`
           }}></Column>
           <Column title="Số hóa đơn đã xuất" key="soHoaDonDaXuat" dataIndex="receipt_count"></Column>
-          {/*<Column title="Số hóa đơn đã thanh toán" dataIndex="total_completed_payment"></Column> */}
+          <Column title="Số hóa đơn đã thanh toán" dataIndex="completed_receipt_count"></Column>
           <Column title="Ngày xuất hóa đơn cuối" key="ngayXuatHDCuoi" dataIndex="last_receipt_exported" render={(text) => {
             if (text !== null) {
               let newDate = moment(text).format("DD-MM-YYYY");
@@ -114,13 +117,19 @@ export default function ReceiptTable() {
           }}></Column>
           <Column key="thaoTac" fixed="right" render={(text) => {
             return <div className="table__thaotac">
-              <Tooltip title="Yêu cầu thanh toán" color="green" >
-                <MdOutlineModeEditOutline className="style__svg" onClick={() => {
+              <Tooltip title="Tạo yêu cầu thanh toán" color="green" >
+                <AiFillPlusCircle className="style__svg" onClick={() => {
                     setIsShowCreateModal(true)
+                    setDataToCreateModal({
+                      contract_id: text.id, 
+                      event_id: text.event_ID?.id, 
+                      real_time_total: text.real_time_total,
+                      total_completed_payments: text.total_completed_payments,
+                      total_created_payments: text.total_created_payments
+                    })
                   // navigate(`${uri}/crm/customer/update/${text.id}`)
                 }} />
               </Tooltip>
-              <HandleFeatures setIsShowModal={setIsShowModal} />
             </div>
           }}></Column>
         </Table>
