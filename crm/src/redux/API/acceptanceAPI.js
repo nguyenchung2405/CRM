@@ -24,9 +24,6 @@ export async function createAcceptanceAPI(data){
             let newToDate = moment(new Date(rest["from_date"])).format("YYYY-MM-DD")
             formAcceptance.append("to_date", newToDate)
         }
-        for (const pair of formAcceptance.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-          }
         const result = await axios({
             url: `${local}/api/acceptance/create`,
             method: "POST",
@@ -61,9 +58,6 @@ export async function createEventAcceptanceAPI(data){
                 formAcceptance.append(key, rest[key])
             }
         }
-        for (const pair of formAcceptance.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-          }
           const result = await axios({
             url: `${local}/api/acceptance/event-create`,
             method: "POST",

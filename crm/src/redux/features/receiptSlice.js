@@ -36,10 +36,15 @@ const receiptSlice = createSlice({
         },
         setAccListInReceipt: (state, action)=>{
             state.acceptanceListInReceipt = action.payload;
+        },
+        addPaymentToReceiptList: (state, action)=>{
+            let {contract_id, data} = action.payload;
+            let receiptIndex = state.recieptList.findIndex(item => item.id === contract_id);
+            state.recieptList[receiptIndex].payments.push(data)
         }
     }
 })
 
 export const {setTotalReceipt, setReceiptList, addReceiptToList, removeReceiptFromList, completeReceiptFromList,
-setAccListInReceipt} = receiptSlice.actions;
+setAccListInReceipt, addPaymentToReceiptList} = receiptSlice.actions;
 export default receiptSlice.reducer;

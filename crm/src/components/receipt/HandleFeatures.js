@@ -1,9 +1,4 @@
-import { Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { FaFileExport } from 'react-icons/fa'
-import { MdCancel, MdDone, MdOutlineModeEditOutline } from 'react-icons/md'
-import {IoCheckmarkDoneCircleSharp} from "react-icons/io5"
-import { useSelector } from 'react-redux'
 import ExportReceiptModal from './ExportReceiptModal'
 import CancelReceiptModal from './CancelReceiptModal'
 import CompleteReceiptModal from './CompleteReceiptModal'
@@ -16,8 +11,6 @@ export default function HandleFeatures(props) {
     const [isShowCancelModal, setIsShowCancelModal] = useState(false)
     const [isShowCompleteModal, setIsShowCompleteModal] = useState(false)
   
-    // const {isSuccess} = useSelector(state => state.receiptReducer);
-
     useEffect(()=>{
         setIsExportReceipt(isExistExport)
     } , [isExistExport])
@@ -25,29 +18,47 @@ export default function HandleFeatures(props) {
     const renderContent = ()=>{
         if(!isComplete){
             if(isExportReceipt){
+                // return <>
+                //     <Tooltip title="Hủy hóa đơn" color="red" >
+                //         <MdCancel className="style__svg" style={{backgroundColor: "red"}} onClick={() => {
+                //             setIsShowCancelModal(true)
+                //         }} />
+                //     </Tooltip>
+                //     <Tooltip title="Hoàn tất" color="blue" >
+                //         <IoCheckmarkDoneCircleSharp className="style__svg" style={{backgroundColor: "blue"}} onClick={() => {
+                //             setIsShowCompleteModal(true)
+                //         }} />
+                //     </Tooltip>
+                // </>
                 return <>
-                    <Tooltip title="Hủy hóa đơn" color="red" >
-                        <MdCancel className="style__svg" style={{backgroundColor: "red"}} onClick={() => {
+                    <span style={{ color: "red", cursor: "pointer", marginRight: "15px" }}
+                        onClick={() => {
                             setIsShowCancelModal(true)
-                        }} />
-                    </Tooltip>
-                    <Tooltip title="Hoàn tất" color="blue" >
-                        <IoCheckmarkDoneCircleSharp className="style__svg" style={{backgroundColor: "blue"}} onClick={() => {
+                        }}
+                    >Hủy hóa đơn</span>
+                    <span style={{ color: "blue", cursor: "pointer" }}
+                        onClick={() => {
                             setIsShowCompleteModal(true)
-                        }} />
-                    </Tooltip>
+                        }}
+                    >Hoàn tất</span>
                 </>
             } else {
-                return <Tooltip title="Xuất hóa đơn" color="orange" >
-                    <FaFileExport className="style__svg" style={{backgroundColor: "orange"}} onClick={() => {
+                // return <Tooltip title="Xuất hóa đơn" color="orange" >
+                //     <FaFileExport className="style__svg" style={{backgroundColor: "orange"}} onClick={() => {
+                //         setIsShowModal(true)
+                //     }} />
+                // </Tooltip>
+                return <span style={{ color: "orange", cursor: "pointer" }}
+                    onClick={() => {
                         setIsShowModal(true)
-                    }} />
-                </Tooltip>
+                    }}
+                >Xuất hóa đơn</span>
             }
         } else {
-            return <Tooltip title="Đã hoàn tất" color="green" >
-                <MdDone style={{color: "green"}} />
-            </Tooltip>
+            // return <Tooltip title="Đã hoàn tất" color="green" >
+            //     <MdDone style={{color: "green"}} />
+            // </Tooltip>
+            return <span style={{color: "green"}}>Đã thanh toán</span>
         }
     }
 

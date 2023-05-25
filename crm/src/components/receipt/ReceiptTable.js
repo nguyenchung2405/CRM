@@ -17,7 +17,7 @@ export default function ReceiptTable() {
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
     const [dataToCreateModal, setDataToCreateModal] = useState({})
     const [list, setList] = useState();
-  
+
     useEffect(() => {
       dispatch({
         type: GET_CONTRACT_LIST,

@@ -10,7 +10,6 @@ import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { MdOutlineModeEditOutline, MdPayment } from "react-icons/md";
-import { setIsOnlyPayment } from '../../redux/features/contractSlice';
 
 export default function ContractTable() {
 
@@ -73,7 +72,6 @@ export default function ContractTable() {
                     <Tooltip title="Tạo hợp đồng" color="green">
                         <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                             navigate(`${uri}/crm/contract/create`)
-                            dispatch(setIsOnlyPayment(false));
                         }} />
                     </Tooltip>
                 </div>
@@ -163,13 +161,6 @@ export default function ContractTable() {
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                 navigate(`${uri}/crm/detail/${text.id}`);
-                                dispatch(setIsOnlyPayment(false));
-                            }} />
-                        </Tooltip>
-                        <Tooltip title="Sửa đợt thanh toán" color="green">
-                            <MdPayment className="style__svg" onClick={() => {
-                                dispatch(setIsOnlyPayment(true));
-                                navigate(`${uri}/crm/detail/${text.id}`)
                             }} />
                         </Tooltip>
                     </div>

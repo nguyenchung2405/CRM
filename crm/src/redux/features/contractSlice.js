@@ -9,7 +9,6 @@ const initialState = {
     keyOfDetailJustAdd: "",
     keyOfRequestJustAdd: "",
     ownerList: [],
-    isOnlyPayment: false
 };
 
 const contractSlice = createSlice({
@@ -81,13 +80,10 @@ const contractSlice = createSlice({
         addPayment: (state, action)=>{
             state.contractDetail.payments.push(action.payload)
         },
-        setIsOnlyPayment: (state,action)=>{
-            state.isOnlyPayment = action.payload;
-        }
     }
 });
 
 export const { setContractList, setContractTypeList, setContractDetail, addContractRequest, updateContractRequest, 
 deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd, setKeyOfDetailJustAdd, 
-updateRequestDetail, setContractRequest, setOwnerList, addPayment, setIsOnlyPayment } = contractSlice.actions;
+updateRequestDetail, setContractRequest, setOwnerList, addPayment } = contractSlice.actions;
 export default contractSlice.reducer;

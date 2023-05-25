@@ -16,7 +16,7 @@ export default function EventAcceptance() {
     const [pageNumber, setPageNumber] = useState(10);
     const [list, setList] = useState([])
     const {eventAcceptanceList, totalEventAccList} = useSelector(state => state.acceptanceReducer)
-    // console.log(eventAcceptanceList, totalEventAccList)
+
     useEffect(()=>{
         dispatch({
             type: GET_ACCEPTANCE_EVENT_LIST,
