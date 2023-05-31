@@ -27,23 +27,22 @@ export default function Sidebar() {
 
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
+            getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
+            getItem(<Link to={`${uri}/crm/event`}>Quản lý sự kiện</Link>, "20", <FcDepartment />),
+            getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
+            getItem("Theo dõi thực hiện quyền lợi", "21", <FcDepartment />, [
+                getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
+                getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
+            ]),
             getItem("Quản lý khách hàng", "10", <BsFileEarmarkFill />,[
                 getItem(<Link to={`${uri}/crm/customer/type`}>Loại, Ngành nghề</Link> , "18" , <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/customer`}>Khách hàng</Link>, "16", <FcDepartment />),
             ]),
-            getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "11", <FcDepartment />),
-            getItem(<Link to={`${uri}/crm/event`}>Quản lý sự kiện</Link>, "20", <FcDepartment />),
             getItem("Quản lý sản phẩm", "12", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/channel`}>Kênh, nhóm</Link>, "15", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/type-att`}>Loại, thuộc tính</Link>, "13", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product`}>Sản phẩm</Link>, "14", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/product/special`}>Sản phẩm đặc biệt</Link>, "19", <FcDepartment />),
-            ]),
-            
-            getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
-            getItem("Quản lý nghiệm thu", "21", <FcDepartment />, [
-                getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
             ]),
         ])
     ]
@@ -102,10 +101,10 @@ export default function Sidebar() {
                                 <NavLink to="/crm/receipt">Quản lý hóa đơn</NavLink>
                             </li>
                             <li>
-                                <NavLink to="/crm/acceptance/contract">Nghiệm thu HĐ</NavLink>
+                                <NavLink to="/crm/acceptance/contract">Theo dõi thực hiện QL HĐ</NavLink>
                             </li>
                             <li>
-                                <NavLink to="/crm/acceptance/event">Nghiệm thu sự kiện</NavLink>
+                                <NavLink to="/crm/acceptance/event">Theo dõi thực hiện QL sự kiện</NavLink>
                             </li>
                         </ul>
                             

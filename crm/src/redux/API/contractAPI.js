@@ -302,6 +302,30 @@ export async function createPaymentAPI(data){
     }
 }
 
+export async function updatePaymentAPI(data){
+    try {
+        let newData = {
+            "request_date": data.request_date,
+            "desc": data.desc,
+            "total_value": data.total_value,
+            "detail_IDs": data.detail_IDs.map(detail => detail.id),
+            id: data.id
+        };
+        const result = await axios({
+            url: `${local}/api/contract/payment-update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
 export async function getRequestOfEventAPI(event_id){
     try {
         const result = await axios({

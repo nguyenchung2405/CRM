@@ -7,7 +7,7 @@ export default function ExpandTableAcceptance(props) {
 
     const renderListDetail = ()=>{
         return data.map(detail => {
-            let tuNgay = moment(new Date(detail.from_date)).format("DD-MM-YYYY");
+            let tuNgay = detail.report_date !== null ? moment(new Date(detail.report_date)).format("DD-MM-YYYY") : "";
             return <li key={detail.id}>
                 <div>{detail.desc}</div>
                 <div>{`${tuNgay}`}</div>

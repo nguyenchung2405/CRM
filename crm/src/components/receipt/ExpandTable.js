@@ -16,14 +16,23 @@ export default function ExpandTableReceipt(props) {
             return <li key={detail.id}>
                 <div>{`${tuNgay}`}</div>
                 <div>{newValue}</div>
-                <HandleFeatures isComplete={isComplete} payment_ID={detail.id} isExistExport={isExistExport} receipt_id={receipt_id} contract_id={contract_id} />
+                <HandleFeatures 
+                isComplete={isComplete} 
+                payment_ID={detail.id} 
+                isExistExport={isExistExport} 
+                receipt_id={receipt_id} 
+                contract_id={contract_id} 
+                data={detail}
+                />
             </li>
         })
     }
 
   return (
-    <ol className="acceptance__expand__table">
-        {renderListDetail()}
-    </ol>
+      <>
+          <ol className="acceptance__expand__table">
+              {renderListDetail()}
+          </ol>
+      </>
   )
 }

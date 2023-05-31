@@ -2,15 +2,19 @@ import { DatePicker, Modal, Select } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL } from '../../title/title';
+import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL, UPDATE_PAYMENT } from '../../title/title';
 
 export default function CreateReceiptModal(props) {
     
     // const {isShowModal, setIsShowModal} = props;
     const {isShowModal, setIsShowModal, dataToCreateModal} = props;
     const dispatch = useDispatch();
+    const {Option} = Select;
     const { acceptanceListInReceipt } = useSelector(state => state.receiptReducer);
+    const {contractDetail} = useSelector(state => state.contractReducer)
     const [valueModal, setValueModal] = useState({});
+    const [moreValue, setMoreValue] = useState({});
+    const [multiSelect, setMultiSelect] = useState([]);
 
     useEffect(()=>{
         if(dataToCreateModal.contract_id){
@@ -19,38 +23,75 @@ export default function CreateReceiptModal(props) {
                 contract_id: dataToCreateModal.contract_id
             });
         }
-        if(!dataToCreateModal.event_id && dataToCreateModal.contract_id){
-            dispatch({
-                type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
-                contract_id: dataToCreateModal.contract_id
-            })
-        }
+        // if(!dataToCreateModal.event_id && dataToCreateModal.contract_id){
+        //     dispatch({
+        //         type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
+        //         contract_id: dataToCreateModal.contract_id
+        //     })
+        // }
     }, [dataToCreateModal.contract_id])
 
+    // useEffect(()=>{
+    //     if(dataToCreateModal.event_id && typeof dataToCreateModal.event_id === "number" && dataToCreateModal.contract_id){
+    //         dispatch({
+    //             type: GET_ACCEPTANCE_LIST_BY_EVENT,
+    //             contract_id: dataToCreateModal.contract_id
+    //         })
+    //     }
+    // }, [dataToCreateModal.event_id, dataToCreateModal.contract_id])
+
     useEffect(()=>{
-        if(dataToCreateModal.event_id && typeof dataToCreateModal.event_id === "number" && dataToCreateModal.contract_id){
-            dispatch({
-                type: GET_ACCEPTANCE_LIST_BY_EVENT,
-                contract_id: dataToCreateModal.contract_id
-            })
+        if(dataToCreateModal.isUpdate){
+            let {isUpdate, ...rest} = dataToCreateModal;
+            let newData = {
+                ...rest,
+                total_value: rest.total_value * 1000000
+            }
+            setValueModal({...newData})
         }
-    }, [dataToCreateModal.event_id, dataToCreateModal.contract_id])
+    }, [dataToCreateModal])
+
+    useEffect(()=>{
+        setMoreValue({
+            real_time_total: contractDetail.dataContract?.real_time_total,
+            total_completed_payments: contractDetail.dataContract?.total_completed_payments,
+            total_created_payments: contractDetail.dataContract?.total_created_payments
+        })
+    }, [contractDetail])
 
     const handleCancel = ()=>{
         setIsShowModal(false)
+         setValueModal({})
+        setMultiSelect([])
     }
 
     const handleOk = ()=>{
-        setIsShowModal(false)
-        let newPayment = {
-            ...valueModal,
-            desc: "",
-            contract_ID: dataToCreateModal.contract_id,
+        if(!dataToCreateModal.isUpdate){
+            let newPayment = {
+                ...valueModal,
+                desc: "",
+                contract_ID: dataToCreateModal.contract_id,
+                detail_IDs: multiSelect
+            }
+            dispatch({
+                type: CREATE_PAYMENT,
+                data: newPayment
+            })
+        } else {
+            let newPayment ={
+                ...valueModal,
+                total_value: valueModal.total_value / 1000000,
+                request_date: moment(valueModal.request_date).format("YYYY-MM-DD")
+            }
+            dispatch({
+                type: UPDATE_PAYMENT,
+                data: newPayment
+            })
         }
-        dispatch({
-            type: CREATE_PAYMENT,
-            data: newPayment
-        })
+        
+        setIsShowModal(false)
+        setValueModal({})
+        setMultiSelect([])
     }
 
     const handleChangeValue = (name, value)=>{
@@ -61,42 +102,40 @@ export default function CreateReceiptModal(props) {
     };
 
     const valueOfField = (name)=>{
-        if(valueModal[name]){
-            return valueModal[name]
+        if(name === "request_date"){
+            if(valueModal[name]){
+                let newRequestDate = moment(new Date(valueModal[name])).format("DD-MM-YYYY")
+                return moment(newRequestDate, "DD-MM-YYYY")
+            }
+            return null
+        } else {
+            if(valueModal[name]){
+                return valueModal[name]
+            } else {
+                return ""
+            }
         }
-    }
-
-    const renderAccList =()=>{
-        return acceptanceListInReceipt.map(acc => {
-            let ngayNghiemThu = moment(new Date(acc.report_date)).format("DD-MM-YYYY")
-            return <li key={acc.id}>{`${ngayNghiemThu} - ${acc.desc}`}</li>
-        })
     }
     
     const showValue = (name)=>{
-        if(dataToCreateModal[name] >= 0 && dataToCreateModal[name] !== undefined){
-            return new Intl.NumberFormat("vi-VN").format(dataToCreateModal[name] * 1000000)
+        if(moreValue[name] >= 0 && moreValue[name] !== undefined){
+            return new Intl.NumberFormat("vi-VN").format(moreValue[name] * 1000000)
         } else {
             return 0
         }
     }
 
-    const showAccList = () => {
-        if (acceptanceListInReceipt.length > 0) {
-            return <div className="receipt__modal__acceptance__list">
-                <span>Danh sách nghiệm thu</span>
-                <div>
-                    <ol>
-                        {renderAccList()}
-                    </ol>
-                </div>
-            </div>
-        }
+    const renderOption = ()=>{
+        let newArr = dataToCreateModal.details?.filter(acc => acc.completed_evidences !== null)
+        return newArr?.map(acc => {
+            let ngayNghiemThu = moment(new Date(acc.report_date)).format("DD-MM-YYYY")
+            return <Option key={acc.id} value={acc.id}>{ngayNghiemThu}</Option>
+        })
     }
 
   return (
     <Modal
-            title={<span>Tạo yêu cầu thanh toán</span>}
+            title={<span>{!dataToCreateModal.isUpdate ? "Tạo quyết toán" : "Cập nhật quyết toán"}</span>}
             closeIcon={<svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.61719 6.5L13.4609 11.3438C13.5911 11.474 13.5911 11.6172 13.4609 11.7734L12.5625 12.6719C12.4062 12.8021 12.263 12.8021 12.1328 12.6719L11.3125 11.8125L7.28906 7.82812L2.44531 12.6719C2.3151 12.8021 2.17188 12.8021 2.01562 12.6719L1.11719 11.7734C0.986979 11.6172 0.986979 11.474 1.11719 11.3438L5.96094 6.5L1.11719 1.65625C0.986979 1.52604 0.986979 1.38281 1.11719 1.22656L2.01562 0.328125C2.17188 0.197917 2.3151 0.197917 2.44531 0.328125L7.28906 5.17188L12.1328 0.328125C12.263 0.197917 12.4062 0.197917 12.5625 0.328125L13.4609 1.22656C13.5911 1.38281 13.5911 1.52604 13.4609 1.65625L12.6016 2.47656L8.61719 6.5Z" fill="black" />
             </svg>}
@@ -106,7 +145,7 @@ export default function CreateReceiptModal(props) {
                         <span>Hủy</span>
                     </button>
                     <button type="button" className="ant-btn ant-btn-default btn__add" onClick={handleOk} >
-                        <span>Tạo</span>
+                        <span>{!dataToCreateModal.isUpdate ? "Tạo" : "Cập nhật"}</span>
                     </button>
                 </div>
             }
@@ -116,7 +155,7 @@ export default function CreateReceiptModal(props) {
         <div className="modal__content contract__service">
               <div className="modal__field field__select">
                   <div>
-                      <label className="term__label">Ngày thanh toán</label>
+                      <label className="term__label">Ngày quyết toán</label>
                       <DatePicker
                           suffixIcon={
                               <svg
@@ -139,7 +178,7 @@ export default function CreateReceiptModal(props) {
                                 let ngayThanhToan = moment(dateString, "DD-MM-YYYY").toISOString();
                                 handleChangeValue("request_date", ngayThanhToan)
                           }}
-                      //   value={valueOfField("report_date")}
+                          value={valueOfField("request_date")}
                       />
                   </div>
               </div>
@@ -156,11 +195,48 @@ export default function CreateReceiptModal(props) {
                       <label>Tiền</label>
                   </div>
               </div>
-              {showAccList()}
+              {!dataToCreateModal.isUpdate
+                  ?
+                  <>
+                      <div className="modal__field field__select modal__report__upload">
+                          <div className="modal__field">
+                              <input type="text"
+                                  name="delay_payment"
+                                  value={valueOfField("delay_payment")}
+                                  onChange={e => {
+                                      let { value, name } = e.target;
+                                      handleChangeValue(name, value)
+                                  }}
+                              />
+                              <label>Số ngày hết hạn</label>
+                          </div>
+                      </div>
+                      <div className="modal__field field__select">
+                          <div>
+                              <label className="term__label">Danh sách đã nghiệm thu</label>
+                              <Select
+                                  className="style"
+                                  showSearch
+                                  mode="multiple"
+                                  filterOption={(input, option) =>
+                                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                                  }
+                                  value={multiSelect}
+                                  onChange={(value) => {
+                                      setMultiSelect(value)
+                                  }}
+                              >
+                                  {renderOption()}
+                              </Select>
+                          </div>
+                      </div>
+                  </>
+                  : ""
+              }
               <div className="receipt__modal__acceptance__values">
-                        <h3>Tổng giá trị đã nghiệm thu: {showValue("real_time_total")} VNĐ</h3>
-                        <h3>Tổng giá trị hợp đồng đã thanh toán: {showValue("total_completed_payments")} VNĐ</h3>
-                        <h3>Tổng giá trị thanh toán đã tạo: {showValue("total_created_payments")} VNĐ</h3>
+                  <h3>Tổng giá trị đã nghiệm thu: {showValue("real_time_total")} VNĐ</h3>
+                  <h3>Tổng giá trị hợp đồng đã thanh toán: {showValue("total_completed_payments")} VNĐ</h3>
+                  <h3>Tổng giá trị thanh toán đã tạo: {showValue("total_created_payments")} VNĐ</h3>
               </div>
           </div>
     </Modal>

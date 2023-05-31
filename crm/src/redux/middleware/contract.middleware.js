@@ -1,12 +1,12 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updateRequestAPI } from "../API/contractAPI";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
-import { addPaymentToReceiptList, setReceiptList, setTotalReceipt } from "../features/receiptSlice";
+import { addPaymentToReceiptList, setReceiptList, setTotalReceipt, updatePaymentToReceiptList } from "../features/receiptSlice";
 import {message} from "antd"
 
 function* getContractList(payload) {
@@ -153,7 +153,6 @@ function* updateDetail(payload){
 
 function* createPayment(payload){
     try {
-        console.log(payload.data)
         const result = yield call(createPaymentAPI, payload.data);
         if(result.data.payment.contract_ID){
             let newPayment = {
@@ -162,9 +161,25 @@ function* createPayment(payload){
             }
             yield put(addPayment(newPayment))
             yield put(addPaymentToReceiptList({contract_id: payload.data.contract_ID, data: {...result.data.payment, receipts: [], total_value: result.data.payment.total_value}}))
-            yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
+            // yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
+            message.success("Thêm đợt thanh toán thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
+            // yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
+            message.error("Thêm đợt thanh toán thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* updatePayment(payload){
+    try {
+        const result = yield call(updatePaymentAPI, payload.data);
+        if(result.data?.msg === "Updated successfully!"){
+            message.success("Cập nhât thành công.")
+            yield put(updatePaymentToReceiptList({contract_id: payload.data.contract_id, data: payload.data}))
+        } else {
+            message.error("Cập nhât thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -217,6 +232,7 @@ export default function* contractMiddleware() {
     yield takeLatest(UPDATE_DETAIL, updateDetail)
     // Payment
     yield takeLatest(CREATE_PAYMENT, createPayment)
+    yield takeLatest(UPDATE_PAYMENT, updatePayment)
     // Event
     // call API lấy quyền lợi chung về nếu loại HĐ là "Sự kịện"
     yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
