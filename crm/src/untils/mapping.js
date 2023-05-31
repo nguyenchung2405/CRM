@@ -36,7 +36,10 @@ export function dataOfContractMapping(data) {
             event_ID: data.event_ID?.id,
             owner_name: data.owner_name,
             discount_total: data.discount_total,
-            original_total: data.original_total
+            original_total: data.original_total,
+            real_time_total: data.real_time_total,
+            total_completed_payments: data.total_completed_payments,
+            total_created_payments: data.total_created_payments,
         };
         // let dataTable = mappingDataOfTable(data)
         return {

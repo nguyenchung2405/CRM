@@ -110,14 +110,15 @@ export default function ReceiptTable() {
             }
           }}></Column>
           <Column title="Ghi chú" key="note" dataIndex="note"></Column>
-          <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" render={(text) => {
+          <Column title="Giá trị đã thanh toán (triệu)" fixed="right" key="giaTriDaThanhToan" render={(text) => {
             let total = text.total;
             let total_completed = text.total_completed_payments;
             return `${total_completed} / ${total}`
           }}></Column>
+          {/**
           <Column key="thaoTac" fixed="right" render={(text) => {
             return <div className="table__thaotac">
-              <Tooltip title="Tạo yêu cầu thanh toán" color="green" >
+              <Tooltip title="Tạo quyết toán" color="green" >
                 <AiFillPlusCircle className="style__svg" onClick={() => {
                     setIsShowCreateModal(true)
                     setDataToCreateModal({
@@ -127,11 +128,11 @@ export default function ReceiptTable() {
                       total_completed_payments: text.total_completed_payments,
                       total_created_payments: text.total_created_payments
                     })
-                  // navigate(`${uri}/crm/customer/update/${text.id}`)
                 }} />
               </Tooltip>
             </div>
           }}></Column>
+        */}
         </Table>
       </div>
     )

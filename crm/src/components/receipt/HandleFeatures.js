@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react'
 import ExportReceiptModal from './ExportReceiptModal'
 import CancelReceiptModal from './CancelReceiptModal'
 import CompleteReceiptModal from './CompleteReceiptModal'
+import CreateReceiptModal from './CreateReceiptModal';
 
 export default function HandleFeatures(props) {
 
-    const { payment_ID, isExistExport, receipt_id, contract_id, isComplete } = props;
+    const { payment_ID, isExistExport, receipt_id, contract_id, isComplete, data } = props;
     const [isExportReceipt, setIsExportReceipt] = useState(false)
     const [isShowModal, setIsShowModal] = useState(false)
     const [isShowCancelModal, setIsShowCancelModal] = useState(false)
     const [isShowCompleteModal, setIsShowCompleteModal] = useState(false)
+    // state của modal cập nhật payment
+    const [isShowPaymentModal, setIsShowPaymentModal] = useState(false);
+    const [dataToCreateModal, setDataToCreateModal] = useState({});
   
     useEffect(()=>{
         setIsExportReceipt(isExistExport)
@@ -48,11 +52,24 @@ export default function HandleFeatures(props) {
                 //         setIsShowModal(true)
                 //     }} />
                 // </Tooltip>
-                return <span style={{ color: "orange", cursor: "pointer" }}
-                    onClick={() => {
-                        setIsShowModal(true)
-                    }}
-                >Xuất hóa đơn</span>
+                return <>
+                    <span style={{ color: "orange", cursor: "pointer", marginRight: "15px" }}
+                        onClick={() => {
+                            setIsShowModal(true)
+                        }}
+                    >Xuất hóa đơn</span>
+                    <span style={{ color: "#7900ff", cursor: "pointer" }}
+                        onClick={() => {
+                            let newData = {
+                                ...data,
+                                isUpdate: true,
+                                contract_id: contract_id
+                            }
+                            setIsShowPaymentModal(true)
+                            setDataToCreateModal(newData)
+                        }}
+                    >Cập nhật quyết toán</span>
+                </>
             }
         } else {
             // return <Tooltip title="Đã hoàn tất" color="green" >
@@ -83,6 +100,11 @@ export default function HandleFeatures(props) {
               receipt_id={receipt_id}
               contract_id={contract_id}
               payment_ID={payment_ID}
+          />
+          <CreateReceiptModal
+          isShowModal={isShowPaymentModal}
+          setIsShowModal={setIsShowPaymentModal}
+          dataToCreateModal={dataToCreateModal}
           />
           {renderContent()}
       </>

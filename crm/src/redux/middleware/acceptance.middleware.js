@@ -6,10 +6,9 @@ import { addDetailContractAccList, addDetailEventAccList, setEventAccList, setRe
 
 function* createAcceptance(payload){
     try {
-        console.log(payload.data)
         if(payload.data.detail_id && payload.data.detail_id !== null){
             const result = yield call(createAcceptanceAPI, payload.data);
-            console.log("line 10",result)
+            // console.log("line 10",result)
             if (result.data.msg === "Updated successfully!") {
                 yield put(addDetailContractAccList({request_id: payload.data.request_id, data: result.data.contract_detail, detail_id: result.data.contract_detail.id}))
                 message.success("Tạo nghiệm thu thành công")
@@ -26,7 +25,7 @@ function* createAcceptance(payload){
                 completed_evidences: payload.data.completed_evidences,
             }
             const result = yield call(createAcceptanceAPI, newDataAcceptance);
-            console.log("line 25",result)
+            // console.log("line 25",result)
             if (result.data.msg === "Updated successfully!") {
                 yield put(addDetailContractAccList({request_id: payload.data.request_id, data: result.data.contract_detail}))
                 message.success("Tạo nghiệm thu thành công")

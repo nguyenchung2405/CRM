@@ -357,7 +357,7 @@ export default function CreateEvent() {
         </div>
         <div className="create__contract__value border_bottom_3px event__donors">
           <div className="display__flex">
-            <p>Nhà tài trợ</p>
+            <p>Hợp đồng tài trợ</p>
             {
               !window.location.href.includes("create")
                 ?

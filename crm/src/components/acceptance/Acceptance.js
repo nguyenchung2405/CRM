@@ -1,8 +1,10 @@
 import { Table, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react'
+import { AiFillPlusCircle } from 'react-icons/ai';
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_ACCEPTANCE_CONTRACT_LIST } from '../../title/title';
+import CreateReceiptModal from '../receipt/CreateReceiptModal';
 import ExpandTableAcceptance from './ExpandTableAcceptance';
 import ReportModal from './ReportModal';
 
@@ -15,6 +17,8 @@ export default function Acceptance() {
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [list, setList] = useState([])
+    const [isShowCreateModal, setIsShowCreateModal] = useState(false)
+    const [dataToCreateModal, setDataToCreateModal] = useState({})
     const {requestAcceptanceList, totalRequestAccList} = useSelector(state => state.acceptanceReducer)
     
     useEffect(()=>{
@@ -40,10 +44,15 @@ export default function Acceptance() {
             isShowModal={isShowModal}
             setIsShowModal={setIsShowModal}
             />
+            <CreateReceiptModal
+            isShowModal={isShowCreateModal}
+            setIsShowModal={setIsShowCreateModal}
+            dataToCreateModal={dataToCreateModal}
+            />
             <div className="content reciept__table customer__table">
                 <div className="table__features">
                     <div className="table__features__add">
-                        <h1>Quản lý nghiệm thu</h1>
+                        <h1>Theo dõi thực hiện quyền lợi hợp đồng</h1>
                         <Tooltip title="Tạo nghiệm thu" color="green">
                             <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                                 setIsShowModal(true)
@@ -101,7 +110,22 @@ export default function Acceptance() {
                     }}></Column>
                     <Column title="Số lượng" dataIndex="quality"></Column>
                     <Column fixed="right" render={(text) => {
-                        
+                        // console.log(text)
+                        return <div className="table__thaotac">
+                            <Tooltip title="Tạo quyết toán" color="green" >
+                                <AiFillPlusCircle className="style__svg" onClick={() => {
+                                    setIsShowCreateModal(true)
+                                    setDataToCreateModal({
+                                        contract_id: text.contract_ID,
+                                        details: text.details,
+                                        // event_id: text.event_ID?.id,
+                                        // real_time_total: text.real_time_total,
+                                        // total_completed_payments: text.total_completed_payments,
+                                        // total_created_payments: text.total_created_payments
+                                    })
+                                }} />
+                            </Tooltip>
+                        </div>
                     }}></Column>
                 </Table>
             </div>

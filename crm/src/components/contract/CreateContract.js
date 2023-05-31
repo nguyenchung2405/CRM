@@ -365,6 +365,30 @@ export default function CreateContract() {
     }
   }
 
+  const showPayment = ()=>{
+    return dotThanhToan?.map((payment, index) => {
+      let convertDate = moment(new Date(payment.request_date)).format("DD-MM-YYYY");
+      let isComplete = payment?.receipts[0]?.is_complete;
+      let isExistExport = payment.receipts.length > 0 ? true : false;
+      let statusOfPayment;
+      if (!isComplete) {
+        if (isExistExport) {
+          statusOfPayment = "Đã xuất hóa đơn"
+        } else {
+          statusOfPayment = "Chưa xuất hóa đơn"
+        }
+      } else {
+        statusOfPayment = "Đã thanh toán"
+      }
+      return <div className="payment__contract">
+        <span>Đợt thanh toán {index + 1}</span>
+        <span>{convertDate}</span>
+        <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
+        <span>{statusOfPayment}</span>
+      </div>
+    })
+  }
+
   return (
     <div className="create__contract content">
       {showLoading()}
@@ -987,14 +1011,7 @@ export default function CreateContract() {
               }} />
           </div>
           <div className="contract__payment__process">
-            {dotThanhToan?.map((payment, index) => {
-              let convertDate = moment(new Date(payment.request_date)).format("DD-MM-YYYY");
-              return <div className="payment__contract">
-                <span>Đợt thanh toán {index + 1}</span>
-                <span>{convertDate}</span>
-                <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
-              </div>
-            })}
+            {showPayment()}
           </div>
 
           {/**

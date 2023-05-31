@@ -285,6 +285,27 @@ const createPayment = async (req, res)=>{
     }
 }
 
+const updatePayment= async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/payment/update?id=${req.body.id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 const getFile = async (req, res)=>{
     try {
         axios.get(req.query.link,{ responseType: 'arraybuffer' })
@@ -320,5 +341,6 @@ module.exports = {
     createDetail,
     updateDetail,
     createPayment,
-    getFile
+    getFile,
+    updatePayment
 }

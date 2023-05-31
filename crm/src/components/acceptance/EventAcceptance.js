@@ -44,7 +44,7 @@ export default function EventAcceptance() {
             <div className="content reciept__table customer__table">
                 <div className="table__features">
                     <div className="table__features__add">
-                        <h1>Quản lý nghiệm thu sự kiện</h1>
+                        <h1>Theo dõi thực hiện quyền lợi sự kiện</h1>
                         <Tooltip title="Tạo nghiệm thu" color="green">
                             <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                                 setIsShowModal(true)

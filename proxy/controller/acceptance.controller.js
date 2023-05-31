@@ -119,7 +119,7 @@ const getAcceptanceContractList = async (req, res)=>{
         let { headers: { authorization } } = req;
         let {page, page_size} = req.query;
         const result = await axios({
-            url: `${local}/contract/request/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=true`,
+            url: `${local}/contract/request/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
             method: "GET",
             headers: {
                 Authorization: authorization

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile } = require("../controller/contract.controller");
+const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment } = require("../controller/contract.controller");
 const { uploadFileDetail } = require("../middleware/upload");
 const contractRouter = express.Router();
 
@@ -20,6 +20,7 @@ contractRouter.post("/detail-create", createDetail)
 contractRouter.put("/detail-update", updateDetail)
 // Payment
 contractRouter.post("/payment-add", createPayment)
+contractRouter.put("/payment-update", updatePayment)
 // get file
 contractRouter.get("/get-file", getFile)
 
