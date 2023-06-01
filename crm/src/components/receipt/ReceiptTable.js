@@ -93,14 +93,18 @@ export default function ReceiptTable() {
           }}></Column>
           <Column title="Tên khách hàng" fixed="left" key="clientName" render={(text) => text.client_ID.name}></Column>
           <Column title="Số hợp đồng" key="soHopDong" dataIndex="contract_number"></Column>
-          <Column title="Số đợt thanh toán" key="soDotThanhToan " dataIndex="payment_count"></Column>
+          <Column title="Số đợt thanh toán" key="soDotThanhToan " 
+          dataIndex="payment_count" 
+          sorter={(a,b) => a.payment_count - b.payment_count}
+          sortDirections={['ascend','descend']}
+          ></Column>
           <Column title="Hình thức thanh toán" key="hinhThucThanhToan" render={(text) => {
             let soLanThanhToan = text.payment_type;
             let kieuThanhToan = text.pay_before_run ? "Trả trước" : "Trả sau";
             return `${soLanThanhToan} / ${kieuThanhToan}`
           }}></Column>
-          <Column title="Số hóa đơn đã xuất" key="soHoaDonDaXuat" dataIndex="receipt_count"></Column>
-          <Column title="Số hóa đơn đã thanh toán" dataIndex="completed_receipt_count"></Column>
+          <Column title="Số hóa đơn đã xuất" key="soHoaDonDaXuat" dataIndex="receipt_count" sorter={(a,b) => a.receipt_count - b.receipt_count}></Column>
+          <Column title="Số hóa đơn đã thanh toán" dataIndex="completed_receipt_count" sorter={(a,b) => a.completed_receipt_count - b.completed_receipt_count}></Column>
           <Column title="Ngày xuất hóa đơn cuối" key="ngayXuatHDCuoi" dataIndex="last_receipt_exported" render={(text) => {
             if (text !== null) {
               let newDate = moment(text).format("DD-MM-YYYY");
