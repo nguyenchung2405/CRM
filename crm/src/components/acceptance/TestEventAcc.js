@@ -8,9 +8,9 @@ import { GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST, GET_EVENT_LIST
 import CreateReceiptModal from '../receipt/CreateReceiptModal';
 import ExpandTableAcceptance from './ExpandTableAcceptance';
 import ReportModal from './ReportModal';
-import ExpandEventAcceptance from './ExpandEventAcc';
+import TestExpandEventAcceptance from './ExpandEventAcc';
 
-export default function EventAcceptance() {
+export default function TestEventAcceptance() {
 
     const {Column} = Table;
     const dispatch = useDispatch();
@@ -79,7 +79,7 @@ export default function EventAcceptance() {
                         showExpandColumn: true,
                         // expandRowByClick: true,
                         expandedRowRender: record => {
-                            return <ExpandEventAcceptance data={record} />
+                            return <TestExpandEventAcceptance data={record} />
                         },
                     }}
                     pagination={{

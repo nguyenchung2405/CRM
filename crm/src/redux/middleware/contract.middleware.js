@@ -6,7 +6,7 @@ import { addContractRequest, addPayment, deleteContractRequest, setContractDetai
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
-import { addPaymentToReceiptList, setReceiptList, setTotalReceipt, updatePaymentToReceiptList } from "../features/receiptSlice";
+import { addPaymentToReceiptList, updatePaymentToReceiptList } from "../features/receiptSlice";
 import {message} from "antd"
 
 function* getContractList(payload) {
@@ -15,8 +15,6 @@ function* getContractList(payload) {
         let result = yield call(getContractListAPI, page, pageNumber);
         let { total_data: total, contract: data } = result.data;
         yield put(setContractList({ total, contractList: data }));
-        yield put(setTotalReceipt(total))
-        yield put(setReceiptList(data))
         yield put(setIsLoading(false))
     } catch (error) {
         console.log(error)
@@ -159,10 +157,10 @@ function* createPayment(payload){
                 ...result.data.payment,
                 total_value: result.data.payment.total_value * 1000000,
             }
+            message.success("Thêm đợt thanh toán thành công.")
             yield put(addPayment(newPayment))
             yield put(addPaymentToReceiptList({contract_id: payload.data.contract_ID, data: {...result.data.payment, receipts: [], total_value: result.data.payment.total_value}}))
             // yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
-            message.success("Thêm đợt thanh toán thành công.")
         } else {
             // yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
             message.error("Thêm đợt thanh toán thất bại.")

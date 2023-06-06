@@ -76,3 +76,19 @@ export async function getAcceptaneListByContractAPI(contract_id, is_event){
         return "Thât bại"
     }
 }
+
+export async function getPaymentListAPI(page, pageNumber){
+    try {
+        const result = await axios({
+            url: `${local}/api/receipt/get-payment-list?page=${page}&page_size=${pageNumber}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}

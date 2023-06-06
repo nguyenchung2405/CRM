@@ -1,13 +1,15 @@
-import { Modal, Radio } from 'antd'
+import { message, Modal, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
+import { createAcceptanceAPI, createDetailInAcceptanceAPI, createDetailInEventAcceptanceAPI, createEventAcceptanceAPI } from '../../redux/API/acceptanceAPI';
+import { setAcceptanceJustCreated } from '../../redux/features/acceptanceSlice';
 import { CREATE_ACCEPTANCE, CREATE_EVENT_ACCEPTANCE } from '../../title/title';
 import ContractContentModal from './ContractContentModal';
 import EventContentModal from './EventContentModal';
 
 export default function ReportModal(props) {
   
-    const {isShowModal, setIsShowModal, eventMode} = props; 
+    const {isShowModal, setIsShowModal, eventMode, list, setList} = props; 
     const dispatch = useDispatch();
     const [valueRadio, setValueRadio] = useState(false)
     const [valueForm, setValueForm] = useState({});
@@ -27,18 +29,14 @@ export default function ReportModal(props) {
         setContracts([])
     }
 
-    const handleOk = ()=>{
+    const handleOk = async ()=>{
         if(!valueRadio){
-            dispatch({
-                type: CREATE_ACCEPTANCE,
-                data: valueForm
-            })
+            // console.log("tạo acc cho hđ")
+            handleCreateAcc(valueForm)
         } else {
             valueForm.contract_IDs = contracts
-            dispatch({
-                type: CREATE_EVENT_ACCEPTANCE,
-                data: valueForm
-            })
+            // console.log("tạo acc cho event")
+            handleCreateAccOfEvent(valueForm)
         }
         setIsShowModal(false)
         setValueForm({});
@@ -49,6 +47,65 @@ export default function ReportModal(props) {
     const handleChangeRadio = (e)=>{
         let {value} = e.target;
         setValueRadio(value)
+    }
+
+    async function handleCreateAcc(data){
+        try {
+            if (data.detail_id && data.detail_id !== null) {
+                const result = await createAcceptanceAPI(valueForm)
+                console.log("line 55", result)
+                if (result.data.msg === "Updated successfully!") {
+                    message.success("Tạo nghiệm thu thành công")
+                    dispatch(setAcceptanceJustCreated({request_id: data.request_id, data: result.data.contract_detail, detail_id: result.data.contract_detail.id}))
+                } else {
+                    message.error("Tạo nghiệm thu thất bại")
+                }
+            } else {
+                const resultDetail = await createDetailInAcceptanceAPI(valueForm);
+                console.log("line 64", resultDetail)
+                let detail_id = resultDetail.data.details[0].id;
+                let newDataAcceptance = {
+                    ...resultDetail.data.details[0],
+                    detail_id,
+                    files: valueForm.files,
+                    completed_evidences: valueForm.completed_evidences,
+                    report_date: valueForm.report_date
+                }
+                const result = await createAcceptanceAPI(newDataAcceptance);
+                console.log("line 73", result)
+                if (result.data.msg === "Updated successfully!") {
+                    message.success("Tạo nghiệm thu thành công")
+                    dispatch(setAcceptanceJustCreated({request_id: data.request_id, data: result.data.contract_detail}))
+                } else {
+                    message.error("Tạo nghiệm thu thất bại")
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function handleCreateAccOfEvent(valueForm){
+        try {
+            const resultDetail = await createDetailInEventAcceptanceAPI(valueForm);
+            let newDataAcceptance = {
+                ...resultDetail.data?.event_executive_detail,
+                files: valueForm.files,
+                completed_evidences: valueForm.completed_evidences,
+                contract_IDs: valueForm.contract_IDs,
+                detail_id: resultDetail.data?.event_executive_detail.id,
+                report_date: valueForm.report_date
+            };
+            const result = await createEventAcceptanceAPI(newDataAcceptance);
+            if(result.data?.msg === "Updated successfully!"){
+                dispatch(setAcceptanceJustCreated({data: result.data.executive_detail, detail_id: result.data.executive_detail.event_detail_ID}))
+                message.success("Tạo nghiệm thu thành công")
+            } else {
+                message.error("Tạo nghiệm thu thất bại")
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
