@@ -5,6 +5,7 @@ const initialState = {
     totalRequestAccList: 0,
     eventAcceptanceList: [],
     totalEventAccList: 0,
+    acceptanceJustCreated: {}
 }
 
 const acceptanceSlice = createSlice({
@@ -38,10 +39,13 @@ const acceptanceSlice = createSlice({
                 let contractIndex = state.requestAcceptanceList.findIndex(event => event.id === request_id);
                 state.requestAcceptanceList[contractIndex].details.push(data);
             }
+        },
+        setAcceptanceJustCreated: (state, action)=>{
+            state.acceptanceJustCreated = action.payload;
         }
     }
 })
 
 export const {setRequestAccList, setTotalRequestAccList, setEventAccList, setTotalEventAccList,
-addDetailEventAccList, addDetailContractAccList} = acceptanceSlice.actions;
+addDetailEventAccList, addDetailContractAccList, setAcceptanceJustCreated} = acceptanceSlice.actions;
 export default acceptanceSlice.reducer;

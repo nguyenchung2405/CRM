@@ -42,7 +42,7 @@ export async function createAcceptanceAPI(data){
 
 export async function createEventAcceptanceAPI(data){
     try {
-        console.log("createAcceptanceAPI", data)
+        // console.log("createAcceptanceAPI", data)
         const formAcceptance = new FormData();
         let {files, ...rest} = data;
         if(files?.length > 0){
@@ -103,7 +103,7 @@ export async function createDetailInAcceptanceAPI(data){
 
 export async function createDetailInEventAcceptanceAPI(data){
     try {
-        console.log("data", data)
+        // console.log("data", data)
         let {detail_id, desc, from_date, ...rest} = data;
         let file = data?.fileDetail;
         const formDetail = new FormData();

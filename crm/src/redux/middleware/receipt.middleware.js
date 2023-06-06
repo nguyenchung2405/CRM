@@ -1,8 +1,8 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CANCEL_EXPORT_RECEIPT, COMPLETE_EXPORT_RECEIPT, CREATE_EXPORT_RECEIPT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT } from "../../title/title";
-import { cancelExportReceiptAPI, completeExportReceiptAPI, createExportReceiptAPI, getAcceptaneListByContractAPI } from "../API/receiptAPI";
-import { addReceiptToList, completeReceiptFromList, removeReceiptFromList, setAccListInReceipt } from "../features/receiptSlice";
+import { CANCEL_EXPORT_RECEIPT, COMPLETE_EXPORT_RECEIPT, CREATE_EXPORT_RECEIPT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_PAYMENT_LIST } from "../../title/title";
+import { cancelExportReceiptAPI, completeExportReceiptAPI, createExportReceiptAPI, getAcceptaneListByContractAPI, getPaymentListAPI } from "../API/receiptAPI";
+import { addReceiptToList, completeReceiptFromList, removeReceiptFromList, setAccListInReceipt, setAccListInReceiptEvent, setReceiptList, setTotalReceipt } from "../features/receiptSlice";
 
 function* createExportReceipt(payload){
     try {
@@ -53,7 +53,7 @@ function* completeExportReceipt(payload){
 function* getAcceptaneListByContract(payload){
     try {
         const result = yield call(getAcceptaneListByContractAPI, payload.contract_id, false);
-        yield put(setAccListInReceipt(result.data.contract_detail))
+        yield put(setAccListInReceiptEvent(result.data.contract_detail))
     } catch (error) {
         console.log(error)
     }
@@ -68,10 +68,23 @@ function* getAcceptaneListByEvent(payload){
     }
 }
 
+function* getPaymentList(payload){
+    try {
+        let { page, pageNumber } = payload.data;
+        const result = yield call(getPaymentListAPI, page, pageNumber);
+        yield put(setTotalReceipt(result.total_data))
+        yield put(setReceiptList(result.payment))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* receiptMiddleware(){
     yield takeLatest(CREATE_EXPORT_RECEIPT, createExportReceipt)
     yield takeLatest(CANCEL_EXPORT_RECEIPT, cancelExportReceipt)
     yield takeLatest(COMPLETE_EXPORT_RECEIPT, completeExportReceipt)
     yield takeLatest(GET_ACCEPTANCE_LIST_BY_CONTRACT, getAcceptaneListByContract)
     yield takeLatest(GET_ACCEPTANCE_LIST_BY_EVENT, getAcceptaneListByEvent)
+    // lấy danh sách payment để hiển thị danh sách hóa đơn
+    yield takeLatest(GET_PAYMENT_LIST, getPaymentList)
 }

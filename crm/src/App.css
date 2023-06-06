@@ -457,7 +457,8 @@ img.file, svg.file {
     border-color: #459C60;
 }
 
-.customer__table span.anticon svg {
+.customer__table span.anticon.active svg,
+.customer__table span.ant-dropdown-trigger.active span.anticon.anticon-filter svg {
     color: #459C60;
 }
 

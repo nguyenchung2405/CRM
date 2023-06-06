@@ -1,53 +1,71 @@
 import { Table, Tooltip } from 'antd';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { AiFillPlusCircle } from 'react-icons/ai';
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_ACCEPTANCE_CONTRACT_LIST } from '../../title/title';
-import CreateReceiptModal from '../receipt/CreateReceiptModal';
-import ExpandTableAcceptance from './ExpandTableAcceptance';
+import { GET_CONTRACT_LIST } from '../../title/title';
 import ReportModal from './ReportModal';
+import ExpandTableAcceptance from "./ExpandTableAcceptance"
+import CreateReceiptModal from '../receipt/CreateReceiptModal';
+import { AiFillPlusCircle } from 'react-icons/ai';
 
 export default function Acceptance() {
 
     const {Column} = Table;
     const dispatch = useDispatch();
     const [isShowModal, setIsShowModal] = useState(false)
-    const [eventMode, setEventMode] = useState(false)
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [list, setList] = useState([])
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
     const [dataToCreateModal, setDataToCreateModal] = useState({})
-    const {requestAcceptanceList, totalRequestAccList} = useSelector(state => state.acceptanceReducer)
+    // const {requestAcceptanceList, totalRequestAccList} = useSelector(state => state.acceptanceReducer)
+    const { total, contractList } = useSelector(state => state.contractReducer);
     
     useEffect(()=>{
         dispatch({
-            type: GET_ACCEPTANCE_CONTRACT_LIST,
+            type: GET_CONTRACT_LIST,
             data: {page, pageNumber}
         })
     }, [page, pageNumber])
 
     useEffect(()=>{
-        let newList = requestAcceptanceList.map(item => {
+        let newList = contractList.map(item => {
             return {
                 ...item,
                 key: item.id
             }
         });
         setList(newList)
-    }, [requestAcceptanceList])
+    }, [contractList])
+
+    const filterStatus = [
+        {
+            text: "Đang chạy",
+            value: "Đang chạy"
+        },
+        {
+            text: "Kết thúc",
+            value: "Kết thúc"
+        },
+        {
+            text: "Chưa chạy",
+            value: "Chưa chạy"
+        },
+    ]
     
     return (
         <div className="acceptance__table content">
             <ReportModal 
             isShowModal={isShowModal}
             setIsShowModal={setIsShowModal}
+            list={list}
+            setList={setList}
             />
             <CreateReceiptModal
-            isShowModal={isShowCreateModal}
-            setIsShowModal={setIsShowCreateModal}
-            dataToCreateModal={dataToCreateModal}
+                isShowModal={isShowCreateModal}
+                setIsShowModal={setIsShowCreateModal}
+                dataToCreateModal={dataToCreateModal}
             />
             <div className="content reciept__table customer__table">
                 <div className="table__features">
@@ -56,7 +74,6 @@ export default function Acceptance() {
                         <Tooltip title="Tạo nghiệm thu" color="green">
                             <FcPlus style={{ marginRight: "5px" }} onClick={() => {
                                 setIsShowModal(true)
-                                setEventMode(false)
                             }} />
                         </Tooltip>
                     </div>
@@ -75,9 +92,8 @@ export default function Acceptance() {
                         showExpandColumn: true,
                         // expandRowByClick: true,
                         expandedRowRender: record => {
-                            return <ExpandTableAcceptance data={record.details} />
+                            return <ExpandTableAcceptance data={record} />
                         },
-                        rowExpandable: (record) => record.details.length > 0,
                     }}
                     pagination={{
                         position: ["bottomLeft"],
@@ -85,7 +101,7 @@ export default function Acceptance() {
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
                         showSizeChanger: true,
-                        total: totalRequestAccList,
+                        total: total,
                         pageSizeOptions: [10, 50, 100],
                         onChange: (page, pageNumber) => {
                             setPageNumber(pageNumber);
@@ -102,31 +118,52 @@ export default function Acceptance() {
                         x: "max-content",
                     }}
                 >
-                    <Column title="Khách hàng" dataIndex="client_name"></Column>
-                    <Column title="Số hợp đồng" dataIndex="contract_number"></Column>
-                    <Column title="Tên quyền lợi" fixed="left" render={(text) => {
-                        // console.log(text)
-                        return text.product_ID.name
-                    }}></Column>
-                    <Column title="Số lượng" dataIndex="quality"></Column>
-                    <Column fixed="right" render={(text) => {
-                        // console.log(text)
-                        return <div className="table__thaotac">
-                            <Tooltip title="Tạo quyết toán" color="green" >
-                                <AiFillPlusCircle className="style__svg" onClick={() => {
-                                    setIsShowCreateModal(true)
-                                    setDataToCreateModal({
-                                        contract_id: text.contract_ID,
-                                        details: text.details,
-                                        // event_id: text.event_ID?.id,
-                                        // real_time_total: text.real_time_total,
-                                        // total_completed_payments: text.total_completed_payments,
-                                        // total_created_payments: text.total_created_payments
-                                    })
-                                }} />
-                            </Tooltip>
-                        </div>
-                    }}></Column>
+                <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.name.toUpperCase() }} />
+                <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
+                    render={(text) => {
+                        return text?.client_ID?.name
+                    }} 
+                />
+                <Column className="contract__table__time" title="Thời gian thực hiện" key="time"
+                    render={(text) => {
+                        let batDau = moment(text.begin_date).format("DD/MM/YYYY");
+                        let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
+                        return `${batDau} - ${ketThuc}`
+                    }} />
+                <Column className="contract__table__status" 
+                    filters={filterStatus}
+                    filterSearch={true}
+                    filterMode="menu"
+                    onFilter={(value, record) => { return record.status.toLowerCase().includes(value.toLowerCase()) }}
+                    title="Trạng thái" 
+                    key="status"
+                    render={(text) => {
+                        return <span status={text.status.toLowerCase()}>{text.status}</span>
+                    }} 
+                />
+                <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="nguoiDauMoi" dataIndex="owner_name" />
+                <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="nguoiTheoDoi" dataIndex="creater_name" />
+                <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
+                    let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
+                    return total + " VNĐ"
+                }} />
+                <Column fixed="right" render={(text) => {
+                    return <div className="table__thaotac">
+                        <Tooltip title="Tạo quyết toán" color="green" >
+                            <AiFillPlusCircle className="style__svg" onClick={() => {
+                                  setIsShowCreateModal(true)
+                                  setDataToCreateModal({
+                                      contract_id: text.id,
+                                    //   details: text.details,
+                                      // event_id: text.event_ID?.id,
+                                      // real_time_total: text.real_time_total,
+                                      // total_completed_payments: text.total_completed_payments,
+                                      // total_created_payments: text.total_created_payments
+                                  })
+                            }} />
+                        </Tooltip>
+                    </div>
+                }}></Column>
                 </Table>
             </div>
         </div>
