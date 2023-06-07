@@ -26,7 +26,7 @@ export default function CreateReceiptModal(props) {
             });
             dispatch({
                 type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
-                contract_id: dataToCreateModal.contract_id
+                data: {contract_id: dataToCreateModal.contract_id, has_payment: false, is_complete: true}
             })
         }
         // if(!dataToCreateModal.event_id && dataToCreateModal.contract_id){
@@ -133,8 +133,8 @@ export default function CreateReceiptModal(props) {
     }
 
     const renderOption = ()=>{
-        let newArr = acceptanceListInReceiptEvent?.filter(acc => acc.completed_evidences !== null)
-        return newArr?.map(acc => {
+        return acceptanceListInReceiptEvent?.map(acc => {
+            console.log(acc)
             let ngayNghiemThu = moment(new Date(acc.report_date)).format("DD-MM-YYYY")
             return <Option key={acc.id} value={acc.id}>{ngayNghiemThu}</Option>
         })
@@ -147,8 +147,7 @@ export default function CreateReceiptModal(props) {
     }
 
     const renderAccOfEvent = ()=>{
-        let newArr = acceptanceListInReceipt.filter(item => item.completed_evidences !== null);
-        return newArr.map(item => {
+        return acceptanceListInReceipt.map(item => {
             let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
             return <Option key={item.id} value={item.id}>{convertDate}</Option>
         })
@@ -178,11 +177,11 @@ export default function CreateReceiptModal(props) {
                                     onChange={(value) => {
                                         dispatch({
                                             type: GET_ACCEPTANCE_LIST_BY_EVENT,
-                                            contract_id: value
+                                            data: {contract_id: value, has_payment: false, is_complete: true}
                                         })
                                         dispatch({
                                             type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
-                                            contract_id: value
+                                            data: {contract_id: value, has_payment: false, is_complete: true}
                                         })
                                         handleChangeValue("contract_ID", value)
                                     }}

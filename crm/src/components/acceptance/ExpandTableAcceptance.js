@@ -25,8 +25,13 @@ export default function ExpandTableAcceptance(props) {
     const getRequestList = async (contract_id)=>{
         const result = await getContractRequestAPI(contract_id)
         let newData = result.data.contract_request.map(item => {
-            return {...item, key: item.id}
-        });
+            return {
+                ...item,
+                key: item.id,
+                details: item.details.filter(detail => detail.completed_evidences === null),
+                detail_completed: item.details.filter(detail => detail.completed_evidences !== null).length
+            }
+        })
         setRequestList(newData)
     }
 
@@ -58,7 +63,7 @@ export default function ExpandTableAcceptance(props) {
             console.log(error)
         }
     }
-
+    
   return (
       <>
           <Table
@@ -71,12 +76,14 @@ export default function ExpandTableAcceptance(props) {
                           {renderListDetail(record)}
                       </ol>
                   },
+                  rowExpandable: (record) => record.quality - record.detail_completed > 0 && record.details.length > 0,
               }}
               pagination={false}
           >
               <Column title="Tên quyền lợi" fixed="left" render={(text) => {
                   return text.product_ID.name
               }}></Column>
+              <Column title="Số quyền lợi đã thực hiện" dataIndex="detail_completed"></Column>
               <Column title="Số lượng" dataIndex="quality"></Column>
           </Table>
       </>

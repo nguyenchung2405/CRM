@@ -2,10 +2,10 @@ import axios from "axios"
 import moment from "moment";
 import { local, TOKEN } from "../../title/title";
 
-export async function getContractListAPI(page, pageNumber) {
+export async function getContractListAPI(page, pageNumber, status) {
     try {
         const result = await axios({
-            url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&sort_by=id&order=desc`,
+            url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -366,6 +366,23 @@ export async function getSelectRequestGeneralAPI(contract_id){
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
+            }
+        });
+        return result;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function getExportFileAPI(contract_id){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN,
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             }
         });
         return result.data;

@@ -72,9 +72,6 @@ export default function Sidebar() {
                     
                     <div className="sidebar__sub__menu">
                         <ul>
-                        <li>
-                                <NavLink to="/crm/test-event-acc">Test event acc</NavLink>
-                            </li>
                             <li>
                                 <NavLink to="/crm/customer">Quản lý khách hàng</NavLink>
                             </li>
