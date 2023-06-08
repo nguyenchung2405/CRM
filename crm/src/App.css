@@ -669,6 +669,19 @@ div.modal__content .modal__field.field__select {
     padding-left: 63px;
 }
 
+div.modal__content .modal__field.field__select.width_525 div.acceptance__list {
+    width: 525px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+div.modal__content .modal__field.field__select.width_525 div.acceptance__list div.acceptance__row {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 9px;
+}
+
 div.modal__content .modal__field .ant-picker .ant-picker-input {
     width: 44%;
 }
@@ -1445,13 +1458,24 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     color: #F1416C;
 }
 
-.create__contract .create__contract__term .display__flex > svg {
+.create__contract .create__contract__term .display__flex svg {
     color: #639a79;
     font-size: 22px;
 }
 
-.create__contract .create__contract__term .display__flex > svg:nth-child(odd){
+.create__contract .create__contract__term .display__flex div.upload__file {
+    position: relative;
+    width: 22px;
+    height: 22px;
     margin: 0 10px;
+}
+
+.create__contract .create__contract__term .display__flex div.upload__file input {
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .create__contract .create__contract__footer {

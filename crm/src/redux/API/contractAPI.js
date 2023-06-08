@@ -375,17 +375,20 @@ export async function getSelectRequestGeneralAPI(contract_id){
     }
 }
 
-export async function getExportFileAPI(contract_id){
+export async function importFileExcelAPI(data){
     try {
+        const form = new FormData();
+        form.append("file", data.file)
         const result = await axios({
-            url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
-            method: "GET",
+            url: `${local}/api/contract/import-file-excel?contract_ID=${data.contract_id}`,
+            method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN,
-                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            }
+                'Content-Type': 'multipart/form-data',
+            },
+            data: form
         });
-        return result.data;
+        return result;
     } catch (error) {
         console.log(error)
         return "Thất bại"

@@ -1,5 +1,7 @@
 const axios = require("axios");
 const { local } = require("../untils/title");
+const formData = require("form-data");
+const fs = require("fs")
 
 const getContractList = async (req, res) => {
     try {
@@ -371,6 +373,32 @@ const getExportFile = (req,res)=>{
     }
 }
 
+const importFileExcel = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { contract_ID } = req.query;
+        let {file} = req;
+        const form = new formData();
+        form.append("file", fs.readFileSync(file.path), file.originalname)
+        const result = await axios({
+            url: `${local}/contract/modify-requests-by-file?contract_ID=${contract_ID}`,
+            method: "POST",
+            headers: {
+                Authorization: authorization,
+                'Content-Type': 'multipart/form-data'
+            },
+            data: form
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -388,5 +416,6 @@ module.exports = {
     createPayment,
     getFile,
     updatePayment,
-    getExportFile
+    getExportFile,
+    importFileExcel
 }

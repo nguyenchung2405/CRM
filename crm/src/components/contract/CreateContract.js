@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox, Too
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_EXPORT_FILE, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, local, SELECT_REQUEST_GENERAL, TOKEN, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, IMPORT_FILE, local, SELECT_REQUEST_GENERAL, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -729,10 +729,20 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
-            <Tooltip title="Import" color="green">
-              <CiImport onClick={()=>{}}/>
-            </Tooltip>
-            <Tooltip title="Export" color="green">
+            <div className="upload__file">
+              <Tooltip title="Nhập file" color="green">
+                <label htmlFor="upFileExcel">
+                  <CiImport/>
+                </label>
+                <input id="upFileExcel" type="file" onChange={e => {
+                    dispatch({
+                      type: IMPORT_FILE,
+                      data: {file: e.target.files[0], contract_id}
+                    })
+                }} />
+              </Tooltip>
+            </div>
+            <Tooltip title="Xuất file" color="green">
               <CiExport
                 onClick={async (e) => {
                   const result = await axios({
@@ -744,13 +754,9 @@ export default function CreateContract() {
                     },
                     responseType: 'arraybuffer'
                   });
-                  console.log(result)
                   let fileBlob = new Blob([result.data], {
                     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
                   })
-                  // const blob = new Blob([response.data], {
-                  //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                  // });
                   FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
                 }}
               />
