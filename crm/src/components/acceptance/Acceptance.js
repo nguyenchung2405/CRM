@@ -25,7 +25,7 @@ export default function Acceptance() {
     useEffect(()=>{
         dispatch({
             type: GET_CONTRACT_LIST,
-            data: {page, pageNumber}
+            data: {page, pageNumber, status: "Đang chạy"}
         })
     }, [page, pageNumber])
 
@@ -38,21 +38,6 @@ export default function Acceptance() {
         });
         setList(newList)
     }, [contractList])
-
-    const filterStatus = [
-        {
-            text: "Đang chạy",
-            value: "Đang chạy"
-        },
-        {
-            text: "Kết thúc",
-            value: "Kết thúc"
-        },
-        {
-            text: "Chưa chạy",
-            value: "Chưa chạy"
-        },
-    ]
     
     return (
         <div className="acceptance__table content">
@@ -130,17 +115,6 @@ export default function Acceptance() {
                         let ketThuc = moment(text.end_date).format("DD/MM/YYYY");
                         return `${batDau} - ${ketThuc}`
                     }} />
-                <Column className="contract__table__status" 
-                    filters={filterStatus}
-                    filterSearch={true}
-                    filterMode="menu"
-                    onFilter={(value, record) => { return record.status.toLowerCase().includes(value.toLowerCase()) }}
-                    title="Trạng thái" 
-                    key="status"
-                    render={(text) => {
-                        return <span status={text.status.toLowerCase()}>{text.status}</span>
-                    }} 
-                />
                 <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="nguoiDauMoi" dataIndex="owner_name" />
                 <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="nguoiTheoDoi" dataIndex="creater_name" />
                 <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {

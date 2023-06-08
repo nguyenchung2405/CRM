@@ -52,7 +52,8 @@ function* completeExportReceipt(payload){
 
 function* getAcceptaneListByContract(payload){
     try {
-        const result = yield call(getAcceptaneListByContractAPI, payload.contract_id, false);
+        let {contract_id, has_payment, is_complete} = payload.data;
+        const result = yield call(getAcceptaneListByContractAPI, contract_id, has_payment, is_complete, false);
         yield put(setAccListInReceiptEvent(result.data.contract_detail))
     } catch (error) {
         console.log(error)
@@ -61,7 +62,8 @@ function* getAcceptaneListByContract(payload){
 
 function* getAcceptaneListByEvent(payload){
     try {
-        const result = yield call(getAcceptaneListByContractAPI, payload.contract_id, true);
+        let {contract_id, has_payment, is_complete} = payload.data;
+        const result = yield call(getAcceptaneListByContractAPI, contract_id, has_payment, is_complete, true);
         yield put(setAccListInReceipt(result.data.executive_detail))
     } catch (error) {
         console.log(error)

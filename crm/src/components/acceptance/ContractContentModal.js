@@ -22,7 +22,7 @@ export default function ContractContentModal(props) {
     useEffect(() => {
         dispatch({
             type: GET_CONTRACT_LIST,
-            data: { page:1, pageNumber: 1000 }
+            data: { page:1, pageNumber: 1000, status: "Đang chạy" }
         })
     }, [dispatch]);
 

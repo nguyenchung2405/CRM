@@ -26,7 +26,12 @@ export default function ExpandEventAcceptance(props) {
     const getRequestList = async (event_id)=>{
         const result = await getEventInforAPI(event_id)
         let newData = result.data.event_management[0].details.map(item => {
-            return {...item, key: item.id}
+            return {
+                ...item, 
+                key: item.id,
+                executive_details: item.executive_details.filter(detail => detail.completed_evidences === null),
+                detail_completed: item.executive_details.filter(detail => detail.completed_evidences !== null).length
+            }
         });
         setRequestList(newData)
     }
@@ -65,10 +70,12 @@ export default function ExpandEventAcceptance(props) {
                           {renderListDetail(record)}
                       </ol>
                   },
+                  rowExpandable: (record) => record.quantity - record.detail_completed > 0 && record.executive_details.length > 0,
               }}
               pagination={false}
           >
               <Column title="Tên quyền lợi" fixed="left" dataIndex="product_name"></Column>
+              <Column title="Số quyền lợi đã thực hiện" dataIndex="detail_completed"></Column>
               <Column title="Số lượng" dataIndex="quantity"></Column>
               {/**
               <Column fixed="right" render={(text) => {

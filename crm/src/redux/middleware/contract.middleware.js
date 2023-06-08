@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_EXPORT_FILE, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getExportFileAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -11,8 +11,8 @@ import {message} from "antd"
 
 function* getContractList(payload) {
     try {
-        let { page, pageNumber } = payload.data;
-        let result = yield call(getContractListAPI, page, pageNumber);
+        let { page, pageNumber, status } = payload.data;
+        let result = yield call(getContractListAPI, page, pageNumber, status);
         let { total_data: total, contract: data } = result.data;
         yield put(setContractList({ total, contractList: data }));
         yield put(setIsLoading(false))
@@ -214,6 +214,15 @@ function* getSelectRequestGeneral(payload){
     }
 }
 
+function* getExportFile(payload){
+    try {
+        const result = yield call(getExportFileAPI, payload.contract_id)
+        console.log(result)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -236,4 +245,6 @@ export default function* contractMiddleware() {
     yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
     yield takeLatest(SELECT_REQUEST_GENERAL, selectRequestGeneral)
     yield takeLatest(GET_SELECT_REQUEST_GENERAL, getSelectRequestGeneral)
+    // Import Export file Excel
+    yield takeLatest(GET_EXPORT_FILE, getExportFile)
 }

@@ -40,6 +40,7 @@ export function dataOfContractMapping(data) {
             real_time_total: data.real_time_total,
             total_completed_payments: data.total_completed_payments,
             total_created_payments: data.total_created_payments,
+            history: data.history
         };
         // let dataTable = mappingDataOfTable(data)
         return {

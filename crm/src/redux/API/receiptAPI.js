@@ -61,10 +61,10 @@ export async function completeExportReceiptAPI(data){
     }
 }
 
-export async function getAcceptaneListByContractAPI(contract_id, is_event){
+export async function getAcceptaneListByContractAPI(contract_id, has_payment,is_complete, is_event){
     try {
         const result = await axios({
-            url: `${local}/api/receipt/acc-list?contract_id=${contract_id}&is_event=${is_event}`,
+            url: `${local}/api/receipt/acc-list?contract_id=${contract_id}&is_event=${is_event}&has_payment=${has_payment}&is_complete=${is_complete}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN

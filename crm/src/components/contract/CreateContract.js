@@ -1,8 +1,8 @@
-import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox } from "antd";
+import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_EXPORT_FILE, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, local, SELECT_REQUEST_GENERAL, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -14,6 +14,10 @@ import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
 import { setMessage } from "../../redux/features/messageSlice";
 import RequestEvent from "./RequestEvent";
+import ContractHistory from "./ContractHistory";
+import { CiImport, CiExport } from "react-icons/ci"
+import axios from "axios";
+import FileSaver from "file-saver"
 
 export default function CreateContract() {
 
@@ -725,6 +729,32 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
+            <Tooltip title="Import" color="green">
+              <CiImport onClick={()=>{}}/>
+            </Tooltip>
+            <Tooltip title="Export" color="green">
+              <CiExport
+                onClick={async (e) => {
+                  const result = await axios({
+                    url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
+                    method: "GET",
+                    headers: {
+                      Authorization: "Bearer " + TOKEN,
+                      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    },
+                    responseType: 'arraybuffer'
+                  });
+                  console.log(result)
+                  let fileBlob = new Blob([result.data], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                  })
+                  // const blob = new Blob([response.data], {
+                  //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                  // });
+                  FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
+                }}
+              />
+            </Tooltip>
           </div>
           <Table
             className="term__table"
@@ -734,7 +764,7 @@ export default function CreateContract() {
               expandedRowRender: (record) => {
                 return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
               },
-              rowExpandable: (record) => record.details.length > 0,
+              rowExpandable: (record) => record?.details?.length > 0,
             }}
           >
             <Column
@@ -1013,42 +1043,10 @@ export default function CreateContract() {
           <div className="contract__payment__process">
             {showPayment()}
           </div>
-
-          {/**
-               <div className="contract__payment__total">
-            <h2 className="price">Tổng giá trị thanh toán<span>20.000.000 VNĐ</span></h2>
-            <h2 className="price">Nợ còn lại<span>100.000.000 VNĐ</span></h2>
-          </div>
-            */}
         </div>
-        {/**
-        <div className="create__contract__value border_bottom_3px more__detail">
-        <p>Thông tin thêm</p>
-        <div className="field__input field__flex">
-          <Select
-            className="style"
-            // showSearch
-            showArrow={false}
-            placeholder="Trạng thái hợp đồng"
-          // filterOption={(input, option) =>
-          //   (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-          // }
-          // onChange={(value)=>{
-          //     handleChangeValue("client_ID", +value)
-          // }}
-          // value={valueOfField("client_ID")}
-          >
-            <Option value={1}>Đang chạy</Option>
-            <Option value={2}>Kết thúc</Option>
-            <Option value={3}>Chưa chạy</Option>
-            <Option value={4}>Hủy</Option>
-            <Option value={5}>Ngưng</Option>
-          </Select>
-          <Progress className="contract__complete" status="active" percent={30} type="line" strokeColor="#6aa84f" showInfo={true} />
-        </div>
-        <textarea placeholder="Ghi chú" name="" id=""></textarea>
-      </div>
-      */}
+        <ContractHistory 
+              data={valueForm.history}
+        />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/contract`, { replace: true }) }}>Hủy</button>
           {renderButtonCreateUpdate()}

@@ -1445,6 +1445,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     color: #F1416C;
 }
 
+.create__contract .create__contract__term .display__flex > svg {
+    color: #639a79;
+    font-size: 22px;
+}
+
+.create__contract .create__contract__term .display__flex > svg:nth-child(odd){
+    margin: 0 10px;
+}
+
 .create__contract .create__contract__footer {
     padding: 28px 0 28px 0;
     margin-left: 118px;

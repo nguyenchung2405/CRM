@@ -4,14 +4,25 @@ const { local } = require("../untils/title");
 const getContractList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size } = req.query;
-        const result = await axios({
-            url: `${local}/contract/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
+        let { page, page_size, status } = req.query;
+        let result;
+        if(status !== "undefined"){
+            result = await axios({
+                url: `${local}/contract/list?page_size=${page_size}&page=${page}&status=${encodeURI(status)}&sort_by=id&asc_order=false`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else {
+            result = await axios({
+                url: `${local}/contract/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        }
         res.send(result.data);
     } catch (error) {
         if(error.response?.data){
@@ -326,6 +337,40 @@ const getFile = async (req, res)=>{
     }
 }
 
+const getExportFile = (req,res)=>{
+    try {
+        let {contract_ID} = req.query;
+        let { headers: { authorization } } = req;
+        axios({
+            url: `${local}/contract/request/get-file?contract_ID=${contract_ID}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization,
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            },
+            responseType: 'arraybuffer'
+        })
+        .then(response => {
+            // console.log(response.data)
+            res.send(response.data)
+        })
+        .catch(err => {
+            console.log("lỗi", err)
+            if (err?.response?.data) {
+                res.send(err.response.data)
+            } else {
+                res.send(err)
+            }
+        })
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -342,5 +387,6 @@ module.exports = {
     updateDetail,
     createPayment,
     getFile,
-    updatePayment
+    updatePayment,
+    getExportFile
 }
