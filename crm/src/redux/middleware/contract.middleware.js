@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_EXPORT_FILE, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, IMPORT_FILE, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getExportFileAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
+import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, importFileExcelAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -39,18 +39,22 @@ function* createContract(payload) {
 };
 
 function* getContractDetail(payload) {
-    let { contract_id } = payload;
-    let result = yield call(getContractDetailAPI, contract_id);
-    let { code, data } = result;
-    let responseRequest = yield call(getContractRequestAPI, contract_id);
-    if (+code === 200 || result.data.contract.length > 0) {
-        let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
-        dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
-        yield put(setContractDetail(dataAfterMapping))
-        yield put(setContractRequest(responseRequest.data.contract_request))
-        yield put(setIsLoading(false))
-    } else {
-        yield put(setContractDetail({}))
+    try {
+        let { contract_id } = payload;
+        let result = yield call(getContractDetailAPI, contract_id);
+        let { code, data } = result;
+        let responseRequest = yield call(getContractRequestAPI, contract_id);
+        if (+code === 200 || result.data.contract.length > 0) {
+            let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
+            dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
+            yield put(setContractDetail(dataAfterMapping))
+            yield put(setContractRequest(responseRequest.data.contract_request))
+            yield put(setIsLoading(false))
+        } else {
+            yield put(setContractDetail({}))
+        }
+    } catch (error) {
+        console.log(error)
     }
 };
 
@@ -214,9 +218,9 @@ function* getSelectRequestGeneral(payload){
     }
 }
 
-function* getExportFile(payload){
+function* importFileExcel(payload){
     try {
-        const result = yield call(getExportFileAPI, payload.contract_id)
+        const result = yield call(importFileExcelAPI, payload.data);
         console.log(result)
     } catch (error) {
         console.log(error)
@@ -246,5 +250,5 @@ export default function* contractMiddleware() {
     yield takeLatest(SELECT_REQUEST_GENERAL, selectRequestGeneral)
     yield takeLatest(GET_SELECT_REQUEST_GENERAL, getSelectRequestGeneral)
     // Import Export file Excel
-    yield takeLatest(GET_EXPORT_FILE, getExportFile)
+    yield takeLatest(IMPORT_FILE, importFileExcel)
 }

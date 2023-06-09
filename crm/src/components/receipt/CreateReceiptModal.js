@@ -3,6 +3,9 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL, GET_EVENT_INFOR, UPDATE_PAYMENT } from '../../title/title';
+import AcceptanceRow from './AcceptanceRow';
+import EventAccRow from './EventAccRow';
+import EventAccRowOfContract from './EventAccRowOfContract';
 
 export default function CreateReceiptModal(props) {
     
@@ -19,7 +22,7 @@ export default function CreateReceiptModal(props) {
     const [multiSelect2, setMultiSelect2] = useState([]);
 
     useEffect(()=>{
-        if(dataToCreateModal.contract_id){
+        if(dataToCreateModal.contract_id && isShowModal){
             dispatch({
                 type: GET_CONTRACT_DETAIL,
                 contract_id: dataToCreateModal.contract_id
@@ -35,16 +38,16 @@ export default function CreateReceiptModal(props) {
         //         contract_id: dataToCreateModal.contract_id
         //     })
         // }
-    }, [dataToCreateModal.contract_id])
+    }, [dataToCreateModal.contract_id, isShowModal])
 
     useEffect(()=>{
-        if(dataToCreateModal.event_id && typeof dataToCreateModal.event_id === "number"){
+        if(dataToCreateModal.event_id && typeof dataToCreateModal.event_id === "number" && isShowModal){
             dispatch({
                 type: GET_EVENT_INFOR,
                 data: dataToCreateModal.event_id
             })
         }
-    }, [dataToCreateModal.event_id])
+    }, [dataToCreateModal.event_id, isShowModal])
 
     useEffect(()=>{
         if(dataToCreateModal.isUpdate){
@@ -67,8 +70,9 @@ export default function CreateReceiptModal(props) {
 
     const handleCancel = ()=>{
         setIsShowModal(false)
-         setValueModal({})
+        setValueModal({})
         setMultiSelect([])
+        setMultiSelect2([])
     }
 
     const handleOk = ()=>{
@@ -132,32 +136,43 @@ export default function CreateReceiptModal(props) {
         }
     }
 
-    const renderOption = ()=>{
+    const renderAccList = ()=>{
         return acceptanceListInReceiptEvent?.map(acc => {
-            console.log(acc)
             let ngayNghiemThu = moment(new Date(acc.report_date)).format("DD-MM-YYYY")
-            return <Option key={acc.id} value={acc.id}>{ngayNghiemThu}</Option>
+            return <AcceptanceRow 
+            ngayNghiemThu={ngayNghiemThu}
+            data={acc}
+            setMultiSelect={setMultiSelect}
+            multiSelect={multiSelect}
+            />
         })
+    }
+
+    const renderAccListForEvent = ()=>{
+        let accOfEvent = acceptanceListInReceipt.map(item => {
+            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
+            return <EventAccRow 
+            convertDate={convertDate}
+            data={item}
+            setMultiSelect2={setMultiSelect2}
+            multiSelect2={multiSelect2}
+            />
+        });
+        let accOfContract = acceptanceListInReceiptEvent.map(item => {
+            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
+            return <EventAccRowOfContract 
+            convertDate={convertDate}
+            data={item}
+            setMultiSelect={setMultiSelect}
+            multiSelect={multiSelect}
+            />
+        })
+        return accOfEvent.concat(accOfContract)
     }
 
     const renderOptionDonors = ()=>{
         return donors.map(item => {
             return <Option key={item.contract_ID} value={item.contract_ID}>{item.client_name}</Option>
-        })
-    }
-
-    const renderAccOfEvent = ()=>{
-        return acceptanceListInReceipt.map(item => {
-            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
-            return <Option key={item.id} value={item.id}>{convertDate}</Option>
-        })
-    }
-
-    const renderAccOfContract = ()=>{
-        let newArr = acceptanceListInReceiptEvent.filter(item => item.completed_evidences !== null);
-        return newArr.map(item => {
-            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
-            return <Option key={item.id} value={item.id}>{convertDate}</Option>
         })
     }
 
@@ -248,42 +263,14 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        <div className="modal__field field__select">
+                        
+                       
+                        <div className="modal__field field__select width_525">
                             <div>
-                                <label className="term__label">Danh sách đã nghiệm thu (chung)</label>
-                                <Select
-                                    className="style"
-                                    showSearch
-                                    mode="multiple"
-                                    filterOption={(input, option) =>
-                                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    value={multiSelect2}
-                                    onChange={(value) => {
-                                        setMultiSelect2(value)
-                                    }}
-                                >
-                                    {renderAccOfEvent()}
-                                </Select>
-                            </div>
-                        </div>
-                        <div className="modal__field field__select">
-                            <div>
-                                <label className="term__label">Danh sách đã nghiệm thu (riêng)</label>
-                                <Select
-                                    className="style"
-                                    showSearch
-                                    mode="multiple"
-                                    filterOption={(input, option) =>
-                                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    value={multiSelect}
-                                    onChange={(value) => {
-                                        setMultiSelect(value)
-                                    }}
-                                >
-                                    {renderAccOfContract()}
-                                </Select>
+                                <label className="term__label">Danh sách đã nghiệm thu</label>
+                                <div className="acceptance__list">
+                                    {renderAccListForEvent()}
+                                </div>
                             </div>
                         </div>
                     </>
@@ -350,23 +337,12 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        <div className="modal__field field__select">
+                        <div className="modal__field field__select width_525">
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
-                                <Select
-                                    className="style"
-                                    showSearch
-                                    mode="multiple"
-                                    filterOption={(input, option) =>
-                                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    value={multiSelect}
-                                    onChange={(value) => {
-                                        setMultiSelect(value)
-                                    }}
-                                >
-                                    {renderOption()}
-                                </Select>
+                                <div className="acceptance__list">
+                                    {renderAccList()}
+                                </div>
                             </div>
                         </div>
                     </>
