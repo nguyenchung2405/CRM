@@ -559,6 +559,10 @@ span.size-10 {
     border-top: none;
 }
 
+.ant-modal.history__modal .ant-modal-content {
+    width: 1000px;
+}
+
 .contract__service__footer {
     padding: 42px 0px;
     text-align: center;
@@ -680,6 +684,17 @@ div.modal__content .modal__field.field__select.width_525 div.acceptance__list di
     display: flex;
     justify-content: space-between;
     padding-left: 9px;
+    align-items: center;
+}
+
+div.modal__content .modal__field.field__select.width_525 div.acceptance__list div.acceptance__row > span:nth-child(2) {
+    width: 80px;
+}
+
+div.modal__content .modal__field.field__select.width_525 div.acceptance__list div.acceptance__row > span:nth-child(3) {
+    min-width: 80px;
+    max-width: 250px;
+    text-align: right;
 }
 
 div.modal__content .modal__field .ant-picker .ant-picker-input {
@@ -1383,9 +1398,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-left: 15px;
 }
 
-.create__contract__payment .contract__payment {
+.create__contract__payment .display__flex.contract__payment {
     justify-content: space-between;
     width: 916px;
+    align-items: flex-start;
 }
 
 .create__contract__payment .soDotThanhToan > select {
@@ -1394,7 +1410,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     width: fit-content;
 }
 
-.create__contract .create__contract__term table {
+.create__contract .create__contract__term table,
+.create__contract__payment .history__table table {
     max-width: 916px;
 }
 
@@ -1644,6 +1661,19 @@ svg.style__svg {
     border-style: none;
     width: 100%;
     height: 100%;
+}
+
+.history__modal .modal__content.create__contract__content .create__contract__term,
+.history__modal .modal__content.create__contract__content .create__contract__value {
+    padding-left: 0;
+}
+
+.history__modal .modal__content.create__contract__content .create__contract__value {
+    text-align: left;
+}
+
+.history__modal .modal__content.create__contract__content .create__contract__value .field__input_3 .contract__field:last-child {
+    margin-right: 0;
 }
 
 /* Hết CSS create contract */
