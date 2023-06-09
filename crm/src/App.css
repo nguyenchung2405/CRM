@@ -1415,6 +1415,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     max-width: 916px;
 }
 
+.create__contract__payment .history__table table tbody tr {
+    cursor: pointer;
+}
+
 .create__contract .create__contract__term table th {
     background-color: white;
     color: #999999;
@@ -1654,7 +1658,6 @@ svg.style__svg {
 .product__TypeAndAtt__table div.antd__auto__complete__style div.ant-select-selector .ant-select-selection-placeholder {
     line-height: 40px;
 }
-
 
 .antd__auto__complete__style .ant-select-selector .ant-select-selection-search input.ant-select-selection-search-input {
     
