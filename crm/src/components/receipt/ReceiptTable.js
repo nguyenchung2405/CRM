@@ -96,7 +96,7 @@ export default function ReceiptTable() {
           }}></Column>
           <Column title="Số đợt thanh toán" key="soDotThanhToan " 
           render={(text) => text?.contract_info?.payment_count}
-          sorter={(a,b) => a.payment_count - b.payment_count}
+          sorter={(a,b) => a.contract_info.payment_count - b.contract_info.payment_count}
           sortDirections={['ascend','descend']}
           ></Column>
           <Column title="Hình thức thanh toán" key="hinhThucThanhToan" render={(text) => {
@@ -107,10 +107,10 @@ export default function ReceiptTable() {
           <Column title="Số hóa đơn đã xuất" 
           key="soHoaDonDaXuat" 
           render={(text) => text?.contract_info?.receipt_count}
-          sorter={(a,b) => a.receipt_count - b.receipt_count}></Column>
+          sorter={(a,b) => a.contract_info.receipt_count - b.contract_info.receipt_count}></Column>
           <Column title="Số hóa đơn đã thanh toán" 
           render={(text) => text?.contract_info?.completed_receipt_count}
-          sorter={(a,b) => a.completed_receipt_count - b.completed_receipt_count}></Column>
+          sorter={(a,b) => a.contract_info.completed_receipt_count - b.contract_info.completed_receipt_count}></Column>
           <Column title="Ngày xuất hóa đơn cuối" key="ngayXuatHDCuoi" render={(text) => {
             let last_receipt_exported = text?.contract_info?.last_receipt_exported
             if (last_receipt_exported !== null && last_receipt_exported !== undefined) {

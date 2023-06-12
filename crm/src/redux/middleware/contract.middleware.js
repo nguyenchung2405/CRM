@@ -22,19 +22,27 @@ function* getContractList(payload) {
 }
 
 function* getContractTypeList() {
-    let result = yield call(getContractTypeListAPI);
-    let { contract_type } = result.data;
-    yield put(setContractTypeList(contract_type))
+    try {
+        let result = yield call(getContractTypeListAPI);
+        let { contract_type } = result.data;
+        yield put(setContractTypeList(contract_type))
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 function* createContract(payload) {
-    let { data } = payload;
-    let result = yield call(createContractAPI, data);
-    let { code } = result;
-    if (+code === 200 || result.data?.contract?.id) {
-        yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
-    } else {
-        yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
+    try {
+        let { data } = payload;
+        let result = yield call(createContractAPI, data);
+        let { code } = result;
+        if (+code === 200 || result.data?.contract?.id) {
+            yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
+        } else {
+            yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
+        }
+    } catch (error) {
+        console.log(error)
     }
 };
 
@@ -72,7 +80,7 @@ function* getOwnerList(payload){
 function* updateContract(payload){
     try {
         const result = yield call(updateContractiAPI, payload.data);
-        if(result.data.msg === "Updated successfully!"){
+        if(result.data?.msg === "Updated successfully!"){
             yield put(setMessage({ type: "thành công", msg: "Cập nhật hợp đồng thành công." }))
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Cập nhật hợp đồng thất bại." }))
