@@ -11,7 +11,7 @@ export default function ModalHistory(props) {
     const dispatch = useDispatch();
     const [multi, setMulti] = useState([]);
     const { productListFull } = useSelector(state => state.productReducer)
-    console.log(dataToModal)
+
     const handleCancel = () => {
         setIsShowModal(false)
     }
@@ -125,13 +125,6 @@ export default function ModalHistory(props) {
                     <div className="create__contract__value border_bottom_3px">
                         <p>Giá trị hợp đồng</p>
                         <div className="field__input_3">
-                            <div style={{ padding: " 0 0 10px 9px" }}>
-                                <label htmlFor="deal_out">Trừ ngoài </label>
-                                <Checkbox id="deal_out" type="checkbox"
-                                    checked={dataToModal.deal_out}
-                                    disabled
-                                />
-                            </div>
                             <div className="contract__field">
                                 <input className="style" type="text"
                                     name="discount_over_contract"

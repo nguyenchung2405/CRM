@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, IMPORT_FILE, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
 import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, importFileExcelAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
@@ -57,6 +57,7 @@ function* getContractDetail(payload) {
             dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
             yield put(setContractDetail(dataAfterMapping))
             yield put(setContractRequest(responseRequest.data.contract_request))
+            yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
             yield put(setIsLoading(false))
         } else {
             yield put(setContractDetail({}))
@@ -206,26 +207,6 @@ function* getRequestOfEvent(payload){
     }
 }
 
-function* selectRequestGeneral(payload){
-    try {
-        const result = yield call(selectRequestGeneralAPI, payload.data);
-    } catch (error) {
-        console.log(error)
-    }
-};
-
-function* getSelectRequestGeneral(payload){
-    try {
-        const result = yield call(getSelectRequestGeneralAPI ,payload.contract_id);
-        let selectRequest = result.data.event_detail_contract.map(request => {
-            return request.event_detail_ID
-        })
-        yield put(setSelectRequest(selectRequest))
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 function* importFileExcel(payload){
     try {
         const result = yield call(importFileExcelAPI, payload.data);
@@ -255,8 +236,6 @@ export default function* contractMiddleware() {
     // Event
     // call API lấy quyền lợi chung về nếu loại HĐ là "Sự kịện"
     yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
-    yield takeLatest(SELECT_REQUEST_GENERAL, selectRequestGeneral)
-    yield takeLatest(GET_SELECT_REQUEST_GENERAL, getSelectRequestGeneral)
     // Import Export file Excel
     yield takeLatest(IMPORT_FILE, importFileExcel)
 }

@@ -1,8 +1,8 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CANCEL_EXPORT_RECEIPT, COMPLETE_EXPORT_RECEIPT, CREATE_EXPORT_RECEIPT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_PAYMENT_LIST } from "../../title/title";
-import { cancelExportReceiptAPI, completeExportReceiptAPI, createExportReceiptAPI, getAcceptaneListByContractAPI, getPaymentListAPI } from "../API/receiptAPI";
-import { addReceiptToList, completeReceiptFromList, removeReceiptFromList, setAccListInReceipt, setAccListInReceiptEvent, setReceiptList, setTotalReceipt } from "../features/receiptSlice";
+import { CANCEL_EXPORT_RECEIPT, COMPLETE_EXPORT_RECEIPT, CREATE_EXPORT_RECEIPT, DELETE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_PAYMENT_LIST } from "../../title/title";
+import { cancelExportReceiptAPI, completeExportReceiptAPI, createExportReceiptAPI, deletePaymentAPI, getAcceptaneListByContractAPI, getPaymentListAPI } from "../API/receiptAPI";
+import { addReceiptToList, completeReceiptFromList, removePayment, removeReceiptFromList, setAccListInReceipt, setAccListInReceiptEvent, setReceiptList, setTotalReceipt } from "../features/receiptSlice";
 
 function* createExportReceipt(payload){
     try {
@@ -81,12 +81,27 @@ function* getPaymentList(payload){
     }
 }
 
+function* deletePayment(payload){
+    try {
+        const result = yield call(deletePaymentAPI, payload.data);
+        if(result.data?.msg === "Huỷ hoá đơn thành công"){
+            yield put(removePayment(payload.data))
+            message.success("Hủy hóa đơn thành công")
+        } else {
+            message.error("Hủy hóa đơn thất bại")
+        }
+    } catch (error) {
+        
+    }
+}
+
 export default function* receiptMiddleware(){
     yield takeLatest(CREATE_EXPORT_RECEIPT, createExportReceipt)
     yield takeLatest(CANCEL_EXPORT_RECEIPT, cancelExportReceipt)
     yield takeLatest(COMPLETE_EXPORT_RECEIPT, completeExportReceipt)
     yield takeLatest(GET_ACCEPTANCE_LIST_BY_CONTRACT, getAcceptaneListByContract)
     yield takeLatest(GET_ACCEPTANCE_LIST_BY_EVENT, getAcceptaneListByEvent)
-    // lấy danh sách payment để hiển thị danh sách hóa đơn
+    // lấy danh sách payment để hiển thị danh sách hóa đơn; các API payment
     yield takeLatest(GET_PAYMENT_LIST, getPaymentList)
+    yield takeLatest(DELETE_PAYMENT, deletePayment)
 }

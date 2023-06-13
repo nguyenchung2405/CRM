@@ -1,6 +1,6 @@
 import { Table } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ModalHistory from './ModalHistory';
 
 export default function ContractHistory(props) {
@@ -9,6 +9,15 @@ export default function ContractHistory(props) {
     const {Column} = Table;
     const [isShowModal, setIsShowModal] = useState(false);
     const [dataToModal, setDataToModal] = useState({});
+    const [dataOfTable, setDataOfTable]= useState([])
+
+    useEffect(()=>{
+      if (data?.length > 0) {
+        let newData = [...data];
+        let reverseArr = newData.reverse();
+        setDataOfTable([...reverseArr])
+      }
+    }, [data])
 
   return (
     <div className="create__contract__payment border_bottom_3px">
@@ -24,7 +33,7 @@ export default function ContractHistory(props) {
       </div>
       <Table
         className="history__table"
-        dataSource={data}
+        dataSource={dataOfTable}
         pagination={false}
         onRow={record => {
           return {
@@ -40,7 +49,7 @@ export default function ContractHistory(props) {
           return index + 1
         }} />
         <Column title="Thời gian chỉnh sửa" key="created_datetime" render={(text) => {
-          let convertDate = moment(new Date(text.created_datetime)).format("HH:mm:ss DD-MM-YYYY");
+          let convertDate = moment(new Date(text.created_datetime)).format("DD-MM-YYYY HH:mm:ss");
           return convertDate;
         }} />
         <Column title="Người chỉnh sửa" key="update_user_name" render={(text) => {

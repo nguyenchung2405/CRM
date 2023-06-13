@@ -28,7 +28,6 @@ export function dataOfContractMapping(data) {
             total: data.total < 1000000 ? data.total * 1000000 : data.total,
             note: data.note,
             creater: data.creater,
-            deal_out: data.deal_out,
             discount_over_contract: data.discount_over_contract * 1000000,
             // payall: data.payall,
             pay_before_run: data.pay_before_run,
@@ -40,7 +39,8 @@ export function dataOfContractMapping(data) {
             real_time_total: data.real_time_total,
             total_completed_payments: data.total_completed_payments,
             total_created_payments: data.total_created_payments,
-            history: data.history
+            history: data.history,
+            event_detail_IDs: data.event_detail_IDs
         };
         // let dataTable = mappingDataOfTable(data)
         return {

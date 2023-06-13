@@ -53,7 +53,7 @@ export default function ReportModal(props) {
         try {
             if (data.detail_id && data.detail_id !== null) {
                 const result = await createAcceptanceAPI(valueForm)
-                console.log("line 55", result)
+                // console.log("line 55", result)
                 if (result.data.msg === "Updated successfully!") {
                     message.success("Tạo nghiệm thu thành công")
                     dispatch(setAcceptanceJustCreated({request_id: data.request_id, data: result.data.contract_detail, detail_id: result.data.contract_detail.id}))
@@ -62,7 +62,7 @@ export default function ReportModal(props) {
                 }
             } else {
                 const resultDetail = await createDetailInAcceptanceAPI(valueForm);
-                console.log("line 64", resultDetail)
+                // console.log("line 64", resultDetail)
                 let detail_id = resultDetail.data.details[0].id;
                 let newDataAcceptance = {
                     ...resultDetail.data.details[0],
@@ -72,7 +72,7 @@ export default function ReportModal(props) {
                     report_date: valueForm.report_date
                 }
                 const result = await createAcceptanceAPI(newDataAcceptance);
-                console.log("line 73", result)
+                // console.log("line 73", result)
                 if (result.data.msg === "Updated successfully!") {
                     message.success("Tạo nghiệm thu thành công")
                     dispatch(setAcceptanceJustCreated({request_id: data.request_id, data: result.data.contract_detail}))

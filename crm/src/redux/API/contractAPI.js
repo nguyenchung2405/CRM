@@ -342,39 +342,6 @@ export async function getRequestOfEventAPI(event_id){
     }
 }
 
-export async function selectRequestGeneralAPI(data){
-    try {
-        const result = await axios({
-            url: `${local}/api/event/select-request`,
-            method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
-            data
-        });
-        return result.data;
-    } catch (error) {
-        console.log(error)
-        return "Thất bại"
-    }
-}
-
-export async function getSelectRequestGeneralAPI(contract_id){
-    try {
-        const result = await axios({
-            url: `${local}/api/event/get-select-request?contract_ID=${contract_id}`,
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
-        });
-        return result;
-    } catch (error) {
-        console.log(error)
-        return "Thất bại"
-    }
-}
-
 export async function importFileExcelAPI(data){
     try {
         const form = new FormData();

@@ -3,10 +3,14 @@ import ExportReceiptModal from './ExportReceiptModal'
 import CancelReceiptModal from './CancelReceiptModal'
 import CompleteReceiptModal from './CompleteReceiptModal'
 import CreateReceiptModal from './CreateReceiptModal';
+import { Popconfirm } from 'antd';
+import { DELETE_PAYMENT } from '../../title/title';
+import { useDispatch } from 'react-redux';
 
 export default function HandleFeatures(props) {
 
     const { payment_ID, isExistExport, receipt_id, contract_id, isComplete, data } = props;
+    const dispatch = useDispatch();
     const [isExportReceipt, setIsExportReceipt] = useState(false)
     const [isShowModal, setIsShowModal] = useState(false)
     const [isShowCancelModal, setIsShowCancelModal] = useState(false)
@@ -18,6 +22,13 @@ export default function HandleFeatures(props) {
     useEffect(()=>{
         setIsExportReceipt(isExistExport)
     } , [isExistExport])
+
+    const onConfirm = ()=>{
+        dispatch({
+            type: DELETE_PAYMENT,
+            data: payment_ID
+        })
+    }
 
     const renderContent = ()=>{
         if(!isComplete){
@@ -58,7 +69,8 @@ export default function HandleFeatures(props) {
                             setIsShowModal(true)
                         }}
                     >Xuất hóa đơn</span>
-                    <span style={{ color: "#7900ff", cursor: "pointer" }}
+                    {/**
+                        <span style={{ color: "#7900ff", cursor: "pointer" }}
                         onClick={() => {
                             let newData = {
                                 ...data,
@@ -69,6 +81,10 @@ export default function HandleFeatures(props) {
                             setDataToCreateModal(newData)
                         }}
                     >Cập nhật quyết toán</span>
+                */}
+                    <Popconfirm title="Bạn có muốn hủy?" onConfirm={onConfirm} okText="Có" cancelText="Không">
+                        <a>Hủy quyết toán</a>
+                    </Popconfirm>
                 </>
             }
         } else {
@@ -101,11 +117,13 @@ export default function HandleFeatures(props) {
               contract_id={contract_id}
               payment_ID={payment_ID}
           />
-          <CreateReceiptModal
+          {/**
+            <CreateReceiptModal
           isShowModal={isShowPaymentModal}
           setIsShowModal={setIsShowPaymentModal}
           dataToCreateModal={dataToCreateModal}
           />
+            */}
           {renderContent()}
       </>
   )

@@ -205,48 +205,6 @@ const addUnserContractToEvent = async (req, res)=>{
     }
 }
 
-const selectRequestGeneral = async (req, res)=>{
-    try {
-        let { headers: { authorization } } = req;
-        const result = await axios({
-            url: `${local}/event/event_detail_contract/update`,
-            method: "PUT",
-            headers: {
-                Authorization: authorization
-            },
-            data: req.body
-        });
-        res.send(result.data);
-    } catch (error) {
-        if (error.response?.data) {
-            res.send(error.response.data)
-        } else {
-            res.send(error)
-        }
-    }
-};
-
-const getSelectRequestGeneral = async (req, res)=>{
-    try {
-        let { headers: { authorization } } = req;
-        let { contract_ID } = req.query;
-        const result = await axios({
-            url: `${local}/event/event_detail_contract/list?contract_ID=${contract_ID}&page_size=100&sort_by=id&asc_order=true`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            },
-        });
-        res.send(result.data);
-    } catch (error) {
-        if (error.response?.data) {
-            res.send(error.response.data)
-        } else {
-            res.send(error)
-        }
-    }
-}
-
 const updateRequest = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
@@ -321,8 +279,6 @@ module.exports = {
     searchEvent,
     getUnsetContract,
     addUnserContractToEvent,
-    selectRequestGeneral,
-    getSelectRequestGeneral,
     updateRequest,
     getEventRequestList,
     getEventRequestContractList

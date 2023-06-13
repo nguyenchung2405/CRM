@@ -3,7 +3,7 @@ import React from 'react'
 export default function EventAccRowOfContract(props) {
 
     const { convertDate, multiSelect, setMultiSelect, data } = props;
-    console.log(data)
+
     const checked = () => {
         if (multiSelect.includes(data.id)) {
             return true

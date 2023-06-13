@@ -43,7 +43,7 @@ export default function SelectType(props){
                         sectors: value
                     })
                 } else if(mode === "tags"){
-                    console.log(value, option)
+                    // console.log(value, option)
                     setMulti(value)
                 } else {
                     setValueForm({

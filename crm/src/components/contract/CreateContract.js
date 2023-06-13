@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox, Too
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, GET_SELECT_REQUEST_GENERAL, IMPORT_FILE, local, SELECT_REQUEST_GENERAL, TOKEN, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useNavigate, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -18,6 +18,7 @@ import ContractHistory from "./ContractHistory";
 import { CiImport, CiExport } from "react-icons/ci"
 import axios from "axios";
 import FileSaver from "file-saver"
+import ContractPayment from "./ContractPayment";
 
 export default function CreateContract() {
 
@@ -84,10 +85,6 @@ export default function CreateContract() {
         type: GET_CONTRACT_DETAIL,
         contract_id
       });
-      dispatch({
-        type: GET_SELECT_REQUEST_GENERAL,
-        contract_id
-      })
       dispatch(setIsLoading(true))
     }
   }, [contract_id])
@@ -200,13 +197,8 @@ export default function CreateContract() {
 
   const valueOfField = (name) => {
     if (name === "rangePicker") {
-      // let newTuNgay = convertDate(valueForm["begin_date"]);
-      // let newDenNgay = convertDate(valueForm["end_date"]);
       let newTuNgay = moment(new Date(valueForm["begin_date"])).format("DD-MM-YYYY");
       let newDenNgay = moment(new Date(valueForm["end_date"])).format("DD-MM-YYYY");
-      // if(newTuNgay === undefined && newDenNgay === undefined){
-      //   return [null, null]
-      // }
       if (valueForm["begin_date"] === undefined && valueForm["end_date"] === undefined) {
         return [null, null]
       }
@@ -221,9 +213,6 @@ export default function CreateContract() {
       if (valueForm[name] && name === "total") {
         return new Intl.NumberFormat("vi-VN").format(valueForm[name])
       }
-      // } else if(name === "total") {
-      //   return new Intl.NumberFormat("vi-VI").format(valueForm[name]) + " VNĐ"
-      // }
       return valueForm[name]
     }
   }
@@ -249,13 +238,10 @@ export default function CreateContract() {
       return <button className="footer__btn btn__create"
         onClick={() => {
           valueForm.contract_id = +contract_id;
+          valueForm.event_detail_IDs = selectGeneralRequest;
           dispatch({
             type: UPDATE_CONTRACT,
             data: valueForm
-          })
-          dispatch({
-            type: SELECT_REQUEST_GENERAL,
-            data: {event_detail_IDs: selectGeneralRequest, contract_ID: +contract_id}
           })
         }}>
         Cập nhật
@@ -263,12 +249,10 @@ export default function CreateContract() {
     } else {
       return <button className="footer__btn btn__create"
         onClick={() => {
-          // let creater = +jwtdecode(TOKEN)?.id;
           let newData = {
             contract: { ...valueForm },
             request: contractRequest,
             payment: dotThanhToan
-            // details: [...dataTable]
           };
           dispatch({
             type: CREATE_CONTRACT,
@@ -302,32 +286,6 @@ export default function CreateContract() {
     }
   }
 
-  const handleAddPayment = ()=>{
-    if(+soTien >= 1000){
-      if(!window.location.href.includes("detail")){
-        let newDotThanhToan = [...dotThanhToan, {
-          total_value: +soTien,
-          request_date: requestDate
-        }]
-        setDotThanhToan([...newDotThanhToan])
-        setSoTien("")
-        setRequestDate(null)
-      } else {
-        let newPayment = {
-          total_value: +soTien,
-          contract_ID: +contract_id,
-          request_date: requestDate
-        }
-        dispatch({
-          type: CREATE_PAYMENT,
-          data: newPayment
-        })
-        setSoTien("")
-        setRequestDate(null)
-      }
-    }
-  }
-
   const showGiaTriThucHien = (mode = "display")=>{
     let total = 0;
     contractRequest.forEach((request) => {
@@ -337,12 +295,10 @@ export default function CreateContract() {
         total += request.price_ID.price * request.quality;
       }
     })
-    // return new Intl.NumberFormat("vi--VN").format(total) + " VNĐ";
     if(total > 0 ){
       if(mode === "display"){
         return new Intl.NumberFormat("vi-VN").format(total * 1000000);
       } else if(mode === "number"){
-        // return total;
         return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
       } else {
         return total;
@@ -352,7 +308,7 @@ export default function CreateContract() {
     }
   }
 
-  const showGiaTriGoc = (mode = "display")=>{
+  const showGiaTriGoc = (mode = "display") => {
     let total = 0;
     contractRequest.forEach((request) => {
       total += request.price_ID.price * request.quality;
@@ -367,30 +323,6 @@ export default function CreateContract() {
       }
       return null;
     }
-  }
-
-  const showPayment = ()=>{
-    return dotThanhToan?.map((payment, index) => {
-      let convertDate = moment(new Date(payment.request_date)).format("DD-MM-YYYY");
-      let isComplete = payment?.receipts[0]?.is_complete;
-      let isExistExport = payment.receipts.length > 0 ? true : false;
-      let statusOfPayment;
-      if (!isComplete) {
-        if (isExistExport) {
-          statusOfPayment = "Đã xuất hóa đơn"
-        } else {
-          statusOfPayment = "Chưa xuất hóa đơn"
-        }
-      } else {
-        statusOfPayment = "Đã thanh toán"
-      }
-      return <div className="payment__contract">
-        <span>Đợt thanh toán {index + 1}</span>
-        <span>{convertDate}</span>
-        <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
-        <span>{statusOfPayment}</span>
-      </div>
-    })
   }
 
   return (
@@ -872,19 +804,6 @@ export default function CreateContract() {
         <div className="create__contract__value border_bottom_3px">
           <p>Giá trị hợp đồng</p>
           <div className="field__input_3">
-            <div style={{ padding: " 0 0 10px 9px" }}>
-              <label htmlFor="deal_out">Trừ ngoài </label>
-              <Checkbox id="deal_out" type="checkbox"
-                onChange={(e) => {
-                  let { checked } = e.target;
-                  setValueForm({
-                    ...valueForm,
-                    deal_out: checked
-                  })
-                }}
-                checked={valueForm.deal_out}
-              />
-            </div>
             <div className="contract__field">
               <input className="style" type="text"
                 name="discount_over_contract"
@@ -958,32 +877,12 @@ export default function CreateContract() {
             <label>Ghi chú</label>
           </div>
         </div>
-        <div className="create__contract__payment border_bottom_3px">
-          <div className="display__flex contract__payment">
-            <div className="display__flex">
-              <p>Đợt thanh toán</p>
-            </div>
-            <div className="display__flex soDotThanhToan">
-              <label htmlFor="soDotThanhToan">Kiểu thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { console.log(e.target.value, typeof e.target.value); setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
-                <option value={true}>Trước thực hiện</option>
-                <option value={false}>Sau thực hiện</option>
-              </select>
-            </div>
-            <div className="display__flex soDotThanhToan">
-              <label htmlFor="soDotThanhToan">Số đợt thanh toán:</label>
-              <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("payment_type")} onChange={(e) => { setValueForm({ ...valueForm, payment_type: e.target.value }) }}>
-                <option value="Một đợt">1 đợt</option>
-                <option value="Nhiều đợt">Nhiều đợt</option>
-                <option value="Theo tháng">Theo thàng</option>
-                <option value="Theo yêu cầu hợp đồng">Theo quyền lợi</option>
-              </select>
-            </div>
-          </div>
-          <div className="contract__payment__process">
-            {showPayment()}
-          </div>
-        </div>
+        <ContractPayment
+          dotThanhToan={dotThanhToan}
+          valueOfField={valueOfField}
+          setValueForm={setValueForm}
+          valueForm={valueForm}
+        />
         <ContractHistory data={valueForm.history} />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/contract`, { replace: true }) }}>Hủy</button>
