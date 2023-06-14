@@ -2,6 +2,7 @@ import { DatePicker, Modal, Select } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { setAccListInReceipt, setAccListInReceiptEvent } from '../../redux/features/receiptSlice';
 import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL, GET_EVENT_INFOR, UPDATE_PAYMENT } from '../../title/title';
 import AcceptanceRow from './AcceptanceRow';
 import EventAccRow from './EventAccRow';
@@ -9,7 +10,6 @@ import EventAccRowOfContract from './EventAccRowOfContract';
 
 export default function CreateReceiptModal(props) {
     
-    // const {isShowModal, setIsShowModal} = props;
     const {isShowModal, setIsShowModal, dataToCreateModal} = props;
     const dispatch = useDispatch();
     const {Option} = Select;
@@ -73,6 +73,8 @@ export default function CreateReceiptModal(props) {
         setValueModal({})
         setMultiSelect([])
         setMultiSelect2([])
+        dispatch(setAccListInReceiptEvent([]))
+        dispatch(setAccListInReceipt([]))
     }
 
     const handleOk = ()=>{
@@ -99,7 +101,8 @@ export default function CreateReceiptModal(props) {
                 data: newPayment
             })
         }
-        
+        dispatch(setAccListInReceiptEvent([]))
+        dispatch(setAccListInReceipt([]))
         setIsShowModal(false)
         setValueModal({})
         setMultiSelect([])
@@ -198,6 +201,10 @@ export default function CreateReceiptModal(props) {
                                             type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
                                             data: {contract_id: value, has_payment: false, is_complete: true}
                                         })
+                                        dispatch({
+                                            type: GET_CONTRACT_DETAIL,
+                                            contract_id: value
+                                        });
                                         handleChangeValue("contract_ID", value)
                                     }}
                                 >
