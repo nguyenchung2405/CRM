@@ -1048,10 +1048,6 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-right: 54px;
 }
 
-.create__contract .create__contract__value p {
-    margin-bottom: 0px;
-}
-
 .create__contract .create__contract__payment p {
     margin-bottom: 20px;
 }
@@ -1417,6 +1413,29 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 
 .create__contract__payment .history__table table tbody tr {
     cursor: pointer;
+}
+
+.create__contract__payment .history__table.table__expand__less {
+    height: 330px;
+    overflow: hidden;
+}
+
+/* .create__contract__payment .history__table.table__expand {
+    height: auto;
+} */
+
+.create__contract__payment .expand__more {
+    width: 916px;
+    text-align: center;
+}
+
+.create__contract__payment .expand__more svg {
+    font-size: 25px;
+}
+
+.create__contract__payment .contract__payment__process.expand__payment__less {
+    height: 300px;
+    overflow: hidden;
 }
 
 .create__contract .create__contract__term table th {

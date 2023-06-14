@@ -118,10 +118,32 @@ const getPaymentList = async (req, res)=>{
     }
 }
 
+const deletePayment = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { payment_id } = req.query;
+        const result = await axios({
+            url: `${local}/payment/disable?payment_id=${payment_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        })
+        res.send(result.data)
+    } catch (error) {
+        if (error.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     createExportReceipt,
     cancelExportReceipt,
     completeExportReceipt,
     getAcceptaneListByContractID,
-    getPaymentList
+    getPaymentList,
+    deletePayment
 }

@@ -54,7 +54,7 @@ const customerSlice = createSlice({
             state.customerTypeList = [action.payload,...state.customerTypeList]
         },
         setCustomerTypeDelete: (state,action)=>{
-            console.log(action.payload);
+            // console.log(action.payload);
             state.customerTypeList = state.customerTypeList.filter((customerType)=>{
                 return action.payload !== customerType.id 
             })
@@ -79,7 +79,7 @@ const customerSlice = createSlice({
             })
         },
         setUpdateJobType: (state,action)=>{
-            console.log(action.payload);
+            // console.log(action.payload);
             state.jobTypeList = state.jobTypeList.map((jobType)=>{
                 return action.payload.id !== jobType.id ? jobType : {...jobType,name: action.payload.name}
             })

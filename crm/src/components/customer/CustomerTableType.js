@@ -543,7 +543,7 @@ function CustomerTableType() {
                                 showSizeChanger:true,
                                 position: ["bottomRight"],
                                 onChange: (pageTable,pageNumber)=>{
-                                    console.log({pageTable,pageNumber})
+                                    // console.log({pageTable,pageNumber})
                                     setPageJobType({
                                         ...pageJobType,
                                         pageCurrent: pageTable,

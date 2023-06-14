@@ -92,3 +92,21 @@ export async function getPaymentListAPI(page, pageNumber){
         return "Thât bại"
     }
 }
+
+export async function deletePaymentAPI(data){
+    try {
+        console.log(data)
+        const result = await axios({
+            url: `${local}/api/receipt/delete-payment?payment_id=${data}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

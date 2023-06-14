@@ -51,10 +51,15 @@ const receiptSlice = createSlice({
             let receiptIndex = state.recieptList.findIndex(pay => pay.id === data.id);
             // let paymentIndex = state.recieptList[receiptIndex].payments.findIndex(pay => pay.id === data.id);
             state.recieptList[receiptIndex] = data
+        },
+        removePayment: (state, action)=>{
+            let payment_id = action.payload;
+            let paymentIndex = state.recieptList.findIndex(pay => pay.id === payment_id);
+            state.recieptList.splice(paymentIndex, 1);
         }
     }
 })
 
 export const {setTotalReceipt, setReceiptList, addReceiptToList, removeReceiptFromList, completeReceiptFromList,
-setAccListInReceipt, addPaymentToReceiptList, updatePaymentToReceiptList, setAccListInReceiptEvent} = receiptSlice.actions;
+setAccListInReceipt, addPaymentToReceiptList, updatePaymentToReceiptList, setAccListInReceiptEvent, removePayment} = receiptSlice.actions;
 export default receiptSlice.reducer;
