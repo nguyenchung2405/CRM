@@ -1415,6 +1415,15 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     cursor: pointer;
 }
 
+.create__contract__payment .history__table.table__expand__less {
+    height: 330px;
+    overflow: hidden;
+}
+
+/* .create__contract__payment .history__table.table__expand {
+    height: auto;
+} */
+
 .create__contract__payment .expand__more {
     width: 916px;
     text-align: center;

@@ -2,6 +2,7 @@ import { Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import ModalHistory from './ModalHistory';
+import { MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
 
 export default function ContractHistory(props) {
 
@@ -9,15 +10,29 @@ export default function ContractHistory(props) {
     const {Column} = Table;
     const [isShowModal, setIsShowModal] = useState(false);
     const [dataToModal, setDataToModal] = useState({});
-    const [dataOfTable, setDataOfTable]= useState([])
+    const [isExpand, setIsExpand] = useState(false)
 
-    useEffect(()=>{
-      if (data?.length > 0) {
-        let newData = [...data];
-        let reverseArr = newData.reverse();
-        setDataOfTable([...reverseArr])
+  const showIconExpand = () => {
+    if (data?.length > 5) {
+      if (isExpand) {
+        return <MdOutlineExpandLess onClick={() => { setIsExpand(false) }} />
+      } else {
+        return <MdOutlineExpandMore onClick={() => { setIsExpand(true) }} />
       }
-    }, [data])
+    }
+  }
+
+  const setClassName = () => {
+    if (data?.length > 5) {
+      if (isExpand) {
+        return "history__table table__expand__more"
+      } else {
+        return "history__table table__expand__less"
+      }
+    } else {
+      return "history__table"
+    }
+  }
 
   return (
     <div className="create__contract__payment border_bottom_3px">
@@ -32,8 +47,8 @@ export default function ContractHistory(props) {
         </div>
       </div>
       <Table
-        className="history__table"
-        dataSource={dataOfTable}
+        className={setClassName()}
+        dataSource={data}
         pagination={false}
         onRow={record => {
           return {
@@ -56,6 +71,9 @@ export default function ContractHistory(props) {
           return text.update_user_name;
         }} />
       </Table>
+      <div className="expand__more">
+        {showIconExpand()}
+      </div>
     </div>
   )
 }

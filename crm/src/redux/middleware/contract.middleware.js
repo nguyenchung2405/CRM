@@ -83,6 +83,7 @@ function* updateContract(payload){
         const result = yield call(updateContractiAPI, payload.data);
         if(result.data?.msg === "Updated successfully!"){
             yield put(setMessage({ type: "thành công", msg: "Cập nhật hợp đồng thành công." }))
+            yield put({type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id})
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Cập nhật hợp đồng thất bại." }))
         }
@@ -210,7 +211,15 @@ function* getRequestOfEvent(payload){
 function* importFileExcel(payload){
     try {
         const result = yield call(importFileExcelAPI, payload.data);
-        console.log(result)
+        if(result.data.data.errors.length > 0){
+            message.error("Nhập file thất bại.")
+            result.data.data.errors.forEach(err => {
+                message.error(`Lỗi ở ${err.slice(0,6).toLowerCase()}`)
+            })
+        } else {
+            message.success("Nhập file thành công.")
+            yield put({type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id})
+        }
     } catch (error) {
         console.log(error)
     }
