@@ -687,6 +687,10 @@ div.modal__content .modal__field.field__select.width_525 div.acceptance__list di
     align-items: center;
 }
 
+div.modal__content .modal__field.field__select.width_525 div.acceptance__list div.acceptance__row > input {
+    width: auto;
+}
+
 div.modal__content .modal__field.field__select.width_525 div.acceptance__list div.acceptance__row > span:nth-child(2) {
     width: 80px;
 }
