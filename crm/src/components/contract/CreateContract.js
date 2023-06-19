@@ -487,19 +487,6 @@ export default function CreateContract() {
               >
                 {renderOptionOwner()}
               </Select>
-              {/**
-                    <input
-                    className="style"
-                    placeholder="Người đầu mối"
-                    type="text"
-                    name="owner"
-                    onChange={(e) => {
-                      let { value, name } = e.target;
-                      handleChangeValue(name, +value)
-                    }}
-                    value={valueOfField("owner")}
-                  />
-                */}
             </div>
           </div>
           <div className="field__input field__flex two__field">
@@ -570,52 +557,6 @@ export default function CreateContract() {
             </div>
           </div>
         </div>
-        {/* Thông tin liên hệ
-            <div className="create__contract__contactInfor border_bottom_3px">
-            <div className="display__flex">
-              <p>Thông tin liên hệ</p>
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11 7.32739V14.6537"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M14.6667 10.9904H7.33337"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <div className="field__input_3">
-              <input className="style" placeholder="Người liên hệ" type="text" />
-              <input className="style" placeholder="Email" type="text" />
-              <input className="style" placeholder="Số điện thoại" type="text" />
-            </div>
-            <div className="field__input">
-              <input type="text" placeholder="Địa chỉ" className="style" />
-            </div>
-          </div>
-            */}
         {valueForm.event_ID ?
           <RequestEvent
             productListFull={productListFull}
@@ -714,7 +655,7 @@ export default function CreateContract() {
                 // let product = productList?.find(product => product.id === text)
                 // return product?.name || product?.Product_name
                 let product = productListFull.find(product => product.id === text.product_ID)
-                return product?.location_ID?.channel_ID?.name + " - " + product?.location_ID?.name + " - " + product?.name
+                return product?.channel?.name + " - " + product?.location?.name + " - " + product?.name
               }}
             />
             <Column

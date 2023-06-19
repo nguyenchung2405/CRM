@@ -1377,6 +1377,7 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     width: 916px;
     border-bottom: 1px solid #EEEFF3;
     padding: 18px 0;
+    cursor: pointer;
 }
 
 .create__contract .create__contract__payment .contract__payment__process .payment__contract>span:first-child {
@@ -1388,6 +1389,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     font-weight: bold;
     min-width: 125px;
     text-align: right;
+}
+
+.payment__infor__modal .payment__infor__modal__content .create__contract__term {
+    padding-left: 0;
 }
 
 #soDotThanhToan {

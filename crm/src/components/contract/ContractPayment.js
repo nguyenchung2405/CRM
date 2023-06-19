@@ -1,11 +1,14 @@
 import moment from 'moment';
 import React, { useState } from 'react'
 import { MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
+import ModalPaymentInfor from './ModalPaymentInfor';
 
 export default function ContractPayment(props) {
 
     const {dotThanhToan, valueOfField, setValueForm, valueForm} = props;
     const [isExpand, setIsExpand] = useState(false)
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [paymentID, setPaymentID] = useState();
 
     const showPayment = () => {
         return dotThanhToan?.map((payment, index) => {
@@ -22,7 +25,7 @@ export default function ContractPayment(props) {
             } else {
                 statusOfPayment = "Đã thanh toán"
             }
-            return <div className="payment__contract">
+            return <div className="payment__contract " onClick={()=>{ setIsShowModal(true); setPaymentID(payment.id) }}>
                 <span>Đợt thanh toán {index + 1}</span>
                 <span>{convertDate}</span>
                 <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
@@ -82,6 +85,11 @@ export default function ContractPayment(props) {
           <div className="expand__more">
             { showIconExpand() }
           </div>
+          <ModalPaymentInfor
+              isShowModal={isShowModal}
+              setIsShowModal={setIsShowModal}
+              paymentID={paymentID}
+          />
       </div>
   )
 }

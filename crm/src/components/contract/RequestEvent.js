@@ -42,7 +42,7 @@ export default function RequestEvent(props) {
             key="item"
             render={(text) => {
               let product = productListFull.find(product => product.id === text.product_ID)
-              return product?.location_ID?.channel_ID?.name + " - " + product?.location_ID?.name + " - " + product?.name
+              return product?.channel?.name + " - " + product?.location?.name + " - " + product?.name
             }}
           />
           <Column
