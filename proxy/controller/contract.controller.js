@@ -319,6 +319,27 @@ const updatePayment= async (req, res)=>{
     }
 }
 
+const getInforPayment = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { id } = req.query;
+        const result = await axios({
+            url: `${local}/payment/list?id=${id}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 const getFile = async (req, res)=>{
     try {
         axios.get(req.query.link,{ responseType: 'arraybuffer' })
@@ -417,5 +438,6 @@ module.exports = {
     getFile,
     updatePayment,
     getExportFile,
-    importFileExcel
+    importFileExcel,
+    getInforPayment
 }

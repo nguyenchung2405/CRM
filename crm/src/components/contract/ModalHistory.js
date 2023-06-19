@@ -1,16 +1,10 @@
-import { Checkbox, Modal, Popconfirm, Select, Table } from 'antd'
-import React, { useState } from 'react'
-import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
+import { Modal, Table } from 'antd'
+import React from 'react'
 
 export default function ModalHistory(props) {
 
     const { isShowModal, setIsShowModal, dataToModal } = props;
-    const { Option } = Select;
     const { Column } = Table;
-    const dispatch = useDispatch();
-    const [multi, setMulti] = useState([]);
-    const { productListFull } = useSelector(state => state.productReducer)
 
     const handleCancel = () => {
         setIsShowModal(false)
