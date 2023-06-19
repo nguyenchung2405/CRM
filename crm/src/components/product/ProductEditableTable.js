@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Input, message, Popconfirm, Select, Table, Tooltip, Typography } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useDispatch, useSelector } from "react-redux"
-import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER, UPDATE_PRODUCT } from '../../title/title';
+import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER, UPDATE_PRODUCT } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -18,12 +18,14 @@ const convertData = (productList) => {
             key: product.id,
             product_id: product.id,
             product_name: product.name,
-            attribute_id: product.attribute_ID.id,
-            attribute_name: product.attribute_ID.name,
-            location_id: product.location_ID.id,
-            location_name: product.location_ID.name,
-            channel_id: product.location_ID.channel_ID?.id,
-            channel_name: product.location_ID.channel_ID.name,
+            attribute_option_id: product.attribute_option_ID.id,
+            attribute_option_name: product.attribute_option_ID.name,
+            location_id: product.location.id,
+            location_name: product.location.name,
+            sub_location_id: product.sub_location_ID.id,
+            sub_location_name: product.sub_location_ID.name,
+            channel_id: product.channel?.id,
+            channel_name: product.channel.name,
             type_id: product.type_ID.id,
             type_name: product.type_ID.name,
             price: product.price.price * 1000000
@@ -39,7 +41,7 @@ export default function ProductTable() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const { isLoading } = useSelector(state => state.loadingReducer);
-    const { productList, totalProduct, productChannel, productLocation, productType, productAttribute } = useSelector(state => state.productReducer);
+    const { productList, totalProduct, productChannel, productLocation, productType, productAttribute, productSubLocation } = useSelector(state => state.productReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     // Normal Table
     const [page, setPage] = useState(1);
@@ -56,6 +58,7 @@ export default function ProductTable() {
     // Get channel, location, type, attribute ò product
     const [channelID, setChannelID] = useState(null);
     const [locationID, setLocationID] = useState(null);
+    const [subLocationID, setSubLocationID] = useState(null);
     const [typeID, setTypeID] = useState(null);
     const [attributeID, setAttributeID] = useState(null);
     
@@ -82,6 +85,15 @@ export default function ProductTable() {
             })
         }
     }, [channelID])
+
+    useEffect(()=>{
+        if (typeof locationID === "number" && locationID !== null) {
+          dispatch({
+            type: GET_PRODUCT_SUBLOCATION,
+            data: { page:1, page_size: 1000, locationID }
+          })
+        }
+      }, [locationID, dispatch])
 
     useEffect(() => {
         if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
@@ -181,7 +193,7 @@ export default function ProductTable() {
                 >
                     {renderTypeOption()}
                 </Select>
-            } else if (inputType === "attribute_name") {
+            } else if (inputType === "attribute_option_name") {
                 return <Select
                     showSearch
                     filterOption={(input, option) =>
@@ -196,6 +208,20 @@ export default function ProductTable() {
                 >
                     {renderAttributeOption()}
                 </Select>
+            } else if(inputType === "sub_location_name"){
+                return <Select
+                showSearch
+                filterOption={(input, option) =>
+                    (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                }
+                value={subLocationID}
+                onChange={(value) => {
+                    setSubLocationID(value)
+                }}
+                disabled={isDisable()}
+            >
+                {renderSubLocationOption()}
+            </Select>
             } else {
                 return <Input />
             }
@@ -232,7 +258,8 @@ export default function ProductTable() {
         setChannelID(record.channel_id)
         setLocationID(record.location_id)
         setTypeID(record.type_id)
-        setAttributeID(record.attribute_id)
+        setAttributeID(record.attribute_option_id)
+        setSubLocationID(record.sub_location_id)
         setIsCreate(false)
         setIsUpdate(true)
     };
@@ -251,16 +278,19 @@ export default function ProductTable() {
             const newProduct = form.getFieldsValue();
             let channel = productChannel.find(channel => channel.id === channelID);
             let location = productLocation.find(location => location.id === locationID);
+            let subLocation = productSubLocation.find(subLoca => subLoca.id === subLocationID)
             let type = productType.find(type => type.id === typeID);
             let attribute = productAttribute.find(att => att.id === attributeID);
             newProduct.channel_id = channelID;
             newProduct.channel_name = channel.name
             newProduct.location_id = locationID;
             newProduct.location_name = location.name
+            newProduct.sub_location_ID = subLocationID;
+            newProduct.sub_location_name = subLocation.name
             newProduct.type_id = typeID;
             newProduct.type_name = type.name
-            newProduct.attribute_id = attributeID;
-            newProduct.attribute_name = attribute.name
+            newProduct.attribute_option_id = attributeID;
+            newProduct.attribute_option_name = attribute.name
             newProduct.id = editingKey;
             const row = await form.validateFields();
             const newData = [...data];
@@ -301,38 +331,44 @@ export default function ProductTable() {
             editable: true,
             title: "Sản phẩm",
             dataIndex: "product_name",
-            width:"15%",
+            width:"12.7%",
             className: "product__name"
         },
         {
             editable: true,
             title: "Kênh sản phẩm",
             dataIndex: "channel_name",
-            width:"15%"
+            width:"12.7%"
         },
         {
             editable: true,
             title: "Nhóm sản phẩm",
             dataIndex: "location_name",
-            width:"15%"
+            width:"12.7%"
+        },
+        {
+            editable: true,
+            title: "Vị trí sản phẩm",
+            dataIndex: "sub_location_name",
+            width:"12.7%"
         },
         {
             editable: true,
             title: "Loại sản phẩm",
             dataIndex: "type_name",
-            width:"15%"
+            width:"12.7%"
         },
         {
             editable: true,
             title: "Thuộc tính sản phẩm",
-            dataIndex: "attribute_name",
-            width:"15%"
+            dataIndex: "attribute_option_name",
+            width:"12.7%"
         },
         {
             editable: true,
             title: "Giá",
             dataIndex: "price",
-            width:"15%",
+            width:"12.7%",
             render: (_, record)=>{
                 return new Intl.NumberFormat("vi-VI").format(record.price) + " VNĐ"
             }
@@ -422,6 +458,13 @@ export default function ProductTable() {
         })
     };
 
+    const renderSubLocationOption = () => {
+        return productSubLocation.map(sublocation => {
+            console.log(sublocation)
+          return <Option key={sublocation.id} value={sublocation.id}>{sublocation.name}</Option>
+        });
+      }
+
     function renderTypeOption() {
         return productType.map(type => {
             return <Option value={type.id}>{type.name}</Option>
@@ -438,19 +481,23 @@ export default function ProductTable() {
         let newProduct = {
             id: uuidv4(),
             "name": "",
-            "location_ID": {
+            "location": {
                 "name": "",
-                "channel_ID": {
-                    "name": "",
-                    "id": null
-                },
                 "id": null
             },
             "type_ID": {
                 "name": "",
                 "id": null
             },
-            "attribute_ID": {
+            "attribute_option_ID": {
+                "name": "",
+                "id": null
+            },
+            "channel": {
+                "name": "",
+                "id": null
+            },
+            sub_location_ID: {
                 "name": "",
                 "id": null
             },

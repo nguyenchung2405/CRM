@@ -3,7 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
+import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 import { getProductSpecialForClientAPI } from '../../../redux/API/productAPI';
@@ -17,9 +17,10 @@ export default function TermModal(props) {
   const [valueModal, setValueModal] = useState({});
   const [channelID, setChannelID] = useState(null);
   const [locationID, setLocationID] = useState(null);
+  const [subLocationID, setSubLocationID] = useState(null);
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
-  const { productChannel, productLocation, productType, productAttribute, productList, customPriceForClient } = useSelector(state => state.productReducer);
+  const { productChannel, productLocation, productSubLocation, productType, productAttribute, productList, customPriceForClient } = useSelector(state => state.productReducer);
 
   useEffect(() => {
     dispatch({
@@ -40,30 +41,39 @@ export default function TermModal(props) {
   useEffect(()=>{
     if (typeof locationID === "number" && locationID !== null) {
       dispatch({
-        type: GET_PRODUCT_TYPE,
-        data: { page: 1, page_size: 1000, locationID }
+        type: GET_PRODUCT_SUBLOCATION,
+        data: { page:1, page_size: 1000, locationID }
       })
     }
   }, [locationID, dispatch])
 
   useEffect(()=>{
-    if((typeof locationID === "number" && locationID !== null) && (typeof typeID === "number" && typeID !== null)) {
+    if (typeof subLocationID === "number" && subLocationID !== null) {
       dispatch({
-        type: GET_PRODUCT_ATTRIBUTE,
-        data: { page: 1, page_size: 1000, locationID, typeID }
+        type: GET_PRODUCT_TYPE,
+        data: { page: 1, page_size: 1000, subLocationID  }
       })
     }
-  }, [locationID, typeID, dispatch])
+  }, [subLocationID])
+
+  useEffect(()=>{
+    if(typeof typeID === "number" && typeID !== null) {
+      dispatch({
+        type: GET_PRODUCT_ATTRIBUTE,
+        data: { page: 1, page_size: 1000, typeID }
+      })
+    }
+  }, [typeID, dispatch])
   
   useEffect(() => {
-    if( typeof locationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
+    if( typeof subLocationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
       dispatch({
         type: GET_PRODUCT_LIST,
-        data: { page: 1, pageSize: 1000, locationID, typeID, attributeID }
+        data: { page: 1, pageSize: 1000, subLocationID, typeID, attributeID }
       });
     }
     setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null, custom_price: "" })
-  }, [locationID, typeID, attributeID, dispatch])
+  }, [subLocationID, typeID, attributeID, dispatch])
 
   useEffect(() => {
     if (isShowModal) {
@@ -75,38 +85,38 @@ export default function TermModal(props) {
     }
   }, [dataToModal, isShowModal])
 
-  useEffect(() => {
-    if(productList.length === 1){
-      setValueModal({
-        ...valueModal,
-        product_ID: productList[0].id,
-        real_price: productList[0].price.price * 1000000,
-        price_ID: productList[0].price.id,
-        product_name: productList[0].name
-      })
-    }
-  }, [productList])
+  // useEffect(() => {
+  //   if(productList.length === 1){
+  //     setValueModal({
+  //       ...valueModal,
+  //       product_ID: productList[0].id,
+  //       real_price: productList[0].price.price * 1000000,
+  //       price_ID: productList[0].price.id,
+  //       product_name: productList[0].name
+  //     })
+  //   }
+  // }, [productList])
 
-  useEffect(()=>{
-    if(valueModal.product_ID && typeof valueModal.product_ID === "number" && !isUpdateModal){
-      dispatch({
-        type: GET_PRODUCT_SPECIAL_FOR_CLIENT,
-        data: {
-          client_type_ID: customerInfor.client_type_ID,
-          product_ID: valueModal.product_ID
-        }
-      })
-    }
-  }, [valueModal.product_ID, customerInfor.client_type_ID])
+  // useEffect(()=>{
+  //   if(valueModal.product_ID && typeof valueModal.product_ID === "number" && !isUpdateModal){
+  //     dispatch({
+  //       type: GET_PRODUCT_SPECIAL_FOR_CLIENT,
+  //       data: {
+  //         client_type_ID: customerInfor.client_type_ID,
+  //         product_ID: valueModal.product_ID
+  //       }
+  //     })
+  //   }
+  // }, [valueModal.product_ID, customerInfor.client_type_ID])
 
-  useEffect(()=>{
-    if(typeof customPriceForClient === "number" && customPriceForClient > 1){
-      setValueModal({
-        ...valueModal,
-        custom_price: customPriceForClient * 1000000
-      })
-    }
-  }, [customPriceForClient])
+  // useEffect(()=>{
+  //   if(typeof customPriceForClient === "number" && customPriceForClient > 1){
+  //     setValueModal({
+  //       ...valueModal,
+  //       custom_price: customPriceForClient * 1000000
+  //     })
+  //   }
+  // }, [customPriceForClient])
 
   const handleCancel = () => {
     setIsShowModal(false);
@@ -198,11 +208,11 @@ export default function TermModal(props) {
     }
   }
 
-  // const renderOptionProduct = ()=>{
-  //   return productList?.map((item)=>{
-  //     return <Option value={item.id}>{item.name}</Option>
-  //   });
-  // }
+  const renderOptionProduct = ()=>{
+    return productList?.map((item)=>{
+      return <Option value={item.id}>{item.name}</Option>
+    });
+  }
 
   const renderOptionProductChannel = () => {
     return productChannel.map(channel => {
@@ -213,6 +223,12 @@ export default function TermModal(props) {
   const renderOptionProductLocation = () => {
     return productLocation.map(location => {
       return <Option key={location.id} value={location.id}>{location.name}</Option>
+    });
+  }
+
+  const renderOptionProductSubLocation = () => {
+    return productSubLocation.map(sublocation => {
+      return <Option key={sublocation.id} value={sublocation.id}>{sublocation.name}</Option>
     });
   }
 
@@ -302,11 +318,35 @@ export default function TermModal(props) {
                       setLocationID(value)
                       setTypeID(null)
                       setAttributeID(null)
+                      setSubLocationID(null)
                       dispatch(setProductList([]))
                       dispatch(setProductAttribute([]))
                     }}
                   >
                     {renderOptionProductLocation()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Vị trí đặt sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn nhóm sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={subLocationID}
+                    onChange={(value) => {
+                      setSubLocationID(value)
+                      setTypeID(null)
+                      setAttributeID(null)
+                      dispatch(setProductList([]))
+                      dispatch(setProductAttribute([]))
+                    }}
+                  >
+                    {renderOptionProductSubLocation()}
                   </Select>
                 </div>
               </div>
@@ -350,13 +390,33 @@ export default function TermModal(props) {
                   </Select>
                 </div>
               </div>
-              <div className="modal__field">
-                <input type="text"
-                  name="real_price"
-                  value={valueOfField("product_name")}
-                  disabled
-                />
-                <label>Sản phẩm</label>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Sản phẩm</label>
+                  <Select
+                    className="style"
+                    showSearch
+                    // placeholder="Chọn sản phẩm"
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={valueOfField("product_ID")}
+                    onChange={(value) => {
+                      // handleChange("product_ID", value)
+                      let product = productList.find(item => item.id === value);
+                      // handleChange("real_price", +product.product_price[0].price)
+                      // let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
+                      setValueModal({
+                        ...valueModal,
+                        product_ID: value,
+                        real_price: +product.price.price * 1000000,
+                        price_ID: product.price.id
+                      })
+                    }}
+                  >
+                    {renderOptionProduct()}
+                  </Select>
+                </div>
               </div>
             </>
           }

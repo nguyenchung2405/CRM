@@ -4,7 +4,7 @@ const { local } = require("../untils/title");
 const getProductTypeList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let {name, page, page_size, location_ID} = req.query;
+        let {name, page, page_size, sub_location_ID} = req.query;
         let result;
         if(name && name !== ""){
             result = await axios({
@@ -14,9 +14,9 @@ const getProductTypeList = async (req, res) => {
                     Authorization: authorization
                 }
             });
-        } else if(location_ID !== "undefined") {
+        } else if(sub_location_ID !== "undefined") {
             result = await axios({
-                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&location_ID=${location_ID}`,
+                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&sub_location_ID=${sub_location_ID}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -44,9 +44,9 @@ const getProductTypeList = async (req, res) => {
 const getProductList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, attribute_ID, location_ID, type_ID } = req.query;
+        let { page, page_size, attribute_ID: attribute_option_ID, sub_location_ID, type_ID } = req.query;
         let queryString = "&";
-        let obj = { attribute_ID, location_ID, type_ID };
+        let obj = { attribute_option_ID, sub_location_ID, type_ID };
         for (let prop in obj) {
             if (typeof +obj[prop] === "number" && +obj[prop] > 0) {
                 if (queryString.length > 1) {
@@ -115,22 +115,43 @@ const getProductLocation = async (req, res) => {
     }
 };
 
+const getProductSubLocation = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { page, page_size, location_id } = req.query;
+        const result = await axios({
+            url: `${local}/product/sublocation/list?page=${page}&page_size=${page_size}&location_id=${location_id}`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 const getProductType = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, name , type_ID, location_ID} = req.query;
+        let { page, page_size, name , type_ID} = req.query;
         let result;
         if(name && name !== ""){
             result = await axios({
-                url: `${local}/product/attribute/list?page_size=1000&page=1&sort_by=id&order=desc&name=${encodeURI(name)}`,
+                url: `${local}/product/optionattribute/list?page_size=1000&page=1&sort_by=id&order=desc&name=${encodeURI(name)}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
                 }
             });
-        } else if(type_ID && location_ID && type_ID !== "undefined" &&location_ID !== "undefined") {
+        } else if(type_ID && type_ID !== "undefined") {
             result = await axios({
-                url: `${local}/product/attribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&type_ID=${type_ID}&location_ID=${location_ID}`,
+                url: `${local}/product/optionattribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&type_ID=${type_ID}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -138,7 +159,7 @@ const getProductType = async (req, res) => {
             });
         } else {
             result = await axios({
-                url: `${local}/product/attribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
+                url: `${local}/product/optionattribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -265,7 +286,7 @@ const createProductAttribute = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
         const result = await axios({
-            url: `${local}/product/attribute/create`,
+            url: `${local}/product/optionattribute/create`,
             method: "POST",
             headers: {
                 Authorization: authorization
@@ -287,7 +308,7 @@ const deleteProductAttribute = async (req, res)=>{
         let {headers: {authorization}} = req;
         let {attribute_id} = req.query;
         const result = await axios({
-            url: `${local}/product/attribute/disable?id=${attribute_id}`,
+            url: `${local}/product/optionattribute/disable?id=${attribute_id}`,
             method: "DELETE",
             headers: {
                 Authorization: authorization
@@ -308,7 +329,7 @@ const updateProductAttribute = async (req, res)=>{
         let {headers: {authorization}} = req;
         let {attribute_id} = req.query;
         const result = await axios({
-            url: `${local}/product/attribute/update?id=${attribute_id}`,
+            url: `${local}/product/optionattribute/update?id=${attribute_id}`,
             method: "PUT",
             headers: {
                 Authorization: authorization
@@ -465,5 +486,6 @@ module.exports = {
     createProductSpecial,
     getProductSpecialForClient,
     updateProduct,
-    deleteProductSpecial
+    deleteProductSpecial,
+    getProductSubLocation
 }

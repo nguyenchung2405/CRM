@@ -3,7 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST_EVENT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST_EVENT } from '../../../title/title';
+import { CREATE_REQUEST_EVENT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST_EVENT } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
 
@@ -16,9 +16,10 @@ export default function TermModalEvent(props) {
   const [valueModal, setValueModal] = useState({});
   const [channelID, setChannelID] = useState(null);
   const [locationID, setLocationID] = useState(null);
+  const [subLocationID, setSubLocationID] = useState(null);
   const [typeID, setTypeID] = useState(null);
   const [attributeID, setAttributeID] = useState(null);
-  const { productChannel, productLocation, productType, productAttribute, productList, customPriceForClient } = useSelector(state => state.productReducer);
+  const { productChannel, productLocation, productSubLocation, productType, productAttribute, productList, customPriceForClient } = useSelector(state => state.productReducer);
 
   useEffect(() => {
     dispatch({
@@ -39,30 +40,39 @@ export default function TermModalEvent(props) {
   useEffect(()=>{
     if (typeof locationID === "number" && locationID !== null) {
       dispatch({
-        type: GET_PRODUCT_TYPE,
-        data: { page: 1, page_size: 1000, locationID }
+        type: GET_PRODUCT_SUBLOCATION,
+        data: { page:1, page_size: 1000, locationID }
       })
     }
   }, [locationID, dispatch])
 
   useEffect(()=>{
-    if((typeof locationID === "number" && locationID !== null) && (typeof typeID === "number" && typeID !== null)) {
+    if (typeof subLocationID === "number" && subLocationID !== null) {
       dispatch({
-        type: GET_PRODUCT_ATTRIBUTE,
-        data: { page: 1, page_size: 1000, locationID, typeID }
+        type: GET_PRODUCT_TYPE,
+        data: { page: 1, page_size: 1000, subLocationID  }
       })
     }
-  }, [locationID, typeID, dispatch])
+  }, [subLocationID])
+
+  useEffect(()=>{
+    if(typeof typeID === "number" && typeID !== null) {
+      dispatch({
+        type: GET_PRODUCT_ATTRIBUTE,
+        data: { page: 1, page_size: 1000, typeID }
+      })
+    }
+  }, [typeID, dispatch])
   
   useEffect(() => {
     if( typeof locationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
       dispatch({
         type: GET_PRODUCT_LIST,
-        data: { page: 1, pageSize: 1000, locationID, typeID, attributeID }
+        data: { page: 1, pageSize: 1000, subLocationID, typeID, attributeID }
       });
     }
     setValueModal({ ...valueModal, product_ID: null, real_price: "", product_name: null, custom_price: "" })
-  }, [locationID, typeID, attributeID, dispatch])
+  }, [subLocationID, typeID, attributeID, dispatch])
 
   useEffect(() => {
     if (isShowModal) {
@@ -74,17 +84,17 @@ export default function TermModalEvent(props) {
     }
   }, [dataToModal, isShowModal])
 
-  useEffect(() => {
-    if(productList.length === 1){
-      setValueModal({
-        ...valueModal,
-        product_ID: productList[0].id,
-        real_price: productList[0].price.price * 1000000,
-        price_ID: productList[0].price.id,
-        product_name: productList[0].name
-      })
-    }
-  }, [productList])
+  // useEffect(() => {
+  //   if(productList.length === 1){
+  //     setValueModal({
+  //       ...valueModal,
+  //       product_ID: productList[0].id,
+  //       real_price: productList[0].price.price * 1000000,
+  //       price_ID: productList[0].price.id,
+  //       product_name: productList[0].name
+  //     })
+  //   }
+  // }, [productList])
 
   const handleCancel = () => {
     setIsShowModal(false);
@@ -119,8 +129,8 @@ export default function TermModalEvent(props) {
       }
     } else {
       // Khi cập nhật thì PUT riêng từng API
+      valueModal.event_ID = event_id;
       if (!isUpdateModal) {
-        valueModal.event_ID = event_id;
         dispatch({
           type: CREATE_REQUEST_EVENT,
           data: valueModal
@@ -187,6 +197,12 @@ export default function TermModalEvent(props) {
     });
   }
 
+  const renderOptionProductSubLocation = () => {
+    return productSubLocation.map(sublocation => {
+      return <Option key={sublocation.id} value={sublocation.id}>{sublocation.name}</Option>
+    });
+  }
+
   const renderOptionProductType = () => {
     return productType.map(type => {
       return <Option key={type.id} value={type.id}>{type.name}</Option>
@@ -196,6 +212,12 @@ export default function TermModalEvent(props) {
   const renderOptionProductAttribute = () => {
     return productAttribute.map(att => {
       return <Option key={att.id} value={att.id}>{att.name}</Option>
+    });
+  }
+
+  const renderOptionProduct = ()=>{
+    return productList?.map((item)=>{
+      return <Option value={item.id}>{item.name}</Option>
     });
   }
 
@@ -283,6 +305,29 @@ export default function TermModalEvent(props) {
               </div>
               <div className="modal__field field__select">
                 <div>
+                  <label className="term__label">Vị trí đặt sản phẩm</label>
+                  <Select
+                    className="style"
+                    // placeholder="Chọn nhóm sản phẩm"
+                    showSearch
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={subLocationID}
+                    onChange={(value) => {
+                      setSubLocationID(value)
+                      setTypeID(null)
+                      setAttributeID(null)
+                      dispatch(setProductList([]))
+                      dispatch(setProductAttribute([]))
+                    }}
+                  >
+                    {renderOptionProductSubLocation()}
+                  </Select>
+                </div>
+              </div>
+              <div className="modal__field field__select">
+                <div>
                   <label className="term__label">Loại sản phẩm</label>
                   <Select
                     className="style"
@@ -321,48 +366,36 @@ export default function TermModalEvent(props) {
                   </Select>
                 </div>
               </div>
-              <div className="modal__field">
-                <input type="text"
-                  name="real_price"
-                  value={valueOfField("product_name")}
-                  disabled
-                />
-                <label>Sản phẩm</label>
+              <div className="modal__field field__select">
+                <div>
+                  <label className="term__label">Sản phẩm</label>
+                  <Select
+                    className="style"
+                    showSearch
+                    // placeholder="Chọn sản phẩm"
+                    filterOption={(input, option) =>
+                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                    }
+                    value={valueOfField("product_ID")}
+                    onChange={(value) => {
+                      // handleChange("product_ID", value)
+                      let product = productList.find(item => item.id === value);
+                      // handleChange("real_price", +product.product_price[0].price)
+                      // let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
+                      setValueModal({
+                        ...valueModal,
+                        product_ID: value,
+                        real_price: +product.price.price * 1000000,
+                        price_ID: product.price.id
+                      })
+                    }}
+                  >
+                    {renderOptionProduct()}
+                  </Select>
+                </div>
               </div>
             </>
           }
-          {/**
-                  <div className="modal__field field__select">
-                    <div>
-                      <label className="term__label">Chọn sản phẩm</label>
-                        Ngày xưa cho chọn sản phẩm theo kênh, location, type, attribute
-                        giờ bỏ đi khi nào xài lại thì mở lại code bên dưới này đỡ phải code lại
-                          <Select
-                        className="style"
-                        showSearch
-                        // placeholder="Chọn sản phẩm"
-                        filterOption={(input, option) =>
-                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                        }
-                        value={valueOfField("product_ID")}
-                        onChange={(value)=>{
-                            // handleChange("product_ID", value)
-                            let product = productList.find(item => item.id === value);
-                            // handleChange("real_price", +product.product_price[0].price)
-                            // let priceConvert = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(+product.price.price * 1000000);
-                            setValueModal({
-                              ...valueModal,
-                              product_ID: value,
-                              real_price: +product.price.price * 1000000,
-                              price_ID: product.price.id
-                            })
-                        }}
-                      >
-                        {renderOptionProduct()}
-                      </Select>
-                      </div>
-                      </div>
-                    */}
 
           <div className="modal__field">
             <input type="text"
@@ -383,52 +416,6 @@ export default function TermModalEvent(props) {
             />
             <label>Số lượng</label>
           </div>
-          <div className="modal__field">
-            <input type="text"
-              name="custom_price"
-              value={valueOfField("custom_price")}
-              onChange={(e) => {
-                let { value, name } = e.target;
-                handleChange(name, value)
-              }}
-            />
-            <label>Giá hiệu chỉnh</label>
-          </div>
-          {/**
-                 <div className="modal__field">
-                    <RangePicker 
-                    format={"DD-MM-YYYY"}
-                    suffixIcon={<svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.625 9H3.375C3.125 9 3 8.875 3 8.625V7.375C3 7.125 3.125 7 3.375 7H4.625C4.875 7 5 7.125 5 7.375V8.625C5 8.875 4.875 9 4.625 9ZM8 8.625C8 8.875 7.875 9 7.625 9H6.375C6.125 9 6 8.875 6 8.625V7.375C6 7.125 6.125 7 6.375 7H7.625C7.875 7 8 7.125 8 7.375V8.625ZM11 8.625C11 8.875 10.875 9 10.625 9H9.375C9.125 9 9 8.875 9 8.625V7.375C9 7.125 9.125 7 9.375 7H10.625C10.875 7 11 7.125 11 7.375V8.625ZM8 11.625C8 11.875 7.875 12 7.625 12H6.375C6.125 12 6 11.875 6 11.625V10.375C6 10.125 6.125 10 6.375 10H7.625C7.875 10 8 10.125 8 10.375V11.625ZM5 11.625C5 11.875 4.875 12 4.625 12H3.375C3.125 12 3 11.875 3 11.625V10.375C3 10.125 3.125 10 3.375 10H4.625C4.875 10 5 10.125 5 10.375V11.625ZM11 11.625C11 11.875 10.875 12 10.625 12H9.375C9.125 12 9 11.875 9 11.625V10.375C9 10.125 9.125 10 9.375 10H10.625C10.875 10 11 10.125 11 10.375V11.625ZM14 3.5V14.5C14 14.9167 13.8542 15.2708 13.5625 15.5625C13.2708 15.8542 12.9167 16 12.5 16H1.5C1.08333 16 0.729167 15.8542 0.4375 15.5625C0.145833 15.2708 0 14.9167 0 14.5V3.5C0 3.08333 0.145833 2.72917 0.4375 2.4375C0.729167 2.14583 1.08333 2 1.5 2H3V0.375C3 0.125 3.125 0 3.375 0H4.625C4.875 0 5 0.125 5 0.375V2H9V0.375C9 0.125 9.125 0 9.375 0H10.625C10.875 0 11 0.125 11 0.375V2H12.5C12.9167 2 13.2708 2.14583 13.5625 2.4375C13.8542 2.72917 14 3.08333 14 3.5ZM12.5 14.3125V5H1.5V14.3125C1.5 14.4375 1.5625 14.5 1.6875 14.5H12.3125C12.4375 14.5 12.5 14.4375 12.5 14.3125Z" fill="#666666" fillOpacity="0.6"/>
-                    </svg>}
-                    className='style' 
-                    placeholder={['Ngày đăng', "Kết thúc"]}
-                    value={valueOfField("rangePicker")}
-                    onChange={(date, dateString)=>{
-                      console.log(dateString)
-                      let ngayDang = moment(dateString[0], "DD-MM-YYYY").toISOString();
-                      let ngayKetThuc = moment(dateString[1], "DD-MM-YYYY").toISOString();
-                      setValueModal({
-                        ...valueModal,
-                        from_date: ngayDang,
-                        to_date: ngayKetThuc
-                      })
-                    }}
-                    />
-                  </div>
-                */}
-          {/**
-                 <div className="modal__field">
-                 <input type="text" placeholder="Nội dung"
-                 name="desc"
-                 value={valueOfField("desc")}
-                 onChange={(e)=>{
-                     let {value, name} = e.target;
-                     handleChange(name, value)
-                 }}
-                 />
-               </div>
-                  */}
         </div>
       </Modal>
     </div>

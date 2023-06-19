@@ -3,7 +3,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { ADD_UNSET_CONTRACT_TO_EVENT, CREATE_EVENT, CREATE_REQUEST_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_EVENT_REQUEST_CONTRACT_LIST, GET_EVENT_REQUEST_LIST, GET_UNSET_CONTRACT, SEARCH_EVENT, UPDATE_EVENT, UPDATE_REQUEST_EVENT } from "../../title/title";
 import { dataOfEventMapping } from "../../untils/mapping";
 import { addUnserContractToEventAPI, createEventAPI, createRequestAPI, deleteRequestAPI, getEventInforAPI, getEventListAPI, getEventRequestContractListAPI, getEventRequestListAPI, getUnsetContractAPI, searchEventAPI, updateEventAPI, updateRequestEventAPI } from "../API/eventAPI";
-import { addContractRequest, deleteContractRequest, setContractDetail, setContractRequest } from "../features/contractSlice";
+import { addContractRequest, deleteContractRequest, setContractDetail, setContractRequest, updateContractRequest } from "../features/contractSlice";
 import { setDonors, setEventList, setEventRequestContractList, setRequestOfEventAcc, setTotalEventList, setUnsetContract } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 
@@ -120,7 +120,12 @@ function* addUnserContractToEvent(payload){
 function* updateRequestEvent(payload){
     try {
         const result = yield call(updateRequestEventAPI, payload.data)
-        console.log(result)
+        if(result.data.msg === "Update successfully"){
+            yield put({type: GET_EVENT_INFOR, data: +payload.data.event_ID})
+            message.success("Cập nhật quyền lợi thành công")
+        } else {
+            message.error("Cập nhật quyền lợi thất bại")
+        }
     } catch (error) {
         console.log(error)
     }

@@ -2,13 +2,13 @@ import axios from "axios"
 import { local, TOKEN } from "../../title/title";
 import { v1 as uuidv1 } from "uuid"
 
-export async function getProductListAPI(page, pageSize, locationID, typeID, attributeID) {
+export async function getProductListAPI(page, pageSize, subLocationID, typeID, attributeID) {
     try {
-        let location_id = locationID === null ? "" : locationID;
+        let sub_location_ID = subLocationID === null ? "" : subLocationID;
         let type_id = typeID === null ? "" : typeID;
         let attribute_id = attributeID === null ? "" : attributeID;
         const result = await axios({
-            url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&location_ID=${location_id}&attribute_ID=${attribute_id}`,
+            url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&sub_location_ID=${sub_location_ID}&attribute_ID=${attribute_id}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -53,10 +53,26 @@ export async function getProductLocationAPI(page, page_size, channelID) {
     }
 };
 
-export async function getProductTypeAPI(page, page_size, locationID) {
+export async function getProductSubLocationAPI(page, page_size, locationID){
     try {
         const result = await axios({
-            url: `${local}/api/product/type/list?page_size=${page_size}&page=${page}&location_ID=${locationID}`,
+            url: `${local}/api/product/sublocation/list?page=${page}&page_size=${page_size}&location_id=${locationID}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+}
+
+export async function getProductTypeAPI(page, page_size, subLocationID) {
+    try {
+        const result = await axios({
+            url: `${local}/api/product/type/list?page_size=${page_size}&page=${page}&sub_location_ID=${subLocationID}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -69,10 +85,10 @@ export async function getProductTypeAPI(page, page_size, locationID) {
     }
 };
 
-export async function getProductAttributeAPI(page, page_size, locationID, typeID) {
+export async function getProductAttributeAPI(page, page_size, typeID) {
     try {
         const result = await axios({
-            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}&type_ID=${typeID}&location_ID=${locationID}`,
+            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}&type_ID=${typeID}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN
@@ -87,16 +103,19 @@ export async function getProductAttributeAPI(page, page_size, locationID, typeID
 
 export async function createProduceAPI(data) {
     try {
+        console.log(data)
         let product = {
             "name": data.product_name,
             "location_ID": data.location_id,
+            sub_location_ID: data.sub_location_ID,
             "type_ID": data.type_id,
-            "attribute_ID": data.attribute_id,
+            "attribute_option_ID": data.attribute_option_id,
             "code_indentify": uuidv1().slice(0, 10),
             "price": {
                 "price": +data.price / 1000000,
             }
         };
+        console.log("product", product)
         const result = await axios({
             url: `${local}/api/product/create`,
             method: "POST",

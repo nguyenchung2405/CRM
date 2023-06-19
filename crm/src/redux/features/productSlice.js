@@ -5,6 +5,7 @@ const initialState = {
     totalProduct: "",
     productChannel: [],
     productLocation: [],
+    productSubLocation: [],
     productType: [],
     productAttribute: [],
     productListFull: [],
@@ -36,6 +37,9 @@ const productSlice = createSlice({
         },
         setProductLocation: (state, action) => {
             state.productLocation = action.payload;
+        },
+        setProductSubLocation: (state, action) => {
+            state.productSubLocation = action.payload;
         },
         setProductType: (state, action) => {
             state.productType = action.payload;
@@ -113,5 +117,5 @@ setProductLocation, setProductAttribute, setProductListFull, addProduct, removeP
 updateProductWithID, setTotalProductType, addProductType, removeProductType, updateProductType,
 setTotalProductAttribute, addProductAttribute, removeProductAttribute, updateProductAttribute,
 setProductSpecial, setTotalProductSpecial, addProductSpecial, removeProductSpecial, updateProductSpecial,
-setCustomPriceForClient} = productSlice.actions;
+setCustomPriceForClient, setProductSubLocation} = productSlice.actions;
 export default productSlice.reducer;
