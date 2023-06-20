@@ -3,14 +3,14 @@ const {local} = require("../untils/title")
 // const local = "http://contract.tuoitre.vn"
 const getCustomerList = async (req, res)=>{
     try {
-        // let {headers: {authorization}} = req;
+        let {headers: {authorization}} = req;
         let {page, page_size} = req.query;
         const result = await axios({
             url: `${local}/client/list?sort_by=id&asc_order=false&page=${page}&page_size=${page_size}`,
             method: "GET",
-            // headers: {
-            //     Authorization: authorization
-            // }
+            headers: {
+                Authorization: authorization
+            }
         });
         res.send(result.data);
     } catch (error) {
@@ -51,11 +51,15 @@ const createCustomer = async (req, res)=>{
 
 const searchCustomer = async (req, res)=>{
     try {
+        let {headers: {authorization}} = req;
         let {name, tax_number, brief_name} = req.query;
         let newName = encodeURI(name)
         const result = await axios({
             url: `${local}/client/list?name=${newName}&tax_number=${tax_number}&brief_name=${brief_name}&page=1&page_size=1000&sort_by=id&asc_order=false`,
-            method: "GET"
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
         });
         res.send(result.data);
     } catch (error) {
@@ -69,10 +73,14 @@ const searchCustomer = async (req, res)=>{
 
 const updateCustomer = async (req, res)=>{
     try {
+        let {headers: {authorization}} = req;
         let {id} = req.query;
         const result = await axios({
             url: `${local}/client/update?id=${id}`,
             method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
             data: req.body
         });
         res.send(result.data);
@@ -87,10 +95,14 @@ const updateCustomer = async (req, res)=>{
 
 const getDetailCustomer = async (req, res)=>{
     try {
+        let {headers: {authorization}} = req;
         const {client_id} = req.params;
         const result = await axios({
             url: `${local}/client/list?id=${client_id}&page_size=10&sort_by=id&asc_order=true`,
-            method: "GET"
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
         });
         res.send(result.data)
     } catch (error) {
