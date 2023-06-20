@@ -32,7 +32,7 @@ const ChanelGContainer = () => {
         setgroupChanne(groupChannelList)
     }, [groupChannelList])
     const formatDataChannelList = (data) => {
-        return data.map((obj) => {
+        return data?.map((obj) => {
             return {
                 ...obj,
                 key: obj.id
@@ -108,7 +108,7 @@ const ChanelGContainer = () => {
                 // setgroupChanne(arrayForAdd)
             } else {
                 let arrayForAdd = groupChanne.filter((item) => {
-                    return Item.idAdd !== 1
+                    return item.idAdd !== 1
                 })
                 setgroupChanne(arrayForAdd)
             }

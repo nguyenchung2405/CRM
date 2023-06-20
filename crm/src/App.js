@@ -11,7 +11,6 @@ import ContractTable from './components/contract/ContractTable';
 import CreateContract from './components/contract/CreateContract';
 import CreateCustomer from './components/customer/CreateCustomer';
 import { checkMicroFe } from './untils/helper';
-import ProductTable from './components/product/ProductTable';
 import ChanelGContainer from '../src/container/ChanelGContainer';
 import ProductEditableTable from './components/product/ProductEditableTable';
 import TypeAndAttribute from './components/product/TypeAndAttribute';

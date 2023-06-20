@@ -1,10 +1,8 @@
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { AiFillPlusCircle } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContractRequestAPI } from '../../redux/API/contractAPI';
-import CreateReceiptModal from '../receipt/CreateReceiptModal';
 
 export default function ExpandTableAcceptance(props) {
 
@@ -80,11 +78,11 @@ export default function ExpandTableAcceptance(props) {
               }}
               pagination={false}
           >
-              <Column title="Tên quyền lợi" fixed="left" render={(text) => {
+              <Column title="Tên quyền lợi" fixed="left" width="33%" render={(text) => {
                   return text.product_ID.name
               }}></Column>
-              <Column title="Số quyền lợi đã thực hiện" dataIndex="detail_completed"></Column>
-              <Column title="Số lượng" dataIndex="quality"></Column>
+              <Column title="Số quyền lợi đã thực hiện" width="33%" dataIndex="detail_completed"></Column>
+              <Column title="Số lượng" width="33%" dataIndex="quality"></Column>
           </Table>
       </>
   )
