@@ -6,6 +6,9 @@ export async function getCustomerListAPI(page, pageNumber){
         const result = await axios({
             url: `${local}/api/client/list?page=${page}&page_size=${pageNumber}`,
             method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         })
         return result.data;
     } catch (error) {
@@ -45,7 +48,10 @@ export async function searchCustomerAPI(data){
         let {name, tax_number, brief_name} = data;
         const result = await axios({
             url: `${local}/api/client/search?name=${name}&tax_number=${tax_number}&brief_name=${brief_name}`,
-            method: "GET"
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         });
         return result.data;
     } catch (error) {
@@ -60,6 +66,9 @@ export async function updateCustomerAPI(data){
         const result = await axios({
             url: `${local}/api/client/update?id=${id}`,
             method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
             data: rest
         });
         return result.data;
@@ -73,7 +82,10 @@ export async function getDetailCustomerAPI(client_id){
     try {
         const result = await axios({
             url: `${local}/api/client/${client_id}`,
-            method: "GET"
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
         });
         return result.data;
     } catch (error) {
