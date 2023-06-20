@@ -28,6 +28,7 @@ export default function AcceptanceRow(props) {
           />
           <span>{ngayNghiemThu}</span>
           <span>{data.desc}</span>
+          <span>{new Intl.NumberFormat("vi-VN").format(data.price * 1000000)} VNĐ</span>
       </div>
   )
 }

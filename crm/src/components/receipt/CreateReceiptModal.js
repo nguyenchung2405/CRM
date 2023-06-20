@@ -16,7 +16,7 @@ export default function CreateReceiptModal(props) {
     const { acceptanceListInReceipt, acceptanceListInReceiptEvent } = useSelector(state => state.receiptReducer);
     const {contractDetail} = useSelector(state => state.contractReducer)
     const { donors } = useSelector(state => state.eventReducer);
-    const [valueModal, setValueModal] = useState({});
+    const [valueModal, setValueModal] = useState({delay_payment: 15});
     const [moreValue, setMoreValue] = useState({});
     const [multiSelect, setMultiSelect] = useState([]);
     const [multiSelect2, setMultiSelect2] = useState([]);
@@ -70,7 +70,7 @@ export default function CreateReceiptModal(props) {
 
     const handleCancel = ()=>{
         setIsShowModal(false)
-        setValueModal({})
+        setValueModal({delay_payment: 15})
         setMultiSelect([])
         setMultiSelect2([])
         dispatch(setAccListInReceiptEvent([]))
@@ -104,7 +104,7 @@ export default function CreateReceiptModal(props) {
         dispatch(setAccListInReceiptEvent([]))
         dispatch(setAccListInReceipt([]))
         setIsShowModal(false)
-        setValueModal({})
+        setValueModal({delay_payment: 15})
         setMultiSelect([])
     }
 

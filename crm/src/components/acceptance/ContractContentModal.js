@@ -61,9 +61,13 @@ export default function ContractContentModal(props) {
     }
     
     const renderDetailOption = ()=>{
-        return detailList.map(detail => {
+        let newDetailList = [...detailList]
+        return newDetailList.filter(item => item.completed_evidences === null).map(detail => {
             return <Option key={detail.id} value={detail.id}>{`${detail.desc}`}</Option>
         })
+        // return detailList.map(detail => {
+        //     return <Option key={detail.id} value={detail.id}>{`${detail.desc}`}</Option>
+        // })
     }
 
     const handleChangRadio = (e)=>{
