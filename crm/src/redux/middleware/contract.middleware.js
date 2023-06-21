@@ -37,9 +37,9 @@ function* createContract(payload) {
         let result = yield call(createContractAPI, data);
         let { code } = result;
         if (+code === 200 || result.data?.contract?.id) {
-            yield put(setMessage({ type: "thành công", msg: "Tạo hợp đồng thành công." }))
+            message.success("Tạo hợp đồng thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Tạo hợp đồng thất bại." }))
+            message.error("Tạo hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -70,7 +70,7 @@ function* getContractDetail(payload) {
 function* getOwnerList(payload){
     try {
         const result = yield call(getOwnerListAPI);
-        if(result.data.users.length > 0){
+        if(result.data?.users?.length > 0){
             yield put(setOwnerList(result.data.users))
         }
     } catch (error) {
@@ -82,10 +82,10 @@ function* updateContract(payload){
     try {
         const result = yield call(updateContractiAPI, payload.data);
         if(result.data?.msg === "Updated successfully!"){
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật hợp đồng thành công." }))
+            message.success("Cập nhật hợp đồng thành công.")
             yield put({type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id})
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật hợp đồng thất bại." }))
+            message.error("Cập nhật hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -95,12 +95,12 @@ function* updateContract(payload){
 function* createRequest(payload){
     try {
         const result = yield call(createRequestAPI ,payload.data);
-        if(result.data.requests.length > 0){
+        if(result.data?.requests?.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
-            yield put(setMessage({ type: "thành công", msg: "Tạo quyền lợi hợp đồng thành công." }))
+            message.success("Tạo quyền lợi hợp đồng thành công.")
             yield put({ type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id })
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Tạo quyền lợi hợp đồng thất bại." }))
+            message.error("Tạo quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -110,11 +110,11 @@ function* createRequest(payload){
 function* deleteRequest(payload){
     try {
         const result = yield call(deleteRequestAPI ,payload.request_id);
-        if(result.data.msg === "Vô hiệu yêu cầu hợp đồng thành công."){
+        if(result.data?.msg === "Vô hiệu yêu cầu hợp đồng thành công."){
             yield put(deleteContractRequest(payload.request_id))
-            yield put(setMessage({ type: "thành công", msg: "Xóa quyền lợi hợp đồng thành công." }))
+            message.success("Xóa quyền lợi hợp đồng thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Xóa quyền lợi hợp đồng thất bại." }))
+            message.error("Xóa quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -126,9 +126,9 @@ function* updateRequest(payload){
         const result = yield call(updateRequestAPI, payload.data);
         if(result.data.msg === "Updated successfully!"){
             yield put(updateContractRequest(payload.data))
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật quyền lợi hợp đồng thành công." }))
+            message.success("Cập nhật quyền lợi hợp đồng thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật quyền lợi hợp đồng thất bại." }))
+            message.error("Cập nhật quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -140,9 +140,9 @@ function* createDetail(payload){
         const result = yield call(createDetailAPI, payload.data);
         if(result.data.details.length > 0){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: result.data.details[0], detail_id_old: payload.data.id }))
-            yield put(setMessage({ type: "thành công", msg: "Thêm chi tiết quyền lợi hợp đồng thành công." }))
+            message.success("Thêm chi tiết quyền lợi hợp đồng thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Thêm chi tiết quyền lợi hợp đồng thất bại." }))
+            message.error("Thêm chi tiết quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -154,9 +154,9 @@ function* updateDetail(payload){
         const result = yield call(updateDetailAPI, payload.data);
         if(result.data.msg === "Updated successfully!"){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: payload.data }))
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật chi tiết quyền lợi hợp đồng thành công." }))
+            message.success("Cập nhật chi tiết quyền lợi hợp đồng thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật chi tiết quyền lợi hợp đồng thất bại." }))
+            message.error("Cập nhật chi tiết quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -211,9 +211,9 @@ function* getRequestOfEvent(payload){
 function* importFileExcel(payload){
     try {
         const result = yield call(importFileExcelAPI, payload.data);
-        if(result.data.data.errors.length > 0){
+        if(result.data?.data?.errors?.length > 0){
             message.error("Nhập file thất bại.")
-            result.data.data.errors.forEach(err => {
+            result.data?.data?.errors.forEach(err => {
                 message.error(`Lỗi ở ${err.slice(0,6).toLowerCase()}`)
             })
         } else {

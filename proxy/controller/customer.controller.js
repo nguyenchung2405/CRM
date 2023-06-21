@@ -24,6 +24,7 @@ const getCustomerList = async (req, res)=>{
 
 const createCustomer = async (req, res)=>{
     try {
+        let {headers: {authorization}} = req;
         const newData = {...req.body};
         // nếu là upload lên server của Đăng thì mở cmt dưới
         // newData.files = [...req.fileUpload];
@@ -36,6 +37,9 @@ const createCustomer = async (req, res)=>{
         const result = await axios({
             url: `${local}/client/create`,
             method: "POST",
+            headers: {
+                Authorization: authorization
+            },
             data: newData
         });
         res.send(result.data);

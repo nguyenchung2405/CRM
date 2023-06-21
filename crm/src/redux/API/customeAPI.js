@@ -21,7 +21,7 @@ export async function createCustomerAPI(dataCustomer){
     try {
         let {files, ...restInforClient} = dataCustomer;
         const form = new FormData();
-        for(let i = 0 ; i < files.length; i++){
+        for(let i = 0 ; i < files?.length; i++){
             form.append("files", files[i]);
         }
         for(let key in restInforClient){
