@@ -117,7 +117,6 @@ function* getCustomerTypeList(payload){
 function* getJobTypeList(payload){
     try {
         const result = yield call(getJobTypeListAPI,payload?.data);
-
         if(payload?.data?.name !== ""){
             if(result?.data?.sector?.length === 0){
                 message.warning("Loại ngành nghề không tồn tại")
@@ -144,8 +143,6 @@ function* getJobTypeList(payload){
                 yield put(setIsLoading(false))
             }
         }
-        console.log(result.data.sector.length)
-
     } catch (error) {
         console.log(error)
     }

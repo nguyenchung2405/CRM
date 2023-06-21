@@ -4,13 +4,11 @@ import axios from "axios"
 import { message } from 'antd';
 import ChanelGComponent from '../components/product/chanelGroup/ChanelGComponent';
 import { GET_GROUP_CHANNEL, local, TOKEN } from "../../src/title/title";
-
 import { setIsLoading } from '../redux/features/loadingSlice';
 const ChanelGContainer = () => {
     const dispatch = useDispatch();
     let { groupChannelList } = useSelector((state) => state.groupChannelReducer)
     const { isLoading } = useSelector(state => state.loadingReducer);
-    console.log(groupChannelList)
     const [search, setSearch] = useState({ name: "", tax_number: "" })
     let [groupChanne, setgroupChanne] = useState([])
     const [groupChannelName, setGroupChannelName] = useState("");

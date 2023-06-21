@@ -8,7 +8,7 @@ const getProductTypeList = async (req, res) => {
         let result;
         if(name && name !== ""){
             result = await axios({
-                url: `${local}/product/type/list?page_size=100&page=1&sort_by=id&order=desc&name=${name}`,
+                url: `${local}/product/type/list?page_size=100&page=1&sort_by=id&asc_order=false&name=${name}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -16,7 +16,7 @@ const getProductTypeList = async (req, res) => {
             });
         } else if(sub_location_ID !== "undefined") {
             result = await axios({
-                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&sub_location_ID=${sub_location_ID}`,
+                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false&sub_location_ID=${sub_location_ID}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -24,7 +24,7 @@ const getProductTypeList = async (req, res) => {
             });
         } else {
             result = await axios({
-                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc`,
+                url: `${local}/product/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
                 method: "GET",
                 headers: {
                     Authorization: authorization

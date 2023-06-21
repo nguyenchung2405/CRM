@@ -24,7 +24,7 @@ export default function ReceiptTable() {
     useEffect(() => {
       dispatch({
         type: GET_PAYMENT_LIST,
-        data: { page, pageNumber }
+        data: { page, pageNumber, completed: true }
       })
       // dispatch(setIsLoading(true))
     }, [dispatch, page, pageNumber]);
@@ -37,9 +37,9 @@ export default function ReceiptTable() {
     return (
       <div className="content reciept__table customer__table">
         <CreateReceiptModal
-        isShowModal={isShowCreateModal}
-        setIsShowModal={setIsShowCreateModal}
-        dataToCreateModal={dataToCreateModal}
+          isShowModal={isShowCreateModal}
+          setIsShowModal={setIsShowCreateModal}
+          dataToCreateModal={dataToCreateModal}
         />
         <div className="table__features">
           <div className="table__features__add">
@@ -79,38 +79,38 @@ export default function ReceiptTable() {
             x: "max-content",
           }}
         >
-        <Column className="receipt__tabel__report__date" title="Ngày quyết toán" key="eventName" fixed="left" render={(text) => {
-          return moment(text.request_date).format("DD-MM-YYYY")
-        }}></Column>
-        <Column className="receipt__tabel__report__date" title="Số tiền" key="eventName" fixed="left" render={(text) => {
-          return new Intl.NumberFormat("vi-VN").format(text.total_value * 1000000)
-        }}></Column>
-          <Column className="receipt__tabel__event__name" title="Tên sự kiên" key="eventName" render={(text) => {
+          <Column className="receipt__table__report__date" title="Ngày quyết toán" key="eventName" fixed="left" render={(text) => {
+            return moment(text.request_date).format("DD-MM-YYYY")
+          }}></Column>
+          <Column className="receipt__table__value" title="Số tiền" key="eventName" fixed="left" render={(text) => {
+            return new Intl.NumberFormat("vi-VN").format(text.total_value * 1000000)
+          }}></Column>
+          <Column className="receipt__table__event__name" title="Tên sự kiên" key="eventName" render={(text) => {
             return text?.contract_info?.event_name
           }}></Column>
           <Column title="Tên khách hàng" key="clientName" render={(text) => text?.contract_info?.client_name}></Column>
           <Column title="Số hợp đồng" key="soHopDong" render={(text) => {
-            return <span style={{ cursor: "pointer" }} onClick={()=>{
+            return <span style={{ cursor: "pointer" }} onClick={() => {
               navigate(`${uri}/crm/detail/${text?.contract_ID}`)
             }}>{text?.contract_info?.contract_number}</span>
           }}></Column>
-          <Column title="Số đợt thanh toán" key="soDotThanhToan " 
-          render={(text) => text?.contract_info?.payment_count}
-          sorter={(a,b) => a.contract_info.payment_count - b.contract_info.payment_count}
-          sortDirections={['ascend','descend']}
+          <Column title="Số đợt thanh toán" key="soDotThanhToan "
+            render={(text) => text?.contract_info?.payment_count}
+            sorter={(a, b) => a.contract_info.payment_count - b.contract_info.payment_count}
+            sortDirections={['ascend', 'descend']}
           ></Column>
           <Column title="Hình thức thanh toán" key="hinhThucThanhToan" render={(text) => {
             let soLanThanhToan = text?.contract_info?.payment_type;
             let kieuThanhToan = text?.contract_info?.pay_before_run ? "Trả trước" : "Trả sau";
             return `${soLanThanhToan} / ${kieuThanhToan}`
           }}></Column>
-          <Column title="Số hóa đơn đã xuất" 
-          key="soHoaDonDaXuat" 
-          render={(text) => text?.contract_info?.receipt_count}
-          sorter={(a,b) => a.contract_info.receipt_count - b.contract_info.receipt_count}></Column>
-          <Column title="Số hóa đơn đã thanh toán" 
-          render={(text) => text?.contract_info?.completed_receipt_count}
-          sorter={(a,b) => a.contract_info.completed_receipt_count - b.contract_info.completed_receipt_count}></Column>
+          <Column title="Số hóa đơn đã xuất"
+            key="soHoaDonDaXuat"
+            render={(text) => text?.contract_info?.receipt_count}
+            sorter={(a, b) => a.contract_info.receipt_count - b.contract_info.receipt_count}></Column>
+          <Column title="Số hóa đơn đã thanh toán"
+            render={(text) => text?.contract_info?.completed_receipt_count}
+            sorter={(a, b) => a.contract_info.completed_receipt_count - b.contract_info.completed_receipt_count}></Column>
           <Column title="Ngày xuất hóa đơn cuối" key="ngayXuatHDCuoi" render={(text) => {
             let last_receipt_exported = text?.contract_info?.last_receipt_exported
             if (last_receipt_exported !== null && last_receipt_exported !== undefined) {
@@ -131,13 +131,13 @@ export default function ReceiptTable() {
             let receipt_id = text?.receipts[0]?.id;
             let isComplete = text?.receipts[0]?.is_complete;
             return <div className="table__thaotac">
-              <HandleFeatures 
-              isExistExport={isExistExport}
-              receipt_id={receipt_id}
-              isComplete={isComplete}
-              payment_ID={text.id}
-              contract_id={text.contract_ID}
-              data={text}
+              <HandleFeatures
+                isExistExport={isExistExport}
+                receipt_id={receipt_id}
+                isComplete={isComplete}
+                payment_ID={text.id}
+                contract_id={text.contract_ID}
+                data={text}
               />
             </div>
           }}></Column>

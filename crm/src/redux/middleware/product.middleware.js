@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_SPECIAL, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_SPECIAL, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, SEARCH_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
 import { createProduceAPI, createProductAttributeAPI, createProductSpecialAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductSpecialAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductSpecialForClientAPI, getProductSpecialListAPI, getProductSubLocationAPI, getProductTypeAPI, searchProductAttributeAPI, searchProductTypeAPI, updateProductAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
@@ -80,10 +81,10 @@ function* createProduct(payload) {
         const result = yield call(createProduceAPI, payload.data);
         if (result.data?.product?.length > 0) {
             yield put(updateProductWithID({ product_id: payload.data.id, data: result.data.product[0] }))
-            yield put(setMessage({ type: "thành công", msg: "Tạo sản phẩm thành công." }))
+            message.success("Tạo sản phẩm thành công.")
         } else {
             yield put(removeProduct(payload.data.id))
-            yield put(setMessage({ type: "thất bại", msg: "Tạo sản phẩm thất bại." }))
+            message.error("Tạo sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -95,9 +96,9 @@ function* deleteProduct(payload) {
         const result = yield call(deleteProductAPI, payload.product_id);
         if (result.data.result) {
             yield put(removeProduct(payload.product_id))
-            yield put(setMessage({ type: "thành công", msg: "Xóa sản phẩm thành công." }))
+            message.success("Xóa sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Xóa sản phẩm thất bại." }))
+            message.error("Xóa sản phẩm thất bại.")
         }
     } catch (error) {
         console.log("lỗi ở deleteProduct", error)
@@ -109,10 +110,10 @@ function* createProductType(payload){
         const result = yield call(createProductTypeAPI, payload.data);
         if(result.data.result){
             yield put(updateProductType({type_id: payload.data.id, data: result.data.data.product_type}))
-            yield put(setMessage({ type: "thành công", msg: "Tạo loại sản phẩm thành công." }))
+            message.success("Tạo loại sản phẩm thành công.")
         } else {
             yield put(removeProductType(payload.data.id))
-            yield put(setMessage({ type: "thất bại", msg: "Tạo loại sản phẩm thất bại." }))
+            message.error("Tạo loại sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -124,9 +125,9 @@ function* deleteProductType(payload){
         const result = yield call(deleteProductTypeAPI, payload.type_id);
         if(result.data.result){
             yield put(removeProductType(payload.type_id))
-            yield put(setMessage({ type: "thành công", msg: "Xóa loại sản phẩm thành công." }))
+            message.success("Xóa loại sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Xóa loại sản phẩm thất bại." }))
+            message.error("Xóa loại sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -138,9 +139,9 @@ function* updateProductTypeMiddlewart(payload){
         const result = yield call(updateProductTypeAPI, payload.data);
         if(result.data.result){
             yield put(updateProductType({type_id: result.data.data.id, data: result.data.data}))
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật loại sản phẩm thành công." }))
+            message.success("Cập nhật loại sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật loại sản phẩm thất bại." }))
+            message.error("Cập nhật loại sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -165,10 +166,10 @@ function* createProductAttribute(payload){
         console.log(result)
         if(result.data.result){
             yield put(updateProductAttribute({attribute_id: payload.data.id, data: result.data.data.product_option_attribute}));
-            yield put(setMessage({ type: "thành công", msg: "Tạo thuộc tính sản phẩm thành công." }))
+            message.success("Tạo thuộc tính sản phẩm thành công.")
         } else {
             yield put(removeProductAttribute(payload.data.id))
-            yield put(setMessage({ type: "thất bại", msg: "Tạo thuộc tính sản phẩm thất bại." }))
+            message.error("Tạo thuộc tính sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -180,9 +181,9 @@ function* deleteProductAttribute(payload){
         const result = yield call(deleteProductAttributeAPI , payload.attribute_id);
         if(result.data.result){
             yield put(removeProductAttribute(payload.attribute_id))
-            yield put(setMessage({ type: "thành công", msg: "Xóa thuộc tính sản phẩm thành công." }))
+            message.success("Xóa thuộc tính sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Xóa thuộc tính sản phẩm thất bại." }))
+            message.error("Xóa thuộc tính sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -194,9 +195,9 @@ function* updateProductAttributeMiddleware(payload){
         const result = yield call(updateProductAttributeAPI, payload.data);
         if(result.data.result){
             yield put(updateProductAttribute({attribute_id: payload.data.id, data: result.data.data}));
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật thuộc tính sản phẩm thành công." }))
+            message.success("Cập nhật thuộc tính sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật thuộc tính sản phẩm thất bại." }))
+            message.error("Cập nhật thuộc tính sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -232,8 +233,10 @@ function* createProductSpecial(payload){
         if(result.data.product_discount_by_clientType.length > 0){
             yield put(updateProductSpecial({id: payload.data.id, data: result.data.product_discount_by_clientType[0]}))
             yield put(setMessage({ type: "thành công", msg: "Tạo sản phẩm thành công." }))
+            message.success("Tạo sản phẩm thành công.")
         } else {
             yield put(setMessage({ type: "thất bại", msg: "Tạo sản phẩm thất bại." }))
+            message.error("Tạo sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -257,9 +260,9 @@ function* updateProduct(payload){
     try {
         const result = yield call(updateProductAPI, payload.data);
         if(result[0] === "Success"){
-            yield put(setMessage({ type: "thành công", msg: "Cập nhật sản phẩm thành công." }))
+            message.success("Cập nhật sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Cập nhật sản phẩm thất bại." }))
+            message.error("Cập nhật sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -271,9 +274,9 @@ function* deleteProductSpecial(payload){
         const result = yield call(deleteProductSpecialAPI, payload.data);
         if(result.data.result){
             yield put(removeProductSpecial(payload.data))
-            yield put(setMessage({ type: "thành công", msg: "Xóa sản phẩm thành công." }))
+            message.success("Xóa sản phẩm thành công.")
         } else {
-            yield put(setMessage({ type: "thất bại", msg: "Xóa sản phẩm thất bại." }))
+            message.error("Xóa sản phẩm thất bại.")
         }
     } catch (error) {
         console.log(error)

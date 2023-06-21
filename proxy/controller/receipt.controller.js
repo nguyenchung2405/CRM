@@ -100,9 +100,9 @@ const getAcceptaneListByContractID = async (req, res)=>{
 const getPaymentList = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        let {page, page_size} = req.query;
+        let {page, page_size, completed} = req.query;
         const result = await axios({
-            url: `${local}/payment/list?&page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
+            url: `${local}/payment/list?&page_size=${page_size}&page=${page}&sort_by=id&asc_order=false&completed=${completed}`,
             method: "GET",
             headers: {
                 Authorization: authorization
