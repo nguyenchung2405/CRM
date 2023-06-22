@@ -14,7 +14,6 @@ export default function CreateCustomer(props) {
                                     window.location.href.includes("dev") ?
                                     "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
                                     : "http://localhost:3003/";
-    // let uri_file = "http://192.168.61.116:8017"
     const {client_id} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
