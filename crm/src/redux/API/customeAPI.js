@@ -211,7 +211,6 @@ export async function updateCustomerTypeAPI(data){
                 id
             }
         })
-
         return resufts.data
     } catch (error) {
         console.log(error);
