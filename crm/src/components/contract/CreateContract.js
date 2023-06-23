@@ -591,38 +591,44 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
-            <div className="upload__file">
-              <Tooltip title="Nhập file" color="green">
-                <label htmlFor="upFileExcel">
-                  <CiImport/>
-                </label>
-                <input id="upFileExcel" type="file" onChange={e => {
-                    dispatch({
-                      type: IMPORT_FILE,
-                      data: {file: e.target.files[0], contract_id}
-                    })
-                }} />
-              </Tooltip>
-            </div>
-            <Tooltip title="Xuất file" color="green">
-              <CiExport
-                onClick={async (e) => {
-                  const result = await axios({
-                    url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
-                    method: "GET",
-                    headers: {
-                      Authorization: "Bearer " + TOKEN,
-                      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    },
-                    responseType: 'arraybuffer'
-                  });
-                  let fileBlob = new Blob([result.data], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                  })
-                  FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
-                }}
-              />
-            </Tooltip>
+            {
+              contract_id ?
+                <>
+                  <div className="upload__file">
+                    <Tooltip title="Nhập file" color="green">
+                      <label htmlFor="upFileExcel">
+                        <CiImport />
+                      </label>
+                      <input id="upFileExcel" type="file" onChange={e => {
+                        dispatch({
+                          type: IMPORT_FILE,
+                          data: { file: e.target.files[0], contract_id }
+                        })
+                      }} />
+                    </Tooltip>
+                  </div>
+                  <Tooltip title="Xuất file" color="green">
+                    <CiExport
+                      onClick={async (e) => {
+                        const result = await axios({
+                          url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
+                          method: "GET",
+                          headers: {
+                            Authorization: "Bearer " + TOKEN,
+                            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                          },
+                          responseType: 'arraybuffer'
+                        });
+                        let fileBlob = new Blob([result.data], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                        })
+                        FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
+                      }}
+                    />
+                  </Tooltip>
+                </>
+            : ""
+            }
           </div>
           <Table
             className="term__table"
