@@ -256,14 +256,17 @@ const createJobType = async (req,res)=>{
 }
 const updateCustomerType = async (req,res)=>{
     console.log(req.body);
-    const { name , id } = req.body
+    const { name , id, TOKEN } = req.body
     const resuft = await axios({
         method: "PUT",
         url: `${local}/client/type/update?id=${id}`,
         data: {
             name: name,
             desc: ""
-        }
+        },
+        headers: {
+            Authorization: `Bearer ${TOKEN}`
+        },
     })
     res.send(resuft.data)
     // console.log({name,id});
@@ -278,7 +281,7 @@ const updateCustomerType = async (req,res)=>{
 }
 const updateJobType = async (req,res)=>{
     try {
-        const { name , id } = req.body
+        const { name , id, token } = req.body
         console.log({name,id});
         const result = await axios({
             method: "PUT",
@@ -286,7 +289,10 @@ const updateJobType = async (req,res)=>{
             data:{
                 name : name,
                 desc: ""
-            }
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         })
         res.send(result.data)
     } catch (error) {

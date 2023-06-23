@@ -16,3 +16,53 @@ export async function getGroupChannelAPI(page, pageNumber, name, location_name) 
         return "Thất bại"
     }
 }
+
+export async function updateGroupSubChannelAPI(data){
+    console.log({data});
+
+    try {
+        const resuft = await axios({
+            url: `${local}/api/usubg`,
+            method: "PUT",
+            data: data,
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        })
+        return resuft.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function deleteGroupSubChannelAPI(id){
+    try {
+        const resuft = await axios({
+            url: `${local}/api/dsubg`,
+            method: "PUT",
+            data: id ,
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        })
+        return resuft.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function createGroupSubChannelAPI(data){
+    try {
+        const resuft = await axios({
+            url: `${local}/api/csubg`,
+            method: "POST",
+            data: data,
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        })
+        return resuft.data
+    } catch (error) {
+        console.log(error);
+    }
+}
