@@ -7,7 +7,7 @@ import { } from "react-icons/fa"
 import ChanelSubChild from './ChanelSubChild';
 
 const ChanelGChild = (props) => {
-    const { isAdd, groupName, onChangeChild, onPressEnterChild, handleEditG, handleDeleteG, handleClose } = props;
+    const { isAdd, groupName, onHandelRerenderComponient, onChangeChild, onPressEnterChild, handleEditG, handleDeleteG, handleClose } = props;
 
     const [isAddSubChild,setIsAddSubChild] = useState(false);
     const [idLocation,setIdLocation] = useState(0);
@@ -15,7 +15,6 @@ const ChanelGChild = (props) => {
     const [data,setData] = useState(props?.data?.locations.map((x,index)=>{return {key: index+1,...x}}) || []);
     const [expendKeys, setExpended] = useState();
     // const data = props?.data?.locations.map((x,index)=>{return {key: index+1,...x}})
-
 
     const expend = async (i) => {
         const index = i + 1
@@ -30,20 +29,6 @@ const ChanelGChild = (props) => {
             
     };
 
-    const handleAddGroupSubChild = (index)=>{
-        console.log({index});
-    }
-
-
-
-    
-    const onTableRowExpandSubChild = (expandable,record)=>{
-        console.log({expandable,record});
-    }
-
-    const rowKeysSubChild = (record)=>{
-        console.log({record});
-    }
 
     const columns = [
         {
@@ -143,6 +128,7 @@ const ChanelGChild = (props) => {
                             return (
                                 <ChanelSubChild 
                                     data={recode} 
+                                    onHandelRerenderComponient={onHandelRerenderComponient}
                                     isAddSubChild={isAddSubChild}
                                     idLocation={idLocation}
                                     setIsAddSubChild={setIsAddSubChild}

@@ -14,7 +14,7 @@ const ChanelGComponent = (props) => {
         isAdd, onPressEnter, onChange, groupChannelName,
         handleEditChannelG,
         handleDeleteChannelG,
-
+        onHandelRerenderComponient,
         handleAddGroup,
         rowKeys,
         onTableRowExpand,
@@ -94,6 +94,9 @@ const ChanelGComponent = (props) => {
             return <Loading />
         }
     }
+
+
+    // console.log({ChanelGChild: "render+1"});
     return (
         <>
             <div className='customer__table content channel' style={{ color: "red" }}>
@@ -136,6 +139,7 @@ const ChanelGComponent = (props) => {
                                     handleDeleteG={handleDeleteG}
                                     handleClose={handleClose}
                                     toDDMMYY={props.toDDMMYY}
+                                    onHandelRerenderComponient={onHandelRerenderComponient}
                                 />
                             },
                             rowExpandable: (record) => record.locations.length != 0,

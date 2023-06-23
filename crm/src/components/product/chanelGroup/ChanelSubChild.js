@@ -3,27 +3,39 @@ import { Space, Table, Badge, Dropdown, Button, message } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { Input, Icon } from 'antd';
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
-import { local,UPDATE_SUB_CHANEL,DELETE_SUB_CHANEL,GET_GROUP_CHANNEL,CREATE_SUB_CHANEL } from '../../../title/title';
+import { local,UPDATE_SUB_CHANEL,DELETE_SUB_CHANEL,GET_SUB_CHANAL,CREATE_SUB_CHANEL  } from '../../../title/title';
+import { setGroupChannelSubList } from '../../../redux/features/groupChannelSlice';
 import axios from "axios"
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
+import { useDispatch,useSelector } from 'react-redux';
+
+const ChanelSubChild = ({data,isAddSubChild,onHandelRerenderComponient,setIsAddSubChild}) => {
     const dispatch = useDispatch()
     const [isEdit,setIsEdit] = useState(false);
-    const [id,setId] = useState(false);
-    const [value,setValue] = useState("")
+    const [dataS,setDataS] = useState( data?.sub_locations || [])
     const [addSubChild,setAddSubChild] = useState("");
-    
-    let dataSource
-    if(isAddSubChild){
-        const addData = {
+    const [addData,setAddData] = useState({
             name: "",
             desc: "",
             location_ID: 0
-        }
-        dataSource = [ addData,...data?.sub_locations];
+    })
+    // const [dataSource,setDataSourch] = useState([])
+    useEffect(()=>{
+        dispatch({type: GET_SUB_CHANAL, data: {location_id:data?.id}})
+    },[])
+    
+    var { groupChannelSubList } = useSelector((state) => state.groupChannelReducer)
+    
+
+
+
+
+    let dataSource
+    if(isAddSubChild){
+        groupChannelSubList = [addData,...groupChannelSubList]
+        // dataSource = [ addData,...data?.sub_locations];
     }else{
-        dataSource = [...data?.sub_locations];
+        // dataSource = [...data?.sub_locations];
     }
 
 
@@ -43,7 +55,6 @@ const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
             value: record.name,
             location_ID: record.location_ID
         })
-       
     }
 
     const HandelEditSub = (v)=>{
@@ -63,15 +74,22 @@ const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
                 location_ID: dataEdit.location_ID,
             }
 
+            const subLocationsData = dataS.map((x)=>{
+                return x.id === dataEdit.id ? dataUpdate : x;
+            })
 
             await  dispatch({
                 type: UPDATE_SUB_CHANEL,
                 data : dataUpdate
             })
-            await dispatch({
-                type: GET_GROUP_CHANNEL,
-                data: { page: 1, pageNumber: 1000, name: "", location_name: "" }
-            })
+
+            setDataS(subLocationsData)
+            
+            // await dispatch({
+            //     type: GET_GROUP_CHANNEL,
+            //     data: { page: 1, pageNumber: 1000, name: "", location_name: "" }
+            // })
+            onHandelRerenderComponient()
             
             setDataEdit({...dataEdit,isEdit: false})
 
@@ -99,10 +117,13 @@ const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
             message.warning("Nhập tên nhánh sản phẩm")
         }else{
            await dispatch({type:CREATE_SUB_CHANEL, data: { name: addSubChild , desc: addSubChild, location_ID: data?.id }})
-           await dispatch({ type: GET_GROUP_CHANNEL, data: { page: 1, pageNumber: 1000, name: "", location_name: "" }})
+        //    await dispatch({ type: GET_GROUP_CHANNEL, data: { page: 1, pageNumber: 1000, name: "", location_name: "" }})
+         
            setAddSubChild("");
+           
         }
     }
+
 
     const columns = [
         {
@@ -155,7 +176,7 @@ const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
             render: (_, record) => {
                 return (
                     <>
-                        {isAddSubChild ? 
+                        {isAddSubChild  && record.location_ID === 0 ? 
                             <div style={{ textAlign: "end" }}>
                                 <div>
                                     <button style={{ marginRight: "6px" }} onClick={()=>HandelSaveAddSubChild()} className="btn__green" >
@@ -205,7 +226,8 @@ const ChanelSubChild = ({data,isAddSubChild,setIsAddSubChild}) => {
                 <Table 
                 
                     columns={columns} 
-                    dataSource={dataSource} 
+                    dataSource={groupChannelSubList} 
+                    // dataSource={dataSource} 
                     pagination={false} 
 
                     // expandable={{
