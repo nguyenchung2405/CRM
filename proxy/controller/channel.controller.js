@@ -19,6 +19,7 @@ const getGroupChannel = async (req, res) => {
             `${local}/product/channel/list?page_size=31&page=1&sort_by=id&order=desc&name=${url_name}&location_name=${url_location_name}`,
             config
         );
+        console.log(data);
         res.send(data);
     } catch (error) {
         if(error.response?.data){
