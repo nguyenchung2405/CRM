@@ -18,8 +18,6 @@ export async function getGroupChannelAPI(page, pageNumber, name, location_name) 
 }
 
 export async function updateGroupSubChannelAPI(data){
-    console.log({data});
-
     try {
         const resuft = await axios({
             url: `${local}/api/usubg`,
@@ -29,7 +27,7 @@ export async function updateGroupSubChannelAPI(data){
                 Authorization: "Bearer " + TOKEN
             }
         })
-        return resuft.data;
+        return resuft.data
     } catch (error) {
         console.log(error);
     }
@@ -65,4 +63,24 @@ export async function createGroupSubChannelAPI(data){
     } catch (error) {
         console.log(error);
     }
+}
+
+export async function getGroupSubChannelAPI(data){
+    try {
+        const { location_id } = data
+        console.log({location_id});
+        const resuft = await axios({
+            url: `${local}/api/gsubg?location_id=${location_id}`,
+            method: "GET",
+            data: data,
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            }
+        })
+        return resuft.data
+    } catch (error) {
+        console.log(error);
+    }
+
+
 }

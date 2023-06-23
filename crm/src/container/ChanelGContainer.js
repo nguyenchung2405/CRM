@@ -10,6 +10,7 @@ const ChanelGContainer = () => {
     let { groupChannelList } = useSelector((state) => state.groupChannelReducer)
     const { isLoading } = useSelector(state => state.loadingReducer);
     const [search, setSearch] = useState({ name: "", tax_number: "" })
+    const [render,setRender] = useState(render)
     let [groupChanne, setgroupChanne] = useState([])
     const [groupChannelName, setGroupChannelName] = useState("");
     const [groupName, setGroupName] = useState("");
@@ -18,6 +19,10 @@ const ChanelGContainer = () => {
     const [rowKeys, setRowKeys] = useState([])
     const [searchChannel, setSearchChannel] = useState(null)
     const [searchGroup, setSearchGroup] = useState(null)
+   
+    const onHandelRerenderComponient = ()=>{
+        setRender(!render)
+    }
 
     useEffect(() => {
         dispatch(setIsLoading(true))
@@ -25,10 +30,10 @@ const ChanelGContainer = () => {
             type: GET_GROUP_CHANNEL,
             data: { page: 1, pageNumber: 1000, name: "", location_name: "" }
         })
-    }, [dispatch]);
+    }, [dispatch,render]);
     useEffect(() => {
         setgroupChanne(groupChannelList)
-    }, [groupChannelList])
+    }, [groupChannelList,render])
     const formatDataChannelList = (data) => {
         return data?.map((obj) => {
             return {
@@ -363,6 +368,7 @@ const ChanelGContainer = () => {
         const numStr = str.substring(numIndex, endIndex);
         return parseInt(numStr, 10);
     }
+
     const toDDMMYY = (inputDateTime) => {
 
         // Create a new Date object from the input date and time string
@@ -404,7 +410,7 @@ const ChanelGContainer = () => {
                 handleEditG={handleEditG}
                 handleDeleteG={handleDeleteG}
                 handleClose={handleClose}
-
+                onHandelRerenderComponient={onHandelRerenderComponient}
                 handleSearchInputChannel={handleSearchInputChannel}
                 handleSearchInputGroup={handleSearchInputGroup}
                 handleSearch={handleSearch}
