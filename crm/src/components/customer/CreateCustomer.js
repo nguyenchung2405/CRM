@@ -59,11 +59,6 @@ export default function CreateCustomer(props) {
     }, [dataCustomer]);
 
     const handleCancel = () => {
-    //   if(title === "Khách hàng mới"){
-    //     setValidateForm({email: false, phone: false})
-    //   } else if(title === "Cập nhật khách hàng"){
-    //     setValidateForm({email: false, phone: false})
-    //   }
         setValidateForm({email: false, phone: false})
         setValueForm({is_company: false})
         navigate(`${uri}/crm/customer`, {replace: true})
