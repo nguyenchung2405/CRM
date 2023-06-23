@@ -212,7 +212,6 @@ export async function updateCustomerTypeAPI(data){
                 TOKEN
             }
         })
-
         return resufts.data
     } catch (error) {
         console.log(error);

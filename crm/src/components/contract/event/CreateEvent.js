@@ -1,10 +1,10 @@
-import { DatePicker, Table, Select, message, Popconfirm, Checkbox } from "antd";
+import { DatePicker, Table, Select, message } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_EVENT, DELETE_REQUEST, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_UNSET_CONTRACT, UPDATE_CONTRACT, UPDATE_EVENT } from "../../../title/title";
-import { useNavigate, useParams } from "react-router-dom";
-import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
+import { CREATE_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_PRODUCT_LIST, GET_UNSET_CONTRACT, UPDATE_EVENT } from "../../../title/title";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { setContractRequest, deleteContractRequest, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
@@ -20,7 +20,6 @@ export default function CreateEvent() {
 
   let uri = checkMicroFe() === true ? "/contract-service" : "";
   const { Column } = Table;
-  const { Option } = Select;
   const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ export default function CreateEvent() {
   const { contractRequest, contractDetail } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
   const { messageAlert } = useSelector(state => state.messageReducer);
-  const { eventList, totalEventList, donors } = useSelector(state => state.eventReducer);
+  const { donors } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowDonorModal, setIsShowDonorModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
@@ -177,14 +176,14 @@ export default function CreateEvent() {
       return b.contract_total - a.contract_total
     })
     return sortArr.map(donor => {
-      return <a key={uuidv4()} href={`${uri}/crm/detail/${donor.contract_ID}`} target="_self">
+      return <Link key={uuidv4()} to={`${uri}/crm/detail/${donor.contract_ID}`} target="_self">
         <li>{donor.client_name + " - " + new Intl.NumberFormat("vi-VN").format(donor.contract_total * 1000000) + " VNĐ"}</li>
-      </a>
+      </Link>
     })
   }
 
   return (
-    <div className="create__contract content">
+    <div className="create__contract content event__content">
       {showLoading()}
       <div className="create__contract__content">
         <div className="create__contract__header border_bottom_3px">

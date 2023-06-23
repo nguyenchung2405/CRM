@@ -103,19 +103,17 @@ export async function getProductAttributeAPI(page, page_size, typeID) {
 
 export async function createProduceAPI(data) {
     try {
-        console.log(data)
         let product = {
             "name": data.product_name,
             "location_ID": data.location_id,
             sub_location_ID: data.sub_location_ID,
             "type_ID": data.type_id,
             "attribute_option_ID": data.attribute_option_id,
-            "code_indentify": uuidv1().slice(0, 10),
+            "code_indentify": data.code_indentify,
             "price": {
                 "price": +data.price / 1000000,
             }
         };
-        console.log("product", product)
         const result = await axios({
             url: `${local}/api/product/create`,
             method: "POST",
@@ -337,7 +335,7 @@ export async function updateProductAPI(data){
         let product = {
            ...data,
             "price": +data.price / 1000000,
-            "code_indentify": uuidv1().slice(0, 10),
+            "code_indentify": data.code_indentify,
         };
         const result = await axios({
             url: `${local}/api/product/update`,

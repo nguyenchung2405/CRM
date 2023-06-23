@@ -72,8 +72,8 @@ function* getAcceptaneListByEvent(payload){
 
 function* getPaymentList(payload){
     try {
-        let { page, pageNumber } = payload.data;
-        const result = yield call(getPaymentListAPI, page, pageNumber);
+        let { page, pageNumber, completed } = payload.data;
+        const result = yield call(getPaymentListAPI, page, pageNumber, completed);
         yield put(setTotalReceipt(result.total_data))
         yield put(setReceiptList(result.payment))
     } catch (error) {

@@ -1,15 +1,26 @@
-import { Modal, Table } from 'antd';
+import { Image, Modal, Table } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import { FcImageFile } from 'react-icons/fc';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { local, TOKEN } from '../../title/title';
+import { checkMicroFe } from '../../untils/helper';
+import ViewPDF from '../ViewPDF';
 
 export default function ModalPaymentInfor(props) {
+
+    let uri_file = checkMicroFe() === true ?
+        window.location.href.includes("dev") ?
+            "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
+        : "http://localhost:3003/";
 
     const { isShowModal, setIsShowModal, paymentID } = props;
     const {Column} = Table;
     const [data, setData] = useState();
+    const [imageVisible, setImageVisible] = useState(false);
+    const [file, setFile] = useState("");
 
     useEffect(()=>{
         if(paymentID && paymentID !== undefined && paymentID !== null && typeof paymentID === "number"){
@@ -99,10 +110,42 @@ export default function ModalPaymentInfor(props) {
                                   return exportDate
                               }}
                           />
+                          <Column
+                              className="evidence"
+                              title="Chứng minh"
+                              key="evidence"
+                              render={(text) => {
+                                  if(text.completed_evidences.length > 0){
+                                    if(text.completed_evidences[0].includes("proxy") || text.completed_evidences.includes("resources")){
+                                        return <FcImageFile className="file" onClick={() => {
+                                            setFile(uri_file + text.completed_evidences)
+                                            setImageVisible(true)
+                                        }} />
+                                    } else {
+                                        return <a 
+                                            href={text.completed_evidences[0]}
+                                            target="_blank"
+                                            rel='noreferrer'
+                                        >Link</a>
+                                    }
+                                  } else {
+                                    return ""
+                                  }
+                              }}
+                          />
                       </Table>
                   </div>
               </div>
           </div>
+          <Image
+              preview={{
+                  visible: imageVisible,
+                  src: file,
+                  onVisibleChange: (value) => {
+                      setImageVisible(value);
+                  },
+              }}
+          />
       </Modal>
   )
 }

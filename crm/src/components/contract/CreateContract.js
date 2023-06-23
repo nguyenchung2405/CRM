@@ -90,17 +90,6 @@ export default function CreateContract() {
   }, [contract_id])
 
   useEffect(() => {
-    let { type, msg } = messageAlert;
-    if (type === "thành công") {
-        message.success(msg)
-        dispatch(setMessage({}))
-    } else if (type === "thất bại") {
-        message.error(msg)
-        dispatch(setMessage({}))
-    }
-}, [messageAlert])
-
-  useEffect(() => {
     setValueForm({
       ...valueForm,
       total: showGiaTriThucHien("total") * 1000000

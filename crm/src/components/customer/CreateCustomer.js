@@ -14,7 +14,6 @@ export default function CreateCustomer(props) {
                                     window.location.href.includes("dev") ?
                                     "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
                                     : "http://localhost:3003/";
-    // let uri_file = "http://192.168.61.116:8017"
     const {client_id} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -60,11 +59,6 @@ export default function CreateCustomer(props) {
     }, [dataCustomer]);
 
     const handleCancel = () => {
-    //   if(title === "Khách hàng mới"){
-    //     setValidateForm({email: false, phone: false})
-    //   } else if(title === "Cập nhật khách hàng"){
-    //     setValidateForm({email: false, phone: false})
-    //   }
         setValidateForm({email: false, phone: false})
         setValueForm({is_company: false})
         navigate(`${uri}/crm/customer`, {replace: true})

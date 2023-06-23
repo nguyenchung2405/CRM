@@ -7,7 +7,6 @@ import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { useNavigate } from 'react-router-dom';
 import { setMessage } from '../../redux/features/messageSlice';
-import { checkMicroFe } from '../../untils/helper';
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import { v4 as uuidv4 } from "uuid";
 import { addProduct, removeProduct } from '../../redux/features/productSlice';
@@ -28,14 +27,14 @@ const convertData = (productList) => {
             channel_name: product.channel.name,
             type_id: product.type_ID.id,
             type_name: product.type_ID.name,
-            price: product.price.price * 1000000
+            price: product.price.price * 1000000,
+            code_indentify: product.code_indentify
         }
     })
 }
 
 export default function ProductTable() {
 
-    let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const { Option } = Select;
     const dispatch = useDispatch();
@@ -115,15 +114,6 @@ export default function ProductTable() {
             dispatch(setIsLoading(true))
         }
     }, [page, pageNumber])
-
-    useEffect(() => {
-        let { type, msg } = messageAlert;
-        if (type === "thành công") {
-            message.success(msg)
-        } else if (type === "thất bại") {
-            message.error(msg)
-        }
-    }, [messageAlert])
 
     useEffect(() => {
         setData(convertData(productList))
@@ -329,51 +319,58 @@ export default function ProductTable() {
     const columns = [
         {
             editable: true,
+            title: "Mã sản phẩm",
+            dataIndex: "code_indentify",
+            width:"11.2%",
+            className: "product__code"
+        },
+        {
+            editable: true,
             title: "Sản phẩm",
             dataIndex: "product_name",
-            width:"12.7%",
-            className: "product__name"
+            width:"11.2%",
         },
         {
             editable: true,
             title: "Kênh sản phẩm",
             dataIndex: "channel_name",
-            width:"12.7%"
+            width:"11.2%"
         },
         {
             editable: true,
             title: "Nhóm sản phẩm",
             dataIndex: "location_name",
-            width:"12.7%"
+            width:"11.2%"
         },
         {
             editable: true,
             title: "Vị trí sản phẩm",
             dataIndex: "sub_location_name",
-            width:"12.7%"
+            width:"11.2%"
         },
         {
             editable: true,
             title: "Loại sản phẩm",
             dataIndex: "type_name",
-            width:"12.7%"
+            width:"11.2%"
         },
         {
             editable: true,
             title: "Thuộc tính sản phẩm",
             dataIndex: "attribute_option_name",
-            width:"12.7%"
+            width:"11.2%"
         },
         {
             editable: true,
             title: "Giá",
             dataIndex: "price",
-            width:"12.7%",
+            width:"11.2%",
             render: (_, record)=>{
                 return new Intl.NumberFormat("vi-VI").format(record.price) + " VNĐ"
             }
         },
         {
+            width: "8%",
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -460,7 +457,6 @@ export default function ProductTable() {
 
     const renderSubLocationOption = () => {
         return productSubLocation.map(sublocation => {
-            console.log(sublocation)
           return <Option key={sublocation.id} value={sublocation.id}>{sublocation.name}</Option>
         });
       }
@@ -481,6 +477,7 @@ export default function ProductTable() {
         let newProduct = {
             id: uuidv4(),
             "name": "",
+            code_indentify: "",
             "location": {
                 "name": "",
                 "id": null

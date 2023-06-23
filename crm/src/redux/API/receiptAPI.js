@@ -77,10 +77,10 @@ export async function getAcceptaneListByContractAPI(contract_id, has_payment,is_
     }
 }
 
-export async function getPaymentListAPI(page, pageNumber){
+export async function getPaymentListAPI(page, pageNumber, completed){
     try {
         const result = await axios({
-            url: `${local}/api/receipt/get-payment-list?page=${page}&page_size=${pageNumber}`,
+            url: `${local}/api/receipt/get-payment-list?page=${page}&page_size=${pageNumber}&completed=${completed}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN

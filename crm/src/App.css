@@ -713,7 +713,7 @@ div.modal__report__content .modal__field .ant-radio-group .ant-radio input {
     width: min-content;
 }
 
-.reciept__table .receipt__tabel__event__name {
+.reciept__table .receipt__table__report__date {
     padding-left: 30px;
 }
 
@@ -737,6 +737,7 @@ div.modal__content .modal__field.field__select .report__date.ant-picker .ant-pic
 div.modal__content .modal__field.field__select .report__date.ant-picker .ant-picker-input input {
     border-radius: 0;
     border: none;
+    background-color: transparent;
 }
 
 div.modal__content .modal__field .ant-picker .ant-picker-clear {
@@ -1719,10 +1720,15 @@ svg.style__svg {
 .event__donors > ol {
     padding-left: 30px;
     margin-top: 15px;
+    width: fit-content;
 }
 
 .event__donors > ol > a {
     color: black;
+}
+
+.event__content .event__donors > div.display__flex {
+    align-items: flex-start;
 }
 
 /* hết Event */
