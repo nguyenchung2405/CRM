@@ -1,5 +1,9 @@
 const axios = require("axios");
 const { local } = require("../untils/title");
+
+
+// const local = "http://contract.tuoitre.vn"
+
 const getGroupChannel = async (req, res) => {
     const config = {
         headers: { Authorization: req.headers.authorization },
@@ -163,6 +167,48 @@ const deleteGroup = async (req, res) => {
 }
 
 
+const updateSubGroup = async (req,res) => {
+    const config = {
+        headers: { Authorization: req.headers.authorization },
+    };
+    try {
+        const { id , ...res } = req.body;
+
+        const {data} = await axios.put(`${local}/product/sublocation/update?id=${id}`,res,config)
+
+        res.send(data)
+    } catch (error) {
+        res.send(error);
+    }
+}
+
+const deleteSubGroup = async (req,res) =>{
+    const config = {
+        headers: { Authorization: req.headers.authorization },
+    };
+    try {
+        const { id,...res } = req.body;
+    } catch (error) {
+        
+    }
+}
+
+const createSubGroup = async (req,res)=>{
+    const config = {
+        headers: { Authorization: req.headers.authorization },
+    };
+    try {
+        const payload = req.body;
+        console.log({payload,config});
+        const { data } = await axios.post(`${local}/product/sublocation/create`,payload,config)
+        
+        console.log(data);
+        res.send(data.data)
+    } catch (error) {
+        res.send(error);
+    }
+}
+
 module.exports = {
     getGroupChannel,
     createGroupChannel,
@@ -170,5 +216,8 @@ module.exports = {
     deleteGroupChannel,
     createGroup,
     updateGroup,
-    deleteGroup
+    deleteGroup,
+    updateSubGroup,
+    deleteSubGroup,
+    createSubGroup
 }

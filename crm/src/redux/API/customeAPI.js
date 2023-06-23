@@ -208,7 +208,8 @@ export async function updateCustomerTypeAPI(data){
             url: `${local}/api/client/update/customer-type-list`,
             data: {
                 name,
-                id
+                id,
+                TOKEN
             }
         })
         return resufts.data

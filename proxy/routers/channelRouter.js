@@ -6,7 +6,10 @@ const {
     deleteGroupChannel,
     createGroup,
     updateGroup,
-    deleteGroup
+    deleteGroup,
+    updateSubGroup,
+    deleteSubGroup,
+    createSubGroup
 } = require("../controller/channel.controller");
 const channelRouter = express.Router();
 // import { RCS } from "../../utils/ConstantRouter";
@@ -20,4 +23,8 @@ channelRouter.post(`/dgc`, deleteGroupChannel);
 channelRouter.post(`/cg`, createGroup);
 channelRouter.post(`/ug`, updateGroup);
 channelRouter.post(`/dg`, deleteGroup);
+
+channelRouter.put("/usubg", updateSubGroup);
+channelRouter.put("/dsubg", deleteSubGroup);
+channelRouter.post("/csubg", createSubGroup);
 module.exports = { channelRouter };
