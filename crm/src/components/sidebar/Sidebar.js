@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { BsReceiptCutoff } from "react-icons/bs"
 import { NavLink, Link } from 'react-router-dom';
 import { checkMicroFe } from '../../untils/helper';
-import { MdPeopleOutline } from "react-icons/md"
 import { BsFileEarmarkFill } from "react-icons/bs"
 import { FcDepartment } from "react-icons/fc"
 
 export default function Sidebar() {
-    
 
     const getItem = (label, key, icon, children) => {
         return {
@@ -17,13 +15,8 @@ export default function Sidebar() {
             children
         }
     }
+
     let uri = checkMicroFe() === true ? "contract-service" : "";
-    // const items = [
-    //     getItem("Hoá đơn", "sub1xxx", [
-    //         getItem(<Link to={`${uri}/crm/customer`}>Quản lý khách hàng</Link>, "2xxx",),
-    //         getItem(<Link to={`${uri}/crm/contract`}>Quản lý hợp đồng</Link>, "3xxx",),
-    //     ])
-    // ]
 
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
@@ -46,7 +39,6 @@ export default function Sidebar() {
             ]),
         ])
     ]
-
     
     const renderSubMenu = () => {
         if (checkMicroFe() === false) {

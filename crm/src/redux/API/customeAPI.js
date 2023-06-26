@@ -202,7 +202,6 @@ export async function createJobTypeListAPI(data){
 export async function updateCustomerTypeAPI(data){
     try {
         const { name , id } = data
-        console.log({name,id});
         const resufts = await axios({
             method: "PUT",
             url: `${local}/api/client/update/customer-type-list`,

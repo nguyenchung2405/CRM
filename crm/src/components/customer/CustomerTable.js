@@ -49,14 +49,14 @@ export default function CustomerTable() {
         }
     }, [page, pageNumber])
 
-    useEffect(() => {
-        let { type, msg } = messageAlert;
-        if (type === "thành công") {
-            message.success(msg)
-        } else if (type === "thất bại") {
-            message.error(msg)
-        }
-    }, [messageAlert])
+    // useEffect(() => {
+    //     let { type, msg } = messageAlert;
+    //     if (type === "thành công") {
+    //         message.success(msg)
+    //     } else if (type === "thất bại") {
+    //         message.error(msg)
+    //     }
+    // }, [messageAlert])
 
     const handleSearchInput = (e) => {
         let { value, name } = e.target;

@@ -28,13 +28,9 @@ function* createCustomer(payload){
     let {code, data: dataResponse} = result;
     if(code === 200 || dataResponse){
         yield put(addCustomer(dataResponse));
-        yield put(setMessage({type: "thành công", msg:"Tạo khách hàng thành công."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.success("Tạo khách hàng thành công.")
     } else {
-        yield put(setMessage({type: "thất bại", msg:"Tạo khách hàng thất bại."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.error("Tạo khách hàng thất bại.")
     }
 }
 
@@ -45,13 +41,9 @@ function* searchCustomer(payload){
     if(result.code === 200 || result?.data?.client?.length > 0){
         yield put(setCustomerList(result.data.client))
         yield put(setTotalCustomer(result.data.total_data))
-        yield put(setMessage({type: "thành công", msg:"Thao tác thành công."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.success("Thao tác thành công.")
     } else {
-        yield put(setMessage({type: "thất bại", msg:"Thao tác thất bại."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.error("Thao tác thất bại.")
     }
 }
 
@@ -219,7 +211,6 @@ function* createJobTypeList(payload){
 
 function* updateCustomerType(payload){
     try {
-        console.log(payload);
         const resuft = yield call(updateCustomerTypeAPI,payload?.data)
         if(resuft?.data?.result){
             yield put(setUpdateType(resuft?.data?.data))
