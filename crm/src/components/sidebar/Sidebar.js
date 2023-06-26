@@ -16,7 +16,7 @@ export default function Sidebar() {
         }
     }
 
-    let uri = checkMicroFe() === true ? "contract-service" : "";
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
 
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
