@@ -59,23 +59,23 @@ function App() {
         <Provider store={store}>
           <div className="mf-contract">
             <Switch>
-              <Route exact path="/crm/customer" component={CustomerTable} />
-              <Route exact path="/crm/customer/create" component={CreateCustomer} />
-              <Route exact path="/crm/customer/type" component={CustomerTableType} />
-              <Route exact path="/crm/customer/update/:client_id" component={CreateCustomer} />
-              <Route exact path="/crm/contract" component={ContractTable} />
-              <Route exact path="/crm/contract/create" component={CreateContract} />
-              <Route exact path="/crm/detail/:contract_id" component={CreateContract} />
-              <Route exact path="/crm/product" component={ProductEditableTable} />
-              <Route exact path="/crm/product/type-att" component={TypeAndAttribute} />
-              <Route exact path="/crm/product/special" component={SpecialProductTable} />
-              <Route exact path="/crm/channel" component={ChanelGContainer} />
-              <Route exact path="/crm/event/create" component={CreateEvent} />
-              <Route exact path="/crm/event" component={EventTable} />
-              <Route exact path="/crm/event/:event_id" component={CreateEvent} />
-              <Route exact path="/crm/receipt" component={ReceiptTable} />
-              <Route exact path="/crm/acceptance/contract" component={Acceptance} />
-              <Route exact path="/crm/acceptance/event" component={EventAcceptance} />
+              <Route exact path="/contract-service/crm/customer" component={CustomerTable} />
+              <Route exact path="/contract-service/crm/customer/create" component={CreateCustomer} />
+              <Route exact path="/contract-service/crm/customer/type" component={CustomerTableType} />
+              <Route exact path="/contract-service/crm/customer/update/:client_id" component={CreateCustomer} />
+              <Route exact path="/contract-service/crm/contract" component={ContractTable} />
+              <Route exact path="/contract-service/crm/contract/create" component={CreateContract} />
+              <Route exact path="/contract-service/crm/detail/:contract_id" component={CreateContract} />
+              <Route exact path="/contract-service/crm/product" component={ProductEditableTable} />
+              <Route exact path="/contract-service/crm/product/type-att" component={TypeAndAttribute} />
+              <Route exact path="/contract-service/crm/product/special" component={SpecialProductTable} />
+              <Route exact path="/contract-service/crm/channel" component={ChanelGContainer} />
+              <Route exact path="/contract-service/crm/event/create" component={CreateEvent} />
+              <Route exact path="/contract-service/crm/event" component={EventTable} />
+              <Route exact path="/contract-service/crm/event/:event_id" component={CreateEvent} />
+              <Route exact path="/contract-service/crm/receipt" component={ReceiptTable} />
+              <Route exact path="/contract-service/crm/acceptance/contract" component={Acceptance} />
+              <Route exact path="/contract-service/crm/acceptance/event" component={EventAcceptance} />
             </Switch>
           </div>
         </Provider>
