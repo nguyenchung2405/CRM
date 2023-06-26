@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { GET_CUSTOMER_LIST, SEARCH_CUSTOMER } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../redux/features/customer.feature';
 import { setMessage } from '../../redux/features/messageSlice';
 import { checkMicroFe } from '../../untils/helper';
@@ -17,7 +17,7 @@ export default function CustomerTable() {
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const history = useHistory()
     const { isLoading } = useSelector(state => state.loadingReducer);
     const { customerList, totalCustomer } = useSelector(state => state.customerReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
@@ -82,7 +82,7 @@ export default function CustomerTable() {
                             // setIsShowModal(true)
                             dispatch(setIsCreateCustomer(true))
                             dispatch(setDataCustomer({}))
-                            navigate(`${uri}/crm/customer/create`)
+                            history.push(`${uri}/crm/customer/create`)
                         }} />
                     </Tooltip>
                     {/**
@@ -162,7 +162,7 @@ export default function CustomerTable() {
                         <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                             dispatch(setDataCustomer(text))
                             dispatch(setIsCreateCustomer(false))
-                            navigate(`${uri}/crm/customer/update/${text.id}`)
+                            history.push(`${uri}/crm/customer/update/${text.id}`)
                         }} />
                     </Tooltip>
                     </div>

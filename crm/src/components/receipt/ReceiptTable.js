@@ -2,7 +2,7 @@ import { Table } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { GET_PAYMENT_LIST } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import CreateReceiptModal from './CreateReceiptModal';
@@ -13,13 +13,32 @@ export default function ReceiptTable() {
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const {Column} = Table;
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const history = useHistory();
     const { total, recieptList } = useSelector(state => state.receiptReducer);
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
     const [dataToCreateModal, setDataToCreateModal] = useState({})
     const [list, setList] = useState([]);
+
+    useEffect(() => {
+      window.addEventListener('error', e => {
+          if (e.message === 'ResizeObserver loop limit exceeded') {
+              const resizeObserverErrDiv = document.getElementById(
+                  'webpack-dev-server-client-overlay-div'
+              );
+              const resizeObserverErr = document.getElementById(
+                  'webpack-dev-server-client-overlay'
+              );
+              if (resizeObserverErr) {
+                  resizeObserverErr.setAttribute('style', 'display: none');
+              }
+              if (resizeObserverErrDiv) {
+                  resizeObserverErrDiv.setAttribute('style', 'display: none');
+              }
+          }
+      });
+  }, []);
     
     useEffect(() => {
       dispatch({
@@ -91,7 +110,7 @@ export default function ReceiptTable() {
           <Column title="Tên khách hàng" key="clientName" render={(text) => text?.contract_info?.client_name}></Column>
           <Column title="Số hợp đồng" key="soHopDong" render={(text) => {
             return <span style={{ cursor: "pointer" }} onClick={() => {
-              navigate(`${uri}/crm/detail/${text?.contract_ID}`)
+              history.push(`${uri}/crm/detail/${text?.contract_ID}`)
             }}>{text?.contract_info?.contract_number}</span>
           }}></Column>
           <Column title="Số đợt thanh toán" key="soDotThanhToan "

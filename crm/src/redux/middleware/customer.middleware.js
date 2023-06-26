@@ -192,7 +192,6 @@ function* createJobTypeList(payload){
     try {
 
         const resuft = yield call(createJobTypeListAPI,payload?.data)
-        console.log(resuft)
         if(resuft.status === 400){
             yield put(setIsLoading(false))
             message.error("Loại ngành nghề đã tồn tại")
@@ -224,7 +223,6 @@ function* updateCustomerType(payload){
 function* updateJobTypeList(payload){
     try {
         const resuft = yield call(updateJobTypeAPI,payload?.data)
-        console.log(resuft);
         if(resuft?.data?.result){
             yield put(setUpdateJobType(resuft?.data?.data))
             message.success("Cập nhật thành công")

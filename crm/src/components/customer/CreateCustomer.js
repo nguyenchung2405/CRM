@@ -1,7 +1,7 @@
 import { Image, Modal, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
@@ -16,14 +16,14 @@ export default function CreateCustomer(props) {
                                     : "http://localhost:3003/";
     const {client_id} = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const history = useHistory();
     let [valueRadio, setValueRadio] = useState(false);
     let [valueForm, setValueForm] = useState({is_company: false});
     let [isShowModal, setIsShowModal] = useState(false);
     let [file, setFile] = useState("");
     let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
     const {isCreateCustomer, dataCustomer, customerTypeList, jobTypeList} = useSelector(state => state.customerReducer)
-    console.log(valueForm)
+    
     useEffect(()=>{
       dispatch({
         type: GET_CUSTOMER_TYPE_LIST,
@@ -61,7 +61,7 @@ export default function CreateCustomer(props) {
     const handleCancel = () => {
         setValidateForm({email: false, phone: false})
         setValueForm({is_company: false})
-        navigate(`${uri}/crm/customer`, {replace: true})
+        history.replace(`${uri}/crm/customer`)
     };
 
     const handleOk = ()=>{
@@ -78,7 +78,7 @@ export default function CreateCustomer(props) {
             data: valueForm
           });
         }
-        navigate(`${uri}/crm/customer`, {replace: true})
+        history.replace(`${uri}/crm/customer`)
         setValueForm({is_company: false})
       }
     }
