@@ -6,7 +6,7 @@ const getEventList = async (req, res)=>{
         let {page, page_size} = req.query;
         let { headers: { authorization } } = req;
         const result = await axios({
-            url: `${local}/event/list?page_size=${page_size}&sort_by=id&asc_order=true&page=${page}`,
+            url: `${local}/event/list?page_size=${page_size}&sort_by=id&asc_order=false&page=${page}`,
             method: "GET",
             headers: {
                 Authorization: authorization

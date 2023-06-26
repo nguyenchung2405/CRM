@@ -3,7 +3,6 @@ import { DatePicker, Radio, Select, Tooltip } from 'antd'
 import { GET_CONTRACT_LIST, GET_CONTRACT_DETAIL } from '../../title/title';
 import { useDispatch, useSelector } from 'react-redux';
 import { FcPlus } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
 import CreateDetail from './CreateDetail';
 import {AiFillMinusCircle} from "react-icons/ai"
 import moment from 'moment';
@@ -12,7 +11,6 @@ export default function ContractContentModal(props) {
     
     const { valueForm, setValueForm, isReset, setIsReset} = props;
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const {Option} = Select;
     const { contractList, contractRequest } = useSelector(state => state.contractReducer);
     const [valueRadio, setValueRadio] = useState(false)

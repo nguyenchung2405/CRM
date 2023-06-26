@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import {v4 as uuidv4} from "uuid"
@@ -22,11 +23,15 @@ export default function QuanLyChi(props) {
     const handleAddChi = ()=>{
         let key = chiTieu.thongTinChi;
         let value = chiTieu.soTien;
-        setQuanLyChi({
-            ...quanLyChi,
-            [key]: value
-        })
-        setChiTieu({ thongTinChi: "", soTien: "" })
+        if(key === "" || value === "" || +value <= 0){
+            message.warning("Thông tin chi hoặc số tiền không phù hợp.")
+        } else {
+            setQuanLyChi({
+                ...quanLyChi,
+                [key]: value
+            })
+            setChiTieu({ thongTinChi: "", soTien: "" })
+        }
     }
 
     const renderChiTieu = ()=>{

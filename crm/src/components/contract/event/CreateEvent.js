@@ -3,7 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CREATE_EVENT, DELETE_REQUEST_EVENT, GET_EVENT_INFOR, GET_EVENT_LIST, GET_PRODUCT_LIST, GET_UNSET_CONTRACT, UPDATE_EVENT } from "../../../title/title";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { setContractRequest, deleteContractRequest, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
@@ -22,7 +22,7 @@ export default function CreateEvent() {
   const { Column } = Table;
   const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { event_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
@@ -157,7 +157,7 @@ export default function CreateEvent() {
           });
           dispatch(setContractRequest([]));
           setTimeout(() => {
-            navigate(`${uri}/crm/event`)
+            history.push(`${uri}/crm/event`)
           }, 1000)
         }}
       >Tạo</button>
@@ -448,7 +448,7 @@ export default function CreateEvent() {
           setQuanLyChi={setQuanLyChi}
         />
         <div className="create__contract__footer">
-          <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/event`, { replace: true }) }}>Hủy</button>
+          <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/event`) }}>Hủy</button>
           {renderButtonCreateUpdate()}
         </div>
       </div >

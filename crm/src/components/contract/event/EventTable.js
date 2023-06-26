@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { GET_CUSTOMER_LIST, GET_EVENT_LIST, SEARCH_CUSTOMER, SEARCH_EVENT } from '../../../title/title';
 import Loading from "../../../components/Loading"
 import { setIsLoading } from '../../../redux/features/loadingSlice';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { setDataCustomer, setIsCreateCustomer } from '../../../redux/features/customer.feature';
 import { setMessage } from '../../../redux/features/messageSlice';
 import { checkMicroFe } from '../../../untils/helper';
@@ -18,7 +18,7 @@ export default function EventTable() {
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const history = useHistory()
     const { isLoading } = useSelector(state => state.loadingReducer);
     const { eventList, totalEventList } = useSelector(state => state.eventReducer);
     const [page, setPage] = useState(1);
@@ -69,7 +69,7 @@ export default function EventTable() {
                         <FcPlus onClick={() => {
                             dispatch(setIsCreateCustomer(true))
                             dispatch(setDataCustomer({}))
-                            navigate(`${uri}/crm/event/create`)
+                            history.push(`${uri}/crm/event/create`)
                         }} />
                     </Tooltip>
                 </div>
@@ -129,7 +129,7 @@ export default function EventTable() {
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                 dispatch(setDataCustomer(text))
                                 dispatch(setIsCreateCustomer(false))
-                                navigate(`${uri}/crm/event/${text.id}`)
+                                history.push(`${uri}/crm/event/${text.id}`)
                             }} />
                         </Tooltip>
                     </div>

@@ -25,7 +25,7 @@ export default function ContractPayment(props) {
             } else {
                 statusOfPayment = "Đã thanh toán"
             }
-            return <div className="payment__contract " onClick={()=>{ setIsShowModal(true); setPaymentID(payment.id) }}>
+            return <div key={payment.id} className="payment__contract " onClick={()=>{ setIsShowModal(true); setPaymentID(payment.id) }}>
                 <span>Đợt thanh toán {index + 1}</span>
                 <span>{convertDate}</span>
                 <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>

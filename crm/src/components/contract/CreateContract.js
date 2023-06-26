@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
-import { useNavigate, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
 import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
@@ -27,7 +27,7 @@ export default function CreateContract() {
   const { Option } = Select;
   const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const history = useHistory();
   const { contract_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
@@ -249,7 +249,7 @@ export default function CreateContract() {
           });
           dispatch(setContractRequest([]));
           setTimeout(() => {
-            navigate(`${uri}/crm/contract`)
+            history.push(`${uri}/crm/contract`)
           }, 1000)
         }}
       >Tạo</button>
@@ -591,38 +591,44 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
-            <div className="upload__file">
-              <Tooltip title="Nhập file" color="green">
-                <label htmlFor="upFileExcel">
-                  <CiImport/>
-                </label>
-                <input id="upFileExcel" type="file" onChange={e => {
-                    dispatch({
-                      type: IMPORT_FILE,
-                      data: {file: e.target.files[0], contract_id}
-                    })
-                }} />
-              </Tooltip>
-            </div>
-            <Tooltip title="Xuất file" color="green">
-              <CiExport
-                onClick={async (e) => {
-                  const result = await axios({
-                    url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
-                    method: "GET",
-                    headers: {
-                      Authorization: "Bearer " + TOKEN,
-                      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    },
-                    responseType: 'arraybuffer'
-                  });
-                  let fileBlob = new Blob([result.data], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                  })
-                  FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
-                }}
-              />
-            </Tooltip>
+            {
+              contract_id ?
+                <>
+                  <div className="upload__file">
+                    <Tooltip title="Nhập file" color="green">
+                      <label htmlFor="upFileExcel">
+                        <CiImport />
+                      </label>
+                      <input id="upFileExcel" type="file" onChange={e => {
+                        dispatch({
+                          type: IMPORT_FILE,
+                          data: { file: e.target.files[0], contract_id }
+                        })
+                      }} />
+                    </Tooltip>
+                  </div>
+                  <Tooltip title="Xuất file" color="green">
+                    <CiExport
+                      onClick={async (e) => {
+                        const result = await axios({
+                          url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
+                          method: "GET",
+                          headers: {
+                            Authorization: "Bearer " + TOKEN,
+                            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                          },
+                          responseType: 'arraybuffer'
+                        });
+                        let fileBlob = new Blob([result.data], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                        })
+                        FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
+                      }}
+                    />
+                  </Tooltip>
+                </>
+            : ""
+            }
           </div>
           <Table
             className="term__table"
@@ -815,7 +821,7 @@ export default function CreateContract() {
         />
         <ContractHistory data={valueForm.history} />
         <div className="create__contract__footer">
-          <button className="footer__btn btn__delete" onClick={() => { navigate(`${uri}/crm/contract`, { replace: true }) }}>Hủy</button>
+          <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/contract`) }}>Hủy</button>
           {renderButtonCreateUpdate()}
         </div>
       </div >
