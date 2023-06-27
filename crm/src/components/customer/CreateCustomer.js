@@ -335,7 +335,7 @@ export default function CreateCustomer(props) {
                         </>
                       }
                 </div>
-                <div className="client__files">
+                <div className="client__files" key={uuidv4()}>
                     { dataCustomer?.files?.map(file => {
                       if(file.includes("doc") || file.includes("docx")){
                         return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
