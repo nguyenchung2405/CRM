@@ -139,7 +139,7 @@ export default function ProductTable() {
         const inputNode = () => {
             if (inputType === "channel_name") {
                 return <Select
-                key={key}
+                key={uuidv4()}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -155,7 +155,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "location_name") {
                 return <Select
-                key={key}
+                key={uuidv4()}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -171,7 +171,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "type_name") {
                 return <Select
-                key={key}
+                key={uuidv4()}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -187,7 +187,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "attribute_option_name") {
                 return <Select
-                key={key}
+                key={uuidv4()}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -203,7 +203,7 @@ export default function ProductTable() {
                 </Select>
             } else if(inputType === "sub_location_name"){
                 return <Select
-                key={key}
+                key={uuidv4()}
                 showSearch
                 filterOption={(input, option) =>
                     (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
