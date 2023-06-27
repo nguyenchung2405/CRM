@@ -56,11 +56,12 @@ export default function ProductAttributeEditTable() {
         record,
         index,
         children,
+        key,
         ...restProps
     }) => {
         const inputNode = <Input />;
         return (
-            <td {...restProps} key={uuidv4()}>
+            <td {...restProps} key={key}>
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
@@ -145,7 +146,8 @@ export default function ProductAttributeEditTable() {
             title: "Thuộc tính",
             dataIndex: "name",
             className: "attribute__name",
-            width: "50%"
+            width: "50%",
+            key: uuidv4()
         },
         {
             render: (_, record) => {

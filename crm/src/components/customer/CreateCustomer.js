@@ -6,6 +6,7 @@ import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_T
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
 import SelectType from './SelectType';
+import {v4 as uuidv4} from "uuid"
 
 export default function CreateCustomer(props) {
 
@@ -334,7 +335,7 @@ export default function CreateCustomer(props) {
                         </>
                       }
                 </div>
-                <div className="client__files">
+                <div className="client__files" key={uuidv4()}>
                     { dataCustomer?.files?.map(file => {
                       if(file.includes("doc") || file.includes("docx")){
                         return <a className="dowload__file" href={uri_file + file}>Tải file word</a>

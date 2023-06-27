@@ -320,49 +320,57 @@ export default function ProductTable() {
             title: "Mã sản phẩm",
             dataIndex: "code_indentify",
             width:"11.2%",
-            className: "product__code"
+            className: "product__code",
+            key: "product__code"
         },
         {
             editable: true,
             title: "Sản phẩm",
             dataIndex: "product_name",
             width:"11.2%",
+            key: "product_name"
         },
         {
             editable: true,
             title: "Kênh sản phẩm",
             dataIndex: "channel_name",
-            width:"11.2%"
+            width:"11.2%",
+            key: "channel_name"
         },
         {
             editable: true,
             title: "Nhóm sản phẩm",
             dataIndex: "location_name",
-            width:"11.2%"
+            width:"11.2%",
+            key: "location_name"
         },
         {
             editable: true,
             title: "Vị trí sản phẩm",
             dataIndex: "sub_location_name",
-            width:"11.2%"
+            width:"11.2%",
+            key: "sub_location_name"
         },
         {
             editable: true,
             title: "Loại sản phẩm",
             dataIndex: "type_name",
-            width:"11.2%"
+            width:"11.2%",
+            key: "type_name"
         },
         {
             editable: true,
             title: "Thuộc tính sản phẩm",
             dataIndex: "attribute_option_name",
-            width:"11.2%"
+            width:"11.2%",
+            key: "attribute_option_name"
         },
         {
             editable: true,
             title: "Giá",
             dataIndex: "price",
             width:"11.2%",
+            key: "price",
             render: (_, record)=>{
                 return new Intl.NumberFormat("vi-VI").format(record.price) + " VNĐ"
             }
