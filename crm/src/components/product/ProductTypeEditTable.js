@@ -56,11 +56,12 @@ export default function ProductTypeEditTable() {
         record,
         index,
         children,
+        key,
         ...restProps
     }) => {
         const inputNode = <Input />;
         return (
-            <td {...restProps} key={uuidv4()}>
+            <td {...restProps} key={key}>
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
@@ -142,7 +143,8 @@ export default function ProductTypeEditTable() {
             title: "Loại",
             dataIndex: "name",
             className: "type__name",
-            width: "50%"
+            width: "50%",
+            key: uuidv4()
         },
         {
             render: (_, record) => {
