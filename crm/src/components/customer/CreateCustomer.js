@@ -350,7 +350,7 @@ export default function CreateCustomer(props) {
                         return <Image key={uuidv4()} src={uri_file + file} />
                       }
                     }) }
-                    <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                    <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
                 </div>
             </div>
             <div className="contract__service__footer">

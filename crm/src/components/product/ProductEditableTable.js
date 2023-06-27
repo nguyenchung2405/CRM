@@ -136,10 +136,10 @@ export default function ProductTable() {
         key,
         ...restProps
     }) => {
-        const inputNode = () => {
+        const inputNode = (key) => {
             if (inputType === "channel_name") {
                 return <Select
-                key={uuidv4()}
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -155,7 +155,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "location_name") {
                 return <Select
-                key={uuidv4()}
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -171,7 +171,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "type_name") {
                 return <Select
-                key={uuidv4()}
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -187,7 +187,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "attribute_option_name") {
                 return <Select
-                key={uuidv4()}
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -203,7 +203,7 @@ export default function ProductTable() {
                 </Select>
             } else if(inputType === "sub_location_name"){
                 return <Select
-                key={uuidv4()}
+                key={key}
                 showSearch
                 filterOption={(input, option) =>
                     (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -236,7 +236,7 @@ export default function ProductTable() {
                         ]}
                         key={uuidv4()}
                     >
-                        {inputNode()}
+                        {inputNode(uuidv4())}
                     </Form.Item>
                 ) : (
                     children
@@ -458,13 +458,13 @@ export default function ProductTable() {
 
     function renderChannelOption() {
         return productChannel.map(channel => {
-            return <Option value={channel.id}>{channel.name}</Option>
+            return <Option key={channel.id} value={channel.id}>{channel.name}</Option>
         })
     };
 
     function renderLocationOption() {
         return productLocation.map(location => {
-            return <Option value={location.id}>{location.name}</Option>
+            return <Option key={location.id} value={location.id}>{location.name}</Option>
         })
     };
 
@@ -476,13 +476,13 @@ export default function ProductTable() {
 
     function renderTypeOption() {
         return productType.map(type => {
-            return <Option value={type.id}>{type.name}</Option>
+            return <Option key={type.id} value={type.id}>{type.name}</Option>
         })
     };
 
     function renderAttributeOption() {
         return productAttribute.map(att => {
-            return <Option value={att.id}>{att.name}</Option>
+            return <Option key={att.id} value={att.id}>{att.name}</Option>
         })
     };
     
