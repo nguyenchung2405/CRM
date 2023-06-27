@@ -1,7 +1,7 @@
 import { Image, Modal, Radio } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
@@ -16,7 +16,7 @@ export default function CreateCustomer(props) {
                                     : "http://localhost:3003/";
     const {client_id} = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const history = useHistory();
     let [valueRadio, setValueRadio] = useState(false);
     let [valueForm, setValueForm] = useState({is_company: false});
     let [isShowModal, setIsShowModal] = useState(false);
@@ -61,7 +61,7 @@ export default function CreateCustomer(props) {
     const handleCancel = () => {
         setValidateForm({email: false, phone: false})
         setValueForm({is_company: false})
-        navigate(`${uri}/crm/customer`, {replace: true})
+        history.replace(`${uri}/crm/customer`)
     };
 
     const handleOk = ()=>{
@@ -78,7 +78,7 @@ export default function CreateCustomer(props) {
             data: valueForm
           });
         }
-        navigate(`${uri}/crm/customer`, {replace: true})
+        history.replace(`${uri}/crm/customer`)
         setValueForm({is_company: false})
       }
     }
@@ -104,8 +104,9 @@ export default function CreateCustomer(props) {
     const checkValueForm = ()=>{
       let check = true;
       let newValidate = {};
-      for(let vali in validateForm){
-        if(vali === "phone"){
+      let newValiDateForm = valueForm.is_company ? {...validateForm} : {email: false, phone: false}
+      for(let vali in newValiDateForm){
+        if(vali.includes("phone")){
             if(valueForm[vali] && valueForm[vali] !== "" && valueForm[vali] !== undefined){
                 if(regexPhone.test(valueForm[vali])){
                   newValidate = {...newValidate, [vali]: false}
@@ -120,7 +121,7 @@ export default function CreateCustomer(props) {
               check = true;
             }
         } 
-        if(vali === "email"){
+        if(vali.includes("email")){
           if(valueForm[vali] && valueForm[vali] !== "" && valueForm[vali] !== undefined){
               if(regexEmail.test(valueForm[vali])){
                 newValidate = {...newValidate, [vali]: false}
@@ -295,7 +296,7 @@ export default function CreateCustomer(props) {
                     onBlur={regexValue}
                     onChange={handleChangeInput} />
                     <label>Số điện thoại</label>
-                    {validateForm?.phone ? showRemind("represent_phone") : ""}
+                    {validateForm?.phone ? showRemind("phone") : ""}
                 </div>
                 <div className="modal__field">
                     <input type="text" name="email" 
@@ -303,7 +304,7 @@ export default function CreateCustomer(props) {
                     onBlur={regexValue}
                     onChange={handleChangeInput} />
                     <label>Email</label>
-                    {validateForm?.email ? showRemind("represent_email") : ""}
+                    {validateForm?.email ? showRemind("email") : ""}
                 </div>
                 { renderInforBusiness() }
                 <div className="modal__upload">

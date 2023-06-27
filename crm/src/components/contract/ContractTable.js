@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { message, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_CONTRACT_LIST } from '../../title/title';
 import moment from 'moment';
@@ -15,13 +15,32 @@ export default function ContractTable() {
 
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { Column } = Table;
-    const navigate = useNavigate();
+    const history = useHistory();
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const { total, contractList } = useSelector(state => state.contractReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     const { isLoading } = useSelector(state => state.loadingReducer);
+
+    useEffect(() => {
+        window.addEventListener('error', e => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById(
+                    'webpack-dev-server-client-overlay-div'
+                );
+                const resizeObserverErr = document.getElementById(
+                    'webpack-dev-server-client-overlay'
+                );
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none');
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none');
+                }
+            }
+        });
+    }, []);
 
     useEffect(() => {
         dispatch({
@@ -71,7 +90,7 @@ export default function ContractTable() {
                     <h1>Quản lý hợp đồng</h1>
                     <Tooltip title="Tạo hợp đồng" color="green">
                         <FcPlus style={{ marginRight: "5px" }} onClick={() => {
-                            navigate(`${uri}/crm/contract/create`)
+                            history.push(`${uri}/crm/contract/create`)
                         }} />
                     </Tooltip>
                 </div>
@@ -160,7 +179,7 @@ export default function ContractTable() {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-                                navigate(`${uri}/crm/detail/${text.id}`);
+                                history.push(`${uri}/crm/detail/${text.id}`);
                             }} />
                         </Tooltip>
                     </div>

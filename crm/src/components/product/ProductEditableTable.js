@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { CREATE_PRODUCT, DELETE_PRODUCT, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, SEARCH_CUSTOMER, UPDATE_PRODUCT } from '../../title/title';
 import Loading from "../../components/Loading"
 import { setIsLoading } from '../../redux/features/loadingSlice';
-import { useNavigate } from 'react-router-dom';
 import { setMessage } from '../../redux/features/messageSlice';
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import { v4 as uuidv4 } from "uuid";
@@ -38,7 +37,6 @@ export default function ProductTable() {
     const { Column } = Table;
     const { Option } = Select;
     const dispatch = useDispatch();
-    const navigate = useNavigate()
     const { isLoading } = useSelector(state => state.loadingReducer);
     const { productList, totalProduct, productChannel, productLocation, productType, productAttribute, productSubLocation } = useSelector(state => state.productReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);

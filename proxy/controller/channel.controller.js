@@ -1,8 +1,6 @@
 const axios = require("axios");
-// const { local } = require("../untils/title");
+const { local } = require("../untils/title");
 
-
-const local = "http://contract.tuoitre.vn"
 
 const getGroupChannel = async (req, res) => {
     const config = {
