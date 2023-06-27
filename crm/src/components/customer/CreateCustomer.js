@@ -335,19 +335,19 @@ export default function CreateCustomer(props) {
                         </>
                       }
                 </div>
-                <div className="client__files" key={uuidv4()}>
+                <div className="client__files">
                     { dataCustomer?.files?.map(file => {
                       if(file.includes("doc") || file.includes("docx")){
-                        return <a className="dowload__file" href={uri_file + file}>Tải file word</a>
+                        return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
                       } else if(file.includes("pdf")) {
                         return <>
-                            <button onClick={()=>{
+                            <button key={uuidv4()} onClick={()=>{
                               setIsShowModal(true)
                               setFile(uri_file + file)
                             }}>Xem PDF</button>
                         </>
                       } else {
-                        return <Image src={uri_file + file} />
+                        return <Image key={uuidv4()} src={uri_file + file} />
                       }
                     }) }
                     <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />

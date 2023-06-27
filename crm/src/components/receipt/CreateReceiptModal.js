@@ -7,6 +7,7 @@ import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY
 import AcceptanceRow from './AcceptanceRow';
 import EventAccRow from './EventAccRow';
 import EventAccRowOfContract from './EventAccRowOfContract';
+import {v4 as uuidv4} from "uuid"
 
 export default function CreateReceiptModal(props) {
     
@@ -147,6 +148,7 @@ export default function CreateReceiptModal(props) {
             data={acc}
             setMultiSelect={setMultiSelect}
             multiSelect={multiSelect}
+            key={uuidv4()}
             />
         })
     }
@@ -182,37 +184,37 @@ export default function CreateReceiptModal(props) {
     const renderContentOFModal = ()=>{
         if(dataToCreateModal.event_id){
             return <>
-            <div className="modal__field field__select">
-                            <div>
-                                <label className="term__label">Danh sách hợp đồng</label>
-                                <Select
-                                    className="style"
-                                    showSearch
-                                    filterOption={(input, option) =>
-                                        (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                                    }
-                                    value={valueOfField("contract_ID")}
-                                    onChange={(value) => {
-                                        dispatch({
-                                            type: GET_ACCEPTANCE_LIST_BY_EVENT,
-                                            data: {contract_id: value, has_payment: false, is_complete: true}
-                                        })
-                                        dispatch({
-                                            type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
-                                            data: {contract_id: value, has_payment: false, is_complete: true}
-                                        })
-                                        dispatch({
-                                            type: GET_CONTRACT_DETAIL,
-                                            contract_id: value
-                                        });
-                                        handleChangeValue("contract_ID", value)
-                                    }}
-                                >
-                                    {renderOptionDonors()}
-                                </Select>
-                            </div>
-                        </div>
-                <div className="modal__field field__select">
+                <div className="modal__field field__select" key={uuidv4()}>
+                    <div>
+                        <label className="term__label">Danh sách hợp đồng</label>
+                        <Select
+                            className="style"
+                            showSearch
+                            filterOption={(input, option) =>
+                                (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                            }
+                            value={valueOfField("contract_ID")}
+                            onChange={(value) => {
+                                dispatch({
+                                    type: GET_ACCEPTANCE_LIST_BY_EVENT,
+                                    data: { contract_id: value, has_payment: false, is_complete: true }
+                                })
+                                dispatch({
+                                    type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
+                                    data: { contract_id: value, has_payment: false, is_complete: true }
+                                })
+                                dispatch({
+                                    type: GET_CONTRACT_DETAIL,
+                                    contract_id: value
+                                });
+                                handleChangeValue("contract_ID", value)
+                            }}
+                        >
+                            {renderOptionDonors()}
+                        </Select>
+                    </div>
+                </div>
+                <div className="modal__field field__select" key={uuidv4()}>
                     <div>
                         <label className="term__label">Ngày quyết toán</label>
                         <DatePicker
@@ -241,7 +243,7 @@ export default function CreateReceiptModal(props) {
                         />
                     </div>
                 </div>
-                <div className="modal__field field__select modal__report__upload">
+                <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
                     <div className="modal__field">
                         <input type="text"
                             name="total_value"
@@ -257,7 +259,7 @@ export default function CreateReceiptModal(props) {
                 {!dataToCreateModal.isUpdate
                     ?
                     <>
-                        <div className="modal__field field__select modal__report__upload">
+                        <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
                             <div className="modal__field">
                                 <input type="text"
                                     name="delay_payment"
@@ -270,9 +272,7 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        
-                       
-                        <div className="modal__field field__select width_525">
+                        <div className="modal__field field__select width_525" key={uuidv4()}>
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
                                 <div className="acceptance__list">
@@ -286,7 +286,7 @@ export default function CreateReceiptModal(props) {
             </>
         } else {
             return <>
-                <div className="modal__field field__select">
+                <div className="modal__field field__select" key={uuidv4()}>
                     <div>
                         <label className="term__label">Ngày quyết toán</label>
                         <DatePicker
@@ -315,7 +315,7 @@ export default function CreateReceiptModal(props) {
                         />
                     </div>
                 </div>
-                <div className="modal__field field__select modal__report__upload">
+                <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
                     <div className="modal__field">
                         <input type="text"
                             name="total_value"
@@ -331,7 +331,7 @@ export default function CreateReceiptModal(props) {
                 {!dataToCreateModal.isUpdate
                     ?
                     <>
-                        <div className="modal__field field__select modal__report__upload">
+                        <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
                             <div className="modal__field">
                                 <input type="text"
                                     name="delay_payment"
@@ -344,7 +344,7 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        <div className="modal__field field__select width_525">
+                        <div className="modal__field field__select width_525" key={uuidv4()}>
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
                                 <div className="acceptance__list">
