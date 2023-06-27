@@ -26,10 +26,16 @@ const groupChannelSlice = createSlice({
         },
         setCreateChanelSubList: (state,action)=>{
             state.groupChannelSubList = [action.payload,...state.groupChannelSubList]
+        },
+        setDeleteChanelSubList: (state,action)=>{
+            
+            state.groupChannelSubList = state.groupChannelSubList.filter((x)=>{
+                return x.id !== action.payload;
+            })
         }
     }
 });
 
-export const { setGroupChannelList, setGroupChannelSubList, setUpdateChanelSubList,setCreateChanelSubList
+export const { setGroupChannelList, setGroupChannelSubList, setUpdateChanelSubList,setCreateChanelSubList,setDeleteChanelSubList
 } = groupChannelSlice.actions;
 export default groupChannelSlice.reducer;

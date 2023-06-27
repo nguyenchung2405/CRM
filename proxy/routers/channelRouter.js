@@ -26,7 +26,7 @@ channelRouter.post(`/ug`, updateGroup);
 channelRouter.post(`/dg`, deleteGroup);
 
 channelRouter.put("/usubg", updateSubGroup);
-channelRouter.put("/dsubg", deleteSubGroup);
+channelRouter.delete("/dsubg", deleteSubGroup);
 channelRouter.post("/csubg", createSubGroup);
 channelRouter.get("/gsubg", getSubGroup);
 module.exports = { channelRouter };

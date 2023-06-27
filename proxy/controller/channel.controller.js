@@ -1,9 +1,8 @@
 const axios = require("axios");
-const { c } = require("docker/src/languages");
-const { local } = require("../untils/title");
+// const { local } = require("../untils/title");
 
 
-// const local = "http://contract.tuoitre.vn"
+const local = "http://contract.tuoitre.vn"
 
 const getGroupChannel = async (req, res) => {
     const config = {
@@ -19,7 +18,7 @@ const getGroupChannel = async (req, res) => {
             `${local}/product/channel/list?page_size=31&page=1&sort_by=id&order=desc&name=${url_name}&location_name=${url_location_name}`,
             config
         );
-        console.log(data);
+        
         res.send(data);
     } catch (error) {
         if(error.response?.data){
@@ -188,9 +187,11 @@ const deleteSubGroup = async (req,res) =>{
         headers: { Authorization: req.headers.authorization },
     };
     try {
-        const { id,...res } = req.body;
+        const { id } = req.query
+        const { data } = await axios.delete(`${local}/product/sublocation/disable?id=${id}`,config)
+        res.send(data.data);
     } catch (error) {
-        
+        console.log(error);
     }
 }
 

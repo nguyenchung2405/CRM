@@ -85,10 +85,6 @@ const ChanelSubChild = ({data,isAddSubChild,onHandelRerenderComponient,setIsAddS
 
             setDataS(subLocationsData)
             
-            // await dispatch({
-            //     type: GET_GROUP_CHANNEL,
-            //     data: { page: 1, pageNumber: 1000, name: "", location_name: "" }
-            // })
             onHandelRerenderComponient()
             
             setDataEdit({...dataEdit,isEdit: false})
@@ -99,6 +95,7 @@ const ChanelSubChild = ({data,isAddSubChild,onHandelRerenderComponient,setIsAddS
     }
 
     const handleDeleteSub = (id)=>{
+        console.log({id});
         if(!id){
             // 
         }else{
@@ -123,8 +120,7 @@ const ChanelSubChild = ({data,isAddSubChild,onHandelRerenderComponient,setIsAddS
            
         }
     }
-
-
+    
     const columns = [
         {
             title: 'Sản phẩm',

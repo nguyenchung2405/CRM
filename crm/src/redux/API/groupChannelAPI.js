@@ -36,9 +36,8 @@ export async function updateGroupSubChannelAPI(data){
 export async function deleteGroupSubChannelAPI(id){
     try {
         const resuft = await axios({
-            url: `${local}/api/dsubg`,
-            method: "PUT",
-            data: id ,
+            url: `${local}/api/dsubg?id=${id}`,
+            method: "DELETE",
             headers: {
                 Authorization: "Bearer " + TOKEN
             }
