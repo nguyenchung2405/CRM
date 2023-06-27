@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function EventAccRowOfContract(props) {
 
-    const { convertDate, multiSelect, setMultiSelect, data } = props;
+    const { convertDate, multiSelect, setMultiSelect, data, key } = props;
 
     const checked = () => {
         if (multiSelect.includes(data.id)) {
@@ -13,7 +13,7 @@ export default function EventAccRowOfContract(props) {
     }
 
     return (
-        <div className="acceptance__row">
+        <div className="acceptance__row" key={key}>
             <input type="checkbox"
                 onChange={() => {
                     if (!checked()) {

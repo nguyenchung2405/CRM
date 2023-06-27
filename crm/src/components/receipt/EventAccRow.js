@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function EventAccRow(props) {
   
-    const { convertDate, multiSelect2, setMultiSelect2, data } = props;
+    const { convertDate, multiSelect2, setMultiSelect2, data, key } = props;
 
     const checked = () => {
         if (multiSelect2.includes(data.id)) {
@@ -13,7 +13,7 @@ export default function EventAccRow(props) {
     }
 
     return (
-        <div className="acceptance__row">
+        <div className="acceptance__row" key={key}>
             <input type="checkbox"
                 onChange={() => {
                     if (!checked()) {
