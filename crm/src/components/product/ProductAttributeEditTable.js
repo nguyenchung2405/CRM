@@ -60,7 +60,7 @@ export default function ProductAttributeEditTable() {
     }) => {
         const inputNode = <Input />;
         return (
-            <td {...restProps}>
+            <td {...restProps} key={uuidv4()}>
                 {editing ? (
                     <Form.Item
                         name={dataIndex}
