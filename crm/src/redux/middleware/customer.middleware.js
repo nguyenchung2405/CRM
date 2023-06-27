@@ -64,10 +64,14 @@ function* updateCustomer(payload){
 };
 
 function* getDetailCustomer(payload){
-    const {client_id} = payload;
-    let result = yield call(getDetailCustomerAPI, client_id);
-    if(result.data.client.length){
-        yield put(setDataCustomer(result.data.client[0]));
+    try {
+        const { client_id } = payload;
+        let result = yield call(getDetailCustomerAPI, client_id);
+        if (result.data.client.length) {
+            yield put(setDataCustomer(result.data.client[0]));
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
