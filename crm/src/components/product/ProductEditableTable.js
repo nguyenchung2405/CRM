@@ -133,11 +133,13 @@ export default function ProductTable() {
         record,
         index,
         children,
+        key,
         ...restProps
     }) => {
         const inputNode = () => {
             if (inputType === "channel_name") {
                 return <Select
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -153,6 +155,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "location_name") {
                 return <Select
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -168,6 +171,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "type_name") {
                 return <Select
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -183,6 +187,7 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "attribute_option_name") {
                 return <Select
+                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -198,6 +203,7 @@ export default function ProductTable() {
                 </Select>
             } else if(inputType === "sub_location_name"){
                 return <Select
+                key={key}
                 showSearch
                 filterOption={(input, option) =>
                     (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -215,7 +221,7 @@ export default function ProductTable() {
             }
         };
         return (
-            <td {...restProps} key={uuidv4()}>
+            <td {...restProps} key={key}>
                 {editing ? (
                     <Form.Item
                         name={dataIndex}

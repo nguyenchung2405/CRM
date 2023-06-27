@@ -371,6 +371,7 @@ export default function TermModalEvent(props) {
                   <label className="term__label">Sản phẩm</label>
                   <Select
                     className="style"
+                    key={uuidv4()}
                     showSearch
                     // placeholder="Chọn sản phẩm"
                     filterOption={(input, option) =>
