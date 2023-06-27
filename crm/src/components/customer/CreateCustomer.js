@@ -354,9 +354,16 @@ export default function CreateCustomer(props) {
                         </>
                       }
                 </div>
-                <div className="client__files">
-                      {renderFiles()}
-                      <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                <div className="client__files" key={uuidv4()}>
+                      {
+                        client_id && typeof +client_id === "number"
+                        ? 
+                        <>
+                        {renderFiles()}
+                        <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                        </>
+                        : <></>
+                      }
                 </div>
             </div>
             <div className="contract__service__footer">
