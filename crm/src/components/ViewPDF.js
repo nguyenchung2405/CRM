@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'antd';
 export default function ViewPDF(props) {
 
-    const {pdf, showModal, setIsShowModal} = props;
+    const {pdf, showModal, setIsShowModal, key} = props;
 
     const handleOk = () => {
       setIsShowModal(false);
@@ -12,7 +12,7 @@ export default function ViewPDF(props) {
     };
 
     return (
-        <Modal className="modal__hidden" open={showModal} onOk={handleOk} onCancel={handleCancel} footer={null} closable={false}
+        <Modal key={key} className="modal__hidden" open={showModal} onOk={handleOk} onCancel={handleCancel} footer={null} closable={false}
         style={{
             top: 0,
           }} >

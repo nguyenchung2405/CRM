@@ -217,7 +217,7 @@ export default function TermModalEvent(props) {
 
   const renderOptionProduct = ()=>{
     return productList?.map((item)=>{
-      return <Option value={item.id}>{item.name}</Option>
+      return <Option key={item.id} value={item.id}>{item.name}</Option>
     });
   }
 

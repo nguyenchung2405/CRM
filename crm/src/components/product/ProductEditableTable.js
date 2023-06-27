@@ -234,6 +234,7 @@ export default function ProductTable() {
                                 message: `Please Input ${title}!`,
                             },
                         ]}
+                        key={uuidv4()}
                     >
                         {inputNode()}
                     </Form.Item>

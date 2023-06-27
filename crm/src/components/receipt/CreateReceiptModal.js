@@ -161,6 +161,7 @@ export default function CreateReceiptModal(props) {
             data={item}
             setMultiSelect2={setMultiSelect2}
             multiSelect2={multiSelect2}
+            key={uuidv4()}
             />
         });
         let accOfContract = acceptanceListInReceiptEvent.map(item => {
@@ -170,6 +171,7 @@ export default function CreateReceiptModal(props) {
             data={item}
             setMultiSelect={setMultiSelect}
             multiSelect={multiSelect}
+            key={uuidv4()}
             />
         })
         return accOfEvent.concat(accOfContract)
@@ -275,7 +277,7 @@ export default function CreateReceiptModal(props) {
                         <div className="modal__field field__select width_525" key={uuidv4()}>
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
-                                <div className="acceptance__list">
+                                <div className="acceptance__list" key={uuidv4()}>
                                     {renderAccListForEvent()}
                                 </div>
                             </div>
@@ -347,7 +349,7 @@ export default function CreateReceiptModal(props) {
                         <div className="modal__field field__select width_525" key={uuidv4()}>
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
-                                <div className="acceptance__list">
+                                <div className="acceptance__list" key={uuidv4()}>
                                     {renderAccList()}
                                 </div>
                             </div>
