@@ -11,6 +11,7 @@ import pdf from "../../img/pdf.png";
 import {FcImageFile} from "react-icons/fc"
 import ViewDoc from '../ViewDoc';
 import word from "../../img/doc.png"
+import {v4 as uuidv4} from "uuid"
 
 function convertLegacyProps(data){
     try {
@@ -78,6 +79,7 @@ export default function ContractRight(props) {
       record,
       index,
       children,
+      key,
       ...restProps
     }) => {
       const inputNode = inputType === 'file' ?
@@ -96,7 +98,7 @@ export default function ContractRight(props) {
         }
       }
       return (
-        <td {...restProps}>
+        <td {...restProps} key={key}>
           {editing ? (
             <Form.Item
               name={dataIndex}
@@ -204,17 +206,20 @@ export default function ContractRight(props) {
         {
           editable: true,
           dataIndex: "from_date",
-          title: "Ngày đăng"
+          title: "Ngày đăng",
+          key: uuidv4()
         },
         {
             editable: true,
             dataIndex: "desc",
-            title: "Mô tả"
+            title: "Mô tả",
+            key: uuidv4()
         },
         {
             editable: true,
             dataIndex: "file",
             title: "File",
+            key: uuidv4(),
             render: (_,record)=>{
               if(record.file?.includes("doc") || record.file?.includes("docx")){
                 // return <a className="dowload__file" href={uri_file + record.file}>Tải file word</a>
@@ -237,6 +242,7 @@ export default function ContractRight(props) {
         },
         {
             className: "thaoTac",
+            key: uuidv4(),
             render: (_, record) => {
               const editable = isEditing(record);
               return editable ? (
