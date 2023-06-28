@@ -2,7 +2,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { GET_GROUP_CHANNEL,UPDATE_SUB_CHANEL,DELETE_SUB_CHANEL, CREATE_SUB_CHANEL,GET_SUB_CHANAL } from "../../title/title";
 import { getGroupChannelAPI,updateGroupSubChannelAPI,deleteGroupSubChannelAPI,createGroupSubChannelAPI, getGroupSubChannelAPI } from "../API/groupChannelAPI";
-import { setGroupChannelList,setGroupChannelSubList,setUpdateChanelSubList, setCreateChanelSubList } from "../features/groupChannelSlice";
+import { setGroupChannelList,setGroupChannelSubList,setUpdateChanelSubList, setCreateChanelSubList, setDeleteChanelSubList } from "../features/groupChannelSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { message } from "antd";
 // import { setMessage } from "../features/messageSlice";
@@ -25,7 +25,7 @@ function* updateGroupSubChannel(payload){
         const { data } = payload;
         const resuft = yield call(updateGroupSubChannelAPI,data)
         yield put(setUpdateChanelSubList(resuft))
-        
+        message.success("Chỉnh sửa thành công")
          
     } catch (error) {
         console.log(error);
@@ -35,8 +35,9 @@ function* updateGroupSubChannel(payload){
 
 function* deleteGroupSubChannel(payload){
     const { data } = payload
-    const resuft = yield call(deleteGroupSubChannelAPI,data)
-
+    const resuft = yield call(deleteGroupSubChannelAPI,data);
+    message.success("Xóa thành công");
+    yield put(setDeleteChanelSubList(data))
 }   
 
 function* createGroupSubChannel(payload){
