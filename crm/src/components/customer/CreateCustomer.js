@@ -8,7 +8,7 @@ import ViewPDF from '../ViewPDF';
 import SelectType from './SelectType';
 import {v4 as uuidv4} from "uuid"
 
-export default function CreateCustomer(props) {
+export default function CreateCustomer() {
 
     let uri = checkMicroFe() === true ? "/contract-service" : "";
     let uri_file = checkMicroFe() === true ? 
@@ -192,7 +192,7 @@ export default function CreateCustomer(props) {
     } 
 
     const renderInforBusiness = ()=>{
-        return <div className={!valueRadio ? "showInforBusiness" : ""}>
+        return <div className={!valueRadio ? "showInforBusiness" : ""} key={uuidv4()}>
           <div className="modal__two__field">
             <div className="field__input width__241">
                 <input type="text" name="representative" 
@@ -258,38 +258,38 @@ export default function CreateCustomer(props) {
    
   return (
     <div className="modal__customer content create__customer">
-        <div>
-            <Radio.Group 
-            onChange={handleChangeRadio} 
-            value={valueRadio} >
-                <Radio value={false}>Cá nhân</Radio>
-                <Radio value={true}>Doanh nghiệp</Radio>
-            </Radio.Group>
-            <div className="modal__content">
-                <div className="modal__two__field">
-                    <div className="field__input width__241">
-                        <input type="text" name="name" 
-                        value={valueOfField("name")}
-                        onChange={handleChangeInput} />
-                        <label>Tên khách hàng</label>
-                    </div>
-                    <div className="field__input width__241">
-                        <input type="text" name="brief_name" 
-                        value={valueOfField("brief_name")}
-                        onChange={handleChangeInput} />
-                        <label>Tên viết tắt</label>
-                    </div>
-                </div>
-                <div className="modal__field__select">
-                    <label>Loại khách hàng</label>
-                    <SelectType list={customerTypeList} valueForm={valueForm} setValueForm={setValueForm} />
-                </div>
-                <div className="modal__field__select">
-                    <label>Loại ngành nghề</label>
-                    <SelectType list={jobTypeList} mode="multiple" valueForm={valueForm} setValueForm={setValueForm} />
-                    {/** <SelectType list={jobTypeList} mode="tags" valueForm={valueForm} setValueForm={setValueForm} /> */}
-                </div>
-                {/**
+      <div>
+        <Radio.Group
+          onChange={handleChangeRadio}
+          value={valueRadio} >
+          <Radio value={false}>Cá nhân</Radio>
+          <Radio value={true}>Doanh nghiệp</Radio>
+        </Radio.Group>
+        <div className="modal__content">
+          <div className="modal__two__field">
+            <div className="field__input width__241">
+              <input type="text" name="name"
+                value={valueOfField("name")}
+                onChange={handleChangeInput} />
+              <label>Tên khách hàng</label>
+            </div>
+            <div className="field__input width__241">
+              <input type="text" name="brief_name"
+                value={valueOfField("brief_name")}
+                onChange={handleChangeInput} />
+              <label>Tên viết tắt</label>
+            </div>
+          </div>
+          <div className="modal__field__select">
+            <label>Loại khách hàng</label>
+            <SelectType list={customerTypeList} valueForm={valueForm} setValueForm={setValueForm} />
+          </div>
+          <div className="modal__field__select">
+            <label>Loại ngành nghề</label>
+            <SelectType list={jobTypeList} mode="multiple" valueForm={valueForm} setValueForm={setValueForm} />
+            {/** <SelectType list={jobTypeList} mode="tags" valueForm={valueForm} setValueForm={setValueForm} /> */}
+          </div>
+          {/**
                   <div className="modal__field">
                         <input type="text" name="business_type"
                         value={valueOfField("business_type")}
@@ -298,83 +298,83 @@ export default function CreateCustomer(props) {
                     <label className="customer__select__label">Loại ngành nghề</label>
                 </div>
               */}
-                <div className="modal__field">
-                    <input type="text" name="address" 
-                    value={valueOfField("address")}
-                    onChange={handleChangeInput} />
-                    <label>Địa chỉ</label>
-                </div>
-                <div className="modal__field">
-                    <input type="text" name="tax_number" 
-                    value={valueOfField("tax_number")}
-                    onChange={handleChangeInput} />
-                    <label>Mã số thuế</label>
-                </div>
-                <div className="modal__field">
-                    <input type="text" name="phone" 
-                    value={valueOfField("phone")}
-                    onBlur={regexValue}
-                    onChange={handleChangeInput} />
-                    <label>Số điện thoại</label>
-                    {validateForm?.phone ? showRemind("phone") : ""}
-                </div>
-                <div className="modal__field">
-                    <input type="text" name="email" 
-                    value={valueOfField("email")}
-                    onBlur={regexValue}
-                    onChange={handleChangeInput} />
-                    <label>Email</label>
-                    {validateForm?.email ? showRemind("email") : ""}
-                </div>
-                { renderInforBusiness() }
-                <div className="modal__upload">
-                    <span>Tài liệu liên quan</span>
-                    {client_id && typeof +client_id === "number"
-                    ? ""
-                    :   <>
-                              <label htmlFor="upload">
-                              <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M5 11L11 11" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round"/>
-                                  <path d="M5 7L9 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round"/>
-                                  <path d="M5 15L9 15" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round"/>
-                                  <path d="M15 11V12C15 13.8613 15 14.7919 14.7553 15.5451C14.2607 17.0673 13.0673 18.2607 11.5451 18.7553C10.7919 19 9.86128 19 8 19V19C6.13872 19 5.20808 19 4.45492 18.7553C2.93273 18.2607 1.73931 17.0673 1.24472 15.5451C1 14.7919 1 13.8613 1 12V7C1 6.07099 1 5.60649 1.06156 5.21783C1.40042 3.07837 3.07837 1.40042 5.21783 1.06156C5.60649 1 6.07099 1 7 1V1" stroke="#CCCCCC" strokeWidth="2"/>
-                                  <path d="M14 1L14 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round"/>
-                                  <path d="M17 4L11 4" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round"/>
-                              </svg>
-                              <br/>
-                              <span>Tải tài liệu</span>
-                          </label>  
-                          <input id="upload" type="file" 
-                          multiple 
-                          accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                          onChange={e => {
-                                let files = e.target.files;
-                                setValueForm({...valueForm, files})
-                          }} /> 
-                        </>
-                      }
-                </div>
-                <div className="client__files" key={uuidv4()}>
-                      {
-                        client_id && typeof +client_id === "number"
-                        ? 
-                        <>
-                        {renderFiles()}
-                        <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
-                        </>
-                        : <></>
-                      }
-                </div>
-            </div>
-            <div className="contract__service__footer">
-            <button type="button" className="ant-btn ant-btn-default btn__cancel" onClick={handleCancel}>
-              <span>Hủy</span>
-            </button>
-            <button type="button" className="ant-btn ant-btn-default btn__add" onClick={handleOk} >
-              <span>{ window.location.href.includes("/customer/create") ? "Thêm" : "Cập nhật"}</span>
-            </button> 
+          <div className="modal__field">
+            <input type="text" name="address"
+              value={valueOfField("address")}
+              onChange={handleChangeInput} />
+            <label>Địa chỉ</label>
+          </div>
+          <div className="modal__field">
+            <input type="text" name="tax_number"
+              value={valueOfField("tax_number")}
+              onChange={handleChangeInput} />
+            <label>Mã số thuế</label>
+          </div>
+          <div className="modal__field">
+            <input type="text" name="phone"
+              value={valueOfField("phone")}
+              onBlur={regexValue}
+              onChange={handleChangeInput} />
+            <label>Số điện thoại</label>
+            {validateForm?.phone ? showRemind("phone") : ""}
+          </div>
+          <div className="modal__field">
+            <input type="text" name="email"
+              value={valueOfField("email")}
+              onBlur={regexValue}
+              onChange={handleChangeInput} />
+            <label>Email</label>
+            {validateForm?.email ? showRemind("email") : ""}
+          </div>
+          {renderInforBusiness()}
+          <div className="modal__upload">
+            <span>Tài liệu liên quan</span>
+            {client_id && typeof +client_id === "number"
+              ? ""
+              : <>
+                <label htmlFor="upload">
+                  <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 11L11 11" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M5 7L9 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M5 15L9 15" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M15 11V12C15 13.8613 15 14.7919 14.7553 15.5451C14.2607 17.0673 13.0673 18.2607 11.5451 18.7553C10.7919 19 9.86128 19 8 19V19C6.13872 19 5.20808 19 4.45492 18.7553C2.93273 18.2607 1.73931 17.0673 1.24472 15.5451C1 14.7919 1 13.8613 1 12V7C1 6.07099 1 5.60649 1.06156 5.21783C1.40042 3.07837 3.07837 1.40042 5.21783 1.06156C5.60649 1 6.07099 1 7 1V1" stroke="#CCCCCC" strokeWidth="2" />
+                    <path d="M14 1L14 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M17 4L11 4" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  <br />
+                  <span>Tải tài liệu</span>
+                </label>
+                <input id="upload" type="file"
+                  multiple
+                  accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={e => {
+                    let files = e.target.files;
+                    setValueForm({ ...valueForm, files })
+                  }} />
+              </>
+            }
+          </div>
+          <div className="client__files" key={uuidv4()}>
+            {
+              client_id && typeof +client_id === "number"
+                ?
+                <>
+                  {/*renderFiles() */}
+                  <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                </>
+                : <></>
+            }
           </div>
         </div>
+        <div className="contract__service__footer">
+          <button type="button" className="ant-btn ant-btn-default btn__cancel" onClick={handleCancel}>
+            <span>Hủy</span>
+          </button>
+          <button type="button" className="ant-btn ant-btn-default btn__add" onClick={handleOk} >
+            <span>{window.location.href.includes("/customer/create") ? "Thêm" : "Cập nhật"}</span>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
