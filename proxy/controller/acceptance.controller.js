@@ -8,7 +8,7 @@ const createAcceptance = async (req, res)=>{
         let newData = {
             ...req.body,
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
-            "completed_evidences": req.body.completed_evidences.split("\r\n").map(item => item).concat(req.files.map(file => file.path)),
+            "completed_evidences": req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path)),
         };
         // console.log("new data", newData)
         const result = await axios({
@@ -35,7 +35,7 @@ const createEventAcceptance = async (req, res)=>{
         let newData ={
             ...req.body,
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
-            "completed_evidences": req.body.completed_evidences.split("\r\n").map(item => item).concat(req.files.map(file => file.path)),
+            "completed_evidences": req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path)),
             contract_IDs: req.body.contract_IDs.split(",").map(item => +item),
             sub_contract_IDs: []
         };

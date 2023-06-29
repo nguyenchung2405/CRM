@@ -186,7 +186,7 @@ export default function CreateReceiptModal(props) {
     const renderContentOFModal = ()=>{
         if(dataToCreateModal.event_id){
             return <>
-                <div className="modal__field field__select" key={uuidv4()}>
+                <div className="modal__field field__select">
                     <div>
                         <label className="term__label">Danh sách hợp đồng</label>
                         <Select
@@ -216,7 +216,7 @@ export default function CreateReceiptModal(props) {
                         </Select>
                     </div>
                 </div>
-                <div className="modal__field field__select" key={uuidv4()}>
+                <div className="modal__field field__select">
                     <div>
                         <label className="term__label">Ngày quyết toán</label>
                         <DatePicker
@@ -245,7 +245,7 @@ export default function CreateReceiptModal(props) {
                         />
                     </div>
                 </div>
-                <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
+                <div className="modal__field field__select modal__report__upload">
                     <div className="modal__field">
                         <input type="text"
                             name="total_value"
@@ -261,7 +261,7 @@ export default function CreateReceiptModal(props) {
                 {!dataToCreateModal.isUpdate
                     ?
                     <>
-                        <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
+                        <div className="modal__field field__select modal__report__upload">
                             <div className="modal__field">
                                 <input type="text"
                                     name="delay_payment"
@@ -274,10 +274,10 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        <div className="modal__field field__select width_525" key={uuidv4()}>
+                        <div className="modal__field field__select width_525">
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
-                                <div className="acceptance__list" key={uuidv4()}>
+                                <div className="acceptance__list">
                                     {renderAccListForEvent()}
                                 </div>
                             </div>
@@ -288,7 +288,7 @@ export default function CreateReceiptModal(props) {
             </>
         } else {
             return <>
-                <div className="modal__field field__select" key={uuidv4()}>
+                <div className="modal__field field__select">
                     <div>
                         <label className="term__label">Ngày quyết toán</label>
                         <DatePicker
@@ -317,7 +317,7 @@ export default function CreateReceiptModal(props) {
                         />
                     </div>
                 </div>
-                <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
+                <div className="modal__field field__select modal__report__upload">
                     <div className="modal__field">
                         <input type="text"
                             name="total_value"
@@ -333,7 +333,7 @@ export default function CreateReceiptModal(props) {
                 {!dataToCreateModal.isUpdate
                     ?
                     <>
-                        <div className="modal__field field__select modal__report__upload" key={uuidv4()}>
+                        <div className="modal__field field__select modal__report__upload">
                             <div className="modal__field">
                                 <input type="text"
                                     name="delay_payment"
@@ -346,10 +346,10 @@ export default function CreateReceiptModal(props) {
                                 <label>Số ngày hết hạn</label>
                             </div>
                         </div>
-                        <div className="modal__field field__select width_525" key={uuidv4()}>
+                        <div className="modal__field field__select width_525">
                             <div>
                                 <label className="term__label">Danh sách đã nghiệm thu</label>
-                                <div className="acceptance__list" key={uuidv4()}>
+                                <div className="acceptance__list">
                                     {renderAccList()}
                                 </div>
                             </div>

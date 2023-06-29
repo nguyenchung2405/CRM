@@ -74,7 +74,7 @@ export default function ModalPaymentInfor(props) {
               <div className="modal__content create__contract__content">
                   <div className="create__contract__term border_bottom_3px">
                       <Table
-                          className="term__table"
+                          className="term__table evidence__table"
                           dataSource={data}
                           pagination={false}
                       >

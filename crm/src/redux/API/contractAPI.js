@@ -66,7 +66,7 @@ export async function createContractAPI(data) {
                 begin_date: convertBeginDate,
                 end_date: convertEndDate,
                 total: data.contract.total / 1000000,
-                discount_over_contract: data.contract.discount_over_contract / 1000000,
+                discount_by_percent: data.contract.discount_by_percent,
             },
             request: [...newRequest],
             payment: [...newPayment]
@@ -145,7 +145,7 @@ export async function updateContractiAPI(data){
             begin_date: convertBeginDate,
             end_date: convertEndDate,
             total: data.total / 1000000,
-            discount_over_contract: data.discount_over_contract / 1000000
+            discount_by_percent: data.discount_by_percent
         };
         const result = await axios({
             url: `${local}/api/contract/update`,
@@ -359,5 +359,72 @@ export async function importFileExcelAPI(data){
     } catch (error) {
         console.log(error)
         return "Thất bại"
+    }
+}
+
+export async function getContractTypeAPI(data){
+    try {
+        let {page, page_size} = data;
+        const result = await axios({
+            url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}`,
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function createContractTypeAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/type/create`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function updateContractTypeMiddlewareAPI(data){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/type/update`,
+            method: "PUT",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+            data
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function deleteContractTypeAPI(id){
+    try {
+        const result = await axios({
+            url: `${local}/api/contract/type/delete?id=${id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + TOKEN
+            },
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
     }
 }

@@ -39,7 +39,7 @@ export default function CreateContract() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({deal_out: true, payment_type: "Nhiều đợt", pay_before_run: true, discount_over_contract: 0});
+  const [valueForm, setValueForm] = useState({VAT: 10, payment_type: "Nhiều đợt", pay_before_run: true, discount_by_percent: 0});
   const [soTien, setSoTien] = useState(null)
   const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
@@ -91,10 +91,12 @@ export default function CreateContract() {
   }, [contract_id])
 
   useEffect(() => {
-    setValueForm({
-      ...valueForm,
-      total: showGiaTriThucHien("total") * 1000000
-    })
+    if(!contract_id){
+      setValueForm({
+        ...valueForm,
+        total: showGiaTriThucHien("total") * 1000000
+      })
+    }
   }, [contractRequest])
 
   useEffect(() => {
@@ -611,9 +613,11 @@ export default function CreateContract() {
           handleChangeValue={handleChangeValue}
           valueOfField={valueOfField}
           valueForm={valueForm}
+          setValueForm={setValueForm}
           showGiaTriThucHien={showGiaTriThucHien}
           setUnlockInput={setUnlockInput}
           unlockInput={unlockInput}
+          showGiaTriGoc={showGiaTriGoc}
         />
         <ContractPayment
           dotThanhToan={dotThanhToan}

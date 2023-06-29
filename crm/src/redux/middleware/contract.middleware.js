@@ -1,11 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_REQUEST, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, SELECT_REQUEST_GENERAL, UPDATE_CONTRACT, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_CONTRACT_TYPE, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
-import { createContractAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, getSelectRequestGeneralAPI, importFileExcelAPI, selectRequestGeneralAPI, updateContractiAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
-import { addContractRequest, addPayment, deleteContractRequest, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, updateContractRequest, updateRequestDetail } from "../features/contractSlice";
+import { createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, importFileExcelAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
+import { addContractRequest, addPayment, deleteContractRequest, removeContractType, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
-import { setMessage } from "../features/messageSlice";
 import { addPaymentToReceiptList, updatePaymentToReceiptList } from "../features/receiptSlice";
 import {message} from "antd"
 
@@ -225,6 +224,56 @@ function* importFileExcel(payload){
     }
 }
 
+function* getContractType(payload){
+    try {
+        const result = yield call(getContractTypeAPI, payload.data);
+        let { contract_type, total_data } = result.data;
+        yield put(setContractTypeList(contract_type))
+        yield put(setTotalContractType(total_data))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* createContractType(payload){
+    try {
+        const result = yield call(createContractTypeAPI, payload.data);
+        if(result.data?.contract_type[0]?.id){
+            message.success("Tạo loại hợp đồng thành công.")
+            yield put(updateContractType({contract_type_id: payload.data.id, data: result.data.contract_type[0]}))
+        } else {
+            message.error("Tạo loại hợp đồng thất bại.")
+            yield put(removeContractType(payload.data.id))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* updateContractTypeMiddleware(payload){
+    try {
+        const result = yield call(updateContractTypeMiddlewareAPI, payload.data);
+        console.log(result)
+        // yield put(updateContractType({contract_type_id: payload.data.id, data: result.data}))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* deleteContractType(payload){
+    try {
+        const result = yield call(deleteContractTypeAPI, payload.contract_type_id);
+        if(result.data?.result && result.data?.data === "Xóa thành công"){
+            message.success("Xóa loại hợp đồng thành công.")
+            yield put(removeContractType(payload.contract_type_id))
+        } else {
+            message.error("Xóa loại hợp đồng thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -247,4 +296,9 @@ export default function* contractMiddleware() {
     yield takeLatest(GET_REQUEST_OF_EVENT, getRequestOfEvent)
     // Import Export file Excel
     yield takeLatest(IMPORT_FILE, importFileExcel)
+    // Contract Type
+    yield takeLatest(GET_CONTRACT_TYPE, getContractType)
+    yield takeLatest(CREATE_CONTRACT_TYPE, createContractType)
+    yield takeLatest(UPDATE_CONTRACT_TYPE, updateContractTypeMiddleware)
+    yield takeLatest(DELETE_CONTRACT_TYPE, deleteContractType)
 }
