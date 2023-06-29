@@ -12,13 +12,14 @@ import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
-import { setMessage } from "../../redux/features/messageSlice";
 import RequestEvent from "./RequestEvent";
 import ContractHistory from "./ContractHistory";
 import { CiImport, CiExport } from "react-icons/ci"
 import axios from "axios";
 import FileSaver from "file-saver"
 import ContractPayment from "./ContractPayment";
+import InforCustomer from "./InforCustomer";
+import ContractValue from "./ContractValue";
 
 export default function CreateContract() {
 
@@ -289,6 +290,8 @@ export default function CreateContract() {
         return new Intl.NumberFormat("vi-VN").format(total * 1000000);
       } else if(mode === "number"){
         return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
+      } else if(mode === "total_contract"){
+        return new Intl.NumberFormat("vi-VN").format(valueForm.total);
       } else {
         return total;
       }
@@ -403,149 +406,16 @@ export default function CreateContract() {
             </div>
           </div>
         </div>
-        <div className="create__contract__inforCustomer border_bottom_3px">
-          <p>Thông tin khách hàng</p>
-          <div className="field__input field__flex">
-            <div className="field__input_2">
-              <label>Tên khách hàng</label>
-              <Select
-                className="style"
-                showSearch
-                showArrow={false}
-                placeholder="Tên khách hàng"
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(value) => {
-                  handleChangeValue("client_ID", +value)
-                }}
-                value={valueOfField("client_ID")}
-              >
-                {renderOption()}
-              </Select>
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11 7.32739V14.6537"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M14.6667 10.9904H7.33337"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M15.6857 1H6.31429C3.04762 1 1 3.31208 1 6.58516V15.4148C1 18.6879 3.0381 21 6.31429 21H15.6857C18.9619 21 21 18.6879 21 15.4148V6.58516C21 3.31208 18.9619 1 15.6857 1Z"
-                  stroke="#35794A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <div className="field__input_2">
-              <label>Người đầu mối</label>
-              <Select
-                className="style"
-                showSearch
-                showArrow={false}
-                placeholder="Người đầu mối"
-                filterOption={(input, option) =>
-                  (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                }
-                onChange={(value, option) => {
-                  setValueForm({
-                    ...valueForm,
-                    owner: +value,
-                    owner_name: option.children
-                  })
-                }}
-                value={valueOfField("owner")}
-              >
-                {renderOptionOwner()}
-              </Select>
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("tax_number")}
-              />
-              <label>Mã số thuế</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("phone")}
-              />
-              <label>Số điện thoại</label>
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("address")}
-              />
-              <label>Địa chỉ</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("email")}
-              />
-              <label>Email</label>
-            </div>
-          </div>
-          <div className="field__input field__flex two__field">
-            <div className="contract__field">
-              <input
-                className="style not__allow"
-                type="text"
-                disabled
-                value={valueOfCustomer("daiDien")}
-              />
-              <label>Người đại diện và chức danh</label>
-            </div>
-            <div className="contract__field">
-              <input
-                className="style"
-                type="text"
-                disabled
-                value=""
-              // value={()=>{
-              //   if(customerInfor["representative"] && customerInfor["represent_position"]){
-              //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
-              //   } else {
-              //     return null;
-              //   }
-              // }}
-              />
-              <label>Người liên hệ và chức danh</label>
-            </div>
-          </div>
-        </div>
+        <InforCustomer
+          renderOption={renderOption}
+          handleChangeValue={handleChangeValue}
+          valueOfField={valueOfField}
+          setValueForm={setValueForm}
+          valueForm={valueForm}
+          renderOptionOwner={renderOptionOwner}
+          valueOfCustomer={valueOfCustomer}
+          history={history}
+        />
         {valueForm.event_ID ?
           <RequestEvent
             productListFull={productListFull}
@@ -737,82 +607,14 @@ export default function CreateContract() {
             customerInfor={customerInfor}
           />
         </div>
-        <div className="create__contract__value border_bottom_3px">
-          <p>Giá trị hợp đồng</p>
-          <div className="field__input_3">
-            <div className="contract__field">
-              <input className="style" type="text"
-                name="discount_over_contract"
-                // disabled
-                onChange={(e) => {
-                  let { value, name } = e.target;
-                  handleChangeValue(name, +value)
-                }}
-                value={valueOfField("discount_over_contract")}
-              />
-              <label>Chiết khấu (VNĐ)</label>
-            </div>
-            <div className="contract__field">
-              <input className="style" type="text"
-                name="VAT"
-                // onChange={(e) => {
-                //   let { value, name } = e.target;
-                //   handleChangeValue(name, +value)
-                // }}
-                value={valueForm.original_total ? showGiaTriGoc("number") : showGiaTriGoc()}
-                disabled
-              />
-              <label>Giá trị gốc</label>
-            </div>
-            <div className="contract__field">
-              <input className="style" type="text"
-                name="VAT"
-                // onChange={(e) => {
-                //   let { value, name } = e.target;
-                //   handleChangeValue(name, +value)
-                // }}
-                value={valueForm.discount_total ? showGiaTriThucHien("number") : showGiaTriThucHien()}
-                disabled
-              />
-              <label>Giá trị thực hiện</label>
-            </div>
-            <div className="contract__field">
-              <Popconfirm
-                title="Bạn có muốn chỉnh sửa không?"
-                onConfirm={() => { setUnlockInput(false) }}
-                // onCancel={cancel}
-                okText="Có"
-                cancelText="Không"
-                disabled={!unlockInput}
-              >
-                <input
-                  className="style"
-                  type="text"
-                  name="total"
-                  onChange={(e) => {
-                    let { value, name } = e.target;
-                    let newValue = value.replaceAll(".", "");
-                    handleChangeValue(name, +newValue)
-                  }}
-                  value={valueOfField("total")}
-                  disabled={unlockInput}
-                />
-                <label className="pink__color">Giá trị hợp đồng</label>
-              </Popconfirm>
-            </div>
-          </div>
-          <div className="contract__value__note">
-            <textarea id="note"
-              name="note"
-              onChange={(e) => {
-                let { value, name } = e.target;
-                handleChangeValue(name, value)
-              }}
-              value={valueOfField("note")}
-            ></textarea>
-            <label>Ghi chú</label>
-          </div>
-        </div>
+        <ContractValue
+          handleChangeValue={handleChangeValue}
+          valueOfField={valueOfField}
+          valueForm={valueForm}
+          showGiaTriThucHien={showGiaTriThucHien}
+          setUnlockInput={setUnlockInput}
+          unlockInput={unlockInput}
+        />
         <ContractPayment
           dotThanhToan={dotThanhToan}
           valueOfField={valueOfField}

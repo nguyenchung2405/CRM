@@ -29,7 +29,7 @@ export default function ContractPayment(props) {
                 <span>Đợt thanh toán {index + 1}</span>
                 <span>{convertDate}</span>
                 <span>{new Intl.NumberFormat("vi-VN").format(payment.total_value)} VNĐ</span>
-                <span>{statusOfPayment}</span>
+                <span>{`${statusOfPayment} ${payment.receipts[0]?.receipt_number ? `(số hóa đơn: ${payment.receipts[0]?.receipt_number})` : ""}`}</span>
             </div>
         })
     }
@@ -74,7 +74,7 @@ export default function ContractPayment(props) {
                   <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("payment_type")} onChange={(e) => { setValueForm({ ...valueForm, payment_type: e.target.value }) }}>
                       <option value="Một đợt">1 đợt</option>
                       <option value="Nhiều đợt">Nhiều đợt</option>
-                      <option value="Theo tháng">Theo thàng</option>
+                      <option value="Theo tháng">Theo tháng</option>
                       <option value="Theo yêu cầu hợp đồng">Theo quyền lợi</option>
                   </select>
               </div>

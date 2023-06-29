@@ -26,8 +26,10 @@ export default function ModalHistory(props) {
         || name === "original_total" || name ==="discount_total")) {
             return new Intl.NumberFormat("vi-VN").format(dataToModal[name] * 1000000)
         }
+        if(dataToModal[name] === null){
+            return ""
+        }
         return dataToModal[name]
-
     }
 
     return (

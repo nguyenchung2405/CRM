@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { local, TOKEN } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
+import {v4 as uuidv4} from "uuid"
 
 export default function ModalPaymentInfor(props) {
 
@@ -116,18 +117,33 @@ export default function ModalPaymentInfor(props) {
                               key="evidence"
                               render={(text) => {
                                   if(text.completed_evidences.length > 0){
-                                    if(text.completed_evidences[0].includes("proxy") || text.completed_evidences.includes("resources")){
-                                        return <FcImageFile className="file" onClick={() => {
-                                            setFile(uri_file + text.completed_evidences)
-                                            setImageVisible(true)
-                                        }} />
-                                    } else {
-                                        return <a 
-                                            href={text.completed_evidences[0]}
-                                            target="_blank"
-                                            rel='noreferrer'
-                                        >Link</a>
-                                    }
+                                    // if(text.completed_evidences[0].includes("proxy") || text.completed_evidences.includes("resources")){
+                                    //     return <FcImageFile className="file" onClick={() => {
+                                    //         setFile(uri_file + text.completed_evidences)
+                                    //         setImageVisible(true)
+                                    //     }} />
+                                    // } else {
+                                    //     return <a 
+                                    //         href={text.completed_evidences[0]}
+                                    //         target="_blank"
+                                    //         rel='noreferrer'
+                                    //     >Link</a>
+                                    // }
+                                    return text.completed_evidences.map(evident => {
+                                        if (evident.includes("proxy") || evident.includes("resources")) {
+                                            return <FcImageFile key={uuidv4()} className="file" onClick={() => {
+                                                setFile(uri_file + evident)
+                                                setImageVisible(true)
+                                            }} />
+                                        } else {
+                                            return <a
+                                                key={uuidv4()}
+                                                href={evident}
+                                                target="_blank"
+                                                rel='noreferrer'
+                                            >Link</a>
+                                        }
+                                    })
                                   } else {
                                     return ""
                                   }
