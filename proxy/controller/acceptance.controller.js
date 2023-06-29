@@ -7,7 +7,8 @@ const createAcceptance = async (req, res)=>{
         // console.log(req.file, req.files);
         let newData = {
             ...req.body,
-            "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
+            // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
+            "completed_evidences": req.body.completed_evidences.split("\r\n").map(item => item).concat(req.files.map(file => file.path)),
         };
         // console.log("new data", newData)
         const result = await axios({
@@ -33,8 +34,10 @@ const createEventAcceptance = async (req, res)=>{
         let { headers: { authorization } } = req;
         let newData ={
             ...req.body,
-            "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
-            contract_IDs: req.body.contract_IDs.split(",").map(item => +item)
+            // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
+            "completed_evidences": req.body.completed_evidences.split("\r\n").map(item => item).concat(req.files.map(file => file.path)),
+            contract_IDs: req.body.contract_IDs.split(",").map(item => +item),
+            sub_contract_IDs: []
         };
         const result = await axios({
             url: `${local}/event/executive_event_detail/update?executive_event_ID=${req.body.detail_id}`,

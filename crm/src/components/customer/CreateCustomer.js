@@ -7,6 +7,11 @@ import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
 import SelectType from './SelectType';
 import {v4 as uuidv4} from "uuid"
+import { FcImageFile } from 'react-icons/fc';
+import ViewDoc from '../ViewDoc';
+import word from "../../img/doc.png"
+import pdf from "../../img/pdf.png";
+import Contacter from './Contacter';
 
 export default function CreateCustomer() {
 
@@ -21,6 +26,8 @@ export default function CreateCustomer() {
     let [valueRadio, setValueRadio] = useState(false);
     let [valueForm, setValueForm] = useState({is_company: false});
     let [isShowModal, setIsShowModal] = useState(false);
+    const [isShowModalWord, setIsShowModalWord] = useState(false);
+    const [imageVisible, setImageVisible] = useState(false);
     let [file, setFile] = useState("");
     let [validateForm, setValidateForm] = useState({email: false, phone: false,represent_phone: false, represent_email: false });
     const {isCreateCustomer, dataCustomer, customerTypeList, jobTypeList} = useSelector(state => state.customerReducer)
@@ -234,23 +241,40 @@ export default function CreateCustomer() {
               <label>Email (người đại diện)</label>
               {validateForm?.represent_email ? showRemind("represent_email") : ""}
           </div>
+          <Contacter />
         </div>
     }
 
     const renderFiles = ()=>{
       if(dataCustomer?.files?.length > 0){
         return dataCustomer?.files?.map(file => {
-          if(file.includes("doc") || file.includes("docx")){
-            return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
-          } else if(file.includes("pdf")) {
-            return <>
-                <button key={uuidv4()} onClick={()=>{
-                  setIsShowModal(true)
-                  setFile(uri_file + file)
-                }}>Xem PDF</button>
-            </>
+          // if(file.includes("doc") || file.includes("docx")){
+          //   return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
+          // } else if(file.includes("pdf")) {
+          //   return <>
+          //       <button key={uuidv4()} onClick={()=>{
+          //         setIsShowModal(true)
+          //         setFile(uri_file + file)
+          //       }}>Xem PDF</button>
+          //   </>
+          // } else {
+          //   return <Image key={uuidv4()} src={uri_file + file} />
+          // }
+          if (file?.includes("doc") || file?.includes("docx")) {
+            return <img key={uuidv4()} className="file" src={word} alt="xem word" onClick={() => {
+              setIsShowModalWord(true)
+              setFile(uri_file + file)
+            }} />
+          } else if (file?.includes("pdf")) {
+            return <img key={uuidv4()} className="file" src={pdf} alt="xem pdf" onClick={() => {
+              setIsShowModal(true)
+              setFile(uri_file + file)
+            }} />
           } else {
-            return <Image key={uuidv4()} src={uri_file + file} />
+            return <FcImageFile key={uuidv4()} className="file" onClick={() => {
+              setFile(uri_file + file)
+              setImageVisible(true)
+            }} />
           }
         }) 
       }
@@ -359,11 +383,24 @@ export default function CreateCustomer() {
               client_id && typeof +client_id === "number"
                 ?
                 <>
-                  {/*renderFiles() */}
-                  <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
+                  {renderFiles()}
                 </>
                 : <></>
             }
+            <ViewDoc showModal={isShowModalWord} setIsShowModal={setIsShowModalWord} word={file} />
+            <Image
+              style={{
+                display: 'none',
+              }}
+              preview={{
+                visible: imageVisible,
+                src: file,
+                onVisibleChange: (value) => {
+                  setImageVisible(value);
+                },
+              }}
+            />
+            <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
           </div>
         </div>
         <div className="contract__service__footer">

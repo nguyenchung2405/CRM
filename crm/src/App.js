@@ -20,6 +20,7 @@ import EventTable from './components/contract/event/EventTable';
 import ReceiptTable from './components/receipt/ReceiptTable';
 import Acceptance from './components/acceptance/Acceptance';
 import EventAcceptance from './components/acceptance/EventAcceptance';
+import ContactTypeTable from './components/contract/ContactTypeTable';
 
 function App() {
   
@@ -49,6 +50,7 @@ function App() {
                 <Route exact path="/crm/receipt" component={ReceiptTable} />
                 <Route exact path="/crm/acceptance/contract" component={Acceptance} />
                 <Route exact path="/crm/acceptance/event" component={EventAcceptance} />
+                <Route exact path="/crm/contract/type" component={ContactTypeTable} />
               </Switch>
             </div>
           </BrowserRouter>

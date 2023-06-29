@@ -797,6 +797,30 @@ div.modal__content .modal__field input:not([value=""]) {
     outline: none;
     border: 1px #CCCCCC solid;
     border-radius: 10px;
+    width: 525px;
+}
+
+div.modal__content .modal__field.modal__report__upload > label {
+    transform: none;
+    position: inherit;
+    padding-left: 9px;
+}
+
+div.modal__content .modal__field textarea {
+    width: 525px;
+    display: block;
+    margin-bottom: 21px;
+    outline: none;
+    max-height: 150px;
+    min-height: 95px;
+    border: 1px #CCCCCC solid;
+    border-radius: 10px;
+    padding: 0 9px 9px 9px;
+}
+
+div.modal__content .modal__field.field__select.modal__report__upload {
+    display: block;
+    text-align: left;
 }
 
 div.modal__content .modal__field input:focus ~ label,
@@ -1134,6 +1158,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     position: relative;
 }
 
+.create__contract .create__contract__inforCustomer .infor__customer .field__input>div.contract__field {
+    margin-top: 20px;
+}
+
 .create__contract .create__contract__inforCustomer .field__input>div.contract__field input {
     margin: 0;
     transition-property: border, border-radius;
@@ -1174,7 +1202,9 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     top: 9px;
 }
 
-.create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2 {
+.create__contract .create__contract__inforCustomer .field__input.field__flex > div.field__input_2,
+.create__contract .create__contract__inforCustomer .field__input.field__flex > div.infor__customer,
+.create__contract .create__contract__inforCustomer .field__input.field__flex > div.infor__owner {
     display: block;
 }
 
@@ -1194,6 +1224,10 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-right: 39px;
     position: relative;
     display: inline-block;
+}
+
+.create__contract__value .field__input_3 .contract__field:last-child {
+    margin-right: 0;
 }
 
 .create__contract__value .field__input_3 .contract__field input {
@@ -1337,13 +1371,24 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 
 .create__contract .create__contract__value .contract__value__note > textarea {
     width: 916px;
-    height: 76px;
-    resize: none;
+    min-height: 76px;
+    max-height: 200px;
+    /* resize: none; */
     border: 1px solid #CCCCCC;
     border-radius: 5px;
     margin-top: 33px;
     padding: 10px 0 0 15px;
     outline: none;
+}
+
+.create__contract .create__contract__value .field__input_3:nth-child(3) {
+    margin-top: 33px;
+}
+
+.create__contract .create__contract__value .field__input_3 {
+    display: flex;
+    max-width: 916px;
+    justify-content: space-between;
 }
 
 .create__contract .create__contract__value .contract__value__note {

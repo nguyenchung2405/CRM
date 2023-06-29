@@ -99,8 +99,37 @@ export default function ContractContentModal(props) {
     }
 
     const renderInput = ()=>{
-        if (valueRadio) {
-            return <input type="file"
+        // if (valueRadio) {
+        //     return <input type="file"
+        //         onChange={e => {
+        //             let files = e.target.files;
+        //             setValueForm({
+        //                 ...valueForm,
+        //                 files
+        //             })
+        //         }}
+        //     />
+        // } else {
+        //     return <input type="text"
+        //         name="completed_evidences"
+        //         value={valueOfField("completed_evidences")}
+        //         onChange={(e) => {
+        //             let { name, value } = e.target;
+        //             handleChangeValue(name, value)
+        //         }}
+        //     />
+        // }
+        return <>
+            <label >Link</label>
+            <textarea
+                name="completed_evidences"
+                value={valueOfField("completed_evidences")}
+                onChange={(e) => {
+                    let { name, value } = e.target;
+                    handleChangeValue(name, value)
+                }}>
+            </textarea>
+            <input type="file"
                 onChange={e => {
                     let files = e.target.files;
                     setValueForm({
@@ -108,17 +137,9 @@ export default function ContractContentModal(props) {
                         files
                     })
                 }}
+                multiple
             />
-        } else {
-            return <input type="text"
-                name="completed_evidences"
-                value={valueOfField("completed_evidences")}
-                onChange={(e) => {
-                    let { name, value } = e.target;
-                    handleChangeValue(name, value)
-                }}
-            />
-        }
+        </>
     }
 
     return (
@@ -216,7 +237,9 @@ export default function ContractContentModal(props) {
                 />
                 : null
             }
-            <div className="modal__field field__select">
+            {
+                /**
+                 <div className="modal__field field__select">
                 <div>
                     <label className="term__label">Ngày nghiệm thu</label>
                     <DatePicker
@@ -245,11 +268,15 @@ export default function ContractContentModal(props) {
                     />
                 </div>
             </div>
+                 */
+            }
             <div className="modal__field field__select modal__report__upload">
+                {/**
                 <Radio.Group onChange={handleChangRadio} value={valueRadio} >
                     <Radio value={false}>Link</Radio>
                     <Radio value={true}>Ảnh</Radio>
                 </Radio.Group>
+                */}
                 { renderInput() }
             </div>
         </div>
