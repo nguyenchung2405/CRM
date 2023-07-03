@@ -358,6 +358,10 @@ img.file, svg.file {
     width: calc(100% - 410px - 240px);
 }
 
+.contract__type__table .table__features .table__features__search__btn {
+    width: auto;
+}
+
 .customer__table .table__features .table__features__search__btn button {
     width: 115px;
     height: 40px;
@@ -657,6 +661,12 @@ div.modal__content {
     text-align: center;
     margin-top: 25px;
     
+}
+
+.evidence__table .evidence {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 div.modal__content .modal__field {
@@ -1081,7 +1091,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-bottom: 20px;
 }
 
-.contract__table .contract__table__loaiHopDong {
+.contract__table .contract__table__loaiHopDong,
+.contract__type__table .contract__type {
     padding-left: 30px;
 }
 

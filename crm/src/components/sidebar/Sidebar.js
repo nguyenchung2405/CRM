@@ -20,10 +20,10 @@ export default function Sidebar() {
 
     const items = [
         getItem("Hợp đồng", "sub5", <BsReceiptCutoff />, [
-            getItem("Quản lý hợp đồng", "11", <FcDepartment />), [
+            getItem("Quản lý hợp đồng", "11", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/contract/type`}>Loại hợp đồng</Link>, "25", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/contract`}>Hợp đồng</Link>, "26", <FcDepartment />),
-            ],
+            ]),
             getItem(<Link to={`${uri}/crm/event`}>Quản lý sự kiện</Link>, "20", <FcDepartment />),
             getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
             getItem("Theo dõi thực hiện quyền lợi", "21", <FcDepartment />, [

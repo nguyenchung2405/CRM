@@ -22,7 +22,7 @@ export default function ModalHistory(props) {
     }
 
     const valueOfField = (name) => {
-        if (dataToModal[name] && (name === "total" || name === "discount_over_contract" 
+        if (dataToModal[name] && (name === "total" || name === "discount_by_percent" 
         || name === "original_total" || name ==="discount_total")) {
             return new Intl.NumberFormat("vi-VN").format(dataToModal[name] * 1000000)
         }
@@ -123,9 +123,9 @@ export default function ModalHistory(props) {
                         <div className="field__input_3">
                             <div className="contract__field">
                                 <input className="style" type="text"
-                                    name="discount_over_contract"
+                                    name="discount_by_percent"
                                     disabled
-                                    value={valueOfField("discount_over_contract")}
+                                    value={valueOfField("discount_by_percent")}
                                 />
                                 <label>Chiết khấu (VNĐ)</label>
                             </div>

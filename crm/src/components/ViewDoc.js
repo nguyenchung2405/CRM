@@ -10,15 +10,16 @@ export default function ViewDoc(props) {
     const { word, showModal, setIsShowModal } = props;
     const panel = useRef(null)
     const [base64URL, setBase64URL] = useState();
-    
+ 
     useEffect(() => {
         if(base64URL !== "" && base64URL?.length > 0){
             fetch(base64URL).then((res) => {
                 const template = res.arrayBuffer();
                 doc
                 .renderAsync(template, panel.current)
-                .then((x) => console.log("docx: finished"));
-                // console.log("buffer: ", template);
+                .then((x) => console.log("docx: finished"))
+                .catch(err => console.log(err))
+                // console.log("buffer: ", template, panel.current)
             });
         }
       }, [base64URL]);

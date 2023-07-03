@@ -420,6 +420,80 @@ const importFileExcel = async (req, res)=>{
     }
 }
 
+const getContractType = async (req, res) => {
+    try {
+        let { headers: { authorization } } = req;
+        let {page, page_size} = req.query;
+        const result = await axios({
+            url: `${local}/contract/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const createContractType = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/contract/type/create`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const updateContractType = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        // const result = await axios({
+        //     url: `${local}/`
+        // })
+    } catch (error) {
+        
+    }
+}
+
+const deleteContractType = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { id } = req.query;
+        const result = await axios({
+            url: `${local}/contract/type/disable?id=${id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -439,5 +513,9 @@ module.exports = {
     updatePayment,
     getExportFile,
     importFileExcel,
-    getInforPayment
+    getInforPayment,
+    getContractType,
+    createContractType,
+    updateContractType,
+    deleteContractType
 }

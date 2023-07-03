@@ -1,5 +1,5 @@
 const express = require("express");
-const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment } = require("../controller/contract.controller");
+const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType } = require("../controller/contract.controller");
 const { uploadFileDetail, uploadFileExcelContract } = require("../middleware/upload");
 const contractRouter = express.Router();
 
@@ -26,6 +26,11 @@ contractRouter.get("/payment-infor", getInforPayment)
 contractRouter.get("/get-file", getFile)
 contractRouter.get("/request-get-file", getExportFile)
 contractRouter.post("/import-file-excel", uploadFileExcelContract().single("file") , importFileExcel)
+// Contract Type
+contractRouter.get("/type/get-list", getContractType)
+contractRouter.post("/type/create", createContractType)
+contractRouter.put("/type/update", updateContractType)
+contractRouter.delete("/type/delete", deleteContractType)
 
 module.exports = {
     contractRouter

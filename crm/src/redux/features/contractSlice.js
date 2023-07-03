@@ -9,6 +9,7 @@ const initialState = {
     keyOfDetailJustAdd: "",
     keyOfRequestJustAdd: "",
     ownerList: [],
+    totalContractType: 0
 };
 
 const contractSlice = createSlice({
@@ -80,10 +81,26 @@ const contractSlice = createSlice({
         addPayment: (state, action)=>{
             state.contractDetail.payments.push(action.payload)
         },
+        setTotalContractType: (state, action)=>{
+            state.totalContractType = action.payload;
+        },
+        addContractType: (state, action)=>{
+            state.contractTypeList.unshift(action.payload)
+        },
+        updateContractType: (state, action)=>{
+            let { contract_type_id, data } = action.payload;
+            let indexOfType = state.contractTypeList.findIndex( type => type.id === contract_type_id);
+            state.contractTypeList[indexOfType] = data;
+        },
+        removeContractType: (state, action)=>{
+            let indexType = state.contractTypeList.findIndex(type => type.id === action.payload);
+            state.contractTypeList.splice(indexType, 1);
+        }
     }
 });
 
 export const { setContractList, setContractTypeList, setContractDetail, addContractRequest, updateContractRequest, 
 deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd, setKeyOfDetailJustAdd, 
-updateRequestDetail, setContractRequest, setOwnerList, addPayment } = contractSlice.actions;
+updateRequestDetail, setContractRequest, setOwnerList, addPayment, setTotalContractType, addContractType, updateContractType,
+removeContractType } = contractSlice.actions;
 export default contractSlice.reducer;

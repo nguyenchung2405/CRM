@@ -4,15 +4,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FcPlus } from "react-icons/fc"
 import { MdDelete, MdOutlineModeEditOutline } from 'react-icons/md';
 import {v4 as uuidv4} from "uuid";
-import { addProductAttribute, removeProductAttribute } from '../../redux/features/productSlice';
-import { CREATE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_ATTRIBUTE, GET_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_ATTRIBUTE } from '../../title/title';
+import { removeProductAttribute } from '../../redux/features/productSlice';
+import { CREATE_CONTRACT_TYPE, DELETE_CONTRACT_TYPE, GET_CONTRACT_TYPE, UPDATE_CONTRACT_TYPE } from '../../title/title';
+import { addContractType } from '../../redux/features/contractSlice';
 
 function convertAttributeData(data){
     try {
-        return data.map( att =>{
+        return data.map( type =>{
             return {
-                key: att.id,
-                name: att.name
+                key: type.id,
+                ...type
             }
         } )
     } catch (error) {
@@ -24,9 +25,9 @@ export default function ContactTypeTable() {
 
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
-    const [pageNumber, setPageNumber] = useState(5);
-    const { productAttribute, totalProductAttribute } = useSelector(state => state.productReducer);
-    const [search, setSearch] = useState(null);
+    const [pageNumber, setPageNumber] = useState(10);
+    const { contractTypeList, totalContractType } = useSelector(state => state.contractReducer);
+    const [search, setSearch] = useState("");
     // edit table
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
@@ -36,17 +37,17 @@ export default function ContactTypeTable() {
     const isEditing = (record) => record.key === editingKey;
 
     useEffect(()=>{
-        setData(convertAttributeData(productAttribute))
-    }, [productAttribute])
+        setData(convertAttributeData(contractTypeList))
+    }, [contractTypeList])
 
     useEffect(()=>{
         if(search === ""){
             dispatch({
-                type: GET_PRODUCT_ATTRIBUTE,
-                data: { page: 1, page_size: 1000 }
+                type: GET_CONTRACT_TYPE,
+                data: { page: page, page_size: pageNumber }
             })
         }
-    }, [search])
+    }, [search, page, pageNumber])
 
     const EditableCell = ({
         editing,
@@ -104,8 +105,8 @@ export default function ContactTypeTable() {
 
     const save = async (key) => {
         try {
-            const attribute = form.getFieldsValue();
-            attribute.id = editingKey;
+            const contractType = form.getFieldsValue();
+            contractType.id = editingKey;
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => key === item.key);
@@ -117,13 +118,13 @@ export default function ContactTypeTable() {
                 });
                 if(isCreate && !isUpdate){
                     dispatch({
-                        type: CREATE_PRODUCT_ATTRIBUTE,
-                        data: attribute
+                        type: CREATE_CONTRACT_TYPE,
+                        data: contractType
                     })
                 } else if(!isCreate && isUpdate){
                     dispatch({
-                        type: UPDATE_PRODUCT_ATTRIBUTE,
-                        data: attribute
+                        type: UPDATE_CONTRACT_TYPE,
+                        data: contractType
                     })
                 }
                 setData(newData);
@@ -143,9 +144,9 @@ export default function ContactTypeTable() {
     const columns = [
         {
             editable: true,
-            title: "Thuộc tính",
+            title: "Loại hợp đồng",
             dataIndex: "name",
-            className: "attribute__name",
+            className: "contract__type",
             width: "50%",
             key: uuidv4()
         },
@@ -177,8 +178,8 @@ export default function ContactTypeTable() {
                                 <Popconfirm title="Có chắc muốn xóa?"
                                     onConfirm={() => {
                                         dispatch({
-                                            type: DELETE_PRODUCT_ATTRIBUTE,
-                                            attribute_id: record.key
+                                            type: DELETE_CONTRACT_TYPE,
+                                            contract_type_id: record.key
                                         })
                                     }}
                                     okText="Có"
@@ -209,15 +210,15 @@ export default function ContactTypeTable() {
         };
     });
     
-    const createProductAttribute = ()=>{
-        let newAtt = {
+    const createContractType = ()=>{
+        let newContractType = {
             id: uuidv4(),
             name: ""
         };
         if (editingKey === "") {
             form.resetFields()
-            dispatch(addProductAttribute(newAtt))
-            setEditingKey(newAtt.id);
+            dispatch(addContractType(newContractType))
+            setEditingKey(newContractType.id);
             setIsCreate(true)
         }
     }
@@ -228,25 +229,25 @@ export default function ContactTypeTable() {
     }
 
     return (
-        <div className="customer__table content product__table product__TypeAndAtt__table">
+        <div className="customer__table content product__table contract__type__table">
             <Form form={form} component={false}>
                 <div className="table__features">
                     <div className="table__features__add">
                         <h1>Quản lý loại hợp đồng</h1>
                         <Tooltip title="Tạo" color="green">
-                            <FcPlus onClick={createProductAttribute} />
+                            <FcPlus onClick={createContractType} />
                         </Tooltip>
                     </div>
                     <div className="table__features__search">
-                        <input placeholder="Thuộc tính sản phẩm" type="text"
+                        <input placeholder="Loại hợp đồng" type="text"
                             onChange={handleChangeSearch}
                             onKeyDown={(e) => {
                                 let { key } = e;
                                 let { value } = e.target;
                                 if (key.toLowerCase() === "enter") {
                                     dispatch({
-                                        type: SEARCH_PRODUCT_ATTRIBUTE,
-                                        data: value
+                                        // type: SEARCH_PRODUCT_ATTRIBUTE,
+                                        // data: value
                                     })
                                 }
                             }}
@@ -254,8 +255,8 @@ export default function ContactTypeTable() {
                         <div className="table__features__search__btn">
                             <button onClick={() => {
                                 dispatch({
-                                    type: SEARCH_PRODUCT_ATTRIBUTE,
-                                    data: search
+                                    // type: SEARCH_PRODUCT_ATTRIBUTE,
+                                    // data: search
                                 })
                             }}>Tìm kiếm</button>
                         </div>
@@ -272,11 +273,11 @@ export default function ContactTypeTable() {
                     rowClassName="editable-row"
                     pagination={{
                         position: ["bottomLeft"],
-                        defaultPageSize: 5,
+                        defaultPageSize: 10,
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
                         showSizeChanger: true,
-                        total: totalProductAttribute,
+                        total: totalContractType,
                         pageSizeOptions: [10, 50, 100],
                         onChange: (page, pageNumber) => {
                             setPageNumber(pageNumber);

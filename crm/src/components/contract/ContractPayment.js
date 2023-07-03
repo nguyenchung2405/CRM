@@ -64,7 +64,7 @@ export default function ContractPayment(props) {
               </div>
               <div className="display__flex soDotThanhToan">
                   <label htmlFor="soDotThanhToan">Kiểu thanh toán:</label>
-                  <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { console.log(e.target.value, typeof e.target.value); setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
+                  <select name="soDotThanhToan" id="soDotThanhToan" value={valueOfField("pay_before_run")} onChange={(e) => { setValueForm({ ...valueForm, pay_before_run: e.target.value }) }}>
                       <option value={true}>Trước thực hiện</option>
                       <option value={false}>Sau thực hiện</option>
                   </select>

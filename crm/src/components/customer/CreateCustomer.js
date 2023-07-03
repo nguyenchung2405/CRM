@@ -199,7 +199,7 @@ export default function CreateCustomer() {
     } 
 
     const renderInforBusiness = ()=>{
-        return <div className={!valueRadio ? "showInforBusiness" : ""} key={uuidv4()}>
+        return <div className={!valueRadio ? "showInforBusiness" : ""}>
           <div className="modal__two__field">
             <div className="field__input width__241">
                 <input type="text" name="representative" 
@@ -241,7 +241,12 @@ export default function CreateCustomer() {
               <label>Email (người đại diện)</label>
               {validateForm?.represent_email ? showRemind("represent_email") : ""}
           </div>
-          <Contacter />
+          <Contacter
+            valueForm={valueForm}
+            setValueForm={setValueForm}
+            handleChangeInput={handleChangeInput}
+            valueOfField={valueOfField}
+          />
         </div>
     }
 
