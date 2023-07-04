@@ -93,6 +93,7 @@ export default function EventTable() {
             </div>
             <Table
                 dataSource={eventList}
+                rowKey={record => record.id}
                 pagination={{
                     position: ["bottomLeft"],
                     defaultPageSize: 10,

@@ -387,14 +387,25 @@ export async function importFileExcelAPI(data){
 
 export async function getContractTypeAPI(data){
     try {
-        let {page, page_size} = data;
-        const result = await axios({
-            url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}`,
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
-        });
+        let {page, page_size, search} = data;
+        let result;
+        if(search){
+            result = await axios({
+                url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}&search=true&name=${search}`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                },
+            });
+        } else {
+            result = await axios({
+                url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                },
+            });
+        }
         return result.data;
     } catch (error) {
         console.log(error)
@@ -422,7 +433,7 @@ export async function createContractTypeAPI(data){
 export async function updateContractTypeMiddlewareAPI(data){
     try {
         const result = await axios({
-            url: `${local}/api/contract/type/update`,
+            url: `${local}/api/contract/type/update?id=${data.id}`,
             method: "PUT",
             headers: {
                 Authorization: "Bearer " + TOKEN

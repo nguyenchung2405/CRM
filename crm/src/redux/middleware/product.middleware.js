@@ -8,8 +8,8 @@ import { removeProduct, removeProductAttribute, removeProductType, setCustomPric
 
 function* getProductList(payload) {
    try {
-       let { page, pageSize, subLocationID, typeID, attributeID } = payload.data;
-       let result = yield call(getProductListAPI, page, pageSize, subLocationID, typeID, attributeID);
+       let { page, pageSize, subLocationID, typeID, attributeID, search } = payload.data;
+       let result = yield call(getProductListAPI, page, pageSize, subLocationID, typeID, attributeID, search);
        yield put(setProductList(result.data.product))
        if (!subLocationID && !typeID && !attributeID) {
            yield put(setProductListFull(result.data.product))

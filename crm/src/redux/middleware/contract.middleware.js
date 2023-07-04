@@ -253,8 +253,12 @@ function* createContractType(payload){
 function* updateContractTypeMiddleware(payload){
     try {
         const result = yield call(updateContractTypeMiddlewareAPI, payload.data);
-        console.log(result)
-        // yield put(updateContractType({contract_type_id: payload.data.id, data: result.data}))
+        if(result.data?.msg === "Updated successfully!"){
+            yield put(updateContractType({contract_type_id: payload.data.id, data: payload.data}))
+            message.success("Cập nhật hợp đồng thành công.")
+        } else {
+            message.error("Cập nhật hợp đồng thất bại.")
+        }
     } catch (error) {
         console.log(error)
     }

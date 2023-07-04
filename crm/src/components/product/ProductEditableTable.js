@@ -43,7 +43,7 @@ export default function ProductTable() {
     // Normal Table
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({ name: "", tax_number: "", brief_name: "" })
+    const [search, setSearch] = useState({ name: ""})
     const [isCreate, setIsCreate] = useState(null);
     const [isUpdate, setIsUpdate] = useState(null);
 
@@ -93,21 +93,31 @@ export default function ProductTable() {
       }, [locationID, dispatch])
 
     useEffect(() => {
-        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+        if (search?.name === "") {
+            if(page === 1){
+                dispatch({
+                    type: GET_PRODUCT_LIST,
+                    data: { page, pageSize: pageNumber }
+                });
+                dispatch(setIsLoading(true))
+                dispatch(setMessage({}))
+            } else {
+                setPage(1)
+            }
+        }
+    }, [search])
+
+    useEffect(() => {
+        if (search?.name === "") {
             dispatch({
                 type: GET_PRODUCT_LIST,
                 data: { page, pageSize: pageNumber }
             });
             dispatch(setIsLoading(true))
-            dispatch(setMessage({}))
-        }
-    }, [search])
-
-    useEffect(() => {
-        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+        } else {
             dispatch({
                 type: GET_PRODUCT_LIST,
-                data: { page, pageSize: pageNumber }
+                data: { page, pageSize: pageNumber, search }
             });
             dispatch(setIsLoading(true))
         }
@@ -529,9 +539,9 @@ export default function ProductTable() {
                     </Tooltip>
                 </div>
                 <div className="table__features__search">
-                    <input placeholder="Tên sản phẩm" type="text"
+                    <input placeholder="Tên sản phẩm" type="name"
                         name="name"
-                    // onChange={handleSearchInput} 
+                        onChange={handleSearchInput}
                     />
                     <input placeholder="Kênh sản phẩm" type="text"
                         name="tax_number"
@@ -551,13 +561,14 @@ export default function ProductTable() {
                     />
                     <div className="table__features__search__btn">
                         <button onClick={() => {
-                            if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+                            if (search?.name === "") {
                                 message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
                             } else {
                                 dispatch({
-                                    type: SEARCH_CUSTOMER,
-                                    searchData: search
-                                })
+                                    type: GET_PRODUCT_LIST,
+                                    data: { page, pageSize: pageNumber, search }
+                                });
+                                dispatch(setIsLoading(true))
                             }
                         }}>Tìm kiếm</button>
                     </div>
@@ -570,6 +581,7 @@ export default function ProductTable() {
                             cell: EditableCell,
                         },
                     }}
+                    rowKey={record => record.key}
                     dataSource={data}
                     columns={mergedColumns}
                     rowClassName="editable-row"
@@ -578,6 +590,7 @@ export default function ProductTable() {
                         defaultPageSize: 10,
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
+                        current: page,
                         showSizeChanger: true,
                         total: totalProduct,
                         pageSizeOptions: [10, 50, 100],

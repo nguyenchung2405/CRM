@@ -6,7 +6,7 @@ const fs = require("fs")
 const getContractList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, status, search, client_name, contract_type, owner } = req.query;
+        let { page, page_size, status, search, client_name, contract_type, owner_name } = req.query;
         let result;
         if(status !== "undefined" && search !== "true"){
             result = await axios({
@@ -17,7 +17,7 @@ const getContractList = async (req, res) => {
                 }
             });
         } else if(search === "true"){
-            let searchData = { client_name, contract_type, owner };
+            let searchData = { client_name, contract_type, owner_name };
             let queryString = "&";
             for (let prop in searchData) {
                 if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
@@ -442,14 +442,25 @@ const importFileExcel = async (req, res)=>{
 const getContractType = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let {page, page_size} = req.query;
-        const result = await axios({
-            url: `${local}/contract/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
+        let {page, page_size, search, name} = req.query;
+        let result;
+        if(search === "true"){
+            result = await axios({
+                url: `${local}/contract/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false&name=${encodeURI(name)}`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else {
+            result = await axios({
+                url: `${local}/contract/type/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        }
         res.send(result.data)
     } catch (error) {
         if(error.response?.data){
@@ -484,11 +495,22 @@ const createContractType = async (req, res)=>{
 const updateContractType = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        // const result = await axios({
-        //     url: `${local}/`
-        // })
+        let {id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/type/update?id=${id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        })
+        res.send(result.data)
     } catch (error) {
-        
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
     }
 }
 

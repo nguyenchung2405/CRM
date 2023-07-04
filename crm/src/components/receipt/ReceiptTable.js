@@ -75,6 +75,7 @@ export default function ReceiptTable() {
         </div >
         <Table
           dataSource={list}
+          rowKey={record => record.id}
           pagination={{
             position: ["bottomLeft"],
             defaultPageSize: 10,
