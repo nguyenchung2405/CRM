@@ -216,6 +216,12 @@ export default function CreateContract() {
       } else {
         return "";
       }
+    } else if(name === "lienHe"){
+      if (customerInfor["contact"] && customerInfor["contact_position"] && customerInfor["contact"] !== null && customerInfor["contact_position"] !== null) {
+        return customerInfor["contact"] + " - " + customerInfor["contact_position"]
+      } else {
+        return "";
+      }
     } else {
       if (customerInfor[name]) {
         return customerInfor[name]

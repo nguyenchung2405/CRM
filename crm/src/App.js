@@ -78,6 +78,7 @@ function App() {
               <Route exact path="/contract-service/crm/receipt" component={ReceiptTable} />
               <Route exact path="/contract-service/crm/acceptance/contract" component={Acceptance} />
               <Route exact path="/contract-service/crm/acceptance/event" component={EventAcceptance} />
+              <Route exact path="/contract-service/crm/contract/type" component={ContactTypeTable} />
             </Switch>
           </div>
         </Provider>

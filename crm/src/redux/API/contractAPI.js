@@ -2,15 +2,38 @@ import axios from "axios"
 import moment from "moment";
 import { local, TOKEN } from "../../title/title";
 
-export async function getContractListAPI(page, pageNumber, status) {
+export async function getContractListAPI(page, pageNumber, status, search) {
     try {
-        const result = await axios({
-            url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc`,
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
+        let result;
+        if (search) {
+            let newSearchData = { ...search }
+            let queryString = "&";
+            for (let prop in search) {
+                if (typeof search[prop] === "string" && search[prop].length > 0) {
+                    if (queryString.length > 1) {
+                        queryString += `&${prop}=${search[prop]}`
+                    } else {
+                        queryString += `${prop}=${search[prop]}`
+                    }
+                }
             }
-        });
+            result = await axios({
+                url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&sort_by=id&order=desc&search=true${queryString}`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                },
+                data: newSearchData
+            });
+        } else {
+            result = await axios({
+                url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                }
+            });
+        }
         return result.data;
     } catch (error) {
         console.log(error)

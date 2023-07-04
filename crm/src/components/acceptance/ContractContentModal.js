@@ -129,6 +129,7 @@ export default function ContractContentModal(props) {
                     handleChangeValue(name, value)
                 }}>
             </textarea>
+            <label>Ảnh</label>
             <input type="file"
                 onChange={e => {
                     let files = e.target.files;
@@ -138,6 +139,7 @@ export default function ContractContentModal(props) {
                     })
                 }}
                 multiple
+                accept="image/png, image/jpeg, image/jpg"
             />
         </>
     }

@@ -814,6 +814,7 @@ div.modal__content .modal__field.modal__report__upload > label {
     transform: none;
     position: inherit;
     padding-left: 9px;
+    display: block;
 }
 
 div.modal__content .modal__field textarea {
