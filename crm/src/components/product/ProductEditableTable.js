@@ -136,10 +136,9 @@ export default function ProductTable() {
         key,
         ...restProps
     }) => {
-        const inputNode = (key) => {
+        const inputNode = () => {
             if (inputType === "channel_name") {
                 return <Select
-                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -155,7 +154,6 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "location_name") {
                 return <Select
-                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -171,7 +169,6 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "type_name") {
                 return <Select
-                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -187,7 +184,6 @@ export default function ProductTable() {
                 </Select>
             } else if (inputType === "attribute_option_name") {
                 return <Select
-                key={key}
                     showSearch
                     filterOption={(input, option) =>
                         (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -203,7 +199,6 @@ export default function ProductTable() {
                 </Select>
             } else if(inputType === "sub_location_name"){
                 return <Select
-                key={key}
                 showSearch
                 filterOption={(input, option) =>
                     (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
@@ -234,9 +229,8 @@ export default function ProductTable() {
                                 message: `Please Input ${title}!`,
                             },
                         ]}
-                        key={uuidv4()}
                     >
-                        {inputNode(uuidv4())}
+                        {inputNode()}
                     </Form.Item>
                 ) : (
                     children

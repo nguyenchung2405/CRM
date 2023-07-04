@@ -84,6 +84,7 @@ export default function EventContentModal(props) {
                     handleChangeValue(name, value)
                 }}>
             </textarea>
+            <label>Ảnh</label>
             <input type="file"
                 onChange={e => {
                     let files = e.target.files;
@@ -93,6 +94,7 @@ export default function EventContentModal(props) {
                     })
                 }}
                 multiple
+                accept="image/png, image/jpeg, image/jpg"
             />
         </>
     }

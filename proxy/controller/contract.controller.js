@@ -6,11 +6,30 @@ const fs = require("fs")
 const getContractList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, status } = req.query;
+        let { page, page_size, status, search, client_name, contract_type, owner } = req.query;
         let result;
-        if(status !== "undefined"){
+        if(status !== "undefined" && search !== "true"){
             result = await axios({
                 url: `${local}/contract/list?page_size=${page_size}&page=${page}&status=${encodeURI(status)}&sort_by=id&asc_order=false`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else if(search === "true"){
+            let searchData = { client_name, contract_type, owner };
+            let queryString = "&";
+            for (let prop in searchData) {
+                if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
+                    if (queryString.length > 1) {
+                        queryString += `&${prop}=${encodeURI(searchData[prop])}`
+                    } else {
+                        queryString += `${prop}=${encodeURI(searchData[prop])}`
+                    }
+                }
+            }
+            result = await axios({
+                url: `${local}/contract/list?page_size=${page_size}&page=${page}&sort_by=id&asc_order=false${queryString}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
@@ -25,7 +44,7 @@ const getContractList = async (req, res) => {
                 }
             });
         }
-        res.send(result.data);
+        res.status(result.status).send(result.data);
     } catch (error) {
         if(error.response?.data){
             res.send(error.response.data)

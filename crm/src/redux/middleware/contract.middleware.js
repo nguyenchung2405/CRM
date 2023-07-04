@@ -10,8 +10,8 @@ import {message} from "antd"
 
 function* getContractList(payload) {
     try {
-        let { page, pageNumber, status } = payload.data;
-        let result = yield call(getContractListAPI, page, pageNumber, status);
+        let { page, pageNumber, status, search } = payload.data;
+        let result = yield call(getContractListAPI, page, pageNumber, status, search);
         let { total_data: total, contract: data } = result.data;
         yield put(setContractList({ total, contractList: data }));
         yield put(setIsLoading(false))

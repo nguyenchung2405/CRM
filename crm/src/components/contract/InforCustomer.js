@@ -117,7 +117,7 @@ export default function InforCustomer(props) {
                               className="style"
                               type="text"
                               disabled
-                              value=""
+                              value={valueOfCustomer("lienHe")}
                           // value={()=>{
                           //   if(customerInfor["representative"] && customerInfor["represent_position"]){
                           //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]

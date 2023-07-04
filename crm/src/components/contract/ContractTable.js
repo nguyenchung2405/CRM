@@ -19,6 +19,7 @@ export default function ContractTable() {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
+    const [search, setSearch] = useState({client_name: "", contract_type: "", owner: ""})
     const { total, contractList } = useSelector(state => state.contractReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     const { isLoading } = useSelector(state => state.loadingReducer);
@@ -43,12 +44,26 @@ export default function ContractTable() {
     }, []);
 
     useEffect(() => {
-        dispatch({
-            type: GET_CONTRACT_LIST,
-            data: { page, pageNumber }
-        })
-        dispatch(setIsLoading(true))
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner !== ""){
+            dispatch(setIsLoading(true))
+            dispatch({
+                type: GET_CONTRACT_LIST,
+                data: { page, pageNumber, search }
+            })
+        } else {
+            dispatch({
+                type: GET_CONTRACT_LIST,
+                data: { page, pageNumber }
+            })
+            dispatch(setIsLoading(true))
+        }
     }, [page, pageNumber, dispatch]);
+
+    useEffect(()=>{
+        if(search.client_name === "" && search.contract_type === "" && search.owner === ""){
+            setPage(1)
+        }
+    }, [search])
 
     useEffect(() => {
         let { type, msg } = messageAlert;
@@ -60,6 +75,16 @@ export default function ContractTable() {
             dispatch(setMessage({}))
         }
     }, [messageAlert])
+
+    const searchContract = ()=>{
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner !== ""){
+            dispatch(setIsLoading(true))
+            dispatch({
+                type: GET_CONTRACT_LIST,
+                data: { page, pageNumber, search }
+            })
+        }
+    }
 
     const showLoading = () => {
         if (isLoading) {
@@ -95,11 +120,32 @@ export default function ContractTable() {
                     </Tooltip>
                 </div>
                 <div className="table__features__search">
-                    <input placeholder="Tên khách hàng" type="text" />
-                    <input placeholder="Loại hợp đồng" type="text" />
-                    <input placeholder="Người đầu mối" type="text" />
+                    <input placeholder="Tên khách hàng" type="text"  
+                        name="client_name"
+                        value={search.client_name}
+                        onChange={e => {
+                            let { name, value } = e.target;
+                            setSearch(prev => { return { ...prev, [name]: value } })
+                        }}
+                    />
+                    <input placeholder="Loại hợp đồng" type="text"
+                        name="contract_type"
+                        value={search.contract_type}
+                        onChange={e => {
+                            let { name, value } = e.target;
+                            setSearch(prev => { return { ...prev, [name]: value } })
+                        }}
+                    />
+                    <input placeholder="Người đầu mối" type="text"
+                        name="owner"
+                        value={search.owner}
+                        onChange={e => {
+                            let { name, value } = e.target;
+                            setSearch(prev => { return { ...prev, [name]: value } })
+                        }}
+                    />
                     <div className="table__features__search__btn">
-                        <button>Tìm kiếm</button>
+                        <button onClick={searchContract}>Tìm kiếm</button>
                     </div>
                 </div>
             </div >
@@ -113,6 +159,7 @@ export default function ContractTable() {
                     showSizeChanger: true,
                     total: total,
                     pageSizeOptions: [10, 50, 100],
+                    current: page,
                     onChange: (page, pageNumber) => {
                         setPageNumber(pageNumber);
                         setPage(page);
@@ -127,6 +174,7 @@ export default function ContractTable() {
                 scroll={{
                     x: "max-content",
                 }}
+                rowKey={record => record.id}
             >
                 <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.name.toUpperCase() }} />
                 <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
@@ -134,19 +182,6 @@ export default function ContractTable() {
                         return text?.client_ID?.name
                     }} 
                 />
-                {/**
-            <Column className="contract__table__nguoiPhuTrach" title="Người phụ trách" key="nguoiPhuTrach" dataIndex="owner"
-            render={(text)=>{
-                // fake tên người phụ trách để đi demo
-                if(+text === 1){
-                    return "Nguyễn Văn Chương"
-                } else if(+text === 2){
-                    return "Nguyễn Trọng Trí"
-                } else {
-                    return "Trần Quốc Duy"
-                }
-            }} />
-            */}
                 <Column className="contract__table__time" title="Thời gian thực hiện" key="time"
                     render={(text) => {
                         // let batDau = convertDate(text.begin_date);
