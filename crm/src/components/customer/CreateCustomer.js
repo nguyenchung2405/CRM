@@ -292,7 +292,7 @@ export default function CreateCustomer() {
           onChange={handleChangeRadio}
           value={valueRadio} >
           <Radio value={false}>Cá nhân</Radio>
-          <Radio value={true}>Doanh nghiệp</Radio>
+          <Radio value={true}>Tổ chức</Radio>
         </Radio.Group>
         <div className="modal__content">
           <div className="modal__two__field">

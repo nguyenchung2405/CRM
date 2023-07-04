@@ -53,13 +53,9 @@ function* updateCustomer(payload){
     let {result: code, data: dataResponse} = result.data;
     if(code){
         yield put(updateCusomer(dataResponse))
-        yield put(setMessage({type: "thành công", msg:"Cập nhật thành công."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.success("Cập nhật thành công.")
     } else {
-        yield put(setMessage({type: "thất bại", msg:"Cập nhật thất bại."}))
-        yield delay(1000)
-        yield put(setMessage({type: "", msg:""}))
+        message.error("Cập nhật thất bại.")
     }
 };
 

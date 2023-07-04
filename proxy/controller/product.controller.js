@@ -44,25 +44,36 @@ const getProductTypeList = async (req, res) => {
 const getProductList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, attribute_ID: attribute_option_ID, sub_location_ID, type_ID } = req.query;
+        let { page, page_size, attribute_ID: attribute_option_ID, sub_location_ID, type_ID, search, name } = req.query;
         let queryString = "&";
         let obj = { attribute_option_ID, sub_location_ID, type_ID };
-        for (let prop in obj) {
-            if (typeof +obj[prop] === "number" && +obj[prop] > 0) {
-                if (queryString.length > 1) {
-                    queryString += `&${prop}=${obj[prop]}`
-                } else {
-                    queryString += `${prop}=${obj[prop]}`
+        let result;
+        if(search === "true"){
+            result = await axios({
+                url: `${local}/product/list?sort_by=id&asc_order=false&page=${page}&page_size=${page_size}&name=${encodeURI(name)}`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+        } else {
+            for (let prop in obj) {
+                if (typeof +obj[prop] === "number" && +obj[prop] > 0) {
+                    if (queryString.length > 1) {
+                        queryString += `&${prop}=${obj[prop]}`
+                    } else {
+                        queryString += `${prop}=${obj[prop]}`
+                    }
                 }
             }
+            result = await axios({
+                url: `${local}/product/list?sort_by=id&asc_order=false&page=${page}&page_size=${page_size}${queryString}`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
         }
-        const result = await axios({
-            url: `${local}/product/list?sort_by=id&asc_order=false&page=${page}&page_size=${page_size}${queryString}`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
         res.send(result.data)
     } catch (error) {
         if(error.response?.data){

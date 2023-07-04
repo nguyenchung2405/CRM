@@ -19,7 +19,7 @@ export default function ContractTable() {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({client_name: "", contract_type: "", owner: ""})
+    const [search, setSearch] = useState({client_name: "", contract_type: "", owner_name: ""})
     const { total, contractList } = useSelector(state => state.contractReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     const { isLoading } = useSelector(state => state.loadingReducer);
@@ -44,7 +44,7 @@ export default function ContractTable() {
     }, []);
 
     useEffect(() => {
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner !== ""){
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -60,8 +60,16 @@ export default function ContractTable() {
     }, [page, pageNumber, dispatch]);
 
     useEffect(()=>{
-        if(search.client_name === "" && search.contract_type === "" && search.owner === ""){
-            setPage(1)
+        if(search.client_name === "" && search.contract_type === "" && search.owner_name === ""){
+            if(page === 1){
+                dispatch({
+                    type: GET_CONTRACT_LIST,
+                    data: { page, pageNumber }
+                })
+                dispatch(setIsLoading(true))
+            } else {
+                setPage(1)
+            }
         }
     }, [search])
 
@@ -77,7 +85,7 @@ export default function ContractTable() {
     }, [messageAlert])
 
     const searchContract = ()=>{
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner !== ""){
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -137,8 +145,8 @@ export default function ContractTable() {
                         }}
                     />
                     <input placeholder="Người đầu mối" type="text"
-                        name="owner"
-                        value={search.owner}
+                        name="owner_name"
+                        value={search.owner_name}
                         onChange={e => {
                             let { name, value } = e.target;
                             setSearch(prev => { return { ...prev, [name]: value } })
@@ -210,7 +218,7 @@ export default function ContractTable() {
                 {/** <Column className="contract__table__no" title="Nợ" key="total" render={(text) => {
                     return <span>{text.id % 2 === 0 ? "10.000.000 VNĐ" : "30.000.000 VNĐ"}</span>
                 }} /> */}
-                <Column className="contract__table__thaotac" key="thaoTac" render={(text) => {
+                <Column className="contract__table__thaotac" fixed="right" key="thaoTac" render={(text) => {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {

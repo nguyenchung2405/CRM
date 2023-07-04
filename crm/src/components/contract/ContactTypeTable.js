@@ -46,8 +46,26 @@ export default function ContactTypeTable() {
                 type: GET_CONTRACT_TYPE,
                 data: { page: page, page_size: pageNumber }
             })
+        } else {
+            dispatch({
+                type: GET_CONTRACT_TYPE,
+                data: { page: page, page_size: pageNumber, search }
+            })
         }
-    }, [search, page, pageNumber])
+    }, [page, pageNumber])
+
+    useEffect(()=>{
+        if(search === ""){
+            if(page === 1){
+                dispatch({
+                    type: GET_CONTRACT_TYPE,
+                    data: { page: page, page_size: pageNumber }
+                })
+            } else {
+                setPage(1)
+            }
+        }
+    }, [search])
 
     const EditableCell = ({
         editing,
@@ -255,8 +273,8 @@ export default function ContactTypeTable() {
                         <div className="table__features__search__btn">
                             <button onClick={() => {
                                 dispatch({
-                                    // type: SEARCH_PRODUCT_ATTRIBUTE,
-                                    // data: search
+                                    type: GET_CONTRACT_TYPE,
+                                    data: { page: page, page_size: pageNumber, search }
                                 })
                             }}>Tìm kiếm</button>
                         </div>
@@ -276,6 +294,7 @@ export default function ContactTypeTable() {
                         defaultPageSize: 10,
                         locale: { items_per_page: "" },
                         defaultCurrent: 1,
+                        current: page,
                         showSizeChanger: true,
                         total: totalContractType,
                         pageSizeOptions: [10, 50, 100],
