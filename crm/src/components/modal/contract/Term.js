@@ -194,6 +194,11 @@ export default function TermModal(props) {
     if (valueModal[name] && valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined) {
       if (name === "real_price") {
         return new Intl.NumberFormat("vi-VN").format(valueModal[name])
+      } else if(name === "custom_price"){
+        if(valueModal[name]){
+          return new Intl.NumberFormat("vi-VN").format(valueModal[name])
+        }
+        return ""
       }
       return valueModal[name]
     } else if (name === "rangePicker" && valueModal["from_date"] && valueModal["to_date"]) {
@@ -201,7 +206,7 @@ export default function TermModal(props) {
       let newDenNgay = moment(new Date(valueModal["to_date"])).format("DD-MM-YYYY");
       return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
     } else {
-      if (name === "desc" || name === "real_price" || name === "quality" || name === "product_name" || name === "custom_price") {
+      if (name === "desc" || name === "real_price" || name === "quality" || name === "product_name") {
         return ""
       }
       return null
@@ -478,10 +483,11 @@ export default function TermModal(props) {
               value={valueOfField("custom_price")}
               onChange={(e) => {
                 let { value, name } = e.target;
-                handleChange(name, +value)
+                let newValue = value.replaceAll(".", "");
+                handleChange(name, +newValue)
               }}
             />
-            <label>Giá hiệu chỉnh</label>
+            <label>Giá trị hiệu chỉnh</label>
           </div>
           {/**
                  <div className="modal__field">

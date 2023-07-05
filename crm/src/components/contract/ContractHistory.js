@@ -6,7 +6,7 @@ import { MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
 
 export default function ContractHistory(props) {
 
-    const {data} = props;
+    const {data, VAT} = props;
     const {Column} = Table;
     const [isShowModal, setIsShowModal] = useState(false);
     const [dataToModal, setDataToModal] = useState({});
@@ -40,6 +40,7 @@ export default function ContractHistory(props) {
         isShowModal={isShowModal}
         setIsShowModal={setIsShowModal}
         dataToModal={dataToModal}
+        VAT={VAT}
       />
       <div className="display__flex contract__payment">
         <div className="display__flex">
