@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function ModalHistory(props) {
 
-    const { isShowModal, setIsShowModal, dataToModal } = props;
+    const { isShowModal, setIsShowModal, dataToModal, VAT } = props;
     const { Column } = Table;
 
     const handleCancel = () => {
@@ -22,14 +22,45 @@ export default function ModalHistory(props) {
     }
 
     const valueOfField = (name) => {
-        if (dataToModal[name] && (name === "total" || name === "discount_by_percent" 
-        || name === "original_total" || name ==="discount_total")) {
+        if (dataToModal[name] && (name === "total" || name === "original_total" || name ==="discount_total")) {
             return new Intl.NumberFormat("vi-VN").format(dataToModal[name] * 1000000)
         }
         if(dataToModal[name] === null){
             return ""
+        } else if(name === "VAT"){
+            return VAT
         }
         return dataToModal[name]
+    }
+
+    const calculateDoanhThu = (row) => {
+        if (row === 1) {
+            if (dataToModal.total_include_VAT >= 0) {
+                // console.log("line 45", dataToModal.total_include_VAT)
+                return new Intl.NumberFormat("vi-VN",).format(dataToModal.total_include_VAT * 1000000);
+            } else {
+                let giaTriTruocThue = dataToModal.total / 1000000;
+                let VAT = dataToModal.VAT;
+                let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
+                // console.log("line 51")
+                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
+            }
+        } else if(row ===2){
+            let giaTriTruocThue = dataToModal.total;
+            let VAT = props.VAT;
+            let discount = dataToModal.discount_by_percent;
+            if(discount !== 0){
+                let doanhThuRow1 = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
+                let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
+                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(4) * 1000000);
+            }
+            return ""
+        } else if(row === "total_include_VAT") {
+            let giaTriTruocThue = dataToModal.total / 1000000;
+            let VAT = dataToModal.VAT;
+            let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
+            return  doanhThu
+        }
     }
 
     return (
@@ -106,7 +137,7 @@ export default function ModalHistory(props) {
                             />
                             <Column
                                 className="price"
-                                title="Giá hiệu chỉnh"
+                                title="Giá trị hiệu chỉnh"
                                 key="custom_price"
                                 render={(text) => {
                                     if (text.custom_price > 0) {
@@ -122,30 +153,6 @@ export default function ModalHistory(props) {
                         <p>Giá trị hợp đồng</p>
                         <div className="field__input_3">
                             <div className="contract__field">
-                                <input className="style" type="text"
-                                    name="discount_by_percent"
-                                    disabled
-                                    value={valueOfField("discount_by_percent")}
-                                />
-                                <label>Chiết khấu (VNĐ)</label>
-                            </div>
-                            <div className="contract__field">
-                                <input className="style" type="text"
-                                    name="VAT"
-                                    value={valueOfField("original_total")}
-                                    disabled
-                                />
-                                <label>Giá trị gốc</label>
-                            </div>
-                            <div className="contract__field">
-                                <input className="style" type="text"
-                                    name="VAT"
-                                    value={valueOfField("discount_total")}
-                                    disabled
-                                />
-                                <label>Giá trị thực hiện</label>
-                            </div>
-                            <div className="contract__field">
                                 <input
                                     className="style"
                                     type="text"
@@ -153,7 +160,41 @@ export default function ModalHistory(props) {
                                     value={valueOfField("total")}
                                     disabled
                                 />
-                                <label className="pink__color">Giá trị hợp đồng</label>
+                                <label className="pink__color">Giá trị trước thuế</label>
+                            </div>
+                            <div className="contract__field">
+                                <input className="style" type="text"
+                                    name="VAT"
+                                    disabled
+                                    value={valueOfField("VAT")}
+                                />
+                                <label>VAT</label>
+                            </div>
+                            <div className="contract__field">
+                                <input className="style" type="text"
+                                    name="VAT"
+                                    value={calculateDoanhThu(1)}
+                                    disabled
+                                />
+                                <label>Doanh thu</label>
+                            </div>
+                        </div>
+                        <div className="field__input_3">
+                            <div className="contract__field">
+                                <input className="style" type="text"
+                                    name="discount_by_percent"
+                                    disabled
+                                    value={valueOfField("discount_by_percent")}
+                                />
+                                <label>Chiết khấu (%)</label>
+                            </div>
+                            <div className="contract__field">
+                                <input className="style" type="text"
+                                    name="VAT"
+                                    value={calculateDoanhThu(2)}
+                                    disabled
+                                />
+                                <label>Doanh thu sau chiết khấu</label>
                             </div>
                         </div>
                         <div className="contract__value__note">

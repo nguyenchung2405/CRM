@@ -663,7 +663,7 @@ div.modal__content {
     
 }
 
-.evidence__table .evidence {
+.evidence__table td.evidence {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;

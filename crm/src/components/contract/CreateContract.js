@@ -567,7 +567,7 @@ export default function CreateContract() {
             />
             <Column
               className="price"
-              title="Giá hiệu chỉnh"
+              title="Giá trị hiệu chỉnh"
               key="custom_price"
               render={(text) => {
                 if (text.custom_price > 0) {
@@ -631,7 +631,7 @@ export default function CreateContract() {
           setValueForm={setValueForm}
           valueForm={valueForm}
         />
-        <ContractHistory data={valueForm.history} />
+        <ContractHistory data={valueForm.history} VAT={valueForm.VAT} />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/contract`) }}>Hủy</button>
           {renderButtonCreateUpdate()}
