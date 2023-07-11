@@ -94,12 +94,13 @@ export default function QuanLyChi(props) {
                   }} />
               <input className="style" type="text" placeholder="Số tiền"
                   name="soTien"
-                  value={chiTieu.soTien}
+                  value={chiTieu.soTien > 0 ? new Intl.NumberFormat("vi-VN").format(chiTieu.soTien) : ""}
                   onChange={(e) => {
                       let { value, name } = e.target;
+                      let newValue = value.replaceAll(".", "");
                       setChiTieu({
                           ...chiTieu,
-                          [name]: +value
+                          [name]: +newValue
                       })
                   }} />
           </div>

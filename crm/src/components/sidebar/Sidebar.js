@@ -4,6 +4,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { checkMicroFe } from '../../untils/helper';
 import { BsFileEarmarkFill } from "react-icons/bs"
 import { FcDepartment } from "react-icons/fc"
+import {Tooltip} from "antd"
 
 export default function Sidebar() {
 
@@ -26,7 +27,7 @@ export default function Sidebar() {
             ]),
             getItem(<Link to={`${uri}/crm/event`}>Quản lý sự kiện</Link>, "20", <FcDepartment />),
             getItem(<Link to={`${uri}/crm/receipt`}>Quản lý hóa đơn</Link>, "24", <FcDepartment />),
-            getItem("Theo dõi thực hiện quyền lợi", "21", <FcDepartment />, [
+            getItem(<Tooltip title="Theo dõi thực hiện quyền lợi">Theo dõi thực...</Tooltip>, "21", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
             ]),

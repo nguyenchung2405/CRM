@@ -168,7 +168,8 @@ export async function updateContractiAPI(data){
             begin_date: convertBeginDate,
             end_date: convertEndDate,
             total: data.total / 1000000,
-            discount_by_percent: data.discount_by_percent
+            discount_by_percent: data.discount_by_percent,
+            VAT: Number(data.VAT)
         };
         const result = await axios({
             url: `${local}/api/contract/update`,

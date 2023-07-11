@@ -191,11 +191,11 @@ export default function TermModal(props) {
   };
 
   const valueOfField = (name) => {
-    if (valueModal[name] && valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined) {
+    if (valueModal[name] !== "" && name !== "rangePicker" && valueModal[name] !== undefined) {
       if (name === "real_price") {
         return new Intl.NumberFormat("vi-VN").format(valueModal[name])
-      } else if(name === "custom_price"){
-        if(valueModal[name]){
+      } else if (name === "custom_price") {
+        if (valueModal[name] && valueModal[name] > 0) {
           return new Intl.NumberFormat("vi-VN").format(valueModal[name])
         }
         return ""

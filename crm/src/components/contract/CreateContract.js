@@ -134,7 +134,7 @@ export default function CreateContract() {
         price_ID: request.price_ID.id,
         product_ID: request.product_ID.id,
         quality: request.quality,
-        real_price: request.price_ID.price * 1000000,
+        real_price: request.price_ID.price_include_VAT * 1000000,
         details: request.details,
         custom_price: request.custom_price * 1000000
       }
@@ -424,7 +424,7 @@ export default function CreateContract() {
           valueOfCustomer={valueOfCustomer}
           history={history}
         />
-        {valueForm.event_ID ?
+        {valueForm.event_ID && !window.location.href.includes("create") ?
           <RequestEvent
             productListFull={productListFull}
             requestOfEvent={requestOfEvent}

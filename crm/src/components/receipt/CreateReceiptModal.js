@@ -124,8 +124,13 @@ export default function CreateReceiptModal(props) {
             }
             return null
         } else {
-            if(valueModal[name]){
+            if(valueModal[name] && name !== "total_value"){
                 return valueModal[name]
+            }else if(name === "total_value"){
+                if(valueModal[name]){
+                    return new Intl.NumberFormat("vi-VN").format(valueModal[name])
+                }
+                return ""
             } else {
                 return ""
             }
@@ -252,7 +257,8 @@ export default function CreateReceiptModal(props) {
                             value={valueOfField("total_value")}
                             onChange={e => {
                                 let { value, name } = e.target;
-                                handleChangeValue(name, value)
+                                let newValue = value.replaceAll(".", "");
+                                handleChangeValue(name, newValue)
                             }}
                         />
                         <label>Tiền</label>
@@ -324,7 +330,8 @@ export default function CreateReceiptModal(props) {
                             value={valueOfField("total_value")}
                             onChange={e => {
                                 let { value, name } = e.target;
-                                handleChangeValue(name, value)
+                                let newValue = value.replaceAll(".", "");
+                                handleChangeValue(name, newValue)
                             }}
                         />
                         <label>Tiền</label>

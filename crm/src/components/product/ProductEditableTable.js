@@ -26,7 +26,7 @@ const convertData = (productList) => {
             channel_name: product.channel.name,
             type_id: product.type_ID.id,
             type_name: product.type_ID.name,
-            price: product.price.price * 1000000,
+            price: product.price.price_include_VAT * 1000000,
             code_indentify: product.code_indentify
         }
     })
