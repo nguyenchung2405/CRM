@@ -342,7 +342,7 @@ export default function CreateContract() {
                 name="contract_number"
                 onChange={(e) => {
                   let { value, name } = e.target;
-                  handleChangeValue(name, +value)
+                  handleChangeValue(name, value)
                 }}
                 value={valueOfField("contract_number")}
               />
@@ -518,6 +518,7 @@ export default function CreateContract() {
               },
               rowExpandable: (record) => record?.details?.length > 0,
             }}
+            rowKey={() => uuidv4()}
           >
             <Column
               className="item"

@@ -74,8 +74,12 @@ function* getPaymentList(payload){
     try {
         let { page, pageNumber, completed } = payload.data;
         const result = yield call(getPaymentListAPI, page, pageNumber, completed);
-        yield put(setTotalReceipt(result.total_data))
-        yield put(setReceiptList(result.payment))
+        if(result?.detail === "Invalid token or expired"){
+            window.location.replace("/")
+        } else {
+            yield put(setTotalReceipt(result.total_data))
+            yield put(setReceiptList(result.payment))
+        }
     } catch (error) {
         console.log(error)
     }

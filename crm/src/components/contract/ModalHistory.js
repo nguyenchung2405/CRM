@@ -1,5 +1,6 @@
 import { Modal, Table } from 'antd'
 import React from 'react'
+import { v4 as uuidv4 } from "uuid"
 
 export default function ModalHistory(props) {
 
@@ -16,7 +17,8 @@ export default function ModalHistory(props) {
                 quality: request?.quality,
                 real_price: request?.price * 1000000,
                 custom_price: request?.custom_price * 1000000,
-                product: request?.product
+                product: request?.product,
+                price_include_VAT: request.price_include_VAT * 1000000
             }
         })
     }
@@ -38,12 +40,6 @@ export default function ModalHistory(props) {
             if (dataToModal.total_include_VAT >= 0) {
                 // console.log("line 45", dataToModal.total_include_VAT)
                 return new Intl.NumberFormat("vi-VN",).format(dataToModal.total_include_VAT * 1000000);
-            } else {
-                let giaTriTruocThue = dataToModal.total / 1000000;
-                let VAT = dataToModal.VAT;
-                let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
-                // console.log("line 51")
-                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
             }
         } else if(row ===2){
             let giaTriTruocThue = dataToModal.total;
@@ -88,9 +84,10 @@ export default function ModalHistory(props) {
                             <p>Quyền lợi hợp đồng</p>
                         </div>
                         <Table
-                            className="term__table"
+                            className="term__table history__table"
                             dataSource={convertContractRequest()}
                             pagination={false}
+                            rowKey={() => uuidv4()}
                         >
                             <Column
                                 className="item"
@@ -109,7 +106,7 @@ export default function ModalHistory(props) {
                                     // console.log("text", text)
                                     // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
                                     // return `${text.real_price} VNĐ`;
-                                    return `${new Intl.NumberFormat("vi-VN").format(text.real_price)} VNĐ`;
+                                    return `${new Intl.NumberFormat("vi-VN").format(text?.price_include_VAT)} VNĐ`;
                                 }}
                             />
                             <Column
@@ -136,7 +133,7 @@ export default function ModalHistory(props) {
                                 }}
                             />
                             <Column
-                                className="price"
+                                className="custom__price"
                                 title="Giá trị hiệu chỉnh"
                                 key="custom_price"
                                 render={(text) => {

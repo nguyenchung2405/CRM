@@ -313,7 +313,8 @@ export default function ContractRight(props) {
             dataSource={data}
             pagination={false}
             showHeader={true}
-            columns={mergedColumns}      
+            columns={mergedColumns}
+            rowKey={()=> uuidv4()}      
         >
            
         </Table>

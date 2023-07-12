@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import ModalHistory from './ModalHistory';
 import { MdOutlineExpandLess, MdOutlineExpandMore } from 'react-icons/md';
+import {v4 as uuidv4} from "uuid"
 
 export default function ContractHistory(props) {
 
@@ -59,6 +60,7 @@ export default function ContractHistory(props) {
             }
           }
         }}
+        rowKey={()=> uuidv4()} 
       >
         <Column title="STT" key="STT" 
         render={(text, record, index) => {

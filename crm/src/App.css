@@ -1447,6 +1447,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     font-weight: bold;
     min-width: 125px;
     text-align: right;
+    min-width: 250px;
+    max-width: 250px;
 }
 
 .payment__infor__modal .payment__infor__modal__content .create__contract__term {
@@ -1537,6 +1539,16 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 
 .create__contract .create__contract__term table .price {
     width: 150px;
+}
+
+.create__contract .create__contract__term .history__table table th.quality {
+    width: 100px;
+    max-width: 100px;
+}
+
+.create__contract .create__contract__term .history__table table th.price {
+    width: 20%;
+    max-width: 200px;
 }
 
 .create__contract .create__contract__term table td.item,
