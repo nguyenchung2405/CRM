@@ -48,18 +48,19 @@ export default function ContractValue(props) {
         if(row === 1){
             if(valueForm.total_include_VAT >= 0  && !isEdit){
                 // console.log("line 45", valueForm.total_include_VAT)
-                return new Intl.NumberFormat("vi-VN",).format(valueForm.total_include_VAT * 1000000);
+                return new Intl.NumberFormat("vi-VN").format(valueForm.total_include_VAT * 1000000);
             } else {
-                let giaTriTruocThue = valueForm.total / 1000000;
+                let giaTriSauThue = valueForm.total / 1000000;
                 let VAT = valueForm.VAT;
-                let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
+                let giaTruocThue = giaTriSauThue / 1.1;
                 // console.log("line 51")
-                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
+                if(giaTriSauThue > 0 && +VAT === 10){
+                    return new Intl.NumberFormat("vi-VN").format(valueForm.total)
+                } else {
+                    let doanhThu = giaTruocThue + (giaTruocThue * VAT / 100)
+                    return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
+                }
             }
-            // let giaTriTruocThue = valueForm.total / 1000000;
-            // let VAT = valueForm.VAT;
-            // let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
-            // return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
         } else if(row ===2){
             let giaTriTruocThue = valueForm.total / 1000000;
             let VAT = valueForm.VAT;
@@ -172,7 +173,7 @@ export default function ContractValue(props) {
                           value={valueOfField("total")}
                           disabled={unlockInput}
                       />
-                      <label className="pink__color">Giá trị trước thuế</label>
+                      <label className="pink__color">Giá trị sau thuế (10%)</label>
                   </Popconfirm>
               </div>
               <div className="contract__field">

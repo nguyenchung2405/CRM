@@ -160,7 +160,7 @@ export default function ModalHistory(props) {
                                     value={valueOfField("total")}
                                     disabled
                                 />
-                                <label className="pink__color">Giá trị trước thuế</label>
+                                <label className="pink__color">Giá trị sau thuế (10%)</label>
                             </div>
                             <div className="contract__field">
                                 <input className="style" type="text"

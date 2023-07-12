@@ -122,7 +122,7 @@ export async function createProduceAPI(data) {
             "attribute_option_ID": data.attribute_option_id,
             "code_indentify": data.code_indentify,
             "price": {
-                "price": +data.price / 1000000,
+                "price_include_VAT": +data.price / 1000000,
             }
         };
         const result = await axios({
@@ -345,7 +345,7 @@ export async function updateProductAPI(data){
     try {
         let product = {
            ...data,
-            "price": +data.price / 1000000,
+            "price_include_VAT": +data.price / 1000000,
             "code_indentify": data.code_indentify,
         };
         const result = await axios({
