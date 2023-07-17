@@ -140,7 +140,7 @@ export default function TermModal(props) {
           quality: valueModal.quality,
           price_ID: {
             id: valueModal.price_ID,
-            price: valueModal.real_price / 1000000
+            price_include_VAT: valueModal.real_price / 1000000
           },
           product_ID: {
             id: valueModal.product_ID
@@ -414,7 +414,7 @@ export default function TermModal(props) {
                       setValueModal({
                         ...valueModal,
                         product_ID: value,
-                        real_price: +product.price.price * 1000000,
+                        real_price: +product.price.price_include_VAT * 1000000,
                         price_ID: product.price.id
                       })
                     }}

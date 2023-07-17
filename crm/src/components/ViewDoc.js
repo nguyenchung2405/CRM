@@ -34,6 +34,9 @@ export default function ViewDoc(props) {
                 // console.log(`data:${resolve?.data?.type};base64,${resolve?.data?.link}`)
                 setBase64URL(`data:${resolve?.data?.type};base64,${resolve?.data?.link}`)
             })
+            handlePreview.catch(err => {
+                console.log(console.log(err))
+            })
         }
       }, [word])
 

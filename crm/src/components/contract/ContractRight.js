@@ -50,7 +50,7 @@ export default function ContractRight(props) {
     const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
     const {isUpdateDetail, setIsUpdateDetail, contract_id} = props;
-    
+      console.log(data)
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
     }, [props.data])
@@ -313,8 +313,7 @@ export default function ContractRight(props) {
             dataSource={data}
             pagination={false}
             showHeader={true}
-            columns={mergedColumns}
-            rowKey={()=> uuidv4()}      
+            columns={mergedColumns}    
         >
            
         </Table>

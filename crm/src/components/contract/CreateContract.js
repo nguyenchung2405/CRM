@@ -290,7 +290,7 @@ export default function CreateContract() {
       if (request.custom_price) {
         total += request.custom_price;
       } else {
-        total += request.price_ID.price * request.quality;
+        total += request.price_ID.price_include_VAT * request.quality;
       }
     })
     if(total > 0 ){
@@ -518,7 +518,6 @@ export default function CreateContract() {
               },
               rowExpandable: (record) => record?.details?.length > 0,
             }}
-            rowKey={() => uuidv4()}
           >
             <Column
               className="item"

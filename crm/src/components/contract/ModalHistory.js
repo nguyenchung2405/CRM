@@ -15,7 +15,7 @@ export default function ModalHistory(props) {
         return dataToModal?.requests?.map(request => {
             return {
                 quality: request?.quality,
-                real_price: request?.price * 1000000,
+                real_price: request?.price_include_VAT * 1000000,
                 custom_price: request?.custom_price * 1000000,
                 product: request?.product,
                 price_include_VAT: request.price_include_VAT * 1000000

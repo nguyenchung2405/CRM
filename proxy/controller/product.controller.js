@@ -444,23 +444,24 @@ const getProductSpecialForClient = async (req, res)=>{
 const updateProduct = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
-        let {product_name, code_indentify, id, price} = req.body;
+        let {product_name, code_indentify, id, price_include_VAT} = req.body;
         let product = {
             "name": product_name,
-            "code_indentify": code_indentify
+            "code_indentify": code_indentify,
+            price_include_VAT
         };
-        let newPrice = {
-            "product_ID": id,
-            "price": price,
-        };
-        const resultPrice = await axios({
-            url: `${local}/product/price/create/`,
-            method: "POST",
-            headers: {
-                Authorization: authorization
-            },
-            data: newPrice
-        });
+        // let newPrice = {
+        //     "product_ID": id,
+        //     "price": price,
+        // };
+        // const resultPrice = await axios({
+        //     url: `${local}/product/price/create/`,
+        //     method: "POST",
+        //     headers: {
+        //         Authorization: authorization
+        //     },
+        //     data: newPrice
+        // });
         const resultProduct = await axios({
             url: `${local}/product/item/update?product_id=${id}`,
             method: "PUT",
@@ -469,7 +470,7 @@ const updateProduct = async (req, res)=>{
             },
             data: product
         });
-        res.send(["Success", resultPrice.data, resultProduct.data])
+        res.send(["Success", resultProduct.data])
     } catch (error) {
         if(error.response.data){
             res.send(error.response.data)

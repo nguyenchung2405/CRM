@@ -113,6 +113,10 @@ export default function ContractTable() {
             text: "Chưa chạy",
             value: "Chưa chạy"
         },
+        {
+            text: "Quá hạn nhưng chưa thanh lý",
+            value: "Quá hạn"
+        },
     ]
 
     return (

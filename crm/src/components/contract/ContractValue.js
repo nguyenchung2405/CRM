@@ -72,10 +72,15 @@ export default function ContractValue(props) {
             }
             return ""
         } else if(row === "total_include_VAT") {
-            let giaTriTruocThue = valueForm.total / 1000000;
+            let giaTriSauThue = valueForm.total / 1000000;
             let VAT = valueForm.VAT;
-            let doanhThu = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
-            return  doanhThu
+            let giaTruocThue = giaTriSauThue / 1.1;
+            if(giaTriSauThue > 0 && +VAT === 10){
+                return valueForm.total / 1000000
+            } else {
+                let doanhThu = giaTruocThue + (giaTruocThue * VAT / 100) 
+                return doanhThu.toFixed(4)
+            }
         }
     }
     
