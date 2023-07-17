@@ -913,13 +913,16 @@ div.modal__content .modal__field.two__fields>input:first-child {
     margin-right: 35px;
 }
 
-
+section.ant-layout table input {
+    border-style: solid;
+}
 
 div.modal__upload {
     /* padding-left: 63px; */
     text-align: left;
-    transform: translateX(525px);
-    width: fit-content;
+    /* transform: translateX(525px); */
+    width: 525px;
+    display: inline-block;
 }
 
 div.modal__upload>span {
