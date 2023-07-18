@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { call, delay, put, takeLatest } from "redux-saga/effects";
-import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_SPECIAL, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_SPECIAL, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, SEARCH_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
-import { createProduceAPI, createProductAttributeAPI, createProductSpecialAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductSpecialAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductLocationAPI, getProductSpecialForClientAPI, getProductSpecialListAPI, getProductSubLocationAPI, getProductTypeAPI, searchProductAttributeAPI, searchProductTypeAPI, updateProductAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
+import { CREATE_PRODUCT, CREATE_PRODUCT_ATTRIBUTE, CREATE_PRODUCT_SPECIAL, CREATE_PRODUCT_TYPE, DELETE_PRODUCT, DELETE_PRODUCT_ATTRIBUTE, DELETE_PRODUCT_SPECIAL, DELETE_PRODUCT_TYPE, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LIST_CONTRACT, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, SEARCH_PRODUCT_ATTRIBUTE, SEARCH_PRODUCT_TYPE, UPDATE_PRODUCT, UPDATE_PRODUCT_ATTRIBUTE, UPDATE_PRODUCT_TYPE } from "../../title/title";
+import { createProduceAPI, createProductAttributeAPI, createProductSpecialAPI, createProductTypeAPI, deleteProductAPI, deleteProductAttributeAPI, deleteProductSpecialAPI, deleteProductTypeAPI, getProductAttributeAPI, getProductChannelAPI, getProductListAPI, getProductListContractAPI, getProductLocationAPI, getProductSpecialForClientAPI, getProductSpecialListAPI, getProductSubLocationAPI, getProductTypeAPI, searchProductAttributeAPI, searchProductTypeAPI, updateProductAPI, updateProductAttributeAPI, updateProductTypeAPI } from "../API/productAPI";
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 import { removeProduct, removeProductAttribute, removeProductType, setCustomPriceForClient, setProductAttribute, setProductChannel, setProductList, setProductListFull, setProductLocation, setProductSpecial, setProductType, setTotalProduct, setTotalProductAttribute, setTotalProductSpecial, setTotalProductType, updateProductAttribute, updateProductSpecial, updateProductType, updateProductWithID, removeProductSpecial, setProductSubLocation } from "../features/productSlice";
@@ -21,6 +21,20 @@ function* getProductList(payload) {
    }
 }
 
+function* getProductListContract(payload){
+    try {
+        let { page, pageSize, subLocationID, typeID, attributeID, search } = payload.data;
+        let result = yield call(getProductListContractAPI, page, pageSize, subLocationID, typeID, attributeID, search);
+        yield put(setProductList(result.data.product))
+        if (!subLocationID && !typeID && !attributeID) {
+            yield put(setProductListFull(result.data.product))
+        }
+        yield put(setTotalProduct(result.data.total_data))
+        yield put(setIsLoading(false))
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 function* getProductChannel(payload) {
     try {
@@ -291,6 +305,7 @@ export default function* productMiddleware() {
     yield takeLatest(CREATE_PRODUCT, createProduct);
     yield takeLatest(DELETE_PRODUCT, deleteProduct);
     yield takeLatest(UPDATE_PRODUCT, updateProduct);
+    yield takeLatest(GET_PRODUCT_LIST_CONTRACT, getProductListContract)
     // Product TYPE
     yield takeLatest(GET_PRODUCT_TYPE, getProductType);
     yield takeLatest(CREATE_PRODUCT_TYPE, createProductType)

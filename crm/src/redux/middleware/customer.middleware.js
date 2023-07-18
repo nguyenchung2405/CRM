@@ -48,14 +48,20 @@ function* searchCustomer(payload){
 }
 
 function* updateCustomer(payload){
-    let {data} = payload;
-    let result = yield call(updateCustomerAPI, data);
-    let {result: code, data: dataResponse} = result.data;
-    if(code){
-        yield put(updateCusomer(dataResponse))
-        message.success("Cập nhật thành công.")
-    } else {
-        message.error("Cập nhật thất bại.")
+    try {
+        let { data } = payload;
+        let result = yield call(updateCustomerAPI, data);
+        console.log(result)
+        let { result: code, data: dataResponse } = result?.data;
+        if (code) {
+            yield put(updateCusomer(dataResponse))
+            message.success("Cập nhật thành công.")
+            yield put({type: GET_CUSTOMER_DETAIL, client_id: data.id})
+        } else {
+            message.error("Cập nhật thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
     }
 };
 
