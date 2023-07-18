@@ -3,10 +3,9 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { addContractRequest, updateContractRequest } from '../../../redux/features/contractSlice';
-import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
+import { CREATE_REQUEST, GET_PRODUCT_ATTRIBUTE, GET_PRODUCT_CHANNEL, GET_PRODUCT_LIST_CONTRACT, GET_PRODUCT_LOCATION, GET_PRODUCT_SPECIAL_FOR_CLIENT, GET_PRODUCT_SUBLOCATION, GET_PRODUCT_TYPE, UPDATE_REQUEST } from '../../../title/title';
 import { v4 as uuidv4 } from 'uuid';
 import { setProductAttribute, setProductList, setProductType } from '../../../redux/features/productSlice';
-import { getProductSpecialForClientAPI } from '../../../redux/API/productAPI';
 
 export default function TermModal(props) {
 
@@ -68,7 +67,7 @@ export default function TermModal(props) {
   useEffect(() => {
     if( typeof subLocationID === "number" && typeof typeID === "number" && typeof attributeID === "number" ){
       dispatch({
-        type: GET_PRODUCT_LIST,
+        type: GET_PRODUCT_LIST_CONTRACT,
         data: { page: 1, pageSize: 1000, subLocationID, typeID, attributeID }
       });
     }

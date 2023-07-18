@@ -79,13 +79,20 @@ const updateCustomer = async (req, res)=>{
     try {
         let {headers: {authorization}} = req;
         let {id} = req.query;
+        let newData = {...req.body};
+        newData.files = [].concat(req.body.files)
+        if (req?.files?.length > 0) {
+            for (let file of req.files) {
+                newData.files.push(file.path)
+            }
+        }
         const result = await axios({
             url: `${local}/client/update?id=${id}`,
             method: "PUT",
             headers: {
                 Authorization: authorization
             },
-            data: req.body
+            data: newData
         });
         res.send(result.data);
     } catch (error) {

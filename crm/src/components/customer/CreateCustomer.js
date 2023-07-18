@@ -370,10 +370,10 @@ export default function CreateCustomer() {
           {renderInforBusiness()}
           <div className="modal__upload">
             <span>Tài liệu liên quan</span>
-            {client_id && typeof +client_id === "number"
+            <UploadFile setValueForm={setValueForm} />
+            { /*  client_id && typeof +client_id === "number"
               ? ""
               : 
-              <UploadFile setValueForm={setValueForm} />
               // <>
               //   <label htmlFor="upload">
               //     <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -395,7 +395,7 @@ export default function CreateCustomer() {
               //       setValueForm({ ...valueForm, files })
               //     }} />
               // </>
-            }
+            */   }
           </div>
           <div className="client__files" key={uuidv4()}>
             {

@@ -1,8 +1,9 @@
 const express = require("express");
-const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial, getProductSpecialForClient, updateProduct, deleteProductSpecial, getProductSubLocation } = require("../controller/product.controller");
+const { getProductTypeList, getProductList, getProductChannel, getProductLocation, getProductType, createProduct, deleteProduct, createProductType, createProductAttribute, deleteProductType, deleteProductAttribute, updateProductType, updateProductAttribute, getProductSpecial, createProductSpecial, getProductSpecialForClient, updateProduct, deleteProductSpecial, getProductSubLocation, getProductListContract } = require("../controller/product.controller");
 const productRouter = express.Router();
 
-productRouter.get("/item/list", getProductList)
+productRouter.post("/item/list", getProductList)
+productRouter.get("/item/list", getProductListContract)
 productRouter.get("/channel/list", getProductChannel)
 productRouter.get("/location/list", getProductLocation)
 productRouter.get("/sublocation/list", getProductSubLocation)

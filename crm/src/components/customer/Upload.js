@@ -28,7 +28,11 @@ export default function UploadFile({setValueForm}) {
     let uploadFiles = newFileList.map(file => {
       return file.originFileObj
     })
-    setValueForm((prev) => { return { ...prev, files: uploadFiles } });
+    if(window.location.href.includes("update")){
+      setValueForm((prev) => { return { ...prev, filesUpdate: uploadFiles } });
+    } else {
+      setValueForm((prev) => { return { ...prev, files: uploadFiles } });
+    }
     setFileList(newFileList)
   };
   const uploadButton = (

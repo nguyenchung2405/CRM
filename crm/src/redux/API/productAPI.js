@@ -7,6 +7,48 @@ export async function getProductListAPI(page, pageSize, subLocationID, typeID, a
         let sub_location_ID = subLocationID === null ? "" : subLocationID;
         let type_id = typeID === null ? "" : typeID;
         let attribute_id = attributeID === null ? "" : attributeID;
+        let newData = {};
+        if(sub_location_ID !== undefined){
+            newData.sub_location_ID = [sub_location_ID]
+        }
+        if(type_id !== undefined){
+            newData.type_ID = [type_id]
+        }
+        if(attribute_id !== undefined){
+            newData.attribute_option_ID = [attribute_id]
+        }
+        let result;
+        if(search){
+            result = await axios({
+                url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&sub_location_ID=${sub_location_ID}&attribute_ID=${attribute_id}&search=true&name=${search.name}`,
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                },
+                data: newData
+            });
+        } else {
+            result = await axios({
+                url: `${local}/api/product/item/list?page_size=${pageSize}&page=${page}&type_ID=${type_id}&sub_location_ID=${sub_location_ID}&attribute_ID=${attribute_id}`,
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                },
+                data: { }
+            });
+        }
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thât bại"
+    }
+};
+
+export async function getProductListContractAPI(page, pageSize, subLocationID, typeID, attributeID, search) {
+    try {
+        let sub_location_ID = subLocationID === null ? "" : subLocationID;
+        let type_id = typeID === null ? "" : typeID;
+        let attribute_id = attributeID === null ? "" : attributeID;
         let result;
         if(search){
             result = await axios({
@@ -31,6 +73,7 @@ export async function getProductListAPI(page, pageSize, subLocationID, typeID, a
         return "Thât bại"
     }
 };
+
 
 export async function getProductChannelAPI(page, pageSize) {
     try {

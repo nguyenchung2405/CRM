@@ -1,14 +1,14 @@
 const express = require("express");
 const { getCustomerList, deleteCustomerType, updateJobType ,updateCustomerType ,createJobType , deleteJobType , createCustomer, searchCustomer, updateCustomer, getDetailCustomer, getCustomerTypeList, getJobTypeList, createCustomerType , getListTypeCustomer} = require("../controller/customer.controller");
 const { uploadResourceClientToServer } = require("../middleware/client.middleware");
-const { uploadFileCreateClient } = require("../middleware/upload");
+const { uploadFileCreateClient, uploadFileUpdateClient } = require("../middleware/upload");
 const clientRouter = express.Router();
 
 clientRouter.get("/search", searchCustomer);
 clientRouter.get("/list", getCustomerList)
 clientRouter.post("/create", uploadFileCreateClient(), createCustomer)
 // clientRouter.post("/create", uploadFileCreateClient(), uploadResourceClientToServer, createCustomer)
-clientRouter.put("/update", updateCustomer)
+clientRouter.put("/update", uploadFileUpdateClient().array("filesUpdate", 10), updateCustomer)
 
 clientRouter.post("/create/job-type-list",createJobType)
 clientRouter.post("/job-type-list", getJobTypeList)

@@ -62,14 +62,22 @@ export async function searchCustomerAPI(data){
 
 export async function updateCustomerAPI(data){
     try {
-        let {id, ...rest} = data;
+        let {id, filesUpdate, ...rest} = data;
+        const form = new FormData();
+        for (let i = 0; i < filesUpdate?.length; i++) {
+            form.append("filesUpdate", filesUpdate[i]);
+        }
+        for (let key in rest) {
+            form.append(key, rest[key])
+        }
         const result = await axios({
             url: `${local}/api/client/update?id=${id}`,
             method: "PUT",
             headers: {
+                "Content-Type": "multipart/form-data",
                 Authorization: "Bearer " + TOKEN
             },
-            data: rest
+            data: form
         });
         return result.data;
     } catch (error) {
