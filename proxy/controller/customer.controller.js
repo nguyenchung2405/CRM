@@ -80,7 +80,7 @@ const updateCustomer = async (req, res)=>{
         let {headers: {authorization}} = req;
         let {id} = req.query;
         let newData = {...req.body};
-        newData.files = [].concat(req.body.files)
+        newData.files = [].concat(req.body.files.split(","))
         if (req?.files?.length > 0) {
             for (let file of req.files) {
                 newData.files.push(file.path)
