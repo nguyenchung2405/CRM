@@ -58,7 +58,7 @@ export default function ContractValue(props) {
                     return new Intl.NumberFormat("vi-VN").format(valueForm.total)
                 } else {
                     let doanhThu = giaTruocThue + (giaTruocThue * VAT / 100)
-                    return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(4) * 1000000);
+                    return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThu.toFixed(6) * 1000000);
                 }
             }
         } else if(row ===2){
@@ -68,7 +68,7 @@ export default function ContractValue(props) {
             if(discount !== 0){
                 let doanhThuRow1 = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
                 let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
-                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(4) * 1000000);
+                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(6) * 1000000);
             }
             return ""
         } else if(row === "total_include_VAT") {
@@ -79,7 +79,7 @@ export default function ContractValue(props) {
                 return valueForm.total / 1000000
             } else {
                 let doanhThu = giaTruocThue + (giaTruocThue * VAT / 100) 
-                return doanhThu.toFixed(4)
+                return doanhThu.toFixed(6)
             }
         }
     }

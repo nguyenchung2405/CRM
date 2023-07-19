@@ -51,7 +51,6 @@ function* updateCustomer(payload){
     try {
         let { data } = payload;
         let result = yield call(updateCustomerAPI, data);
-        console.log(result)
         let { result: code, data: dataResponse } = result?.data;
         if (code) {
             yield put(updateCusomer(dataResponse))
