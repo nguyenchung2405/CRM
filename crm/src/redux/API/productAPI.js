@@ -139,10 +139,10 @@ export async function getProductTypeAPI(page, page_size, subLocationID) {
     }
 };
 
-export async function getProductAttributeAPI(page, page_size, typeID) {
+export async function getProductAttributeAPI(page, page_size, typeID, subLocationID) {
     try {
         const result = await axios({
-            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}&type_ID=${typeID}`,
+            url: `${local}/api/product/attribute/list?page_size=${page_size}&page=${page}&type_ID=${typeID}&sub_location_ID=${subLocationID}`,
             method: "GET",
             headers: {
                 Authorization: "Bearer " + TOKEN

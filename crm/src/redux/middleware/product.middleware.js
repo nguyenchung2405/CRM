@@ -81,8 +81,8 @@ function* getProductType(payload) {
 
 function* getProductAttribute(payload) {
     try {
-        let { page, page_size, typeID } = payload.data;
-        const result = yield call(getProductAttributeAPI, page, page_size, typeID);
+        let { page, page_size, typeID, subLocationID } = payload.data;
+        const result = yield call(getProductAttributeAPI, page, page_size, typeID, subLocationID);
         yield put(setProductAttribute(result.data.data))
         yield put(setTotalProductAttribute(result.data.total))
     } catch (error) {

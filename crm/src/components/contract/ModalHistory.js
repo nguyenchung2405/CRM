@@ -48,7 +48,7 @@ export default function ModalHistory(props) {
             if(discount !== 0){
                 let doanhThuRow1 = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
                 let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
-                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(4) * 1000000);
+                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(6) * 1000000);
             }
             return ""
         } else if(row === "total_include_VAT") {

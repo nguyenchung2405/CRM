@@ -397,7 +397,6 @@ const getExportFile = (req,res)=>{
             res.send(response.data)
         })
         .catch(err => {
-            console.log("lỗi", err)
             if (err?.response?.data) {
                 res.send(err.response.data)
             } else {

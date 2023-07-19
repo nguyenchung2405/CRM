@@ -86,6 +86,7 @@ const updateCustomer = async (req, res)=>{
                 newData.files.push(file.path)
             }
         }
+        newData.bank_account_info = newData.bank_account_info === "null" ? null : newData.bank_account_info;
         const result = await axios({
             url: `${local}/client/update?id=${id}`,
             method: "PUT",

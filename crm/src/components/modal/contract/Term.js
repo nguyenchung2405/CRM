@@ -59,7 +59,7 @@ export default function TermModal(props) {
     if(typeof typeID === "number" && typeID !== null) {
       dispatch({
         type: GET_PRODUCT_ATTRIBUTE,
-        data: { page: 1, page_size: 1000, typeID }
+        data: { page: 1, page_size: 1000, typeID, subLocationID }
       })
     }
   }, [typeID, dispatch])

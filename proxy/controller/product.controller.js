@@ -196,7 +196,7 @@ const getProductSubLocation = async (req, res)=>{
 const getProductType = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, name , type_ID} = req.query;
+        let { page, page_size, name , type_ID, sub_location_ID} = req.query;
         let result;
         if(name && name !== ""){
             result = await axios({
@@ -206,9 +206,9 @@ const getProductType = async (req, res) => {
                     Authorization: authorization
                 }
             });
-        } else if(type_ID && type_ID !== "undefined") {
+        } else if(type_ID && type_ID !== "undefined" && sub_location_ID && sub_location_ID !== "undefined" ) {
             result = await axios({
-                url: `${local}/product/optionattribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&type_ID=${type_ID}`,
+                url: `${local}/product/optionattribute/list?page_size=${page_size}&page=${page}&sort_by=id&order=desc&type_ID=${type_ID}&sub_location_ID=${sub_location_ID}`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
