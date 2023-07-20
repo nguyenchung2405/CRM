@@ -46,6 +46,7 @@ const getContractList = async (req, res) => {
         }
         res.status(result.status).send(result.data);
     } catch (error) {
+        console.log("lỗi")
         if(error.response?.data){
             res.send(error.response.data)
         } else {
