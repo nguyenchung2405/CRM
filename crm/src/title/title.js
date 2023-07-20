@@ -2,7 +2,7 @@ import { checkMicroFe, getTokenInCookie } from "../untils/helper";
 
 export const local = checkMicroFe() === true ?
     window.location.href.includes("staging")
-        ? "http://crmservice-staging.tuoitre.vn"
+        ? "https://crmservice-staging.tuoitre.vn"
         : "https://crmservice-dev.tuoitre.vn"
     : ""
 
