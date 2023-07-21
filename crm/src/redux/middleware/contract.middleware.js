@@ -98,6 +98,8 @@ function* createRequest(payload){
             yield put(addContractRequest(result.data.requests[0]));
             message.success("Tạo quyền lợi hợp đồng thành công.")
             yield put({ type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id })
+        } else if(result?.detail){
+            message.error(result.detail)
         } else {
             message.error("Tạo quyền lợi hợp đồng thất bại.")
         }
