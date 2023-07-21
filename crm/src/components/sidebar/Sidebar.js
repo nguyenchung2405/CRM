@@ -31,7 +31,7 @@ export default function Sidebar() {
                 getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
             ]),
-            getItem("Quản lý khách hàng", "10", <BsFileEarmarkFill />,[
+            getItem(<Tooltip title="Quản lý khách hàng">Quản lý khách...</Tooltip>, "10", <BsFileEarmarkFill />,[
                 getItem(<Link to={`${uri}/crm/customer/type`}>Loại, Ngành nghề</Link> , "18" , <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/customer`}>Khách hàng</Link>, "16", <FcDepartment />),
             ]),

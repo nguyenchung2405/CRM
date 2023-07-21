@@ -635,6 +635,30 @@ div.ant-radio-group {
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    margin-top: 1rem;
+}
+
+.create__customer .client__files > .ant-image {
+    display: none;
+}
+
+.create__customer .client__files .upload__file {
+    position: relative;
+    margin-right: 1rem;
+    width: 40px;
+    height: 40px;
+    border: 1px dotted green;
+    padding-top: 3px;
+}
+
+.create__customer .client__files .upload__file > svg:nth-child(2) {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    color: red;
+    cursor: pointer;
+    z-index: 100;
+    background-color: white;
 }
 
 div.modal__content .modal__field__select {
