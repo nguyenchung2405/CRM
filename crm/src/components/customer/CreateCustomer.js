@@ -100,7 +100,7 @@ export default function CreateCustomer() {
         ...valueForm,
         is_company: value
       })
-      setValidateForm({email: false, phone: false,represent_phone: false, represent_email: false })
+      setValidateForm({email: false, phone: false })
     }
 
     const handleChangeInput = (e)=>{
@@ -115,6 +115,7 @@ export default function CreateCustomer() {
       let check = true;
       let newValidate = {};
       let newValiDateForm = valueForm.is_company ? {...validateForm} : {email: false, phone: false}
+      console.log(validateForm)
       for(let vali in newValiDateForm){
         if(vali.includes("phone")){
             if(valueForm[vali] && valueForm[vali] !== "" && valueForm[vali] !== undefined){
