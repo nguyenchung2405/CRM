@@ -282,7 +282,7 @@ export default function CreateReceiptModal(props) {
                         </div>
                         <div className="modal__field field__select width_525">
                             <div>
-                                <label className="term__label">Danh sách đã nghiệm thu</label>
+                                <label className="term__label">Danh sách chi tiết đã thực hiện</label>
                                 <div className="acceptance__list">
                                     {renderAccListForEvent()}
                                 </div>
@@ -355,7 +355,7 @@ export default function CreateReceiptModal(props) {
                         </div>
                         <div className="modal__field field__select width_525">
                             <div>
-                                <label className="term__label">Danh sách đã nghiệm thu</label>
+                                <label className="term__label">Danh sách chi tiết đã thực hiện</label>
                                 <div className="acceptance__list">
                                     {renderAccList()}
                                 </div>

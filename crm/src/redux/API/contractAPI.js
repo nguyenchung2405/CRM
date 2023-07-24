@@ -127,16 +127,27 @@ export async function getContractDetailAPI(contract_id) {
     }
 };
 
-export async function getContractRequestAPI(contract_id) {
+export async function getContractRequestAPI(contract_id, request_done) {
     try {
-        const result = await axios({
-            url: `${local}/api/contract/request/list?contract_id=${contract_id}`,
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
-        });
-        return result.data;
+        if(request_done === undefined){
+            const result = await axios({
+                url: `${local}/api/contract/request/list?contract_id=${contract_id}`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                }
+            });
+            return result.data;
+        } else {
+            const result = await axios({
+                url: `${local}/api/contract/request/list?contract_id=${contract_id}&done=${request_done}`,
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + TOKEN
+                }
+            });
+            return result.data;
+        }
     } catch (error) {
         console.log(error)
         return "Thất bại"
