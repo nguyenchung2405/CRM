@@ -365,21 +365,6 @@ export default function CreateContract() {
           </div>
           <div className="field__input field__flex">
             <div className="field__input_2">
-              <label>Tên sự kiện</label>
-              <Select
-                className="style"
-                type="text"
-                placeholder={window.location.href.includes("create") ? "Tên hợp đồng" : ""}
-                onChange={(value) => {
-                  handleChangeValue("event_ID", value)
-                }}
-                value={valueOfField("event_ID")}
-                disabled={valueForm.contract_type_id === 4 ? false : true}
-              >
-                {renderEventOption()}
-              </Select>
-            </div>
-            <div className="field__input_2">
               <label>Ngày bắt đầu - Ngày kết thúc</label>
               <RangePicker
                 className="date__range__picker"
@@ -411,6 +396,21 @@ export default function CreateContract() {
                 }}
                 value={valueOfField("rangePicker")}
               />
+            </div>
+            <div className="field__input_2">
+              <label>Tên sự kiện</label>
+              <Select
+                className="style"
+                type="text"
+                placeholder={window.location.href.includes("create") ? "Tên hợp đồng" : ""}
+                onChange={(value) => {
+                  handleChangeValue("event_ID", value)
+                }}
+                value={valueOfField("event_ID")}
+                disabled={valueForm.contract_type_id === 4 ? false : true}
+              >
+                {renderEventOption()}
+              </Select>
             </div>
           </div>
         </div>

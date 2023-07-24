@@ -47,20 +47,38 @@ function* createContract(payload) {
 
 function* getContractDetail(payload) {
     try {
-        let { contract_id } = payload;
-        let result = yield call(getContractDetailAPI, contract_id);
-        let { code, data } = result;
-        let responseRequest = yield call(getContractRequestAPI, contract_id);
-        if (+code === 200 || result.data.contract.length > 0) {
-            let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
-            dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
-            yield put(setContractDetail(dataAfterMapping))
-            yield put(setContractRequest(responseRequest.data.contract_request))
-            yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
-            yield put(setIsLoading(false))
-        } else {
-            yield put(setContractDetail({}))
+        if(payload?.contract_id){
+            let { contract_id } = payload;
+            let result = yield call(getContractDetailAPI, contract_id);
+            let { code, data } = result;
+            let responseRequest = yield call(getContractRequestAPI, contract_id);
+            if (+code === 200 || result.data.contract.length > 0) {
+                let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
+                dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
+                yield put(setContractDetail(dataAfterMapping))
+                yield put(setContractRequest(responseRequest.data.contract_request))
+                yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
+                yield put(setIsLoading(false))
+            } else {
+                yield put(setContractDetail({}))
+            }
+        } else if(payload?.data){
+            let {contract_id, request_done} = payload.data;
+            let result = yield call(getContractDetailAPI, contract_id);
+            let { code, data } = result;
+            let responseRequest = yield call(getContractRequestAPI, contract_id, request_done);
+            if (+code === 200 || result.data.contract.length > 0) {
+                let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
+                dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
+                yield put(setContractDetail(dataAfterMapping))
+                yield put(setContractRequest(responseRequest.data.contract_request))
+                yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
+                yield put(setIsLoading(false))
+            } else {
+                yield put(setContractDetail({}))
+            }
         }
+        
     } catch (error) {
         console.log(error)
     }

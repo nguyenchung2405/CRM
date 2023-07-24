@@ -159,7 +159,7 @@ export default function ContractContentModal(props) {
                         onChange={(value) => {
                             dispatch({
                                 type: GET_CONTRACT_DETAIL,
-                                contract_id: value
+                                data: {contract_id: value, request_done: false}
                             });
                             handleChangeValue("contract_id", value)
                         }}

@@ -130,15 +130,26 @@ const uploadFileDetailResponse = async (req, res) => {
 const getContractRequest = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { contract_id } = req.query;
-        const result = await axios({
-            url: `${local}/contract/request/list?contract_id=${contract_id}&page_size=100&sort_by=id&asc_order=true`,
-            method: "GET",
-            headers: {
-                Authorization: authorization
-            }
-        });
-        res.send(result.data)
+        let { contract_id, done } = req.query;
+        if(!done){
+            const result = await axios({
+                url: `${local}/contract/request/list?contract_id=${contract_id}&page_size=100&sort_by=id&asc_order=true`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+            res.send(result.data)
+        } else {
+            const result = await axios({
+                url: `${local}/contract/request/list?contract_id=${contract_id}&done=${done}&page_size=100&sort_by=id&asc_order=true`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+            res.send(result.data)
+        }
     } catch (error) {
         if (error.response.data) {
             res.send(error.response.data)
@@ -152,7 +163,7 @@ const getOwnerList = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         const result = await axios({
-            url: `${local}/info/communication-department-users`,
+            url: `${local}/info/communication-department-users?page_size=200&page=1`,
             method: "GET",
             headers: {
                 Authorization: authorization
