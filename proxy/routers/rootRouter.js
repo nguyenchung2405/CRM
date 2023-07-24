@@ -6,6 +6,7 @@ const { channelRouter } = require("./channelRouter");
 const { eventRouter } = require("./eventRouter");
 const { acceptanceRouter } = require("./acceptanceRouter");
 const { receiptRouter } = require("./receiptRouter");
+const { removeFile } = require("../controller/remove-file.controller");
 // const { customerRouter } = require("./customerRouter")
 const rootRouter = express.Router();
 
@@ -16,6 +17,7 @@ rootRouter.use("/event", eventRouter)
 rootRouter.use("/acceptance", acceptanceRouter)
 rootRouter.use("/receipt", receiptRouter)
 rootRouter.use("/", channelRouter);
+rootRouter.delete("/remove-file", removeFile)
 // rootRouter.use("/customer", customerRouter )
 
 module.exports = {

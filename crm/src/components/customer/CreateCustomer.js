@@ -1,8 +1,8 @@
-import { Image, message, Modal, Radio } from 'antd'
+import { Image, message, Modal, Radio, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
+import { CREATE_CUSTOMER, GET_CUSTOMER_DETAIL, GET_CUSTOMER_TYPE_LIST, GET_JOB_TYPE_LIST, local, regexEmail, regexPhone, UPDATE_CUSTOMER } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
 import SelectType from './SelectType';
@@ -13,6 +13,7 @@ import word from "../../img/doc.png"
 import pdf from "../../img/pdf.png";
 import Contacter from './Contacter';
 import UploadFile from "./Upload"
+import axios from 'axios';
 
 export default function CreateCustomer() {
 
@@ -261,10 +262,26 @@ export default function CreateCustomer() {
           />
         </div>
     }
+    
+    const deletePathOfFile = (index)=>{
+      axios({
+        url: `${local}/api/remove-file`,
+        method: "DELETE",
+        data: {path: valueForm.files[index]}
+      })
+      let newFiles = [...valueForm.files]
+      newFiles.splice(index, 1)
+      setValueForm(prev => {
+        return {
+          ...prev,
+          files: newFiles
+        }
+      })
+    }
 
     const renderFiles = ()=>{
-      if(dataCustomer?.files?.length > 0){
-        return dataCustomer?.files?.map(file => {
+      if(valueForm?.files?.length > 0){
+        return valueForm?.files?.map((file, indexFile) => {
           // if(file.includes("doc") || file.includes("docx")){
           //   return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
           // } else if(file.includes("pdf")) {
@@ -277,21 +294,50 @@ export default function CreateCustomer() {
           // } else {
           //   return <Image key={uuidv4()} src={uri_file + file} />
           // }
+          let index = file.indexOf("_")
+          let name = file.slice(index + 1)
           if (file?.includes("doc") || file?.includes("docx")) {
-            return <img key={uuidv4()} className="file" src={word} alt="xem word" onClick={() => {
-              setIsShowModalWord(true)
-              setFile(uri_file + file)
-            }} />
+            return <div className="upload__file" key={uuidv4()}>
+              <Tooltip title={name}>
+                <img key={uuidv4()} className="file" src={word} alt="xem word" onClick={() => {
+                  setIsShowModalWord(true)
+                  setFile(uri_file + file)
+                }} />
+                </Tooltip>
+              <svg onClick={()=>{ deletePathOfFile(indexFile) }} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z">
+                </path>
+                <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+              </svg>
+            </div>
           } else if (file?.includes("pdf")) {
-            return <img key={uuidv4()} className="file" src={pdf} alt="xem pdf" onClick={() => {
-              setIsShowModal(true)
-              setFile(uri_file + file)
-            }} />
+            return <div className="upload__file" key={uuidv4()}>
+              <Tooltip title={name}>
+                <img key={uuidv4()} className="file" src={pdf} alt="xem pdf" onClick={() => {
+                  setIsShowModal(true)
+                  setFile(uri_file + file)
+                }} />
+              </Tooltip>
+              <svg onClick={()=>{ deletePathOfFile(indexFile) }} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z">
+                </path>
+                <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+              </svg>
+            </div>
           } else {
-            return <FcImageFile key={uuidv4()} className="file" onClick={() => {
-              setFile(uri_file + file)
-              setImageVisible(true)
-            }} />
+            return <div className="upload__file" key={uuidv4()}>
+              <Tooltip title={name}>
+                <FcImageFile key={uuidv4()} className="file" onClick={() => {
+                  setFile(uri_file + file)
+                  setImageVisible(true)
+                }} />
+              </Tooltip>
+              <svg onClick={()=>{ deletePathOfFile(indexFile) }} stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z">
+                </path>
+                <path d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
+              </svg>
+            </div>
           }
         }) 
       }
