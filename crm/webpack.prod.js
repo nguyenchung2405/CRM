@@ -2,7 +2,7 @@ const path = require("path")
 const HTMLWebpackPlugin = require("html-webpack-plugin")
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin")
 const deps = require("./package.json").dependencies
-const webpack = require("webpack")
+const webpack = require("webpack");
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
