@@ -1,14 +1,12 @@
 import axios from "axios"
 import { local, TOKEN } from "../../title/title"
+import { AxiosExpress } from "../../untils/axios";
 
 export async function getCustomerListAPI(page, pageNumber){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/list?page=${page}&page_size=${pageNumber}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         })
         return result.data;
     } catch (error) {
@@ -27,15 +25,11 @@ export async function createCustomerAPI(dataCustomer){
         for(let key in restInforClient){
             form.append(key, restInforClient[key])
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/create`,
             method: "POST",
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
-            },
             data: form
-        });
+        })
         return result.data
     } catch (error) {
         console.log(error)
@@ -46,13 +40,10 @@ export async function createCustomerAPI(dataCustomer){
 export async function searchCustomerAPI(data){
     try {
         let {name, tax_number, brief_name} = data;
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/search?name=${name}&tax_number=${tax_number}&brief_name=${brief_name}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
-        });
+        })
         return result.data;
     } catch (error) {
         console.log(error)
@@ -70,13 +61,9 @@ export async function updateCustomerAPI(data){
         for (let key in rest) {
             form.append(key, rest[key])
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/update?id=${id}`,
             method: "PUT",
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
-            },
             data: form
         });
         return result.data;
@@ -88,12 +75,9 @@ export async function updateCustomerAPI(data){
 
 export async function getDetailCustomerAPI(client_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/${client_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -105,15 +89,11 @@ export async function getDetailCustomerAPI(client_id){
 export async function getCustomerTypeListAPI(data){
     try {
         const { page , page_size , name , sort_by , asc_order } = data
-        const resuft = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/client/type/customer?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
-        })
-        
-        return resuft.data
+        });
+        return result.data
     } catch (error) {
         console.log(error)
     }
@@ -124,12 +104,9 @@ export async function getJobTypeListAPI(data){
     try {
         const { page , page_size , name , sort_by , asc_order } = data
         // console.log({page , page_size , name , sort_by , asc_order});
-        const result = await axios({
+        const result = await AxiosExpress({
             method: "POST",
             url: `${local}/api/client/job-type-list?name=${name}&page=${page}&page_size=${page_size}&sort_by=${sort_by}&asc_order=${asc_order}`,
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data
     } catch (error) {

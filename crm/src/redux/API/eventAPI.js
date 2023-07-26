@@ -1,15 +1,12 @@
-import axios from "axios";
 import moment from "moment";
-import { local, TOKEN } from "../../title/title";
+import { local } from "../../title/title";
+import { AxiosExpress } from "../../untils/axios";
 
 export async function getEventListAPI(payload){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/list?page_size=${payload.pageNumber}&page=${payload.page}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
         });
         return result.data;
     } catch (error) {
@@ -39,12 +36,9 @@ export async function createEventAPI(data){
             details: [...newRequest],
         };
         let newData = {...data}
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/create`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -56,12 +50,9 @@ export async function createEventAPI(data){
 
 export async function getEventInforAPI(event_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/detail/list?id=${event_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -80,12 +71,9 @@ export async function updateEventAPI(data){
             to_date: convertEndDate,
             value_event: data.value_event / 1000000
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/update`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -107,12 +95,9 @@ export async function createRequestAPI(data){
                 }
             ],
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/create-request`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -124,12 +109,9 @@ export async function createRequestAPI(data){
 
 export async function deleteRequestAPI(request_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/delete-request?id=${request_id}`,
             method: "DELETE",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -140,12 +122,9 @@ export async function deleteRequestAPI(request_id){
 
 export async function searchEventAPI(data){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/search?name=${data}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -156,12 +135,9 @@ export async function searchEventAPI(data){
 
 export async function getUnsetContractAPI(){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/unset_contract`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -172,12 +148,9 @@ export async function getUnsetContractAPI(){
 
 export async function addUnserContractToEventAPI(data){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/add-unset-contract`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data
         });
         return result.data;
@@ -195,12 +168,9 @@ export async function updateRequestEventAPI(data){
             value_detail: data.real_price / 1000000,
             desc: ""
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/update-request?id=${data.id}`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -212,12 +182,9 @@ export async function updateRequestEventAPI(data){
 
 export async function getEventRequestListAPI(event_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/request-list?id=${event_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -228,12 +195,9 @@ export async function getEventRequestListAPI(event_id){
 
 export async function getEventRequestContractListAPI(event_id, detail_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/request-contract?event_id=${event_id}&detail_id=${detail_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {

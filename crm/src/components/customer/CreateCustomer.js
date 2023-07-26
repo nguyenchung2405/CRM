@@ -115,7 +115,6 @@ export default function CreateCustomer() {
       let check = true;
       let newValidate = {};
       let newValiDateForm = valueForm.is_company ? {...validateForm} : {email: false, phone: false}
-      console.log(validateForm)
       for(let vali in newValiDateForm){
         if(vali.includes("phone")){
             if(valueForm[vali] && valueForm[vali] !== "" && valueForm[vali] !== undefined){
