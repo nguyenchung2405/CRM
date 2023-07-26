@@ -4,7 +4,6 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const deps = require("./package.json").dependencies
 const webpack = require("webpack")
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
@@ -13,7 +12,6 @@ module.exports = {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist")
     },
-    devtool: 'source-map',
     mode: 'production',
     plugins: [
         new HTMLWebpackPlugin({
@@ -43,11 +41,10 @@ module.exports = {
             },
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
-        new MiniCssExtractPlugin()
     ],
     optimization: {
         splitChunks: false,
-        minimizer: [`...`, new TerserPlugin(), new CssMinimizerPlugin()],
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     },
     devServer: {
         port: 3002,
@@ -83,7 +80,7 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, "style-loader", "css-loader"],
+                use: ["style-loader", "css-loader"],
             },
             {
                 test: /\.(png|jp(e*)g|svg|gif)$/,
