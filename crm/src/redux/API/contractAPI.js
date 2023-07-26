@@ -1,6 +1,6 @@
-import axios from "axios"
 import moment from "moment";
-import { local, TOKEN } from "../../title/title";
+import { local } from "../../title/title";
+import { AxiosExpress } from "../../untils/axios";
 
 export async function getContractListAPI(page, pageNumber, status, search) {
     try {
@@ -17,21 +17,15 @@ export async function getContractListAPI(page, pageNumber, status, search) {
                     }
                 }
             }
-            result = await axios({
+            result = await AxiosExpress({
                 url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&sort_by=id&order=desc&search=true${queryString}`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                },
                 data: newSearchData
             });
         } else {
-            result = await axios({
+            result = await AxiosExpress({
                 url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                }
             });
         }
         return result.data;
@@ -43,12 +37,9 @@ export async function getContractListAPI(page, pageNumber, status, search) {
 
 export async function getContractTypeListAPI() {
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/type/list?page_size=10&page=1&sort_by=id&order=desc`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
         });
         return result.data;
     } catch (error) {
@@ -95,12 +86,9 @@ export async function createContractAPI(data) {
             payment: [...newPayment]
         }
         const newData = { ...data }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/create`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         // console.log(result.data)
@@ -113,12 +101,9 @@ export async function createContractAPI(data) {
 
 export async function getContractDetailAPI(contract_id) {
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/detail?id=${contract_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
         });
         return result.data;
     } catch (error) {
@@ -130,21 +115,15 @@ export async function getContractDetailAPI(contract_id) {
 export async function getContractRequestAPI(contract_id, request_done) {
     try {
         if(request_done === undefined){
-            const result = await axios({
+            const result = await AxiosExpress({
                 url: `${local}/api/contract/request/list?contract_id=${contract_id}`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                }
             });
             return result.data;
         } else {
-            const result = await axios({
+            const result = await AxiosExpress({
                 url: `${local}/api/contract/request/list?contract_id=${contract_id}&done=${request_done}`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                }
             });
             return result.data;
         }
@@ -156,12 +135,9 @@ export async function getContractRequestAPI(contract_id, request_done) {
 
 export async function getOwnerListAPI(){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/owner/list`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            }
         });
         return result.data;
     } catch (error) {
@@ -182,12 +158,9 @@ export async function updateContractiAPI(data){
             discount_by_percent: data.discount_by_percent,
             VAT: Number(data.VAT)
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/update`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -210,12 +183,9 @@ export async function createRequestAPI(data){
                 }
             ]
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/create-request`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newRequest
         });
         return result.data;
@@ -227,12 +197,9 @@ export async function createRequestAPI(data){
 
 export async function deleteRequestAPI(request_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/delete-request?request_id=${request_id}`,
             method: "DELETE",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -247,12 +214,9 @@ export async function updateRequestAPI(data){
             "quality": data.quality,
             "custom_price": data.custom_price >= 1000000 ? data.custom_price / 1000000 : null
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/update-request?request_id=${data.id}`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: updateRequest
         });
         return result.data;
@@ -276,12 +240,9 @@ export async function createDetailAPI(data){
                 }
             ]
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/detail-create`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newDetail
         });
         return result.data;
@@ -299,12 +260,9 @@ export async function updateDetailAPI(data){
             "to_date": data.from_date,
             "file": data.file
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/detail-update?detail_id=${data.id}`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newDetail
         });
         return result.data;
@@ -322,12 +280,9 @@ export async function createPaymentAPI(data){
             request_date: newRequestDate,
             total_value: data.total_value / 1000000
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/payment-add`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -346,12 +301,9 @@ export async function updatePaymentAPI(data){
             "detail_IDs": data.detail_IDs.map(detail => detail.id),
             id: data.id
         };
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/payment-update`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data: newData
         });
         return result.data;
@@ -363,12 +315,9 @@ export async function updatePaymentAPI(data){
 
 export async function getRequestOfEventAPI(event_id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/event/detail/list?id=${event_id}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -381,11 +330,10 @@ export async function importFileExcelAPI(data){
     try {
         const form = new FormData();
         form.append("file", data.file)
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/import-file-excel?contract_ID=${data.contract_id}`,
             method: "POST",
             headers: {
-                Authorization: "Bearer " + TOKEN,
                 'Content-Type': 'multipart/form-data',
             },
             data: form
@@ -402,20 +350,14 @@ export async function getContractTypeAPI(data){
         let {page, page_size, search} = data;
         let result;
         if(search){
-            result = await axios({
+            result = await AxiosExpress({
                 url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}&search=true&name=${search}`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                },
             });
         } else {
-            result = await axios({
+            result = await AxiosExpress({
                 url: `${local}/api/contract/type/get-list?page=${page}&page_size=${page_size}`,
                 method: "GET",
-                headers: {
-                    Authorization: "Bearer " + TOKEN
-                },
             });
         }
         return result.data;
@@ -427,12 +369,9 @@ export async function getContractTypeAPI(data){
 
 export async function createContractTypeAPI(data){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/type/create`,
             method: "POST",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data
         });
         return result.data;
@@ -444,12 +383,9 @@ export async function createContractTypeAPI(data){
 
 export async function updateContractTypeMiddlewareAPI(data){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/type/update?id=${data.id}`,
             method: "PUT",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
             data
         });
         return result.data;
@@ -461,12 +397,9 @@ export async function updateContractTypeMiddlewareAPI(data){
 
 export async function deleteContractTypeAPI(id){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/contract/type/delete?id=${id}`,
             method: "DELETE",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {

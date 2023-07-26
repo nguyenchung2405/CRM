@@ -595,7 +595,7 @@ export default function CreateContract() {
                     } else {
                       dispatch({
                         type: DELETE_REQUEST,
-                        request_id: text.id
+                        data: {request_id: text.id, contract_id}
                       })
                     }
                   }} />

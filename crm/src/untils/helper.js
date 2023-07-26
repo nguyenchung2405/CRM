@@ -5,10 +5,8 @@ export let getTokenInCookie = () => {
     try {
         let tokenCookie = docCookie.getItem("usertoken")
         if (!tokenCookie) {
-            // return null
-            // Khi test trên local
-            return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEzLCJleHAiOjE3NDc3NjkzNjd9.XTw5NE1kSEwbdr8xE59TsbVTUF4jyh1l33LdKOge6-4"
-            // return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwIjoyNzUwNDExMDg3fQ.uWeEJEXHyNysw85k22m0s6dFNi4nJFAO8NS8leY6fyA"
+            // window.location.replace("/")
+            return
         }
         // console.log(tokenCookie);
         return tokenCookie

@@ -1,6 +1,6 @@
-import axios from "axios";
 import moment from "moment";
-import { local, TOKEN } from "../../title/title";
+import { local } from "../../title/title";
+import { AxiosExpress } from "../../untils/axios";
 
 export async function createAcceptanceAPI(data){
     try {
@@ -24,12 +24,11 @@ export async function createAcceptanceAPI(data){
             let newToDate = moment(new Date(rest["from_date"])).format("YYYY-MM-DD")
             formAcceptance.append("to_date", newToDate)
         }
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/create`,
             method: "POST",
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
             },
             data: formAcceptance
         });
@@ -58,16 +57,15 @@ export async function createEventAcceptanceAPI(data){
                 formAcceptance.append(key, rest[key])
             }
         }
-          const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/event-create`,
             method: "POST",
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
             },
             data: formAcceptance
-          });
-          return result.data;
+        });
+        return result.data;
     } catch (error) {
         console.log(error)
         return "Thất bại"
@@ -85,12 +83,11 @@ export async function createDetailInAcceptanceAPI(data){
         formDetail.append("contract_id", contract_id)
         formDetail.append("request_id", request_id)
         formDetail.append("from_date", newFromDate)
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/detail-create`,
             method: "POST",
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
             },
             data: formDetail
         });
@@ -112,12 +109,11 @@ export async function createDetailInEventAcceptanceAPI(data){
         formDetail.append("desc", desc)
         formDetail.append("from_date", newFromDate)
         formDetail.append("fileDetail", file)
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/event-detail-create`,
             method: "POST",
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: "Bearer " + TOKEN
             },
             data: formDetail
         });
@@ -130,12 +126,9 @@ export async function createDetailInEventAcceptanceAPI(data){
 
 export async function getAcceptanceContractListAPI(page, pageNumber){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/request-list?page=${page}&page_size=${pageNumber}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {
@@ -146,12 +139,9 @@ export async function getAcceptanceContractListAPI(page, pageNumber){
 
 export async function getAcceptanceEventListAPI(page, pageNumber){
     try {
-        const result = await axios({
+        const result = await AxiosExpress({
             url: `${local}/api/acceptance/event-list?page=${page}&page_size=${pageNumber}`,
             method: "GET",
-            headers: {
-                Authorization: "Bearer " + TOKEN
-            },
         });
         return result.data;
     } catch (error) {

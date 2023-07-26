@@ -50,7 +50,7 @@ export default function ContractRight(props) {
     const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
     const {isUpdateDetail, setIsUpdateDetail, contract_id} = props;
-      console.log(data)
+    
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
     }, [props.data])
@@ -128,10 +128,21 @@ export default function ContractRight(props) {
             formData.append("detailFile", file);
             const upload = await axios({
               url: `${local}/api/contract/upload/detail`,
+              headers: {
+                "Content-Type": "multipart/form-data",
+                // Authorization: "Bearer " + TOKEN
+              },
               method: "POST",
               data: formData
             });
-            pathOfFile = upload.data;
+            if(upload?.data){
+              axios({
+                url: `${local}/api/remove-file`,
+                method: "DELETE",
+                data: {path: pathOfFile}
+              })
+              pathOfFile = upload.data;
+            }
         } catch (error) {
           console.log("uploadFileDetail", error)
         }
