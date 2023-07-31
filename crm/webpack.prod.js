@@ -39,7 +39,7 @@ module.exports = {
                     requiredVersion: deps["react-redux"],
                 },
                 "antd": {
-                    singleton: true,
+                    singleton: false,
                     requiredVersion: deps["antd"],
                 }
             },
