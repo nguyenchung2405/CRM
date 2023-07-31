@@ -2,13 +2,15 @@ const path = require("path")
 const HTMLWebpackPlugin = require("html-webpack-plugin")
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin")
 const deps = require("./package.json").dependencies
+const webpack = require("webpack");
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 module.exports = {
     entry: path.join(__dirname, "./src/index.js"),
     output: {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist")
     },
-
     plugins: [
         new HTMLWebpackPlugin({
             template: "./public/index.html"
@@ -36,10 +38,11 @@ module.exports = {
                 },
             },
         }),
-
+        new webpack.optimize.AggressiveMergingPlugin(),
     ],
     optimization: {
         splitChunks: false,
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     },
     devServer: {
         port: 3002,
@@ -56,7 +59,6 @@ module.exports = {
     },
     devtool: 'inline-source-map',
     mode: 'development',
-
     module: {
         rules: [
             {

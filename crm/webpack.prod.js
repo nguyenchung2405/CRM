@@ -12,7 +12,7 @@ module.exports = {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist")
     },
-    mode: 'development',
+    mode: 'production',
     plugins: [
         new HTMLWebpackPlugin({
             template: "./public/index.html"
@@ -38,6 +38,10 @@ module.exports = {
                     singleton: false,
                     requiredVersion: deps["react-redux"],
                 },
+                "antd": {
+                    singleton: true,
+                    requiredVersion: deps["antd"],
+                }
             },
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
