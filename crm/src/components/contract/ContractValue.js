@@ -62,13 +62,20 @@ export default function ContractValue(props) {
                 }
             }
         } else if(row ===2){
-            let giaTriTruocThue = valueForm.total / 1000000;
-            let VAT = valueForm.VAT;
+            let giaTriSauThue = valueForm.total / 1000000;
+            let VAT = Number(valueForm.VAT);
             let discount = valueForm.discount_by_percent;
             if(discount !== 0){
-                let doanhThuRow1 = giaTriTruocThue + (giaTriTruocThue * VAT / 100);
-                let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
-                return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(6) * 1000000);
+                if(giaTriSauThue > 0 && +VAT === 10){
+                    let doanhThuRow1 = giaTriSauThue;
+                    let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
+                    return new Intl.NumberFormat("vi-VN").format(doanhThuRow2.toFixed(6) * 1000000)
+                } else {
+                    let giaTruocThue = giaTriSauThue / 1.1;
+                    let doanhThuRow1 = giaTruocThue + (giaTruocThue * VAT / 100);
+                    let doanhThuRow2 = doanhThuRow1 - (doanhThuRow1 * discount / 100)
+                    return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(doanhThuRow2.toFixed(6) * 1000000);
+                }
             }
             return ""
         } else if(row === "total_include_VAT") {

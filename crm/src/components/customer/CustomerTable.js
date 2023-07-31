@@ -23,13 +23,13 @@ export default function CustomerTable() {
     const { messageAlert } = useSelector(state => state.messageReducer);
     const [isShowModal, setIsShowModal] = useState(false);
     const [isShowModalUpdate, setIsShowModalUpdate] = useState(false);
-    const [dataToModal, setDataToModal] = useState({});
+    const [isFirstRender, setIsFirstRender] = useState(true);
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [search, setSearch] = useState({ name: "", tax_number: "", brief_name: "" })
-
+console.log(isFirstRender)
     useEffect(() => {
-        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+        if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "" && !isFirstRender) {
             dispatch({
                 type: GET_CUSTOMER_LIST,
                 data: { page, pageNumber }
@@ -49,14 +49,9 @@ export default function CustomerTable() {
         }
     }, [page, pageNumber])
 
-    // useEffect(() => {
-    //     let { type, msg } = messageAlert;
-    //     if (type === "thành công") {
-    //         message.success(msg)
-    //     } else if (type === "thất bại") {
-    //         message.error(msg)
-    //     }
-    // }, [messageAlert])
+    useEffect(()=>{
+        setIsFirstRender(false)
+    }, [])
 
     const handleSearchInput = (e) => {
         let { value, name } = e.target;

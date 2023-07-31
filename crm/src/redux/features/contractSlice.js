@@ -70,10 +70,11 @@ const contractSlice = createSlice({
                 let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
                 let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detail_id_old);
                 state.contractRequest[indexReq].details[indexDetail] = detailData;
+            } else {
+                let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
+                let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detailData.id);
+                state.contractRequest[indexReq].details[indexDetail] = detailData;
             }
-            let indexReq = state.contractRequest.findIndex(req => req.id === request_id);
-            let indexDetail = state.contractRequest[indexReq].details.findIndex(detail => detail.id === detailData.id);
-            state.contractRequest[indexReq].details[indexDetail] = detailData;
         },
         setOwnerList: (state, action)=>{
             state.ownerList = action.payload;
