@@ -22,7 +22,8 @@ function convertLegacyProps(data){
                 desc: item.desc,
                 file: item?.file,
                 from_date: newFromDate,
-                key: item.id
+                key: item.id,
+                completed_evidences: item.completed_evidences
             }
         })
     } catch (error) {
@@ -271,24 +272,14 @@ export default function ContractRight(props) {
                   </Popconfirm>
                 </span>
               ) : (
-                <>
-                <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                  Sửa
-                </Typography.Link>
-                {/**
-                <Typography.Link onClick={()=>{
-                  if(record.file.includes("doc") || record.file.includes("docx")){
-                    // return <a className="dowload__file" href={uri_file + record.file}>Tải file word</a>
-                  } else if(record.file.includes("pdf")) {
-                        setIsShowModal(true)
-                        setFile(uri_file + record.file)
-                  } else {
-                      setFile(uri_file + record.file)
-                      setImageVisible(true)
-                  }
-                }}>Xem</Typography.Link>
-              */}
-                </>
+                  record.completed_evidences?.length > 0
+                    ?
+                    ""
+                    : <>
+                      <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                        Sửa
+                      </Typography.Link>
+                    </>
               );
             }
         }
