@@ -642,7 +642,18 @@ div.ant-radio-group {
     display: none;
 }
 
-.create__customer .client__files .upload__file {
+.detail__infor__modal .modal__upload .client__files {
+    display: flex;
+}
+
+.detail__infor__modal .modal__upload .upload__file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.create__customer .client__files .upload__file,
+.detail__infor__modal .modal__upload .upload__file {
     position: relative;
     margin-right: 1rem;
     width: 40px;
@@ -651,7 +662,8 @@ div.ant-radio-group {
     padding-top: 3px;
 }
 
-.create__customer .client__files .upload__file > svg:nth-child(2) {
+.create__customer .client__files .upload__file > svg:nth-child(2),
+.detail__infor__modal .modal__upload  .upload__file > svg:nth-child(2){
     position: absolute;
     top: -5px;
     right: -5px;
@@ -841,7 +853,17 @@ div.modal__content .modal__field.modal__report__upload > label {
     display: block;
 }
 
-div.modal__content .modal__field textarea {
+div.detail__infor__modal .ant-modal-body .modal__report__upload,
+div.detail__infor__modal .ant-modal-body .modal__upload {
+    padding-left: 63px;
+}
+
+div.detail__infor__modal .ant-modal-body .modal__report__upload label {
+    display: block;
+}
+
+div.modal__content .modal__field textarea,
+div.detail__infor__modal .ant-modal-body .modal__report__upload textarea {
     width: 525px;
     display: block;
     margin-bottom: 21px;
@@ -1515,10 +1537,6 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     height: 330px;
     overflow: hidden;
 }
-
-/* .create__contract__payment .history__table.table__expand {
-    height: auto;
-} */
 
 .create__contract__payment .expand__more {
     width: 916px;

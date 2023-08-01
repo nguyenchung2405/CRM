@@ -39,6 +39,45 @@ export async function createAcceptanceAPI(data){
     }
 };
 
+export async function updateAcceptanceAPI(data){
+    try {
+        const formAcceptance = new FormData();
+        let {files, ...rest} = data;
+        if(files?.length > 0){
+            for(let i = 0 ; i < files.length; i++){
+                formAcceptance.append("files", files[i]);
+            }
+        }
+        for(let key in rest){
+            if(key === "report_date" || key === "from_date"){
+                let newReportDate = moment(new Date(rest[key])).format("YYYY-MM-DD")
+                formAcceptance.append(key, newReportDate)
+            } else {
+                formAcceptance.append(key, rest[key])
+            }
+        }
+        if(!rest.to_date){
+            let newToDate = moment(new Date(rest["from_date"])).format("YYYY-MM-DD")
+            formAcceptance.append("to_date", newToDate)
+        }
+        for (const pair of formAcceptance.entries()) {
+            console.log(`${pair[0]}, ${pair[1]}`);
+          }
+        const result = await AxiosExpress({
+            url: `${local}/api/acceptance/update`,
+            method: "PUT",
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            data: formAcceptance
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
 export async function createEventAcceptanceAPI(data){
     try {
         // console.log("createAcceptanceAPI", data)

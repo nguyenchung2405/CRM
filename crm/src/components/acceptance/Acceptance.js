@@ -137,7 +137,7 @@ export default function Acceptance() {
                 <Column className="contract__table__nguoiDauMoi" title="Người đầu mối" key="nguoiDauMoi" dataIndex="owner_name" />
                 <Column className="contract__table__nguoiTheoDoi" title="Người theo dõi" key="nguoiTheoDoi" dataIndex="creater_name" />
                 <Column className="contract__table__total" title="Giá trị hợp đồng" key="total" render={(text) => {
-                    let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total > 1000000 ? +text.total : +text.total * 1000000)
+                    let total = new Intl.NumberFormat("vi-VN", { currency: "VND" }).format(+text.total_include_VAT > 1000000 ? +text.total_include_VAT : +text.total_include_VAT * 1000000)
                     return total + " VNĐ"
                 }} />
                 <Column fixed="right" render={(text) => {

@@ -416,7 +416,7 @@ export default function CreateCustomer() {
           {renderInforBusiness()}
           <div className="modal__upload">
             <span>Tài liệu liên quan</span>
-            <UploadFile setValueForm={setValueForm} />
+            <UploadFile setValueForm={setValueForm} accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpg, image/gif" />
             { /*  client_id && typeof +client_id === "number"
               ? ""
               : 

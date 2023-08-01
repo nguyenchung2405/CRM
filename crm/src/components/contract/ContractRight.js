@@ -1,4 +1,4 @@
-import { Form, Image, Input, Popconfirm, Table, Typography } from 'antd'
+import { Form, Image, Input, Popconfirm, Table, Tooltip, Typography } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import imageIcon from "../../img/image.png";
 import ViewDoc from '../ViewDoc';
 import word from "../../img/doc.png"
 import {v4 as uuidv4} from "uuid"
+import ModalInforDetail from './ModalInforDetail';
 
 function convertLegacyProps(data){
     try {
@@ -23,7 +24,8 @@ function convertLegacyProps(data){
                 file: item?.file,
                 from_date: newFromDate,
                 key: item.id,
-                completed_evidences: item.completed_evidences
+                completed_evidences: item.completed_evidences,
+                price: item.price
             }
         })
     } catch (error) {
@@ -47,11 +49,13 @@ export default function ContractRight(props) {
     const [requestId, setRequestId] = useState();
     const [isShowModal, setIsShowModal] = useState(false);
     const [isShowModalWord, setIsShowModalWord] = useState(false);
+    const [isShowModalDetail, setIsShowModalDetail] = useState(false);
+    const [dataModalDetail, setDataModalDetail] = useState({});
     const [file, setFile] = useState("");
     const [imageVisible, setImageVisible] = useState(false);
     const isEditing = (record) => record.key === editingKey;
     const {isUpdateDetail, setIsUpdateDetail, contract_id} = props;
-    
+
     useEffect(()=>{
       setData(convertLegacyProps(props.data))
     }, [props.data])
@@ -219,18 +223,40 @@ export default function ContractRight(props) {
           editable: true,
           dataIndex: "from_date",
           title: "Ngày đăng",
-          key: uuidv4()
+          key: uuidv4(),
+          width: "18%"
         },
         {
             editable: true,
             dataIndex: "desc",
             title: "Mô tả",
-            key: uuidv4()
+            key: uuidv4(),
+            width: "40%",
+            render: (_, record)=>{
+              if ((record.desc.split(" ").length - 1) > 15) {
+                let indexSpace = 0
+                let numberIndex = 0
+                for (let i = 0; i < record.desc.length; i++) {
+                  if (record.desc[i] === " " && numberIndex < 3) {
+                    indexSpace = i
+                    numberIndex += 1
+                  } else {
+                    break;
+                  }
+                }
+                return <Tooltip>
+                  {record.desc.slice(0, indexSpace)}
+                </Tooltip>
+              } else {
+                return record.desc
+              }
+            }
         },
         {
             editable: true,
             dataIndex: "file",
             title: "File",
+            width: "10%",
             key: uuidv4(),
             render: (_,record)=>{
               if(record.file?.includes("doc") || record.file?.includes("docx")){
@@ -253,10 +279,33 @@ export default function ContractRight(props) {
             }
         },
         {
+          className: "price__detail",
+          key: uuidv4(),
+          title: "Giá trước thuế (VNĐ)",
+          width: "max-content",
+          render: (_,record)=>{
+            // if(record.completed_evidences?.length > 0){
+            //   return new Intl.NumberFormat("vi-VN").format((record.price * 1000000).toFixed(6)) + " VNĐ"
+            // } else {
+            //   return ""
+            // }
+            return new Intl.NumberFormat("vi-VN").format((record.price * 1000000).toFixed(6))
+          }
+        },
+        {
             className: "thaoTac",
             key: uuidv4(),
+            width: "10%",
             render: (_, record) => {
               const editable = isEditing(record);
+              if(record.completed_evidences?.length > 0){
+                return <Typography.Link onClick={() => {
+                  setDataModalDetail(record)
+                  setIsShowModalDetail(true)
+                }}>
+                Xem chi tiết
+              </Typography.Link>
+              }
               return editable ? (
                 <span>
                   <Typography.Link
@@ -282,7 +331,7 @@ export default function ContractRight(props) {
                     </>
               );
             }
-        }
+          },
     ];
 
     const mergedColumns = columns.map((col) => {
@@ -315,10 +364,10 @@ export default function ContractRight(props) {
             dataSource={data}
             pagination={false}
             showHeader={true}
-            columns={mergedColumns}    
+            columns={mergedColumns}
         >
-           
         </Table>
+        <ModalInforDetail isShowModal={isShowModalDetail} setIsShowModal={setIsShowModalDetail} data={dataModalDetail} setDataModalDetail={setDataModalDetail} />
         <ViewPDF pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
         <ViewDoc showModal={isShowModalWord} setIsShowModal={setIsShowModalWord} word={file} />
         <Image 
