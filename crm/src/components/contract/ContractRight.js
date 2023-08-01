@@ -8,7 +8,7 @@ import { CREATE_DETAIL, local, UPDATE_DETAIL } from '../../title/title';
 import ViewPDF from '../ViewPDF';
 import { checkMicroFe } from '../../untils/helper';
 import pdf from "../../img/pdf.png";
-import {FcImageFile} from "react-icons/fc"
+import imageIcon from "../../img/image.png";
 import ViewDoc from '../ViewDoc';
 import word from "../../img/doc.png"
 import {v4 as uuidv4} from "uuid"
@@ -245,7 +245,7 @@ export default function ContractRight(props) {
                         setFile(uri_file + record.file)
                 }} />
               } else {
-                return <FcImageFile className="file" onClick={()=>{
+                return <img className="file" src={imageIcon} alt="xem pdf" onClick={() => {
                   setFile(uri_file + record.file)
                   setImageVisible(true)
                 }} />

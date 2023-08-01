@@ -172,7 +172,7 @@ function* createDetail(payload){
 function* updateDetail(payload){
     try {
         const result = yield call(updateDetailAPI, payload.data);
-        if(result.data.msg === "Updated successfully!"){
+        if(result.data?.msg === "Updated successfully!"){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: payload.data }))
             message.success("Cập nhật chi tiết quyền lợi hợp đồng thành công.")
         } else {
