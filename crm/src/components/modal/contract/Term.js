@@ -156,8 +156,8 @@ export default function TermModal(props) {
       }
     } else {
       // Khi cập nhật thì PUT riêng từng API
+      valueModal.contract_id = contract_id;
       if (!isUpdateModal) {
-        valueModal.contract_id = contract_id;
         // console.log(valueModal)
         dispatch({
           type: CREATE_REQUEST,

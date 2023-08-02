@@ -147,6 +147,7 @@ function* updateRequest(payload){
         if(result.data.msg === "Updated successfully!"){
             yield put(updateContractRequest(payload.data))
             message.success("Cập nhật quyền lợi hợp đồng thành công.")
+            yield put({ type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id })
         } else {
             message.error("Cập nhật quyền lợi hợp đồng thất bại.")
         }

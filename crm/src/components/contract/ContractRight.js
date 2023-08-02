@@ -141,7 +141,7 @@ export default function ContractRight(props) {
               data: formData
             });
             if(upload?.data){
-              axios({
+              await axios({
                 url: `${local}/api/remove-file`,
                 method: "DELETE",
                 data: {path: pathOfFile}
@@ -284,12 +284,11 @@ export default function ContractRight(props) {
           title: "Giá trước thuế (VNĐ)",
           width: "max-content",
           render: (_,record)=>{
-            // if(record.completed_evidences?.length > 0){
-            //   return new Intl.NumberFormat("vi-VN").format((record.price * 1000000).toFixed(6)) + " VNĐ"
-            // } else {
-            //   return ""
-            // }
-            return new Intl.NumberFormat("vi-VN").format((record.price * 1000000).toFixed(6))
+            if(record.completed_evidences?.length > 0){
+              return new Intl.NumberFormat("vi-VN").format((record.price * 1000000).toFixed(6)) + " VNĐ"
+            } else {
+              return ""
+            }
           }
         },
         {
