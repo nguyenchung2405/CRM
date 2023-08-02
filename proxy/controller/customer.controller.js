@@ -87,6 +87,11 @@ const updateCustomer = async (req, res)=>{
             }
         }
         newData.bank_account_info = newData.bank_account_info === "null" ? null : newData.bank_account_info;
+        for(let property in newData){
+            if(newData[property] === "null"){
+                newData[property] = null
+            }
+        }
         const result = await axios({
             url: `${local}/client/update?id=${id}`,
             method: "PUT",

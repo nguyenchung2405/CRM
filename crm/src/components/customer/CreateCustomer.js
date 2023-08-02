@@ -1,4 +1,4 @@
-import { Image, message, Modal, Radio, Tooltip } from 'antd'
+import { Image, message, Radio, Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
@@ -7,10 +7,10 @@ import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
 import SelectType from './SelectType';
 import {v4 as uuidv4} from "uuid"
-import { FcImageFile } from 'react-icons/fc';
 import ViewDoc from '../ViewDoc';
 import word from "../../img/doc.png"
 import pdf from "../../img/pdf.png";
+import image from "../../img/image.png";
 import Contacter from './Contacter';
 import UploadFile from "./Upload"
 import axios from 'axios';
@@ -43,7 +43,7 @@ export default function CreateCustomer() {
         type: GET_JOB_TYPE_LIST,
         data: { page:1 , page_size: 100, name: "", sort_by: "id", asc_order: false,}
       })
-    }, [])
+    }, [dispatch])
     
     useEffect(()=>{
       if(client_id && dataCustomer === null){
@@ -52,44 +52,41 @@ export default function CreateCustomer() {
             client_id
           })
       }
-    }, [client_id, dataCustomer])
-
+    }, [client_id, dispatch])
+    
     useEffect(()=>{
-        if(isCreateCustomer){
-            setValueForm({is_company: false})
-            setValueRadio(false)
-        } else {
-            setValueForm({...dataCustomer})
+        if(dataCustomer !== null){
+          setValueForm(dataCustomer)
+          setValueRadio(dataCustomer.is_company)
         }
-        if(dataCustomer?.is_company){
-            setValueRadio(dataCustomer.is_company)
-        } else {
-            setValueRadio(false)
+        return ()=>{
+          setValueForm({})
+          setValueRadio(false)
         }
-    }, [dataCustomer]);
+    }, [dataCustomer, dispatch]);
 
     const handleCancel = () => {
         setValidateForm({email: false, phone: false})
-        setValueForm({is_company: false})
+        setValueForm({})
         history.replace(`${uri}/crm/customer`)
     };
 
     const handleOk = ()=>{
       let check = checkValueForm();
       if(!check){
-        if(window.location.href.includes("/customer/create") || isCreateCustomer){
+        if(window.location.href.includes("/customer/create") ){
           dispatch({
             type: CREATE_CUSTOMER,
             data: valueForm
           });
-        } else if(window.location.href.includes("/customer/update") || !isCreateCustomer){
+        } else if(window.location.href.includes("/customer/update")){
           dispatch({
             type: UPDATE_CUSTOMER,
             data: valueForm
           });
         }
         history.replace(`${uri}/crm/customer`)
-        setValueForm({is_company: false})
+        setValueForm({})
       }
     }
 
@@ -282,18 +279,6 @@ export default function CreateCustomer() {
     const renderFiles = ()=>{
       if(valueForm?.files?.length > 0){
         return valueForm?.files?.map((file, indexFile) => {
-          // if(file.includes("doc") || file.includes("docx")){
-          //   return <a key={uuidv4()} className="dowload__file" href={uri_file + file}>Tải file word</a>
-          // } else if(file.includes("pdf")) {
-          //   return <>
-          //       <button key={uuidv4()} onClick={()=>{
-          //         setIsShowModal(true)
-          //         setFile(uri_file + file)
-          //       }}>Xem PDF</button>
-          //   </>
-          // } else {
-          //   return <Image key={uuidv4()} src={uri_file + file} />
-          // }
           let index = file.indexOf("_")
           let name = file.slice(index + 1)
           if (file?.includes("doc") || file?.includes("docx")) {
@@ -327,7 +312,7 @@ export default function CreateCustomer() {
           } else {
             return <div className="upload__file" key={uuidv4()}>
               <Tooltip title={name}>
-                <FcImageFile key={uuidv4()} className="file" onClick={() => {
+                <img key={uuidv4()} className="file" src={image} alt="Xem ảnh" onClick={() => {
                   setFile(uri_file + file)
                   setImageVisible(true)
                 }} />
@@ -374,17 +359,7 @@ export default function CreateCustomer() {
           <div className="modal__field__select">
             <label>Loại ngành nghề</label>
             <SelectType list={jobTypeList} mode="multiple" valueForm={valueForm} setValueForm={setValueForm} />
-            {/** <SelectType list={jobTypeList} mode="tags" valueForm={valueForm} setValueForm={setValueForm} /> */}
           </div>
-          {/**
-                  <div className="modal__field">
-                        <input type="text" name="business_type"
-                        value={valueOfField("business_type")}
-                        onChange={handleChangeInput} 
-                        />
-                    <label className="customer__select__label">Loại ngành nghề</label>
-                </div>
-              */}
           <div className="modal__field">
             <input type="text" name="address"
               value={valueOfField("address")}
@@ -417,31 +392,6 @@ export default function CreateCustomer() {
           <div className="modal__upload">
             <span>Tài liệu liên quan</span>
             <UploadFile setValueForm={setValueForm} accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpg, image/gif" />
-            { /*  client_id && typeof +client_id === "number"
-              ? ""
-              : 
-              // <>
-              //   <label htmlFor="upload">
-              //     <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              //       <path d="M5 11L11 11" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
-              //       <path d="M5 7L9 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
-              //       <path d="M5 15L9 15" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
-              //       <path d="M15 11V12C15 13.8613 15 14.7919 14.7553 15.5451C14.2607 17.0673 13.0673 18.2607 11.5451 18.7553C10.7919 19 9.86128 19 8 19V19C6.13872 19 5.20808 19 4.45492 18.7553C2.93273 18.2607 1.73931 17.0673 1.24472 15.5451C1 14.7919 1 13.8613 1 12V7C1 6.07099 1 5.60649 1.06156 5.21783C1.40042 3.07837 3.07837 1.40042 5.21783 1.06156C5.60649 1 6.07099 1 7 1V1" stroke="#CCCCCC" strokeWidth="2" />
-              //       <path d="M14 1L14 7" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
-              //       <path d="M17 4L11 4" stroke="#CCCCCC" strokeWidth="2" strokeLinecap="round" />
-              //     </svg>
-              //     <br />
-              //     <span>Tải tài liệu</span>
-              //   </label>
-              //   <input id="upload" type="file"
-              //     multiple
-              //     accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpg, image/gif"
-              //     onChange={e => {
-              //       let files = e.target.files;
-              //       setValueForm({ ...valueForm, files })
-              //     }} />
-              // </>
-            */   }
           </div>
           <div className="client__files" key={uuidv4()}>
             {
