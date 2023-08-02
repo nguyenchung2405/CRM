@@ -8,7 +8,7 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-export default function UploadFile({setValueForm}) {
+export default function UploadFile({setValueForm, accept}) {
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -28,10 +28,14 @@ export default function UploadFile({setValueForm}) {
     let uploadFiles = newFileList.map(file => {
       return file.originFileObj
     })
-    if(window.location.href.includes("update")){
-      setValueForm((prev) => { return { ...prev, filesUpdate: uploadFiles } });
-    } else {
+    if(window.location.href.includes("crm/detail")){
       setValueForm((prev) => { return { ...prev, files: uploadFiles } });
+    } else {
+      if(window.location.href.includes("update")){
+        setValueForm((prev) => { return { ...prev, filesUpdate: uploadFiles } });
+      } else {
+        setValueForm((prev) => { return { ...prev, files: uploadFiles } });
+      }
     }
     setFileList(newFileList)
   };
@@ -59,7 +63,7 @@ export default function UploadFile({setValueForm}) {
         showUploadList={{
             showPreviewIcon: true
         }}
-        accept="application/pdf, application/msword, image/png, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/jpg, image/gif"
+        accept={accept}
         onPreview={handlePreview}
         onChange={handleChange}
       >

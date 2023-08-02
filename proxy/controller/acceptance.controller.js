@@ -29,6 +29,36 @@ const createAcceptance = async (req, res)=>{
     }
 };
 
+const updateAcceptance = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let evidenceOriginal = req.body.completed_evidences.split(",");
+        let evidenctUpdate = req.body.completed_evidences_update !== undefined ? req.body.completed_evidences_update.split("\r\n").concat(req.files.map(file => file.path)) : []
+        let newData = {
+            ...req.body,
+            "completed_evidences": evidenceOriginal.concat(evidenctUpdate),
+        };
+        console.log("new data", newData)
+        const result = await axios({
+            url: `${local}/contract/detail/update?id=${req.body.key}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: newData
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error.response?.data) {
+            console.log("Lỗi 1")
+            res.send(error.response.data)
+        } else {
+            console.log("Lỗi 2", error)
+            res.send(error)
+        }
+    }
+}
+
 const createEventAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
@@ -165,5 +195,6 @@ module.exports = {
     getAcceptanceContractList,
     getAcceptanceEventList,
     createDetailInEventAcceptance,
-    createEventAcceptance
+    createEventAcceptance,
+    updateAcceptance
 }

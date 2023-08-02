@@ -194,9 +194,7 @@ function* createPayment(payload){
             message.success("Thêm đợt thanh toán thành công.")
             yield put(addPayment(newPayment))
             yield put(addPaymentToReceiptList({contract_id: payload.data.contract_ID, data: {...result.data.payment, receipts: [], total_value: result.data.payment.total_value}}))
-            // yield put(setMessage({ type: "thành công", msg: "Thêm đợt thanh toán thành công." }))
         } else {
-            // yield put(setMessage({ type: "thất bại", msg: "Thêm đợt thanh toán thất bại." }))
             message.error("Thêm đợt thanh toán thất bại.")
         }
     } catch (error) {

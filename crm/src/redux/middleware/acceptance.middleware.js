@@ -1,8 +1,9 @@
 import { message } from "antd";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_ACCEPTANCE, CREATE_EVENT_ACCEPTANCE, GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST } from "../../title/title";
-import { createAcceptanceAPI, createDetailInAcceptanceAPI, createDetailInEventAcceptanceAPI, createEventAcceptanceAPI, getAcceptanceContractListAPI, getAcceptanceEventListAPI } from "../API/acceptanceAPI";
+import { CREATE_ACCEPTANCE, CREATE_EVENT_ACCEPTANCE, GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST, UPDATE_ACCEPTANCE } from "../../title/title";
+import { createAcceptanceAPI, createDetailInAcceptanceAPI, createDetailInEventAcceptanceAPI, createEventAcceptanceAPI, getAcceptanceContractListAPI, getAcceptanceEventListAPI, updateAcceptanceAPI } from "../API/acceptanceAPI";
 import { addDetailContractAccList, addDetailEventAccList, setEventAccList, setRequestAccList, setTotalEventAccList, setTotalRequestAccList } from "../features/acceptanceSlice";
+import { updateRequestDetail } from "../features/contractSlice";
 
 function* createAcceptance(payload){
     try {
@@ -32,6 +33,20 @@ function* createAcceptance(payload){
             } else {
                 message.error("Tạo nghiệm thu thất bại")
             }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* updateAcceptance(payload){
+    try {
+        const result = yield call(updateAcceptanceAPI, payload.data);
+        if(result.data?.msg === "Updated successfully!"){
+            message.success("Cập nhật nghiệm thu thành công")
+            yield put(updateRequestDetail({request_id: payload.data.request_id, detailData: result.data.contract_detail, detail_id_old: result.data.contract_detail.id}))
+        } else {
+            message.error("Cập nhật nghiệm thu thất bại")
         }
     } catch (error) {
         console.log(error)
@@ -89,4 +104,5 @@ export default function* acceptanceMiddleware(){
     yield takeLatest(GET_ACCEPTANCE_CONTRACT_LIST, getAcceptanceContractList)
     yield takeLatest(GET_ACCEPTANCE_EVENT_LIST, getAcceptanceEventList)
     yield takeLatest(CREATE_EVENT_ACCEPTANCE, createEventAcceptance)
+    yield takeLatest(UPDATE_ACCEPTANCE, updateAcceptance)
 }

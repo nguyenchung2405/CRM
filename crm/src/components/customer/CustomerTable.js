@@ -27,7 +27,7 @@ export default function CustomerTable() {
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [search, setSearch] = useState({ name: "", tax_number: "", brief_name: "" })
-console.log(isFirstRender)
+
     useEffect(() => {
         if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "" && !isFirstRender) {
             dispatch({
