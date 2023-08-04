@@ -390,9 +390,9 @@ export default function CreateReceiptModal(props) {
           <div className="modal__content contract__service">
                 {renderContentOFModal()}
               <div className="receipt__modal__acceptance__values">
-                  <h3>Tổng giá trị đã nghiệm thu: {showValue("real_time_total")} VNĐ</h3>
-                  <h3>Tổng giá trị hợp đồng đã thanh toán: {showValue("total_completed_payments")} VNĐ</h3>
+                  <h3>Tổng giá trị đã thực hiện: {showValue("real_time_total")} VNĐ</h3>
                   <h3>Tổng giá trị thanh toán đã tạo: {showValue("total_created_payments")} VNĐ</h3>
+                  <h3>Tổng giá trị hợp đồng đã thanh toán: {showValue("total_completed_payments")} VNĐ</h3>
               </div>
           </div>
       </Modal>

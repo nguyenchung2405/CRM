@@ -9,7 +9,9 @@ import { checkMicroFe } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
-import { MdOutlineModeEditOutline, MdPayment } from "react-icons/md";
+import { MdOutlineModeEditOutline } from "react-icons/md";
+import { AiFillPlusCircle } from 'react-icons/ai';
+import AskCreateSubContractModal from './sub_contract/AskCreateSubContractModal';
 
 export default function ContractTable() {
 
@@ -20,6 +22,8 @@ export default function ContractTable() {
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
     const [search, setSearch] = useState({client_name: "", contract_type: "", owner_name: ""})
+    const [isShowModal, setIsShowModal] = useState(false)
+    const [dataToModal, setDataToModal] = useState({})
     const { total, contractList } = useSelector(state => state.contractReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     const { isLoading } = useSelector(state => state.loadingReducer);
@@ -122,6 +126,7 @@ export default function ContractTable() {
     return (
         <div className="content contract__table customer__table">
             {showLoading()}
+            <AskCreateSubContractModal isShowModal={isShowModal} setIsShowModal={setIsShowModal} data={dataToModal} />
             <div className="table__features">
                 <div className="table__features__add">
                     <h1>Quản lý hợp đồng</h1>
@@ -224,6 +229,12 @@ export default function ContractTable() {
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                 history.push(`${uri}/crm/detail/${text.id}`);
+                            }} />
+                        </Tooltip>
+                        <Tooltip title="Tạo hợp đồng con/phụ lục" color="green" >
+                            <AiFillPlusCircle className="style__svg" onClick={() => {
+                                setIsShowModal(true)
+                                setDataToModal(text)
                             }} />
                         </Tooltip>
                     </div>

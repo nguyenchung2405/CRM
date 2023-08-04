@@ -1,27 +1,27 @@
-import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox, Tooltip } from "antd";
+import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
-import TermModal from "../modal/contract/Term";
+import { CREATE_CONTRACT, CREATE_SUB_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../../title/title";
+import TermModal from "../../modal/contract/Term";
 import { useHistory, useParams } from "react-router-dom";
-import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
-import { checkMicroFe } from "../../untils/helper";
-import ContractRight from "./ContractRight";
+import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
+import { checkMicroFe } from "../../../untils/helper";
+import ContractRight from "./../ContractRight";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
-import Loading from "../Loading";
-import { setIsLoading } from "../../redux/features/loadingSlice";
-import RequestEvent from "./RequestEvent";
-import ContractHistory from "./ContractHistory";
+import Loading from "../../Loading";
+import { setIsLoading } from "../../../redux/features/loadingSlice";
+import RequestEvent from "./../RequestEvent";
+import ContractHistory from "./../ContractHistory";
 import { CiImport, CiExport } from "react-icons/ci"
 import axios from "axios";
 import FileSaver from "file-saver"
-import ContractPayment from "./ContractPayment";
-import InforCustomer from "./InforCustomer";
-import ContractValue from "./ContractValue";
+import ContractPayment from "../ContractPayment";
+import InforCustomer from "../InforCustomer";
+import ContractValue from "../ContractValue";
 
-export default function CreateContract() {
+export default function SubContract() {
 
   let uri = checkMicroFe() === true ? "/contract-service" : "";
   const { Column } = Table;
@@ -29,18 +29,16 @@ export default function CreateContract() {
   const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
   const history = useHistory();
-  const { contract_id } = useParams();
+  const { sub_contract_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
-  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList } = useSelector(state => state.contractReducer);
+  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList, subContractInfor } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
-  const { messageAlert } = useSelector(state => state.messageReducer);
   const { eventList, requestOfEvent, selectRequest } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [valueForm, setValueForm] = useState({VAT: 10, payment_type: "Nhiều đợt", pay_before_run: true, discount_by_percent: 0});
-  const [soTien, setSoTien] = useState(null)
   const [requestDate, setRequestDate] = useState(null)
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
@@ -50,9 +48,9 @@ export default function CreateContract() {
 
   useEffect(() => {
     dispatch({
-      type: GET_EVENT_LIST,
-      data: { page: 1, pageNumber: 1000 }
-    });
+        type: GET_CONTRACT_LIST,
+        data: { page: 1, pageNumber: 1000 }
+    })
     dispatch({
       type: GET_CUSTOMER_LIST,
       data: { page: 1, pageNumber: 1000 }
@@ -74,31 +72,31 @@ export default function CreateContract() {
   }, []);
 
   useEffect(() => {
-    if (customerList.length > 0 && contract_id && typeof +contract_id === "number") {
+    if (customerList.length > 0 && sub_contract_id && typeof +sub_contract_id === "number") {
       let customerInfor = customerList.find(client => client.id === +valueForm.client_ID);
       setCustomerInfor({ ...customerInfor })
     }
-  }, [contract_id, customerList, valueForm])
+  }, [sub_contract_id, customerList, valueForm])
 
   useEffect(() => {
-    if (contract_id && typeof +contract_id === "number") {
+    if (sub_contract_id && typeof +sub_contract_id === "number" && +sub_contract_id > 0) {
       dispatch({
-        type: GET_CONTRACT_DETAIL,
-        contract_id
+        type: GET_DETAIL_SUB_CONTRACT,
+        sub_contract_id
       });
       dispatch(setIsLoading(true))
     }
-  }, [contract_id])
+  }, [sub_contract_id])
 
   useEffect(() => {
-    if(!contract_id){
+    if(!sub_contract_id){
       setValueForm({
         ...valueForm,
         total: showGiaTriThucHien("total") * 1000000
       })
     }
   }, [contractRequest])
-
+  console.log(contractDetail)
   useEffect(() => {
     let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
     // if(dataContract && dataOfTable){
@@ -121,6 +119,16 @@ export default function CreateContract() {
       })
     }
   }, [valueForm.event_ID])
+
+  useEffect(()=>{
+      if (subContractInfor?.contract_ID) {
+          let newData = {
+              ...valueForm,
+              ...subContractInfor,
+          }
+          setValueForm({ ...newData })
+      }
+  }, [subContractInfor])
 
   useEffect(()=>{
     setSelectGeneralRequest([...selectRequest])
@@ -158,7 +166,7 @@ export default function CreateContract() {
       let customerInfor = customerList.find(client => client.id === value);
       setCustomerInfor({ ...customerInfor })
     }
-    if(name === "contract_type_id"){
+    if(name === "contract_type_ID"){
       if(value !== 4){
         setValueForm({
           ...valueForm,
@@ -169,24 +177,39 @@ export default function CreateContract() {
         setValueForm({ ...valueForm, [name]: value })
       }
     }
-    if (name !== "" && name.length > 0 && name !== "contract_type_id") {
+    if (name !== "" && name.length > 0 && name !== "contract_type_ID") {
       setValueForm({ ...valueForm, [name]: value })
     }
-    
   };
 
-  const renderLoaiHopDong = () => {
-    return contractTypeList?.map((item) => {
-      return <Option key={item.id} value={+item.id}>{item.name}</Option>
-    });
+  const titleOfSubContract = ()=>{
+    if(!sub_contract_id){
+        if(!valueForm.extend_parent_contract){
+            return "Tạo hợp đồng con"
+        } else if(valueForm.extend_parent_contract){
+            return "Tạo phụ lục"
+        }
+    } else if(sub_contract_id) {
+        if(!valueForm.extend_parent_contract){
+            return "Chỉnh sửa hợp đồng con"
+        } else if(valueForm.extend_parent_contract){
+            return "Chỉnh sửa phụ lục"
+        }
+    }
   }
 
-  const renderEventOption = ()=>{
-    return eventList.map(item => {
-      return <Option key={item.id} value={item.id}>{item.name}</Option>
-    })
-  };
+    const renderLoaiHopDong = () => {
+        return contractTypeList?.map((item) => {
+            return <Option key={item.id} value={+item.id}>{item.name}</Option>
+        });
+    }
 
+    const renderEventOption = ()=>{
+        return eventList.map(item => {
+          return <Option key={item.id} value={item.id}>{item.name}</Option>
+        })
+      };
+  
   const valueOfField = (name) => {
     if (name === "rangePicker") {
       let newTuNgay = moment(new Date(valueForm["begin_date"])).format("DD-MM-YYYY");
@@ -232,15 +255,15 @@ export default function CreateContract() {
   }
 
   const renderButtonCreateUpdate = () => {
-    if (contract_id) {
+    if (sub_contract_id) {
       return <button className="footer__btn btn__create"
         onClick={() => {
-          valueForm.contract_id = +contract_id;
+          valueForm.sub_contract_id = +sub_contract_id;
           valueForm.event_detail_IDs = selectGeneralRequest;
-          dispatch({
-            type: UPDATE_CONTRACT,
-            data: valueForm
-          })
+        //   dispatch({
+        //     type: UPDATE_CONTRACT,
+        //     data: valueForm
+        //   })
         }}>
         Cập nhật
       </button>
@@ -253,7 +276,7 @@ export default function CreateContract() {
             payment: dotThanhToan
           };
           dispatch({
-            type: CREATE_CONTRACT,
+            type: CREATE_SUB_CONTRACT,
             data: newData
           });
           dispatch(setContractRequest([]));
@@ -330,7 +353,7 @@ export default function CreateContract() {
       {showLoading()}
       <div className="create__contract__content">
         <div className="create__contract__header border_bottom_3px">
-          <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
+          <h2>{titleOfSubContract()}</h2>
         </div>
         <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
           <p>Thông tin hợp đồng</p>
@@ -339,12 +362,12 @@ export default function CreateContract() {
               <input
                 className="style"
                 type="text"
-                name="contract_number"
+                name="sub_contract_number"
                 onChange={(e) => {
                   let { value, name } = e.target;
                   handleChangeValue(name, value)
                 }}
-                value={valueOfField("contract_number")}
+                value={valueOfField("sub_contract_number")}
               />
               <label id="soHD">Số hợp đồng</label>
             </div>
@@ -355,9 +378,9 @@ export default function CreateContract() {
                 type="text"
                 placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
                 onChange={(value) => {
-                  handleChangeValue("contract_type_id", value);
+                  handleChangeValue("contract_type_ID", value);
                 }}
-                value={valueOfField("contract_type_id")}
+                value={valueOfField("contract_type_ID")}
               >
                 {renderLoaiHopDong()}
               </Select>
@@ -407,7 +430,7 @@ export default function CreateContract() {
                   handleChangeValue("event_ID", value)
                 }}
                 value={valueOfField("event_ID")}
-                disabled={valueForm.contract_type_id === 4 ? false : true}
+                disabled={valueForm.contract_type_ID === 4 ? false : true}
               >
                 {renderEventOption()}
               </Select>
@@ -424,7 +447,7 @@ export default function CreateContract() {
           valueOfCustomer={valueOfCustomer}
           history={history}
         />
-        {valueForm.event_ID && !window.location.href.includes("create") ?
+        { valueForm.event_ID && !window.location.href.includes("create") ?
           <RequestEvent
             productListFull={productListFull}
             requestOfEvent={requestOfEvent}
@@ -469,8 +492,7 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
-            {
-              contract_id ?
+            {sub_contract_id ?
                 <>
                   <div className="upload__file">
                     <Tooltip title="Nhập file" color="green">
@@ -478,29 +500,29 @@ export default function CreateContract() {
                         <CiImport />
                       </label>
                       <input id="upFileExcel" type="file" onChange={e => {
-                        dispatch({
-                          type: IMPORT_FILE,
-                          data: { file: e.target.files[0], contract_id }
-                        })
+                        // dispatch({
+                        //   type: IMPORT_FILE,
+                        //   data: { file: e.target.files[0], sub_contract_id }
+                        // })
                       }} />
                     </Tooltip>
                   </div>
                   <Tooltip title="Xuất file" color="green">
                     <CiExport
                       onClick={async (e) => {
-                        const result = await axios({
-                          url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
-                          method: "GET",
-                          headers: {
-                            Authorization: "Bearer " + TOKEN,
-                            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                          },
-                          responseType: 'arraybuffer'
-                        });
-                        let fileBlob = new Blob([result.data], {
-                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                        })
-                        FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
+                        // const result = await axios({
+                        //   url: `${local}/api/contract/request-get-file?contract_ID=${sub_contract_id}`,
+                        //   method: "GET",
+                        //   headers: {
+                        //     Authorization: "Bearer " + TOKEN,
+                        //     "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        //   },
+                        //   responseType: 'arraybuffer'
+                        // });
+                        // let fileBlob = new Blob([result.data], {
+                        //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                        // })
+                        // FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
                       }}
                     />
                   </Tooltip>
@@ -514,7 +536,7 @@ export default function CreateContract() {
             pagination={false}
             expandable={{
               expandedRowRender: (record) => {
-                return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
+                return <ContractRight data={record} contract_id={sub_contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
               },
               rowExpandable: (record) => record?.details?.length > 0,
             }}
@@ -593,10 +615,10 @@ export default function CreateContract() {
                     if (window.location.href.includes("create")) {
                       dispatch(deleteContractRequest(text.id))
                     } else {
-                      dispatch({
-                        type: DELETE_REQUEST,
-                        data: {request_id: text.id, contract_id}
-                      })
+                    //   dispatch({
+                    //     type: DELETE_REQUEST,
+                    //     data: {request_id: text.id, sub_contract_id}
+                    //   })
                     }
                   }} />
                 </div>
@@ -611,7 +633,7 @@ export default function CreateContract() {
             setDataToModal={setDataToModal}
             isUpdateModal={isUpdateModal}
             setIsUpdateModal={setIsUpdateModal}
-            contract_id={contract_id}
+            contract_id={sub_contract_id}
             customerInfor={customerInfor}
           />
         </div>

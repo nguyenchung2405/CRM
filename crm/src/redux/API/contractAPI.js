@@ -407,3 +407,85 @@ export async function deleteContractTypeAPI(id){
         return "Fail"
     }
 }
+
+export async function createSubContractAPI(data){
+    try {
+        let convertBeginDate = moment(data.contract.begin_date).format("YYYY-MM-DD");
+        let convertEndDate = moment(data.contract.end_date).format("YYYY-MM-DD");
+        let newRequest = data.request.map(item => {
+            return {
+                ...item,
+                price_ID: item.price_ID.id,
+                product_ID: item.product_ID.id,
+                custom_price: item.custom_price || null,
+                details: item.details.map(detail => {
+                    return {
+                        ...detail,
+                        product_ID: item.product_ID.id,
+                    }
+                })
+            }
+        })
+        let newPayment = data.payment.map(payment => {
+            let newRequestDate = moment(payment.request_date).format("YYYY-MM-DD");
+            return {
+                ...payment,
+                total_value: payment.total_value / 1000000,
+                request_date: newRequestDate
+            }
+        })
+        data = {
+            ...data.contract,
+            begin_date: convertBeginDate,
+            end_date: convertEndDate,
+            total: data.contract.total / 1000000,
+            discount_by_percent: data.contract.discount_by_percent,
+            request: [...newRequest],
+            payment: [...newPayment]
+        }
+        const newData = { ...data }
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/create-sub`,
+            method: "POST",
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function getDetailSubContractAPI(sub_contract_id){
+    try {
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/get-sub?sub_contract_id=${sub_contract_id}`,
+            method: "GET",
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function getSubContractRequestAPI(sub_contract_id, request_done){
+    try {
+        if(request_done === undefined){
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}`,
+                method: "GET",
+            });
+            return result.data;
+        } else {
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}&done=${request_done}`,
+                method: "GET",
+            });
+            return result.data;
+        }
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

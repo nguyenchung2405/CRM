@@ -9,7 +9,8 @@ const initialState = {
     keyOfDetailJustAdd: "",
     keyOfRequestJustAdd: "",
     ownerList: [],
-    totalContractType: 0
+    totalContractType: 0,
+    subContractInfor: {}
 };
 
 const contractSlice = createSlice({
@@ -96,6 +97,9 @@ const contractSlice = createSlice({
         removeContractType: (state, action)=>{
             let indexType = state.contractTypeList.findIndex(type => type.id === action.payload);
             state.contractTypeList.splice(indexType, 1);
+        },
+        setSubContractInfor: (state, action)=>{
+            state.subContractInfor = action.payload;
         }
     }
 });
@@ -103,5 +107,5 @@ const contractSlice = createSlice({
 export const { setContractList, setContractTypeList, setContractDetail, addContractRequest, updateContractRequest, 
 deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd, setKeyOfDetailJustAdd, 
 updateRequestDetail, setContractRequest, setOwnerList, addPayment, setTotalContractType, addContractType, updateContractType,
-removeContractType } = contractSlice.actions;
+removeContractType, setSubContractInfor } = contractSlice.actions;
 export default contractSlice.reducer;

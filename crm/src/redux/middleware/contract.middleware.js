@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, DELETE_CONTRACT_TYPE, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
+import { CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment } from "../../untils/mapping";
-import { createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getOwnerListAPI, getRequestOfEventAPI, importFileExcelAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
+import { createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, removeContractType, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -298,6 +298,60 @@ function* deleteContractType(payload){
     }
 }
 
+function* createSubContract(payload){
+    try {
+        let { data } = payload;
+        const result = yield call(createSubContractAPI, data);
+        let { code } = result;
+        if (+code === 200 || result.data?.sub_contract?.id) {
+            message.success("Tạo hợp đồng thành công.")
+        } else {
+            message.error("Tạo hợp đồng thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* getDetailSubContract(payload){
+    try {
+        if(payload?.sub_contract_id){
+            let { sub_contract_id } = payload;
+            let result = yield call(getDetailSubContractAPI, sub_contract_id);
+            let { code, data } = result;
+            let responseRequest = yield call(getSubContractRequestAPI, sub_contract_id);
+            if (+code === 200 || data.sub_contract.length > 0) {
+                console.log("thành công", data.sub_contract[0])
+                let dataAfterMapping = dataOfContractMapping(data.sub_contract[0]);
+                dataAfterMapping.payments = dataOfPayment(data.sub_contract[0].payments);
+                yield put(setContractDetail(dataAfterMapping))
+                yield put(setContractRequest(responseRequest.data.sub_contract_request))
+                yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
+                yield put(setIsLoading(false))
+            } else {
+                yield put(setContractDetail({}))
+            }
+        } else if(payload?.data){
+            let {sub_contract_id, request_done} = payload.data;
+            let result = yield call(getContractDetailAPI, sub_contract_id);
+            let { code, data } = result;
+            let responseRequest = yield call(getContractRequestAPI, sub_contract_id, request_done);
+            if (+code === 200 || result.data.contract.length > 0) {
+                let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
+                dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);
+                yield put(setContractDetail(dataAfterMapping))
+                yield put(setContractRequest(responseRequest.data.contract_request))
+                yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
+                yield put(setIsLoading(false))
+            } else {
+                yield put(setContractDetail({}))
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -325,4 +379,7 @@ export default function* contractMiddleware() {
     yield takeLatest(CREATE_CONTRACT_TYPE, createContractType)
     yield takeLatest(UPDATE_CONTRACT_TYPE, updateContractTypeMiddleware)
     yield takeLatest(DELETE_CONTRACT_TYPE, deleteContractType)
+    // Sub Contract
+    yield takeLatest(CREATE_SUB_CONTRACT, createSubContract)
+    yield takeLatest(GET_DETAIL_SUB_CONTRACT, getDetailSubContract)
 }
