@@ -567,6 +567,10 @@ span.size-10 {
     width: 1000px;
 }
 
+.ant-modal.create__sub__contranct__modal .ant-modal-content {
+    width: 500px;
+}
+
 .contract__service__footer {
     padding: 42px 0px;
     text-align: center;
@@ -1749,6 +1753,14 @@ svg.style__svg {
     border-radius: 4px;
     display: inline-block;
     margin-left: 5px;
+}
+
+.create__contract__term .term__table .ant-table table tr.ant-table-expanded-row-level-1 td,
+.create__contract__term .term__table .ant-table table tr.ant-table-expanded-row-level-1:hover td,
+.reciept__table.customer__table .ant-table table tr.ant-table-expanded-row-level-1 td, 
+.reciept__table.customer__table .ant-table table tr.ant-table-expanded-row-level-1:hover td {
+    background-color: transparent;
+    color: black;
 }
 
 .expand__table .ant-table-cell > a:first-child {

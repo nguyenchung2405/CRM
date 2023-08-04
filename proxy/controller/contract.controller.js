@@ -546,6 +546,80 @@ const deleteContractType = async (req, res)=>{
     }
 }
 
+const createSubContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/contract/add-subcontract`,
+            method: "POST",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const getDetailSubContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { sub_contract_id } = req.query;
+        const result = await axios({
+            url: `${local}/contract/subcontract/list?id=${sub_contract_id}&page_size=10&page=1&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+};
+
+const getSubContractRequest = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { sub_contract_id, done } = req.query;
+        if(!done){
+            const result = await axios({
+                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&page_size=100&sort_by=id&asc_order=true`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+            res.send(result.data)
+        } else {
+            const result = await axios({
+                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&done=${done}&page_size=100&sort_by=id&asc_order=true`,
+                method: "GET",
+                headers: {
+                    Authorization: authorization
+                }
+            });
+            res.send(result.data)
+        }
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -569,5 +643,8 @@ module.exports = {
     getContractType,
     createContractType,
     updateContractType,
-    deleteContractType
+    deleteContractType,
+    createSubContract,
+    getDetailSubContract,
+    getSubContractRequest
 }
