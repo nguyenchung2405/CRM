@@ -1,5 +1,5 @@
 const express = require("express");
-const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest } = require("../controller/contract.controller");
+const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest, getSubContractByMomContract } = require("../controller/contract.controller");
 const { uploadFileDetail, uploadFileExcelContract } = require("../middleware/upload");
 const contractRouter = express.Router();
 
@@ -35,6 +35,7 @@ contractRouter.delete("/type/delete", deleteContractType)
 contractRouter.post("/create-sub", createSubContract)
 contractRouter.get("/get-sub", getDetailSubContract)
 contractRouter.get("/request/sub-list", getSubContractRequest)
+contractRouter.get("/get-sub-by-mom", getSubContractByMomContract)
 
 module.exports = {
     contractRouter
