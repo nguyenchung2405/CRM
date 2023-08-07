@@ -489,3 +489,16 @@ export async function getSubContractRequestAPI(sub_contract_id, request_done){
         return "Fail"
     }
 }
+
+export async function getSubContractOfMomContract(contract_id){
+    try {
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/get-sub-by-mom?contract_id=${contract_id}`,
+            method: "GET"
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

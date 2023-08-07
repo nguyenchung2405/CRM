@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setSubContractInfor } from '../../../redux/features/contractSlice';
+import { checkMicroFe } from '../../../untils/helper';
 
 export default function AskCreateSubContractModal(props) {
 
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
     const { isShowModal, setIsShowModal, data } = props;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -19,7 +21,7 @@ export default function AskCreateSubContractModal(props) {
         let newValueModal = {...valueModal, contract_ID: data.id}
         dispatch(setSubContractInfor(newValueModal))
         setIsShowModal(false)
-        history.push("/crm/subcontract/create")
+        history.push(`${uri}/crm/subcontract/create`)
     }
 
     const handleChange = (name, value)=>{

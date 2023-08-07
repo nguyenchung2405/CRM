@@ -620,6 +620,27 @@ const getSubContractRequest = async (req, res)=>{
     }
 }
 
+const getSubContractByMomContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {contract_id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/subcontract/list?contract_id=${contract_id}&page_size=10&page=1&sort_by=id&asc_order=true`,
+            method: "GET",
+            headers: {
+                Authorization: authorization
+            }
+        });
+        res.send(result.data)
+    } catch (error) {
+        if(error.response?.data){
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -646,5 +667,6 @@ module.exports = {
     deleteContractType,
     createSubContract,
     getDetailSubContract,
-    getSubContractRequest
+    getSubContractRequest,
+    getSubContractByMomContract
 }

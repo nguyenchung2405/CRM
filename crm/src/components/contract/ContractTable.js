@@ -12,6 +12,7 @@ import { setIsLoading } from '../../redux/features/loadingSlice';
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { AiFillPlusCircle } from 'react-icons/ai';
 import AskCreateSubContractModal from './sub_contract/AskCreateSubContractModal';
+import ExpandSubContractTable from './sub_contract/ExpandSubContractTable';
 
 export default function ContractTable() {
 
@@ -192,6 +193,14 @@ export default function ContractTable() {
                     x: "max-content",
                 }}
                 rowKey={record => record.id}
+                expandable={{
+                    showExpandColumn: true,
+                    // expandRowByClick: true,
+                    expandedRowRender: record => {
+                        return <ExpandSubContractTable contract_id={record.id} />
+                    },
+                    // rowExpandable: record => record.id > 100
+                }}
             >
                 <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.name.toUpperCase() }} />
                 <Column className="contract__table__customerName" title="Tên khách hàng" key="customerName" fixed="left"
