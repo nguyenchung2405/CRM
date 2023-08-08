@@ -90,3 +90,41 @@ export function dataOfEventMapping(data){
         console.log(error)
     }
 }
+
+export function dataOfSubContractMapping(data) {
+    try {
+        const dataContract = {
+            client_ID: data.client_ID.id,
+            contract_ID: data.contract_ID,
+            owner: data.owner,
+            begin_date: data.begin_date,
+            end_date: data.end_date,
+            contract_type_ID: data.contract_type_ID.id,
+            VAT: data.VAT,
+            total: data.total < 1000000 ? data.total * 1000000 : data.total,
+            note: data.note,
+            creater: data.creater,
+            discount_by_percent: data.discount_by_percent,
+            pay_before_run: data.pay_before_run,
+            payment_type: data.payment_type,
+            event_ID: data.event_ID?.id,
+            owner_name: data.owner_name,
+            discount_total: data.discount_total,
+            original_total: data.original_total,
+            real_time_total: data.real_time_total,
+            total_completed_payments: data.total_completed_payments,
+            total_created_payments: data.total_created_payments,
+            history: data.history,
+            event_detail_IDs: data.event_detail_IDs,
+            total_include_VAT: data.total_include_VAT,
+            sub_contract_number: data.sub_contract_number,
+            extend_parent_contract: data.extend_parent_contract
+
+        };
+        return {
+            dataContract,
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

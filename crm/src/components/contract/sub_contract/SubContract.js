@@ -2,8 +2,8 @@ import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_SUB_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../../title/title";
-import TermModal from "../../modal/contract/Term";
+import { CREATE_SUB_CONTRACT, DELETE_REQUEST, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, UPDATE_SUB_CONTRACT } from "../../../title/title";
+import TermModal from "../../modal/sub_contract/Term";
 import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
@@ -15,8 +15,6 @@ import { setIsLoading } from "../../../redux/features/loadingSlice";
 import RequestEvent from "./../RequestEvent";
 import ContractHistory from "./../ContractHistory";
 import { CiImport, CiExport } from "react-icons/ci"
-import axios from "axios";
-import FileSaver from "file-saver"
 import ContractPayment from "../ContractPayment";
 import InforCustomer from "../InforCustomer";
 import ContractValue from "../ContractValue";
@@ -47,6 +45,10 @@ export default function SubContract() {
   const [selectGeneralRequest, setSelectGeneralRequest] = useState([]);
 
   useEffect(() => {
+    dispatch({
+      type: GET_EVENT_LIST,
+      data: { page: 1, pageNumber: 1000 }
+    });
     dispatch({
         type: GET_CONTRACT_LIST,
         data: { page: 1, pageNumber: 1000 }
@@ -96,7 +98,7 @@ export default function SubContract() {
       })
     }
   }, [contractRequest])
-  console.log(contractDetail)
+
   useEffect(() => {
     let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
     // if(dataContract && dataOfTable){
@@ -260,10 +262,10 @@ export default function SubContract() {
         onClick={() => {
           valueForm.sub_contract_id = +sub_contract_id;
           valueForm.event_detail_IDs = selectGeneralRequest;
-        //   dispatch({
-        //     type: UPDATE_CONTRACT,
-        //     data: valueForm
-        //   })
+          dispatch({
+            type: UPDATE_SUB_CONTRACT,
+            data: valueForm
+          })
         }}>
         Cập nhật
       </button>
@@ -633,8 +635,9 @@ export default function SubContract() {
             setDataToModal={setDataToModal}
             isUpdateModal={isUpdateModal}
             setIsUpdateModal={setIsUpdateModal}
-            contract_id={sub_contract_id}
+            sub_contract_id={sub_contract_id}
             customerInfor={customerInfor}
+            contract_id={valueForm.contract_ID}
           />
         </div>
         <ContractValue

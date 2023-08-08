@@ -142,7 +142,7 @@ export default function ReceiptTable() {
           }}></Column>
           <Column title="Ghi chú" key="note" render={(text) => text?.contract_info?.note}></Column>
           <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" render={(text) => {
-            let total = text?.total_value;
+            let total = text?.contract_info?.total_include_VAT;
             let total_completed = text?.contract_info?.total_completed_payments;
             return `${total_completed} / ${total}`
           }}></Column>

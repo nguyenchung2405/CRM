@@ -199,7 +199,7 @@ export default function ContractTable() {
                     expandedRowRender: record => {
                         return <ExpandSubContractTable contract_id={record.id} />
                     },
-                    // rowExpandable: record => record.id > 100
+                    rowExpandable: record => record.has_sub_contract
                 }}
             >
                 <Column className="contract__table__loaiHopDong" title="Loại hợp đồng" key="loaiHopDong" fixed="left" render={(text) => { return text.contract_type_id.name.toUpperCase() }} />
