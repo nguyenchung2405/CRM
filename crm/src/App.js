@@ -82,9 +82,8 @@ function App() {
               <Route exact path="/contract-service/crm/acceptance/contract" component={Acceptance} />
               <Route exact path="/contract-service/crm/acceptance/event" component={EventAcceptance} />
               <Route exact path="/contract-service/crm/contract/type" component={ContactTypeTable} />
-              {/** 2 thằng Route bên dưới là hợp đồng con do đang phát triển nên path cố tình để sai (thiếu "/contract-service") để cho team test không thể vô được */}
-              <Route exact path="/crm/subcontract/create" component={SubContract} />
-              <Route exact path="/crm/subcontract/detail/:sub_contract_id" component={SubContract} />
+              <Route exact path="/contract-service/crm/subcontract/create" component={SubContract} />
+              <Route exact path="/contract-service/crm/subcontract/detail/:sub_contract_id" component={SubContract} />
             </Switch>
           </div>
         </Provider>

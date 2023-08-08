@@ -440,7 +440,7 @@ export async function createSubContractAPI(data){
             end_date: convertEndDate,
             total: data.contract.total / 1000000,
             discount_by_percent: data.contract.discount_by_percent,
-            request: [...newRequest],
+            requests: [...newRequest],
             payment: [...newPayment]
         }
         const newData = { ...data }
@@ -500,5 +500,49 @@ export async function getSubContractOfMomContract(contract_id){
     } catch (error) {
         console.log(error)
         return "Fail"
+    }
+}
+
+export async function createRequestSubContractAPI(data){
+    try {
+        let newRequest = {
+            "contract_ID": +data.contract_id,
+            "sub_contract_ID": +data.sub_contract_id,
+            "requests": [
+                {
+                    "product_ID": data.product_ID,
+                    "price_ID": data.price_ID,
+                    "quality": data.quality,
+                    "custom_price": data.custom_price / 1000000 || null,
+                }
+            ]
+        };
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/create-request`,
+            method: "POST",
+            data: newRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function updateRequestSubContractAPI(data){
+    try {
+        let updateRequest = {
+            "quality": data.quality,
+            "custom_price": data.custom_price >= 1000000 ? data.custom_price / 1000000 : null
+        };
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/update-request?request_id=${data.id}`,
+            method: "PUT",
+            data: updateRequest
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
     }
 }
