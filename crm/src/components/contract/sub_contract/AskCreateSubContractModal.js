@@ -1,4 +1,4 @@
-import { Modal, Switch } from 'antd'
+import { Modal, notification, Switch } from 'antd'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -18,10 +18,20 @@ export default function AskCreateSubContractModal(props) {
     }
 
     const handleOK = ()=>{
-        let newValueModal = {...valueModal, contract_ID: data.id}
-        dispatch(setSubContractInfor(newValueModal))
-        setIsShowModal(false)
-        history.push(`${uri}/crm/subcontract/create`)
+        if(valueModal.extend_parent_contract || (data.total_left > 0 && !valueModal.extend_parent_contract)){
+            let newValueModal = {...valueModal, contract_ID: data.id}
+            dispatch(setSubContractInfor(newValueModal))
+            setIsShowModal(false)
+            history.push(`${uri}/crm/subcontract/create`)
+        } else {
+            const args = {
+                message: 'Lỗi',
+                description:
+                    'Không thể tạo Hợp đồng con do số tiền khả dụng bằng 0.',
+                duration: 1.5,
+            };
+            notification.error(args);
+        }
     }
 
     const handleChange = (name, value)=>{
@@ -94,7 +104,7 @@ export default function AskCreateSubContractModal(props) {
                         <span>Tổng giá trị hợp đồng đã thanh toán: {showPrices("total_completed_payments") + " VNĐ"}</span>
                     </div>
                     <div className="mom__contract__field">
-                        <span>Số tiền chưa thực hiện: {showPrices("total_left") + " VNĐ"}</span>
+                        <span>Số tiền khả dụng: {showPrices("total_left") + " VNĐ"}</span>
                     </div>
                 </div>
                 <hr />

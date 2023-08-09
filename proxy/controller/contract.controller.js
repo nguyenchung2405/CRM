@@ -393,10 +393,21 @@ const getFile = async (req, res)=>{
 
 const getExportFile = (req,res)=>{
     try {
-        let {contract_ID} = req.query;
+        let {contract_ID, sub_contract_ID} = req.query;
         let { headers: { authorization } } = req;
+        let searchData = {contract_ID, sub_contract_ID}
+        let queryString = "&";
+            for (let prop in searchData) {
+                if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
+                    if (queryString.length > 1) {
+                        queryString += `&${prop}=${encodeURI(searchData[prop])}`
+                    } else {
+                        queryString += `${prop}=${encodeURI(searchData[prop])}`
+                    }
+                }
+            }
         axios({
-            url: `${local}/contract/request/get-file?contract_ID=${contract_ID}`,
+            url: `${local}/contract/request/get-file?${queryString}`,
             method: "GET",
             headers: {
                 Authorization: authorization,
@@ -641,6 +652,54 @@ const getSubContractByMomContract = async (req, res)=>{
     }
 }
 
+const updateSubContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {sub_contract_id} = req.query;
+        const result = await axios({
+            url: `${local}/contract/subcontract/update?id=${sub_contract_id}`,
+            method: "PUT",
+            headers: {
+                Authorization: authorization
+            },
+            data: req.body
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
+const importFileExcelSubContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let { contract_ID, sub_contract_ID } = req.query;
+        let {file} = req;
+        const form = new formData();
+        form.append("file", fs.readFileSync(file.path), file.originalname)
+        const result = await axios({
+            url: `${local}/contract/modify-requests-by-file?contract_ID=${contract_ID}&sub_contract_ID=${sub_contract_ID}`,
+            method: "POST",
+            headers: {
+                Authorization: authorization,
+                'Content-Type': 'multipart/form-data'
+            },
+            data: form
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -668,5 +727,7 @@ module.exports = {
     createSubContract,
     getDetailSubContract,
     getSubContractRequest,
-    getSubContractByMomContract
+    getSubContractByMomContract,
+    updateSubContract,
+    importFileExcelSubContract
 }

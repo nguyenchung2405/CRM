@@ -1,5 +1,5 @@
 const express = require("express");
-const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest, getSubContractByMomContract } = require("../controller/contract.controller");
+const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest, getSubContractByMomContract, updateSubContract, importFileExcelSubContract } = require("../controller/contract.controller");
 const { uploadFileDetail, uploadFileExcelContract } = require("../middleware/upload");
 const contractRouter = express.Router();
 
@@ -26,6 +26,7 @@ contractRouter.get("/payment-infor", getInforPayment)
 contractRouter.get("/get-file", getFile)
 contractRouter.get("/request-get-file", getExportFile)
 contractRouter.post("/import-file-excel", uploadFileExcelContract().single("file") , importFileExcel)
+contractRouter.post("/import-file-excel-sub", uploadFileExcelContract().single("file") , importFileExcelSubContract)
 // Contract Type
 contractRouter.get("/type/get-list", getContractType)
 contractRouter.post("/type/create", createContractType)
@@ -36,6 +37,7 @@ contractRouter.post("/create-sub", createSubContract)
 contractRouter.get("/get-sub", getDetailSubContract)
 contractRouter.get("/request/sub-list", getSubContractRequest)
 contractRouter.get("/get-sub-by-mom", getSubContractByMomContract)
+contractRouter.put("/update-sub", updateSubContract)
 
 module.exports = {
     contractRouter

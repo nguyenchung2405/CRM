@@ -546,3 +546,46 @@ export async function updateRequestSubContractAPI(data){
         return "Thất bại"
     }
 }
+
+export async function updateSubContractAPI(data){
+    try {
+        let convertBeginDate = moment(data.begin_date).format("YYYY-MM-DD");
+        let convertEndDate = moment(data.end_date).format("YYYY-MM-DD");
+        let newData ={
+            ...data,
+            begin_date: convertBeginDate,
+            end_date: convertEndDate,
+            total: data.total / 1000000,
+            discount_by_percent: data.discount_by_percent,
+            VAT: Number(data.VAT)
+        };
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/update-sub?sub_contract_id=${newData.sub_contract_id}`,
+            method: "PUT",
+            data: newData
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
+export async function importFileSubContractAPI(data){
+    try {
+        const form = new FormData();
+        form.append("file", data.file)
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/import-file-excel-sub?contract_ID=${data.contract_id}&sub_contract_ID=${data.sub_contract_id}`,
+            method: "POST",
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            data: form
+        });
+        return result;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}

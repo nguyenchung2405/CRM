@@ -2,7 +2,7 @@ import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_SUB_CONTRACT, DELETE_REQUEST, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, UPDATE_SUB_CONTRACT } from "../../../title/title";
+import { CREATE_SUB_CONTRACT, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE_SUB_CONTRACT, local, UPDATE_SUB_CONTRACT } from "../../../title/title";
 import TermModal from "../../modal/sub_contract/Term";
 import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
@@ -16,8 +16,10 @@ import RequestEvent from "./../RequestEvent";
 import ContractHistory from "./../ContractHistory";
 import { CiImport, CiExport } from "react-icons/ci"
 import ContractPayment from "../ContractPayment";
-import InforCustomer from "../InforCustomer";
+import InforCustomer from "./InforCustomerSub";
 import ContractValue from "../ContractValue";
+import { AxiosExpress } from "../../../untils/axios";
+import FileSaver from "file-saver";
 
 export default function SubContract() {
 
@@ -502,29 +504,28 @@ export default function SubContract() {
                         <CiImport />
                       </label>
                       <input id="upFileExcel" type="file" onChange={e => {
-                        // dispatch({
-                        //   type: IMPORT_FILE,
-                        //   data: { file: e.target.files[0], sub_contract_id }
-                        // })
+                        dispatch({
+                          type: IMPORT_FILE_SUB_CONTRACT,
+                          data: { file: e.target.files[0], sub_contract_id, contract_id: valueForm.contract_ID }
+                        })
                       }} />
                     </Tooltip>
                   </div>
                   <Tooltip title="Xuất file" color="green">
                     <CiExport
                       onClick={async (e) => {
-                        // const result = await axios({
-                        //   url: `${local}/api/contract/request-get-file?contract_ID=${sub_contract_id}`,
-                        //   method: "GET",
-                        //   headers: {
-                        //     Authorization: "Bearer " + TOKEN,
-                        //     "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                        //   },
-                        //   responseType: 'arraybuffer'
-                        // });
-                        // let fileBlob = new Blob([result.data], {
-                        //   type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                        // })
-                        // FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
+                        const result = await AxiosExpress({
+                          url: `${local}/api/contract/request-get-file?contract_ID=${valueForm.contract_ID}&sub_contract_ID=${sub_contract_id}`,
+                          method: "GET",
+                          headers: {
+                            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                          },
+                          responseType: 'arraybuffer'
+                        });
+                        let fileBlob = new Blob([result.data], {
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                        })
+                        FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
                       }}
                     />
                   </Tooltip>
@@ -617,10 +618,10 @@ export default function SubContract() {
                     if (window.location.href.includes("create")) {
                       dispatch(deleteContractRequest(text.id))
                     } else {
-                    //   dispatch({
-                    //     type: DELETE_REQUEST,
-                    //     data: {request_id: text.id, sub_contract_id}
-                    //   })
+                      dispatch({
+                        type: DELETE_REQUEST_SUB_CONTRACT,
+                        data: {request_id: text.id, sub_contract_id}
+                      })
                     }
                   }} />
                 </div>
