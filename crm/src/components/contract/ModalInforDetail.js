@@ -9,8 +9,7 @@ import ViewDoc from '../ViewDoc';
 import { checkMicroFe } from '../../untils/helper';
 import axios from 'axios';
 import { local, UPDATE_ACCEPTANCE } from '../../title/title';
-import { FcImageFile } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import image from "../../img/image.png";
 import { useDispatch } from 'react-redux';
 import { setClearDataModal } from '../../redux/features/acceptanceSlice';
 
@@ -107,7 +106,7 @@ export default function ModalInforDetail(props) {
                     } else {
                         return <div className="upload__file" key={uuidv4()}>
                             <Tooltip title={name}>
-                                <FcImageFile key={uuidv4()} className="file" onClick={() => {
+                            <img key={uuidv4()} className="file" src={image} alt="Xem ảnh" onClick={() => {
                                     setFile(uri_file + file)
                                     setImageVisible(true)
                                 }} />
