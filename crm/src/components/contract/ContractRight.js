@@ -167,6 +167,11 @@ export default function ContractRight(props) {
     const cancel = () => {
       if ((keyOfDetailJustAdd && keyOfDetailJustAdd !== "") && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")) {
         dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }))
+        axios({
+          url: `${local}/api/remove-file`,
+          method: "DELETE",
+          data: {path: pathOfFile}
+        })
       }
       setEditingKey('');
     };

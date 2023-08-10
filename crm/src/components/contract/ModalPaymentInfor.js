@@ -9,6 +9,7 @@ import { local, TOKEN } from '../../title/title';
 import { checkMicroFe } from '../../untils/helper';
 import ViewPDF from '../ViewPDF';
 import {v4 as uuidv4} from "uuid"
+import image from "../../img/image.png";
 
 export default function ModalPaymentInfor(props) {
 
@@ -131,7 +132,7 @@ export default function ModalPaymentInfor(props) {
                                     // }
                                     return text.completed_evidences.map(evident => {
                                         if (evident.includes("proxy") || evident.includes("resources")) {
-                                            return <FcImageFile key={uuidv4()} className="file" onClick={() => {
+                                            return <img key={uuidv4()} className="file" src={image} alt="Xem ảnh" onClick={() => {
                                                 setFile(uri_file + evident)
                                                 setImageVisible(true)
                                             }} />

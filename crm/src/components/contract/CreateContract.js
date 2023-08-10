@@ -580,8 +580,9 @@ export default function CreateContract() {
             <Column
               className="thaoTac"
               render={(text) => {
+                console.log(text)
                 return <div>
-                  <button className="btn__green" onClick={() => {
+                  <button disabled={text.quality === text.details?.length ? true : false} className="btn__green" onClick={() => {
                     addDetailWhenCreate(text.id)
                   }}>Thêm chi tiết</button>
                   <MdOutlineModeEditOutline onClick={() => {

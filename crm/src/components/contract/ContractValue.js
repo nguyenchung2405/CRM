@@ -191,7 +191,7 @@ export default function ContractValue(props) {
               <div className="contract__field">
                   <input className="style" type="text"
                       name="VAT"
-                      // disabled
+                      disabled={window.location.href.includes("detail") ? true : false}
                       onChange={(e) => {
                           let { value, name } = e.target;
                           handleChangeValue(name, value)
