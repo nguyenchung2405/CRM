@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -14,6 +15,14 @@ export default function UploadFile({setValueForm, accept}) {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
+  const { clearDataModal } = useSelector(state => state.acceptanceReducer);
+
+  useEffect(()=>{
+    if(clearDataModal){
+      setFileList([])
+    }
+  }, [clearDataModal])
+
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {

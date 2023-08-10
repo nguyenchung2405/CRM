@@ -33,12 +33,24 @@ const updateAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         let evidenceOriginal = req.body.completed_evidences.split(",");
-        let evidenctUpdate = req.body.completed_evidences_update !== undefined ? req.body.completed_evidences_update.split("\r\n").concat(req.files.map(file => file.path)) : []
+        // let evidenctUpdate = req.body.completed_evidences_update !== undefined ? req.body.completed_evidences_update.split("\r\n").concat(req.files.map(file => file.path)) : []
+        let evidenctUpdate;
+        if(req.body.completed_evidences_update !== undefined){
+            if(req.files.length > 0){
+                evidenctUpdate = req.body.completed_evidences_update.split("\r\n").concat(req.files.map(file => file.path))
+            } else {
+                evidenctUpdate = req.body.completed_evidences_update.split("\r\n")
+            }
+        } else if(req.body.completed_evidences_update === undefined && req.files.length > 0){
+            evidenctUpdate = req.files.map(file => file.path)
+        } else {
+            evidenctUpdate = []
+        }
         let newData = {
             ...req.body,
             "completed_evidences": evidenceOriginal.concat(evidenctUpdate),
         };
-        console.log("new data", newData)
+        // console.log("new data", newData)
         const result = await axios({
             url: `${local}/contract/detail/update?id=${req.body.key}`,
             method: "PUT",

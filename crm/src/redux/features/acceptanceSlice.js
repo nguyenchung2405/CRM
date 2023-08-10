@@ -5,7 +5,8 @@ const initialState = {
     totalRequestAccList: 0,
     eventAcceptanceList: [],
     totalEventAccList: 0,
-    acceptanceJustCreated: {}
+    acceptanceJustCreated: {},
+    clearDataModal: false
 }
 
 const acceptanceSlice = createSlice({
@@ -42,10 +43,13 @@ const acceptanceSlice = createSlice({
         },
         setAcceptanceJustCreated: (state, action)=>{
             state.acceptanceJustCreated = action.payload;
+        },
+        setClearDataModal: (state, action)=>{
+            state.clearDataModal = action.payload
         }
     }
 })
 
 export const {setRequestAccList, setTotalRequestAccList, setEventAccList, setTotalEventAccList,
-addDetailEventAccList, addDetailContractAccList, setAcceptanceJustCreated} = acceptanceSlice.actions;
+addDetailEventAccList, addDetailContractAccList, setAcceptanceJustCreated, setClearDataModal} = acceptanceSlice.actions;
 export default acceptanceSlice.reducer;

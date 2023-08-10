@@ -43,6 +43,7 @@ export async function updateAcceptanceAPI(data){
     try {
         const formAcceptance = new FormData();
         let {files, ...rest} = data;
+        console.log(rest)
         if(files?.length > 0){
             for(let i = 0 ; i < files.length; i++){
                 formAcceptance.append("files", files[i]);
@@ -50,19 +51,20 @@ export async function updateAcceptanceAPI(data){
         }
         for(let key in rest){
             if(key === "report_date" || key === "from_date"){
-                let newReportDate = moment(new Date(rest[key])).format("YYYY-MM-DD")
+                let newReportDate = moment(rest[key], "DD-MM-YYYY").format("YYYY-MM-DD")
                 formAcceptance.append(key, newReportDate)
             } else {
                 formAcceptance.append(key, rest[key])
             }
         }
         if(!rest.to_date){
-            let newToDate = moment(new Date(rest["from_date"])).format("YYYY-MM-DD")
+            let newToDate = moment(rest["from_date"], "DD-MM-YYYY").format("YYYY-MM-DD")
             formAcceptance.append("to_date", newToDate)
+            console.log(newToDate)
         }
-        for (const pair of formAcceptance.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-          }
+        // for (const pair of formAcceptance.entries()) {
+        //     console.log(`${pair[0]}, ${pair[1]}`);
+        //   }
         const result = await AxiosExpress({
             url: `${local}/api/acceptance/update`,
             method: "PUT",
