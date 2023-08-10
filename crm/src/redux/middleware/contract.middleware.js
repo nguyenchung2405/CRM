@@ -2,7 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment, dataOfSubContractMapping } from "../../untils/mapping";
 import { createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI } from "../API/contractAPI";
-import { addContractRequest, addPayment, deleteContractRequest, removeContractType, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
+import { addContractRequest, addPayment, deleteContractRequest, removeContractType, removeRequestDetail, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { addPaymentToReceiptList, updatePaymentToReceiptList } from "../features/receiptSlice";
@@ -163,7 +163,8 @@ function* createDetail(payload){
             yield put(updateRequestDetail({ request_id: payload.data.request_id, detailData: result.data.details[0], detail_id_old: payload.data.id }))
             message.success("Thêm chi tiết quyền lợi hợp đồng thành công.")
         } else {
-            message.error("Thêm chi tiết quyền lợi hợp đồng thất bại.")
+            yield put(removeRequestDetail({request_id: payload.data.request_id, detail_id: payload.data.id}))
+            message.error(`Thêm chi tiết quyền lợi hợp đồng thất bại. Lý do: ${result.data.warning}`)
         }
     } catch (error) {
         console.log(error)

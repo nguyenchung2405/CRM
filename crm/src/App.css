@@ -1731,6 +1731,10 @@ div.ant-select-dropdown div.ant-select-item {
     cursor: pointer;
 }
 
+button.btn__green[disabled] {
+    visibility: hidden;
+}
+
 .create__contract__term .term__table .thaoTac svg {
     padding: 2px;
     background-color: green;
