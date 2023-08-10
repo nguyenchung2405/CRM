@@ -13,6 +13,7 @@ import ViewDoc from '../ViewDoc';
 import word from "../../img/doc.png"
 import {v4 as uuidv4} from "uuid"
 import ModalInforDetail from './ModalInforDetail';
+import { setClearDataModal } from '../../redux/features/acceptanceSlice';
 
 function convertLegacyProps(data){
     try {
@@ -301,6 +302,7 @@ export default function ContractRight(props) {
                 return <Typography.Link onClick={() => {
                   setDataModalDetail(record)
                   setIsShowModalDetail(true)
+                  dispatch(setClearDataModal(true))
                 }}>
                 Xem chi tiết
               </Typography.Link>

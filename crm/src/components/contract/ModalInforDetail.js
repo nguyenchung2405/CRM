@@ -12,6 +12,7 @@ import { local, UPDATE_ACCEPTANCE } from '../../title/title';
 import { FcImageFile } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { setClearDataModal } from '../../redux/features/acceptanceSlice';
 
 export default function ModalInforDetail(props) {
 
@@ -29,6 +30,7 @@ export default function ModalInforDetail(props) {
 
     const handleCancel = () => {
         setIsShowModal(false)
+        dispatch(setClearDataModal(false))
     }
 
     const handleOK = ()=>{
@@ -38,6 +40,7 @@ export default function ModalInforDetail(props) {
         })
         setIsShowModal(false)
         setFile("")
+        dispatch(setClearDataModal(false))
     }
 
     const deletePathOfFile = (index) => {
