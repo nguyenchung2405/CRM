@@ -5,10 +5,22 @@ const createAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         // console.log(req.file, req.files);
+        let evidenctUpdate;
+        if(req.body.completed_evidences !== undefined && req.body.completed_evidences !== "undefined"){
+            if(req.files.length > 0){
+                evidenctUpdate = req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path))
+            } else {
+                evidenctUpdate = req.body.completed_evidences.split("\r\n")
+            }
+        } else if((req.body.completed_evidences === undefined || req.body.completed_evidences !== "undefined") && req.files.length > 0){
+            evidenctUpdate = req.files.map(file => file.path)
+        } else {
+            evidenctUpdate = []
+        }
         let newData = {
             ...req.body,
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
-            "completed_evidences": req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path)),
+            "completed_evidences": evidenctUpdate,
         };
         // console.log("new data", newData)
         const result = await axios({
