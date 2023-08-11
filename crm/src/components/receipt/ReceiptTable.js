@@ -1,4 +1,4 @@
-import { Table } from 'antd'
+import { Table, Tooltip } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -140,7 +140,15 @@ export default function ReceiptTable() {
               return null
             }
           }}></Column>
-          <Column title="Ghi chú" key="note" render={(text) => text?.contract_info?.note}></Column>
+          <Column title="Ghi chú" key="note" render={(text) => {
+            if (text?.contract_info?.note?.length > 50) {
+              return <Tooltip title={text?.contract_info?.note}>
+                <span>{text?.contract_info?.note?.slice(0, 50) + "..."}</span>
+              </Tooltip>
+            } else {
+              return text?.contract_info?.note
+            }
+          }}></Column>
           <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" render={(text) => {
             let total = text?.contract_info?.total_include_VAT;
             let total_completed = text?.contract_info?.total_completed_payments;
@@ -158,6 +166,8 @@ export default function ReceiptTable() {
                 payment_ID={text.id}
                 contract_id={text.contract_ID}
                 data={text}
+                page={page}
+                pageNumber={pageNumber}
               />
             </div>
           }}></Column>
