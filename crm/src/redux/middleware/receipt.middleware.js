@@ -38,10 +38,11 @@ function* cancelExportReceipt(payload){
 
 function* completeExportReceipt(payload){
     try {
-        const result = yield call(completeExportReceiptAPI, payload.data);
+        const result = yield call(completeExportReceiptAPI, payload.data.valueModal);
         if(result.data.msg){
-            yield put(completeReceiptFromList(payload.data))
+            yield put(completeReceiptFromList(payload.data.valueModal))
             message.success("Hoàn tất hóa đơn thành công")
+            yield put({ type: GET_PAYMENT_LIST, data: { page: payload.data.page, pageNumber: payload.data.pageNumber, completed: true } })
         } else {
             message.error("Hoàn tất hóa đơn thất bại")
         }

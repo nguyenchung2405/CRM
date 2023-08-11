@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 export default function HandleFeatures(props) {
 
-    const { payment_ID, isExistExport, receipt_id, contract_id, isComplete, data } = props;
+    const { payment_ID, isExistExport, receipt_id, contract_id, isComplete, data, page, pageNumber } = props;
     const dispatch = useDispatch();
     const [isExportReceipt, setIsExportReceipt] = useState(false)
     const [isShowModal, setIsShowModal] = useState(false)
@@ -116,6 +116,8 @@ export default function HandleFeatures(props) {
               receipt_id={receipt_id}
               contract_id={contract_id}
               payment_ID={payment_ID}
+              page={page}
+              pageNumber={pageNumber}
           />
           {/**
             <CreateReceiptModal

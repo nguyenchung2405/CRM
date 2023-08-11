@@ -7,7 +7,7 @@ import { COMPLETE_EXPORT_RECEIPT} from '../../title/title';
 export default function CompleteReceiptModal(props) {
     
     // const {isShowModal, setIsShowModal} = props;
-    const {isShowModal, setIsShowModal, receipt_id, contract_id, payment_ID} = props;
+    const {isShowModal, setIsShowModal, receipt_id, contract_id, payment_ID, page, pageNumber} = props;
     const dispatch = useDispatch();
     const [valueModal, setValueModal] = useState({});
 
@@ -24,7 +24,7 @@ export default function CompleteReceiptModal(props) {
         valueModal.payment_ID = payment_ID
         dispatch({
             type: COMPLETE_EXPORT_RECEIPT,
-            data: valueModal
+            data: {valueModal, page, pageNumber}
         })
         setValueModal({})
     }
