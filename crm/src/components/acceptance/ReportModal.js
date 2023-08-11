@@ -88,20 +88,24 @@ export default function ReportModal(props) {
     async function handleCreateAccOfEvent(valueForm){
         try {
             const resultDetail = await createDetailInEventAcceptanceAPI(valueForm);
-            let newDataAcceptance = {
-                ...resultDetail.data?.event_executive_detail,
-                files: valueForm.files,
-                completed_evidences: valueForm.completed_evidences,
-                contract_IDs: valueForm.contract_IDs,
-                detail_id: resultDetail.data?.event_executive_detail.id,
-                // report_date: valueForm.report_date
-            };
-            const result = await createEventAcceptanceAPI(newDataAcceptance);
-            if(result.data?.msg === "Updated successfully!"){
-                dispatch(setAcceptanceJustCreated({data: result.data.executive_detail, detail_id: result.data.executive_detail.event_detail_ID}))
-                message.success("Tạo nghiệm thu thành công")
+            if(resultDetail?.detail){
+                message.error(resultDetail?.detail)
             } else {
-                message.error("Tạo nghiệm thu thất bại")
+                let newDataAcceptance = {
+                    ...resultDetail.data?.event_executive_detail,
+                    files: valueForm.files,
+                    completed_evidences: valueForm.completed_evidences,
+                    contract_IDs: valueForm.contract_IDs,
+                    detail_id: resultDetail.data?.event_executive_detail.id,
+                    // report_date: valueForm.report_date
+                };
+                const result = await createEventAcceptanceAPI(newDataAcceptance);
+                if(result.data?.msg === "Updated successfully!"){
+                    dispatch(setAcceptanceJustCreated({data: result.data.executive_detail, detail_id: result.data.executive_detail.event_detail_ID}))
+                    message.success("Tạo nghiệm thu thành công")
+                } else {
+                    message.error("Tạo nghiệm thu thất bại")
+                }
             }
         } catch (error) {
             console.log(error)

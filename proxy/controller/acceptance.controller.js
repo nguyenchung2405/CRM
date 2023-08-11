@@ -74,10 +74,22 @@ const updateAcceptance = async (req, res)=>{
 const createEventAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
+        let evidenctUpdate;
+        if(req.body.completed_evidences !== undefined && req.body.completed_evidences !== "undefined"){
+            if(req.files.length > 0){
+                evidenctUpdate = req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path))
+            } else {
+                evidenctUpdate = req.body.completed_evidences.split("\r\n")
+            }
+        } else if((req.body.completed_evidences === undefined || req.body.completed_evidences === "undefined") && req.files.length > 0){
+            evidenctUpdate = req.files.map(file => file.path)
+        } else {
+            evidenctUpdate = []
+        }
         let newData ={
             ...req.body,
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
-            "completed_evidences": req.body.completed_evidences.split("\r\n").concat(req.files.map(file => file.path)),
+            "completed_evidences": evidenctUpdate,
             contract_IDs: req.body.contract_IDs.split(",").map(item => +item),
             sub_contract_IDs: []
         };
