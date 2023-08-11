@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
+import { COMPLETED_CONTRACT, CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment, dataOfSubContractMapping } from "../../untils/mapping";
-import { createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI } from "../API/contractAPI";
+import { completedContractAPI, createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, removeContractType, removeRequestDetail, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -434,6 +434,18 @@ function* deleteRequestSubContract(payload){
     }
 }
 
+function* completedContract(payload){
+    try {
+        const result = yield call(completedContractAPI, payload.data.contract_id);
+        if(result.data?.result){
+            message.success("Thanh lý thành công")
+            yield put({type: GET_CONTRACT_LIST, data: { page: payload.data.page, pageNumber: payload.data.pageNumber }})
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_LIST, getContractList)
     yield takeLatest(GET_CONTRACT_TYPE_LIST, getContractTypeList)
@@ -441,6 +453,7 @@ export default function* contractMiddleware() {
     yield takeLatest(GET_CONTRACT_DETAIL, getContractDetail);
     yield takeLatest(GET_OWNER_LIST, getOwnerList)
     yield takeLatest(UPDATE_CONTRACT, updateContract)
+    yield takeLatest(COMPLETED_CONTRACT, completedContract)
     // Request Middleware
     yield takeLatest(CREATE_REQUEST, createRequest)
     yield takeLatest(DELETE_REQUEST, deleteRequest)

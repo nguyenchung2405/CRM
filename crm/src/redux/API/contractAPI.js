@@ -589,3 +589,16 @@ export async function importFileSubContractAPI(data){
         return "Thất bại"
     }
 }
+
+export async function completedContractAPI(contract_id){
+    try {
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/completed?contract_id=${contract_id}`,
+            method: "POST",
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

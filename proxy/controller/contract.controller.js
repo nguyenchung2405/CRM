@@ -700,6 +700,26 @@ const importFileExcelSubContract = async (req, res)=>{
     }
 }
 
+const completedContract = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        const result = await axios({
+            url: `${local}/contract/completed?contract_id=${req.query.contract_id}`,
+            method: "POST",
+            headers: {
+                Authorization: authorization,
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 module.exports = {
     getContractList,
     getContractTypeList,
@@ -729,5 +749,6 @@ module.exports = {
     getSubContractRequest,
     getSubContractByMomContract,
     updateSubContract,
-    importFileExcelSubContract
+    importFileExcelSubContract,
+    completedContract
 }
