@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { message, Table, Tooltip } from 'antd';
+import { message, Popconfirm, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_CONTRACT_LIST } from '../../title/title';
+import { COMPLETED_CONTRACT, GET_CONTRACT_LIST } from '../../title/title';
 import moment from 'moment';
 import { checkMicroFe } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
 import Loading from '../Loading';
 import { setIsLoading } from '../../redux/features/loadingSlice';
 import { MdOutlineModeEditOutline } from "react-icons/md";
-import { AiFillPlusCircle } from 'react-icons/ai';
+import { AiFillPlusCircle, AiOutlineFileDone } from 'react-icons/ai';
 import AskCreateSubContractModal from './sub_contract/AskCreateSubContractModal';
 import ExpandSubContractTable from './sub_contract/ExpandSubContractTable';
 
@@ -123,6 +123,13 @@ export default function ContractTable() {
             value: "Quá hạn"
         },
     ]
+
+    const confirm = (contract_id)=>{
+        dispatch({
+            type: COMPLETED_CONTRACT,
+            data: {contract_id, page, pageNumber}
+        })
+    }
 
     return (
         <div className="content contract__table customer__table">
@@ -245,6 +252,17 @@ export default function ContractTable() {
                                 setIsShowModal(true)
                                 setDataToModal(text)
                             }} />
+                        </Tooltip>
+                        <Tooltip title="Thanh lý hợp đồng" color="green" >
+                            <Popconfirm
+                                title="Bạn có chắc muốn thanh lý hợp đồng này ?"
+                                onConfirm={()=>{ confirm(text.id) }}
+                                okText="Có"
+                                cancelText="Không"
+                                placement="topRight"
+                            >
+                                <AiOutlineFileDone className="style__svg"/>
+                            </Popconfirm>
                         </Tooltip>
                     </div>
                 }} />

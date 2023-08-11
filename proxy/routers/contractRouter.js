@@ -1,5 +1,5 @@
 const express = require("express");
-const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest, getSubContractByMomContract, updateSubContract, importFileExcelSubContract } = require("../controller/contract.controller");
+const { getContractList, getContractTypeList, createContract, getContractDetail, uploadFileDetailResponse, getContractRequest, getOwnerList, updateContract, createRequest, deleteRequest, updateRequest, createDetail, updateDetail, createPayment, getFile, updatePayment, getExportFile, importFileExcel, getInforPayment, getContractType, createContractType, updateContractType, deleteContractType, createSubContract, getDetailSubContract, getSubContractRequest, getSubContractByMomContract, updateSubContract, importFileExcelSubContract, completedContract } = require("../controller/contract.controller");
 const { uploadFileDetail, uploadFileExcelContract } = require("../middleware/upload");
 const contractRouter = express.Router();
 
@@ -11,6 +11,7 @@ contractRouter.get("/request/list", getContractRequest)
 contractRouter.post("/upload/detail", uploadFileDetail(), uploadFileDetailResponse)
 contractRouter.get("/owner/list", getOwnerList)
 contractRouter.put("/update", updateContract)
+contractRouter.post("/completed", completedContract)
 // Request
 contractRouter.post("/create-request", createRequest)
 contractRouter.delete("/delete-request", deleteRequest)
