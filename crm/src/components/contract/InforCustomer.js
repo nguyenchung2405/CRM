@@ -1,10 +1,11 @@
 import { Select } from 'antd';
 import React from 'react'
+import { checkMicroFe } from '../../untils/helper';
 
 export default function InforCustomer(props) {
 
     const {renderOption, handleChangeValue, valueOfField, setValueForm, valueForm, renderOptionOwner, valueOfCustomer, history} = props;
-
+    let uri = checkMicroFe() === true ? "/contract-service" : "";
   return (
       <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin khách hàng</p>
@@ -34,7 +35,7 @@ export default function InforCustomer(props) {
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           onClick={()=>{
-                            history.push("/crm/customer")
+                            history.push(`${uri}/crm/customer`)
                           }}
                       >
                           <path
