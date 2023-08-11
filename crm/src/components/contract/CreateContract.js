@@ -1,8 +1,8 @@
-import { DatePicker, Table, Select, Progress, message, Popconfirm, Checkbox, Tooltip } from "antd";
+import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, CREATE_PAYMENT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
+import { CREATE_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
@@ -29,12 +29,11 @@ export default function CreateContract() {
   const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
   const history = useHistory();
-  const { contract_id } = useParams();
+  const { contract_id, completed_contract_id } = useParams();
   const { isLoading } = useSelector(state => state.loadingReducer);
   const { customerList } = useSelector(state => state.customerReducer);
   const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList } = useSelector(state => state.contractReducer);
   const { productList, productListFull } = useSelector(state => state.productReducer)
-  const { messageAlert } = useSelector(state => state.messageReducer);
   const { eventList, requestOfEvent, selectRequest } = useSelector(state => state.eventReducer);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
@@ -87,8 +86,14 @@ export default function CreateContract() {
         contract_id
       });
       dispatch(setIsLoading(true))
+    } else if(completed_contract_id && typeof +completed_contract_id === "number") {
+      dispatch({
+        type: GET_CONTRACT_DETAIL,
+        data: {contract_id: completed_contract_id, status: "Đã thanh lý"}
+      });
+      dispatch(setIsLoading(true))
     }
-  }, [contract_id])
+  }, [contract_id, completed_contract_id])
 
   useEffect(() => {
     if(!contract_id){
@@ -232,7 +237,7 @@ export default function CreateContract() {
   }
 
   const renderButtonCreateUpdate = () => {
-    if (contract_id) {
+    if (contract_id !== undefined && completed_contract_id === undefined) {
       return <button className="footer__btn btn__create"
         onClick={() => {
           valueForm.contract_id = +contract_id;
@@ -244,7 +249,7 @@ export default function CreateContract() {
         }}>
         Cập nhật
       </button>
-    } else {
+    } else if(contract_id === undefined && completed_contract_id === undefined) {
       return <button className="footer__btn btn__create"
         onClick={() => {
           let newData = {
@@ -325,12 +330,20 @@ export default function CreateContract() {
     }
   }
 
+  const showTitleContract =()=>{
+    if(contract_id !== undefined || completed_contract_id !== undefined){
+      return "Chỉnh sửa hợp đồng"
+    } else {
+      return "Tạo hợp đồng"
+    }
+  }
+
   return (
     <div className="create__contract content">
       {showLoading()}
       <div className="create__contract__content">
         <div className="create__contract__header border_bottom_3px">
-          <h2>{!contract_id ? "Tạo hợp đồng" : "Chỉnh sửa hợp đồng"}</h2>
+          <h2>{showTitleContract()}</h2>
         </div>
         <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
           <p>Thông tin hợp đồng</p>

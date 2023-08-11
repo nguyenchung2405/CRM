@@ -62,7 +62,7 @@ function* getContractDetail(payload) {
             } else {
                 yield put(setContractDetail({}))
             }
-        } else if(payload?.data){
+        } else if(payload?.data?.request_done === true || payload?.data?.request_done === false){
             let {contract_id, request_done} = payload.data;
             let result = yield call(getContractDetailAPI, contract_id);
             let { code, data } = result;
@@ -77,8 +77,22 @@ function* getContractDetail(payload) {
             } else {
                 yield put(setContractDetail({}))
             }
+        } else if(payload?.data?.status){
+            let {contract_id, status} = payload.data;
+            let result = yield call(getContractDetailAPI, contract_id, status);
+            let { code, data } = result;
+            let responseRequest = yield call(getContractRequestAPI, contract_id);
+            if (+code === 200 || data.contract.length > 0) {
+                let dataAfterMapping = dataOfContractMapping(data.contract[0]);
+                dataAfterMapping.payments = dataOfPayment(data.contract[0].payments);
+                yield put(setContractDetail(dataAfterMapping))
+                yield put(setContractRequest(responseRequest.data.contract_request))
+                yield put(setSelectRequest(dataAfterMapping.dataContract.event_detail_IDs))
+                yield put(setIsLoading(false))
+            } else {
+                yield put(setContractDetail({}))
+            }
         }
-        
     } catch (error) {
         console.log(error)
     }

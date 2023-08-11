@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message, Popconfirm, Table, Tooltip } from 'antd';
+import { message, Popconfirm, Select, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import { AiFillPlusCircle, AiOutlineFileDone } from 'react-icons/ai';
 import AskCreateSubContractModal from './sub_contract/AskCreateSubContractModal';
 import ExpandSubContractTable from './sub_contract/ExpandSubContractTable';
+import { setIsCompletedContract } from '../../redux/features/contractSlice';
 
 export default function ContractTable() {
 
@@ -22,7 +23,7 @@ export default function ContractTable() {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({client_name: "", contract_type: "", owner_name: ""})
+    const [search, setSearch] = useState({client_name: "", contract_type: "", owner_name: "", status: ""})
     const [isShowModal, setIsShowModal] = useState(false)
     const [dataToModal, setDataToModal] = useState({})
     const { total, contractList } = useSelector(state => state.contractReducer);
@@ -49,7 +50,7 @@ export default function ContractTable() {
     }, []);
 
     useEffect(() => {
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== ""){
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== "" || search.status !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -65,7 +66,7 @@ export default function ContractTable() {
     }, [page, pageNumber, dispatch]);
 
     useEffect(()=>{
-        if(search.client_name === "" && search.contract_type === "" && search.owner_name === ""){
+        if(search.client_name === "" && search.contract_type === "" && search.owner_name === "" && search.status === ""){
             if(page === 1){
                 dispatch({
                     type: GET_CONTRACT_LIST,
@@ -90,7 +91,7 @@ export default function ContractTable() {
     }, [messageAlert])
 
     const searchContract = ()=>{
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== ""){
+        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== "" || search.status !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -169,6 +170,13 @@ export default function ContractTable() {
                             setSearch(prev => { return { ...prev, [name]: value } })
                         }}
                     />
+                    <Select
+                        className="search__select"
+                        placeholder="Trạng thái"
+                        allowClear
+                        onChange={(value) => { setSearch(prev => { return { ...prev, status: value } }) }}>
+                        <Select.Option value="Đã thanh lý">Đã thanh lý</Select.Option>
+                    </Select>
                     <div className="table__features__search__btn">
                         <button onClick={searchContract}>Tìm kiếm</button>
                     </div>
@@ -244,7 +252,12 @@ export default function ContractTable() {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-                                history.push(`${uri}/crm/detail/${text.id}`);
+                                if(search.status.includes("Đã")){
+                                //     dispatch(setIsCompletedContract(true))
+                                    history.push(`${uri}/crm/completed/${text.id}`);
+                                } else {
+                                    history.push(`${uri}/crm/detail/${text.id}`);
+                                }
                             }} />
                         </Tooltip>
                         <Tooltip title="Tạo hợp đồng con/phụ lục" color="green" >
