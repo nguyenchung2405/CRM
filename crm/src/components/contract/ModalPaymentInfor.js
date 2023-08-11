@@ -103,15 +103,17 @@ export default function ModalPaymentInfor(props) {
                                   }
                               }}
                           />
+                          {/*
                           <Column
-                              className="item"
-                              title="Ngày nghiệm thu nội bộ"
-                              key="item"
-                              render={(text) => {
-                                  let exportDate = moment(new Date(text?.report_date)).format("DD-MM-YYYY")
-                                  return exportDate
-                              }}
-                          />
+                          className="item"
+                          title="Ngày nghiệm thu nội bộ"
+                          key="item"
+                          render={(text) => {
+                              let exportDate = moment(new Date(text?.report_date)).format("DD-MM-YYYY")
+                              return exportDate
+                          }}
+                      />
+                        */}
                           <Column
                               className="evidence"
                               title="Chứng minh"
