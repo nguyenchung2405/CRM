@@ -147,7 +147,7 @@ export default function CreateReceiptModal(props) {
 
     const renderAccList = ()=>{
         return acceptanceListInReceiptEvent?.map(acc => {
-            let ngayNghiemThu = moment(new Date(acc.report_date)).format("DD-MM-YYYY")
+            let ngayNghiemThu = moment(new Date(acc.from_date)).format("DD-MM-YYYY")
             return <AcceptanceRow 
             ngayNghiemThu={ngayNghiemThu}
             data={acc}
@@ -160,7 +160,7 @@ export default function CreateReceiptModal(props) {
 
     const renderAccListForEvent = ()=>{
         let accOfEvent = acceptanceListInReceipt.map(item => {
-            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
+            let convertDate = moment(new Date(item.from_date)).format("DD-MM-YYYY")
             return <EventAccRow 
             convertDate={convertDate}
             data={item}
@@ -170,7 +170,7 @@ export default function CreateReceiptModal(props) {
             />
         });
         let accOfContract = acceptanceListInReceiptEvent.map(item => {
-            let convertDate = moment(new Date(item.report_date)).format("DD-MM-YYYY")
+            let convertDate = moment(new Date(item.from_date)).format("DD-MM-YYYY")
             return <EventAccRowOfContract 
             convertDate={convertDate}
             data={item}

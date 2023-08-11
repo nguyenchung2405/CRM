@@ -148,11 +148,20 @@ const createDetailInAcceptance = async (req, res)=>{
 const createDetailInEventAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        let newDetail = {
-            ...req.body,
-            "file": req?.file?.path,
-            "to_date": req.body.from_date
-        };
+        let newDetail;
+        for(let pro in req.body){
+            if(req.body[pro] === "undefined"){
+                newDetail = {
+                    ...newDetail,
+                    [pro]: ""
+                }
+            } else {
+                newDetail = {
+                    ...newDetail,
+                    [pro]: req.body[pro]
+                }
+            }
+        }
         const result = await axios({
             url: `${local}/event/executive_event_detail/create`,
             method: "POST",
