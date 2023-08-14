@@ -41,6 +41,7 @@ function App() {
                 <Route exact path="/crm/contract" component={ContractTable} />
                 <Route exact path="/crm/contract/create" component={CreateContract} />
                 <Route exact path="/crm/detail/:contract_id" component={CreateContract} />
+                <Route exact path="/crm/completed/:completed_contract_id" component={CreateContract} />
                 <Route exact path="/crm/channel" component={ChanelGContainer} />
                 <Route exact path="/crm/product" component={ProductEditableTable} />
                 <Route exact path="/crm/product/type-att" component={TypeAndAttribute} />
@@ -71,6 +72,7 @@ function App() {
               <Route exact path="/contract-service/crm/contract" component={ContractTable} />
               <Route exact path="/contract-service/crm/contract/create" component={CreateContract} />
               <Route exact path="/contract-service/crm/detail/:contract_id" component={CreateContract} />
+              <Route exact path="/contract-service/crm/completed/:completed_contract_id" component={CreateContract} />
               <Route exact path="/contract-service/crm/product" component={ProductEditableTable} />
               <Route exact path="/contract-service/crm/product/type-att" component={TypeAndAttribute} />
               <Route exact path="/contract-service/crm/product/special" component={SpecialProductTable} />

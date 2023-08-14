@@ -99,13 +99,21 @@ export async function createContractAPI(data) {
     }
 }
 
-export async function getContractDetailAPI(contract_id) {
+export async function getContractDetailAPI(contract_id, status) {
     try {
-        const result = await AxiosExpress({
-            url: `${local}/api/contract/detail?id=${contract_id}`,
-            method: "GET",
-        });
-        return result.data;
+        if(typeof status === "string"){
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/detail?id=${contract_id}&status=${status}`,
+                method: "GET",
+            });
+            return result.data;
+        } else {
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/detail?id=${contract_id}`,
+                method: "GET",
+            });
+            return result.data;
+        }
     } catch (error) {
         console.log(error)
         return "Thất bại"

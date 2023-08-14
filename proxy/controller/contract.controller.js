@@ -17,7 +17,7 @@ const getContractList = async (req, res) => {
                 }
             });
         } else if(search === "true"){
-            let searchData = { client_name, contract_type, owner_name };
+            let searchData = { client_name, contract_type, owner_name, status };
             let queryString = "&";
             for (let prop in searchData) {
                 if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
@@ -100,9 +100,20 @@ const createContract = async (req, res) => {
 const getContractDetail = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { id } = req.query;
+        let { id, status } = req.query;
+        let searchData = { id, status };
+        let queryString = "&";
+        for (let prop in searchData) {
+            if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
+                if (queryString.length > 1) {
+                    queryString += `&${prop}=${encodeURI(searchData[prop])}`
+                } else {
+                    queryString += `${prop}=${encodeURI(searchData[prop])}`
+                }
+            }
+        }
         const result = await axios({
-            url: `${local}/contract/list?id=${id}`,
+            url: `${local}/contract/list?${queryString}`,
             method: "GET",
             headers: {
                 Authorization: authorization

@@ -1047,6 +1047,34 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
     margin-right: 0;
 }
 
+div.contract__table .table__features .table__features__search .search__select {
+    width: 251px;
+    height: 40px;
+}
+
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector {
+    height: 100%;
+    width: 100%;
+    background-color: #F0F5FA;
+    border-radius: 3px;
+    border-style: none;
+}
+
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search {
+    height: 100%;
+    width: 100%;
+}
+
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search > {
+    height: 100%;
+    width: 100%;
+}
+
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item {
+    line-height: 40px;
+}
+
 .contract__table .contract__table__soHopDong {
     padding-left: 30px;
     width: 180px;
