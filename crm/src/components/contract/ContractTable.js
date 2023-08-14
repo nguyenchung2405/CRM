@@ -3,7 +3,7 @@ import { message, Popconfirm, Select, Table, Tooltip } from 'antd';
 import { FcPlus } from "react-icons/fc"
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { COMPLETED_CONTRACT, GET_CONTRACT_LIST } from '../../title/title';
+import { COMPLETED_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST } from '../../title/title';
 import moment from 'moment';
 import { checkMicroFe } from '../../untils/helper';
 import { setMessage } from '../../redux/features/messageSlice';
@@ -23,10 +23,10 @@ export default function ContractTable() {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({client_name: "", contract_type: "", owner_name: "", status: ""})
+    const [search, setSearch] = useState({client_name: "", contract_type_ID: "", owner_name: "", status: ""})
     const [isShowModal, setIsShowModal] = useState(false)
     const [dataToModal, setDataToModal] = useState({})
-    const { total, contractList } = useSelector(state => state.contractReducer);
+    const { total, contractList, contractTypeList } = useSelector(state => state.contractReducer);
     const { messageAlert } = useSelector(state => state.messageReducer);
     const { isLoading } = useSelector(state => state.loadingReducer);
 
@@ -47,10 +47,13 @@ export default function ContractTable() {
                 }
             }
         });
+        dispatch({
+            type: GET_CONTRACT_TYPE_LIST
+        });
     }, []);
 
     useEffect(() => {
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== "" || search.status !== ""){
+        if(search.client_name !== "" || search.contract_type_ID !== "" || search.owner_name !== "" || search.status !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -66,7 +69,7 @@ export default function ContractTable() {
     }, [page, pageNumber, dispatch]);
 
     useEffect(()=>{
-        if(search.client_name === "" && search.contract_type === "" && search.owner_name === "" && search.status === ""){
+        if(search.client_name === "" && (search.contract_type_ID === "" || search.contract_type_ID === undefined) && search.owner_name === "" && (search.status === "" || search.status === undefined)){
             if(page === 1){
                 dispatch({
                     type: GET_CONTRACT_LIST,
@@ -91,7 +94,7 @@ export default function ContractTable() {
     }, [messageAlert])
 
     const searchContract = ()=>{
-        if(search.client_name !== "" || search.contract_type !== "" || search.owner_name !== "" || search.status !== ""){
+        if(search.client_name !== "" || search.contract_type_ID !== "" || search.owner_name !== "" || search.status !== ""){
             dispatch(setIsLoading(true))
             dispatch({
                 type: GET_CONTRACT_LIST,
@@ -106,29 +109,16 @@ export default function ContractTable() {
         }
     }
 
-    const filterStatus = [
-        {
-            text: "Đang chạy",
-            value: "Đang chạy"
-        },
-        {
-            text: "Kết thúc",
-            value: "Kết thúc"
-        },
-        {
-            text: "Chưa chạy",
-            value: "Chưa chạy"
-        },
-        {
-            text: "Quá hạn nhưng chưa thanh lý",
-            value: "Quá hạn"
-        },
-    ]
-
     const confirm = (contract_id)=>{
         dispatch({
             type: COMPLETED_CONTRACT,
             data: {contract_id, page, pageNumber}
+        })
+    }
+
+    const renderContractTypeOption = ()=>{
+        return contractTypeList.map(type => {
+            return <Select.Option key={type.id + type.name} value={type.id}>{type.name}</Select.Option>
         })
     }
 
@@ -154,14 +144,14 @@ export default function ContractTable() {
                             setSearch(prev => { return { ...prev, [name]: value } })
                         }}
                     />
-                    <input placeholder="Loại hợp đồng" type="text"
-                        name="contract_type"
-                        value={search.contract_type}
-                        onChange={e => {
-                            let { name, value } = e.target;
-                            setSearch(prev => { return { ...prev, [name]: value } })
-                        }}
-                    />
+                    <Select
+                        className="search__select"
+                        placeholder="Loại hợp đồng"
+                        allowClear
+                        onChange={(value) => { setSearch(prev => { return { ...prev, contract_type_ID: value?.toString() } }) }}
+                    >
+                        {renderContractTypeOption()}
+                    </Select>
                     <input placeholder="Người đầu mối" type="text"
                         name="owner_name"
                         value={search.owner_name}
@@ -175,7 +165,10 @@ export default function ContractTable() {
                         placeholder="Trạng thái"
                         allowClear
                         onChange={(value) => { setSearch(prev => { return { ...prev, status: value } }) }}>
-                        <Select.Option value="Đã thanh lý">Đã thanh lý</Select.Option>
+                        <Select.Option key="Đang chạy" value="Đang chạy">Đang chạy</Select.Option>
+                        <Select.Option key="Chưa chạy" value="Chưa chạy">Chưa chạy</Select.Option>
+                        <Select.Option key="Quá hạn nhưng chưa thanh lý" value="Quá hạn nhưng chưa thanh lý">Quá hạn nhưng chưa thanh lý</Select.Option>
+                        <Select.Option key="Đã thanh lý" value="Đã thanh lý">Đã thanh lý</Select.Option>
                     </Select>
                     <div className="table__features__search__btn">
                         <button onClick={searchContract}>Tìm kiếm</button>
@@ -232,10 +225,6 @@ export default function ContractTable() {
                         return `${batDau} - ${ketThuc}`
                     }} />
                 <Column className="contract__table__status" 
-                    filters={filterStatus}
-                    filterSearch={true}
-                    filterMode="menu"
-                    onFilter={(value, record) => { return record.status.toLowerCase().includes(value.toLowerCase()) }}
                     title="Trạng thái" 
                     key="status"
                     render={(text) => {
@@ -252,7 +241,7 @@ export default function ContractTable() {
                     return <div className="table__thaotac">
                         <Tooltip title="Chỉnh sửa" color="green">
                             <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-                                if(search.status.includes("Đã")){
+                                if(search.status?.includes("Đã")){
                                 //     dispatch(setIsCompletedContract(true))
                                     history.push(`${uri}/crm/completed/${text.id}`);
                                 } else {

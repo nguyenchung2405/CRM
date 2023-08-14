@@ -6,7 +6,7 @@ const fs = require("fs")
 const getContractList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, status, search, client_name, contract_type, owner_name } = req.query;
+        let { page, page_size, status, search, client_name, contract_type_ID, owner_name } = req.query;
         let result;
         if(status !== "undefined" && search !== "true"){
             result = await axios({
@@ -17,7 +17,7 @@ const getContractList = async (req, res) => {
                 }
             });
         } else if(search === "true"){
-            let searchData = { client_name, contract_type, owner_name, status };
+            let searchData = { client_name, contract_type_ID, owner_name, status };
             let queryString = "&";
             for (let prop in searchData) {
                 if (typeof searchData[prop] === "string" && searchData[prop].length > 0) {
