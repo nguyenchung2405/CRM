@@ -147,10 +147,6 @@ img.file, svg.file {
     margin: 0;
 }
 
-.sidebar .sidebar__sub__menu ul li {
-    padding: 4px 0;
-}
-
 .sidebar .sidebar__sub__menu ul li a {
     color: white;
     font-size: 16px;
@@ -1040,7 +1036,7 @@ div.contract__table .table__features .table__features__search input:nth-child(2)
 
 div.contract__table .table__features .table__features__search input:nth-child(3) {
     width: 251px;
-    margin-left: 0;
+    margin-left: 37px;
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(4) {
@@ -1073,6 +1069,7 @@ div.contract__table .table__features .table__features__search .search__select > 
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item {
     line-height: 40px;
+    color: #666666;
 }
 
 .contract__table .contract__table__soHopDong {
@@ -1688,7 +1685,7 @@ div.contract__table .table__features .table__features__search .search__select > 
 .create__contract .create__contract__footer .footer__btn {
     width: 135px;
     height: 44px;
-    margin-right: 40px;
+    /* margin-right: 40px; */
     border-radius: 3px;
     cursor: pointer;
 }
@@ -1710,6 +1707,7 @@ div.contract__table .table__features .table__features__search .search__select > 
     background: #35794A;
     border: 1px solid #35794A;
     color: white;
+    margin-left: 40px;
 }
 
 div.ant-select-dropdown {
