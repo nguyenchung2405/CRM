@@ -391,10 +391,6 @@ img.file, svg.file {
     width: 200px;
 }
 
-.customer__table .table__features .table__features__search input:nth-child(3) {
-    margin-left: 37px;
-}
-
 .customer__table .ant-table-wrapper {
     background-color: white;
     border-bottom-left-radius: 12px;
@@ -697,6 +693,19 @@ div.modal__content {
     text-align: center;
     margin-top: 25px;
     
+}
+
+div.donor__modal .donor__list {
+    text-align: center;
+    /* padding-left: 50px; */
+    max-width: 525px;
+    margin: 0 auto 15px auto;
+}
+
+div.donor__modal label {
+    display: block;
+    width: auto;
+    text-align: left;
 }
 
 .evidence__table td.evidence {
@@ -1026,7 +1035,7 @@ div.contract__table .table__features .table__features__search input {
     margin-right: 37px;
 }
 
-div.contract__table .table__features .table__features__search input:first-child {
+div.contract__table .table__features .table__features__search > input:first-child {
     width: 200px;
 }
 
@@ -1036,19 +1045,22 @@ div.contract__table .table__features .table__features__search input:nth-child(2)
 
 div.contract__table .table__features .table__features__search input:nth-child(3) {
     width: 251px;
-    margin-left: 37px;
+    /* margin-left: 37px; */
 }
 
 div.contract__table .table__features .table__features__search input:nth-child(4) {
     margin-right: 0;
 }
 
-div.contract__table .table__features .table__features__search .search__select {
+div.contract__table .table__features .table__features__search .search__select,
+div.product__table .table__features .table__features__search .search__select {
     width: 251px;
     height: 40px;
+    margin-right: 37px;
 }
 
-div.contract__table .table__features .table__features__search .search__select > .ant-select-selector {
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector,
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector {
     height: 100%;
     width: 100%;
     background-color: #F0F5FA;
@@ -1056,18 +1068,16 @@ div.contract__table .table__features .table__features__search .search__select > 
     border-style: none;
 }
 
-div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search {
-    height: 100%;
-    width: 100%;
-}
-
-div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search > {
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search,
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search {
     height: 100%;
     width: 100%;
 }
 
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
-div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item {
+div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item,
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item {
     line-height: 40px;
     color: #666666;
 }

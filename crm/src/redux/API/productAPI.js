@@ -1,20 +1,26 @@
 import { local } from "../../title/title";
 import { AxiosExpress } from "../../untils/axios";
 
-export async function getProductListAPI(page, pageSize, subLocationID, typeID, attributeID, search) {
+export async function getProductListAPI(page, pageSize, subLocationID, typeID, attributeID, channel_ID, location_ID, search) {
     try {
-        let sub_location_ID = subLocationID === null ? "" : subLocationID;
-        let type_id = typeID === null ? "" : typeID;
-        let attribute_id = attributeID === null ? "" : attributeID;
+        let sub_location_ID = subLocationID === null ? null : subLocationID;
+        let type_id = typeID === null ? null : typeID;
+        let attribute_id = attributeID === null ? null : attributeID;
         let newData = {};
-        if(sub_location_ID !== undefined){
+        if(sub_location_ID !== undefined && sub_location_ID !== ""){
             newData.sub_location_ID = [sub_location_ID]
         }
-        if(type_id !== undefined){
+        if(type_id !== undefined && type_id !== ""){
             newData.type_ID = [type_id]
         }
-        if(attribute_id !== undefined){
+        if(attribute_id !== undefined && attribute_id !== ""){
             newData.attribute_option_ID = [attribute_id]
+        }
+        if(channel_ID !== undefined && channel_ID !== ""){
+            newData.channel_ID = [channel_ID]
+        }
+        if(location_ID !== undefined && location_ID !== ""){
+            newData.location_ID = [location_ID]
         }
         let result;
         if(search){

@@ -9,6 +9,7 @@ export default function ModalDonor(props) {
     const {Option} = Select;
     const dispatch = useDispatch();
     const [multi, setMulti] = useState([]);
+    const [multiSub, setMultiSub] = useState([]);
     const { unsetContract } = useSelector(state => state.eventReducer)
     
     const handleCancel = ()=>{
@@ -17,25 +18,39 @@ export default function ModalDonor(props) {
 
     const handleOk = ()=>{
         let contractUnsetSelectedArr = [];
+        let subContractUnsetSelectedArr = [];
         for(let contract_id of multi){
-            let contract = unsetContract.find(contract => contract.id === contract_id);
+            let contract = unsetContract.contractArray.find(contract => contract.id === contract_id);
             if(contract){
                 let newContract = {...contract, event_ID: +event_id}
                 contractUnsetSelectedArr.push(newContract)
             }
         }
-        if(contractUnsetSelectedArr.length > 0){
+        for(let sub_contract_id of multiSub){
+            let subContract = unsetContract.subContractArray.find(subContract => subContract.id === sub_contract_id);
+            if(subContract){
+                let newSubContract = {...subContract, event_ID: +event_id}
+                subContractUnsetSelectedArr.push(newSubContract)
+            }
+        }
+        if(contractUnsetSelectedArr.length > 0 || subContractUnsetSelectedArr.length > 0){
             dispatch({
                 type: ADD_UNSET_CONTRACT_TO_EVENT,
-                data: contractUnsetSelectedArr
+                data: {contractUnsetSelectedArr, subContractUnsetSelectedArr}
             })
         }
         setIsShowModal(false)
     }
 
-    const renderOption = ()=>{
-        return unsetContract.map(contract => {
+    const renderContractOption = ()=>{
+        return unsetContract?.contractArray?.map(contract => {
             return <Option key={contract.id} value={contract.id}>{contract.contract_number}</Option>
+        })
+    }
+
+    const renderSubContractOption = ()=>{
+        return unsetContract?.subContractArray?.map(subContract => {
+            return <Option key={subContract.id} value={subContract.id}>{subContract.sub_contract_number}</Option>
         })
     }
 
@@ -58,22 +73,43 @@ export default function ModalDonor(props) {
           open={isShowModal}
           onCancel={handleCancel}
       >
-          <div className="modal__content">
-              <Select
-                  className="customer__select style"
-                  mode="multiple"
-                  value={multi}
-                  showSearch
-                  allowClear
-                  filterOption={(input, option) =>
-                      (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
-                  }
-                  onChange={(value, option) => {
-                    setMulti(value)
-                  }}
-              >
-                  {renderOption()}
-              </Select>
+          <div className="modal__content donor__modal">
+              <div className="donor__list">
+                  <label>Hợp đồng</label>
+                  <Select
+                      className="customer__select style"
+                      mode="multiple"
+                      value={multi}
+                      showSearch
+                      allowClear
+                      filterOption={(input, option) =>
+                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={(value, option) => {
+                        setMulti(value)
+                      }}
+                  >
+                      {renderContractOption()}
+                  </Select>
+              </div>
+              <div className="donor__list">
+                  <label>Hợp đồng con/Phụ lục</label>
+                  <Select
+                      className="customer__select style"
+                      mode="multiple"
+                      value={multiSub}
+                      showSearch
+                      allowClear
+                      filterOption={(input, option) =>
+                          (option?.children ?? "").toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={(value, option) => {
+                        setMultiSub(value)
+                      }}
+                  >
+                      {renderSubContractOption()}
+                  </Select>
+              </div>
           </div>
     </Modal>
   )

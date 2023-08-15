@@ -43,7 +43,7 @@ export default function ProductTable() {
     // Normal Table
     const [page, setPage] = useState(1);
     const [pageNumber, setPageNumber] = useState(10);
-    const [search, setSearch] = useState({ name: ""})
+    const [search, setSearch] = useState({ name: "", attribute_option_ID: "", type_ID: "", sub_location_ID: "", channel_ID:"", location_ID: ""})
     const [isCreate, setIsCreate] = useState(null);
     const [isUpdate, setIsUpdate] = useState(null);
 
@@ -93,7 +93,12 @@ export default function ProductTable() {
       }, [locationID, dispatch])
 
     useEffect(() => {
-        if (search?.name === "") {
+        if (search?.name === "" 
+        && (search?.attribute_option_ID === "" || search?.attribute_option_ID === undefined) 
+        && (search?.location_ID === "" || search?.location_ID === undefined) 
+        && (search?.channel_ID === "" || search?.channel_ID === undefined) 
+        && (search?.type_ID === "" || search?.type_ID === undefined)
+        && (search?.sub_location_ID === "" || search?.sub_location_ID === undefined)) {
             if(page === 1){
                 dispatch({
                     type: GET_PRODUCT_LIST,
@@ -543,30 +548,68 @@ export default function ProductTable() {
                         name="name"
                         onChange={handleSearchInput}
                     />
-                    <input placeholder="Kênh sản phẩm" type="text"
-                        name="tax_number"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Nhóm sản phẩm" type="text"
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Loại sản phẩm" type="text" style={{ marginLeft: "37px" }}
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
-                    <input placeholder="Thuộc tính sản phẩm" type="text" style={{ marginLeft: "37px" }}
-                        name="brief_name"
-                    // onChange={handleSearchInput} 
-                    />
+                    <Select
+                        className="search__select"
+                        placeholder="Kênh sản phẩm"
+                        allowClear
+                        onChange={(value) => { setChannelID(value); setSearch(prev => { return { ...prev, channel_ID: value?.toString() } })  }}
+                    >
+                        {renderChannelOption()}
+                    </Select>
+                    <Select
+                        className="search__select"
+                        placeholder="Nhóm sản phẩm"
+                        allowClear
+                        onChange={(value) => { setLocationID(value); setSearch(prev => { return { ...prev, location_ID: value?.toString() } })  }}
+                    >
+                        {renderLocationOption()}
+                    </Select>
+                    <Select
+                        className="search__select"
+                        placeholder="Vị trí sản phẩm"
+                        allowClear
+                        onChange={(value) => { setSearch(prev => { return { ...prev, sub_location_ID: value?.toString() } }) }}
+                    >
+                        {renderSubLocationOption()}
+                    </Select>
+                    <Select
+                        className="search__select"
+                        placeholder="Loại sản phẩm"
+                        allowClear
+                        onChange={(value) => { setSearch(prev => { return { ...prev, type_ID: value?.toString() } }) }}
+                    >
+                        {renderTypeOption()}
+                    </Select>
+                    <Select
+                        className="search__select"
+                        placeholder="Thuộc tính sản phẩm"
+                        allowClear
+                        onChange={(value) => { setSearch(prev => { return { ...prev, attribute_option_ID: value?.toString() } }) }}
+                    >
+                        {renderAttributeOption()}
+                    </Select>
                     <div className="table__features__search__btn">
                         <button onClick={() => {
-                            if (search?.name === "") {
+                            if (search?.name === "" 
+                            && (search?.attribute_option_ID === "" || search?.attribute_option_ID === undefined) 
+                            && (search?.location_ID === "" || search?.location_ID === undefined) 
+                            && (search?.channel_ID === "" || search?.channel_ID === undefined) 
+                            && (search?.type_ID === "" || search?.type_ID === undefined)
+                            && (search?.sub_location_ID === "" || search?.sub_location_ID === undefined)) {
                                 message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
                             } else {
                                 dispatch({
                                     type: GET_PRODUCT_LIST,
-                                    data: { page, pageSize: pageNumber, search }
+                                    data: { 
+                                        page, 
+                                        pageSize: pageNumber, 
+                                        search, 
+                                        subLocationID: search.sub_location_ID, 
+                                        typeID: search.type_ID, 
+                                        attributeID: search.attribute_option_ID ,
+                                        channel_ID: search.channel_ID,
+                                        location_ID: search.location_ID
+                                    }
                                 });
                                 dispatch(setIsLoading(true))
                             }

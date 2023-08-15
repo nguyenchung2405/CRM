@@ -667,6 +667,7 @@ const updateSubContract = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         let {sub_contract_id} = req.query;
+        console.log(JSON.stringify(req.body))
         const result = await axios({
             url: `${local}/contract/subcontract/update?id=${sub_contract_id}`,
             method: "PUT",

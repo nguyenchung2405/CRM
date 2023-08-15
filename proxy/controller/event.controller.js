@@ -169,7 +169,7 @@ const getUnsetContract = async (req, res)=>{
 const addUnserContractToEvent = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        let promiseArr = req.body.map(contract =>{
+        let promiseArr = req.body.contractUnsetSelectedArr?.map(contract =>{
             return axios({
                 url: `${local}/contract/update?id=${contract.id}`,
                 method: "PUT",
@@ -179,7 +179,18 @@ const addUnserContractToEvent = async (req, res)=>{
                 data: contract
             })
         });
-        Promise.all(promiseArr)
+        let promiseSubArr = req.body.subContractUnsetSelectedArr?.map(sub => {
+            return axios({
+                url: `${local}/contract/subcontract/update?id=${sub.id}`,
+                method: "PUT",
+                headers: {
+                    Authorization: authorization
+                },
+                data: sub
+            })
+        })
+        let newPromiseAll = promiseArr.concat(promiseSubArr)
+        Promise.all(newPromiseAll)
         .then(resolve => {
             let result = [];
             for(let i = 0; i < resolve.length; i++){

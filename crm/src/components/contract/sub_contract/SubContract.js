@@ -2,12 +2,12 @@ import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_SUB_CONTRACT, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE_SUB_CONTRACT, local, UPDATE_SUB_CONTRACT } from "../../../title/title";
+import { CREATE_SUB_CONTRACT, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE_SUB_CONTRACT, local, UPDATE_SUB_CONTRACT } from "../../../title/title";
 import TermModal from "../../modal/sub_contract/Term";
 import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
-import ContractRight from "./../ContractRight";
+import ContractRightSubContract from "./../sub_contract/ContractRightSubContract";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../Loading";
@@ -148,7 +148,8 @@ export default function SubContract() {
         quality: request.quality,
         real_price: request.price_ID.price_include_VAT * 1000000,
         details: request.details,
-        custom_price: request.custom_price * 1000000
+        custom_price: request.custom_price * 1000000,
+        contract_ID: request.contract_ID
       }
     })
   }
@@ -539,7 +540,7 @@ export default function SubContract() {
             pagination={false}
             expandable={{
               expandedRowRender: (record) => {
-                return <ContractRight data={record} contract_id={sub_contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
+                return <ContractRightSubContract data={record} contract_id={record.contract_ID} sub_contract_id={sub_contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
               },
               rowExpandable: (record) => record?.details?.length > 0,
             }}
