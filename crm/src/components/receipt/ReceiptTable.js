@@ -152,7 +152,7 @@ export default function ReceiptTable() {
           <Column title="Giá trị đã thanh toán (triệu)" key="giaTriDaThanhToan" render={(text) => {
             let total = text?.contract_info?.total_include_VAT;
             let total_completed = text?.contract_info?.total_completed_payments;
-            return `${total_completed} / ${total}`
+            return `${total_completed.toString().replaceAll(".", ",")} / ${total.toString().replaceAll(".", ",")}`
           }}></Column>
           <Column key="thaoTac" fixed="right" render={(text) => {
             let isExistExport = text?.receipts?.length > 0 ? true : false;

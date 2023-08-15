@@ -95,11 +95,15 @@ export default function ContractTable() {
 
     const searchContract = ()=>{
         if(search.client_name !== "" || search.contract_type_ID !== "" || search.owner_name !== "" || search.status !== ""){
-            dispatch(setIsLoading(true))
-            dispatch({
-                type: GET_CONTRACT_LIST,
-                data: { page, pageNumber, search }
-            })
+            if(page === 1){
+                dispatch({
+                    type: GET_CONTRACT_LIST,
+                    data: { page, pageNumber, search }
+                })
+                dispatch(setIsLoading(true))
+            } else {
+                setPage(1)
+            }
         }
     }
 
@@ -238,35 +242,40 @@ export default function ContractTable() {
                     return total + " VNĐ"
                 }} />
                 <Column className="contract__table__thaotac" fixed="right" key="thaoTac" render={(text) => {
-                    return <div className="table__thaotac">
-                        <Tooltip title="Chỉnh sửa" color="green">
-                            <MdOutlineModeEditOutline className="style__svg" onClick={() => {
-                                if(search.status?.includes("Đã")){
-                                //     dispatch(setIsCompletedContract(true))
+                    if (text.status.includes("Đã thanh lý")) {
+                        return <div className="table__thaotac">
+                            <Tooltip title="Xem" color="green">
+                                <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                     history.push(`${uri}/crm/completed/${text.id}`);
-                                } else {
+                                }} />
+                            </Tooltip>
+                        </div>
+                    } else {
+                        return <div className="table__thaotac">
+                            <Tooltip title="Chỉnh sửa" color="green">
+                                <MdOutlineModeEditOutline className="style__svg" onClick={() => {
                                     history.push(`${uri}/crm/detail/${text.id}`);
-                                }
-                            }} />
-                        </Tooltip>
-                        <Tooltip title="Tạo hợp đồng con/phụ lục" color="green" >
-                            <AiFillPlusCircle className="style__svg" onClick={() => {
-                                setIsShowModal(true)
-                                setDataToModal(text)
-                            }} />
-                        </Tooltip>
-                        <Tooltip title="Thanh lý hợp đồng" color="green" >
-                            <Popconfirm
-                                title="Bạn có chắc muốn thanh lý hợp đồng này ?"
-                                onConfirm={()=>{ confirm(text.id) }}
-                                okText="Có"
-                                cancelText="Không"
-                                placement="topRight"
-                            >
-                                <AiOutlineFileDone className="style__svg"/>
-                            </Popconfirm>
-                        </Tooltip>
-                    </div>
+                                }} />
+                            </Tooltip>
+                            <Tooltip title="Tạo hợp đồng con/phụ lục" color="green" >
+                                <AiFillPlusCircle className="style__svg" onClick={() => {
+                                    setIsShowModal(true)
+                                    setDataToModal(text)
+                                }} />
+                            </Tooltip>
+                            <Tooltip title="Thanh lý hợp đồng" color="green" >
+                                <Popconfirm
+                                    title="Bạn có chắc muốn thanh lý hợp đồng này ?"
+                                    onConfirm={() => { confirm(text.id) }}
+                                    okText="Có"
+                                    cancelText="Không"
+                                    placement="topRight"
+                                >
+                                    <AiOutlineFileDone className="style__svg" />
+                                </Popconfirm>
+                            </Tooltip>
+                        </div>
+                    }
                 }} />
             </Table>
         </div >
