@@ -238,6 +238,7 @@ export async function createDetailAPI(data){
     try {
         let newDetail = {
             "contract_ID": +data.contract_id,
+            "sub_contract_ID": data.sub_contract_id && data.sub_contract_id?.length > 0 ? +data.sub_contract_id : null,
             "request_ID": data.request_id,
             "details": [
                 {

@@ -44,7 +44,7 @@ const getProductTypeList = async (req, res) => {
 const getProductList = async (req, res) => {
     try {
         let { headers: { authorization } } = req;
-        let { page, page_size, attribute_ID: attribute_option_ID, sub_location_ID, type_ID, search, name } = req.query;
+        let { page, page_size, attribute_ID: attribute_option_ID, sub_location_ID, type_ID, search, name, location_ID, channel_ID } = req.query;
         let queryString = "&";
         let obj = { attribute_option_ID, sub_location_ID, type_ID };
         let result;

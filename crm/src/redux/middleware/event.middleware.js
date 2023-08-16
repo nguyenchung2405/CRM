@@ -98,7 +98,9 @@ function* searchEvent(payload){
 function* getUnsetContract(){
     try {
         const result = yield call(getUnsetContractAPI);
-        yield put(setUnsetContract(result.data.contracts))
+        let contractArray = result.data.contracts;
+        let subContractArray = result.data.sub_contracts
+        yield put(setUnsetContract({ contractArray, subContractArray }))
     } catch (error) {
         console.log(error)
     }
