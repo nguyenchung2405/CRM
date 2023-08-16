@@ -1,28 +1,26 @@
 import { Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { getContractRequestAPI } from '../../redux/API/contractAPI';
+import { useSelector } from 'react-redux';
+import { getSubContractRequestAPI } from '../../../redux/API/contractAPI';
 
-export default function ExpandTableAcceptance(props) {
+export default function ExpandRequestTable(props) {
 
-    const { data } = props;
-    const dispatch = useDispatch();
+    const {data} = props;
     const {Column} = Table;
-    const [requestList, setRequestList] = useState([]);
+    const [requests, setRequests] = useState([])
     const { acceptanceJustCreated } = useSelector(state => state.acceptanceReducer)
-    
+
     useEffect(()=>{
-        getRequestList(data.id)
+        getRequest(data.id)
     }, [data])
 
     useEffect(()=>{
         addDetail(acceptanceJustCreated)
-        getRequestList(data.id)
     }, [acceptanceJustCreated])
 
-    const getRequestList = async (contract_id)=>{
-        const result = await getContractRequestAPI(contract_id)
+    const getRequest = async (sub_contract_id)=>{
+        const result = await getSubContractRequestAPI(sub_contract_id);
         let newData = result.data.contract_request.map(item => {
             return {
                 ...item,
@@ -31,7 +29,7 @@ export default function ExpandTableAcceptance(props) {
                 detail_completed: item.details.filter(detail => detail.completed_evidences !== null).length
             }
         })
-        setRequestList(newData)
+        setRequests(newData)
     }
 
     const renderListDetail = (data)=>{
@@ -47,26 +45,26 @@ export default function ExpandTableAcceptance(props) {
 
     function addDetail({request_id, data, detail_id}){
         try {
-            let newList = [...requestList]
+            let newList = [...requests]
             if (detail_id) {
                 let contractIndex = newList.findIndex(event => event.id === request_id);
                 let detailIndex = newList[contractIndex].details.findIndex(detail => detail.id === detail_id);
                 newList[contractIndex].details[detailIndex] = data
-                setRequestList(newList)
+                setRequests(newList)
             } else {
                 let contractIndex = newList.findIndex(event => event.id === request_id);
                 newList[contractIndex].details.unshift(data);
-                setRequestList(newList)
+                setRequests(newList)
             }
         } catch (error) {
             console.log(error)
         }
     }
-    
+
   return (
       <>
           <Table
-              dataSource={requestList}
+              dataSource={requests}
               expandable={{
                   showExpandColumn: true,
                   // expandRowByClick: true,
@@ -80,6 +78,7 @@ export default function ExpandTableAcceptance(props) {
               pagination={false}
           >
               <Column title="Tên quyền lợi" fixed="left" width="33%" render={(text) => {
+                console.log(text)
                   return text.product_ID.name
               }}></Column>
               <Column title="Số quyền lợi đã thực hiện" width="33%" dataIndex="detail_completed"></Column>

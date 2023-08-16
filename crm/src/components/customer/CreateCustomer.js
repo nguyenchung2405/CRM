@@ -31,7 +31,7 @@ export default function CreateCustomer() {
     const [isShowModalWord, setIsShowModalWord] = useState(false);
     const [imageVisible, setImageVisible] = useState(false);
     let [file, setFile] = useState("");
-    let [validateForm, setValidateForm] = useState({email: false, phone: false});
+    let [validateForm, setValidateForm] = useState();
     const {isCreateCustomer, dataCustomer, customerTypeList, jobTypeList} = useSelector(state => state.customerReducer)
     
     useEffect(()=>{
@@ -72,7 +72,9 @@ export default function CreateCustomer() {
     };
 
     const handleOk = ()=>{
-      let check = checkValueForm();
+      // let check = checkValueForm();
+      // console.log(check)
+      let check = false;
       if(!check){
         if(window.location.href.includes("/customer/create") ){
           dispatch({
@@ -111,7 +113,8 @@ export default function CreateCustomer() {
     const checkValueForm = ()=>{
       let check = true;
       let newValidate = {};
-      let newValiDateForm = valueForm.is_company ? {...validateForm} : {email: false, phone: false}
+      // let newValiDateForm = valueForm.is_company ? {...validateForm} : {email: false, phone: false}
+      let newValiDateForm = valueForm.is_company ? {...validateForm} : {}
       for(let vali in newValiDateForm){
         if(vali.includes("phone")){
             if(valueForm[vali] && valueForm[vali] !== "" && valueForm[vali] !== undefined){
@@ -375,18 +378,18 @@ export default function CreateCustomer() {
           <div className="modal__field">
             <input type="text" name="phone"
               value={valueOfField("phone")}
-              onBlur={regexValue}
+              // onBlur={regexValue}
               onChange={handleChangeInput} />
             <label>Số điện thoại</label>
-            {validateForm?.phone ? showRemind("phone") : ""}
+            {/*validateForm?.phone ? showRemind("phone") : "" */}
           </div>
           <div className="modal__field">
             <input type="text" name="email"
               value={valueOfField("email")}
-              onBlur={regexValue}
+              // onBlur={regexValue}
               onChange={handleChangeInput} />
             <label>Email</label>
-            {validateForm?.email ? showRemind("email") : ""}
+            {/*validateForm?.email ? showRemind("email") : "" */}
           </div>
           {renderInforBusiness()}
           <div className="modal__upload">

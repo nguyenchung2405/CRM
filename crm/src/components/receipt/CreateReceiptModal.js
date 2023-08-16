@@ -3,7 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccListInReceipt, setAccListInReceiptEvent } from '../../redux/features/receiptSlice';
-import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL, GET_EVENT_INFOR, UPDATE_PAYMENT } from '../../title/title';
+import { CREATE_PAYMENT, GET_ACCEPTANCE_LIST_BY_CONTRACT, GET_ACCEPTANCE_LIST_BY_EVENT, GET_CONTRACT_DETAIL, GET_DETAIL_SUB_CONTRACT, GET_EVENT_INFOR, UPDATE_PAYMENT } from '../../title/title';
 import AcceptanceRow from './AcceptanceRow';
 import EventAccRow from './EventAccRow';
 import EventAccRowOfContract from './EventAccRowOfContract';
@@ -23,7 +23,7 @@ export default function CreateReceiptModal(props) {
     const [multiSelect2, setMultiSelect2] = useState([]);
 
     useEffect(()=>{
-        if(dataToCreateModal.contract_id && isShowModal){
+        if(dataToCreateModal.contract_id && isShowModal && !dataToCreateModal.sub_contract_id){
             dispatch({
                 type: GET_CONTRACT_DETAIL,
                 contract_id: dataToCreateModal.contract_id
@@ -33,12 +33,6 @@ export default function CreateReceiptModal(props) {
                 data: {contract_id: dataToCreateModal.contract_id, has_payment: false, is_complete: true}
             })
         }
-        // if(!dataToCreateModal.event_id && dataToCreateModal.contract_id){
-        //     dispatch({
-        //         type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
-        //         contract_id: dataToCreateModal.contract_id
-        //     })
-        // }
     }, [dataToCreateModal.contract_id, isShowModal])
 
     useEffect(()=>{
@@ -49,6 +43,19 @@ export default function CreateReceiptModal(props) {
             })
         }
     }, [dataToCreateModal.event_id, isShowModal])
+
+    useEffect(()=>{
+        if(dataToCreateModal.sub_contract_id && typeof dataToCreateModal.sub_contract_id === "number" && isShowModal){
+            dispatch({
+                type: GET_DETAIL_SUB_CONTRACT,
+                sub_contract_id: dataToCreateModal.sub_contract_id
+            });
+            dispatch({
+                type: GET_ACCEPTANCE_LIST_BY_CONTRACT,
+                data: {contract_id: dataToCreateModal.contract_id, has_payment: false, is_complete: true, sub_contract_id: dataToCreateModal.sub_contract_id}
+            })
+        }
+    }, [dataToCreateModal.sub_contract_id, isShowModal])
 
     useEffect(()=>{
         if(dataToCreateModal.isUpdate){
@@ -84,6 +91,7 @@ export default function CreateReceiptModal(props) {
                 ...valueModal,
                 desc: "",
                 contract_ID: dataToCreateModal.contract_id ? dataToCreateModal.contract_id : valueModal.contract_ID,
+                sub_contract_ID: dataToCreateModal.sub_contract_id || null,
                 detail_IDs: multiSelect,
                 executive_event_IDs: multiSelect2
             }

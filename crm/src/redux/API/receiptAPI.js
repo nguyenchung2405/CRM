@@ -52,13 +52,21 @@ export async function completeExportReceiptAPI(data){
     }
 }
 
-export async function getAcceptaneListByContractAPI(contract_id, has_payment,is_complete, is_event){
+export async function getAcceptaneListByContractAPI(contract_id, has_payment,is_complete, is_event, sub_contract_id){
     try {
-        const result = await AxiosExpress({
-            url: `${local}/api/receipt/acc-list?contract_id=${contract_id}&is_event=${is_event}&has_payment=${has_payment}&is_complete=${is_complete}`,
-            method: "GET",
-        });
-        return result.data;
+        if(sub_contract_id && sub_contract_id !== undefined){
+            const result = await AxiosExpress({
+                url: `${local}/api/receipt/acc-list?contract_id=${contract_id}&is_event=${is_event}&has_payment=${has_payment}&is_complete=${is_complete}&sub_contract_id=${sub_contract_id}`,
+                method: "GET",
+            });
+            return result.data;
+        } else {
+            const result = await AxiosExpress({
+                url: `${local}/api/receipt/acc-list?contract_id=${contract_id}&is_event=${is_event}&has_payment=${has_payment}&is_complete=${is_complete}`,
+                method: "GET",
+            });
+            return result.data;
+        }
     } catch (error) {
         console.log(error)
         return "Thât bại"
