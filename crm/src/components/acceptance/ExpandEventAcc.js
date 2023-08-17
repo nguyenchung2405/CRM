@@ -1,11 +1,8 @@
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { AiFillPlusCircle } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContractRequestAPI } from '../../redux/API/contractAPI';
 import { getEventInforAPI } from '../../redux/API/eventAPI';
-import CreateReceiptModal from '../receipt/CreateReceiptModal';
 
 export default function ExpandEventAcceptance(props) {
 
@@ -38,7 +35,7 @@ export default function ExpandEventAcceptance(props) {
 
     const renderListDetail = (data)=>{
         return data?.executive_details?.map(detail => {
-            let tuNgay = detail.report_date !== null ? moment(new Date(detail.report_date)).format("DD-MM-YYYY") : "";
+            let tuNgay = detail.from_date !== null ? moment(new Date(detail.from_date)).format("DD-MM-YYYY") : "";
             return <li key={detail.id}>
                 <div>{detail.desc}</div>
                 <div>{`${tuNgay}`}</div>

@@ -22,6 +22,7 @@ import Acceptance from './components/acceptance/Acceptance';
 import EventAcceptance from './components/acceptance/EventAcceptance';
 import ContactTypeTable from './components/contract/ContactTypeTable';
 import SubContract from './components/contract/sub_contract/SubContract';
+import SubContractAcceptance from './components/acceptance/subContract/SubContractAcceptance';
 
 function App() {
   
@@ -55,6 +56,7 @@ function App() {
                 <Route exact path="/crm/contract/type" component={ContactTypeTable} />
                 <Route exact path="/crm/subcontract/create" component={SubContract} />
                 <Route exact path="/crm/subcontract/detail/:sub_contract_id" component={SubContract} />
+                <Route exact path="/crm/acceptance/subcontract" component={SubContractAcceptance} />
               </Switch>
             </div>
           </BrowserRouter>
@@ -86,6 +88,7 @@ function App() {
               <Route exact path="/contract-service/crm/contract/type" component={ContactTypeTable} />
               <Route exact path="/contract-service/crm/subcontract/create" component={SubContract} />
               <Route exact path="/contract-service/crm/subcontract/detail/:sub_contract_id" component={SubContract} />
+              <Route exact path="/contract-service/crm/acceptance/subcontract" component={SubContractAcceptance} />
             </Switch>
           </div>
         </Provider>
