@@ -4,7 +4,7 @@ const { local } = require("../untils/title");
 const createAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        // console.log(req.file, req.files);
+        console.log(req.files?.length, ", " , req.body.completed_evidences, typeof req.body.completed_evidences);
         let evidenctUpdate;
         if(req.body.completed_evidences !== undefined && req.body.completed_evidences !== "undefined"){
             if(req.files.length > 0){
@@ -12,26 +12,27 @@ const createAcceptance = async (req, res)=>{
             } else {
                 evidenctUpdate = req.body.completed_evidences.split("\r\n")
             }
-        } else if((req.body.completed_evidences === undefined || req.body.completed_evidences !== "undefined") && req.files.length > 0){
+        } else if(req.files.length > 0 && (req.body.completed_evidences === undefined || req.body.completed_evidences === "undefined") ){
             evidenctUpdate = req.files.map(file => file.path)
         } else {
-            evidenctUpdate = []
+            evidenctUpdate = null
         }
         let newData = {
             ...req.body,
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
             "completed_evidences": evidenctUpdate,
         };
-        console.log("new data", newData)
-        const result = await axios({
-            url: `${local}/contract/detail/update?id=${req.body.detail_id}`,
-            method: "PUT",
-            headers: {
-                Authorization: authorization
-            },
-            data: newData
-        });
-        res.send(result.data)
+        console.log(newData)
+        res.send(newData)
+        // const result = await axios({
+        //     url: `${local}/contract/detail/update?id=${req.body.detail_id}`,
+        //     method: "PUT",
+        //     headers: {
+        //         Authorization: authorization
+        //     },
+        //     data: newData
+        // });
+        // res.send(result.data)
     } catch (error) {
         if (error.response?.data) {
             res.send(error.response.data)

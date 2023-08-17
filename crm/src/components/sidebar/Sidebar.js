@@ -30,7 +30,9 @@ export default function Sidebar() {
             getItem(<Tooltip title="Theo dõi thực hiện quyền lợi">Theo dõi thực...</Tooltip>, "21", <FcDepartment />, [
                 getItem(<Link to={`${uri}/crm/acceptance/contract`}>Hợp đồng</Link>, "22", <FcDepartment />),
                 getItem(<Link to={`${uri}/crm/acceptance/event`}>Sự kiện</Link>, "23", <FcDepartment />),
-                getItem(<Link to={`${uri}/crm/acceptance/subcontract`}><Tooltip title="Hợp đồng con/Phụ lục">Hợp đồng con...</Tooltip></Link>, "27", <FcDepartment />),
+                getItem(<Tooltip title="Hợp đồng con/Phụ lục">
+                <Link to={`${uri}/crm/acceptance/subcontract`}>Hợp đồng con...</Link>
+                </Tooltip>, "27", <FcDepartment />),
             ]),
             getItem(<Tooltip title="Quản lý khách hàng">Quản lý khách...</Tooltip>, "10", <BsFileEarmarkFill />,[
                 getItem(<Link to={`${uri}/crm/customer/type`}>Loại, Ngành nghề</Link> , "18" , <FcDepartment />),
@@ -66,7 +68,6 @@ export default function Sidebar() {
                             Hợp đồng
                         </p>
                     </div>
-                    
                     <div className="sidebar__sub__menu">
                         <ul>
                             <li>
