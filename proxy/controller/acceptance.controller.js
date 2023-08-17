@@ -22,7 +22,7 @@ const createAcceptance = async (req, res)=>{
             // "completed_evidences": req.files.length > 0 ? req.files.map(file => file.path) : [req.body.completed_evidences],
             "completed_evidences": evidenctUpdate,
         };
-        // console.log("new data", newData)
+        console.log("new data", newData)
         const result = await axios({
             url: `${local}/contract/detail/update?id=${req.body.detail_id}`,
             method: "PUT",
@@ -126,10 +126,11 @@ const createEventAcceptance = async (req, res)=>{
 const createDetailInAcceptance = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        let {contract_id, desc, request_id, from_date} = req.body;
+        let {contract_id, desc, request_id, from_date, sub_contract_id} = req.body;
         let newDetail = {
             "contract_ID": contract_id,
             "request_ID": request_id,
+            "sub_contract_ID": sub_contract_id === undefined || sub_contract_id === "undefined" ? null : sub_contract_id,
             "details": [
                 {
                     "desc": desc,

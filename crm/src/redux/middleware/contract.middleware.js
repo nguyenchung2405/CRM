@@ -330,11 +330,11 @@ function* createSubContract(payload){
 
 function* getDetailSubContract(payload){
     try {
-        if(payload?.sub_contract_id){
-            let { sub_contract_id } = payload;
+        if(payload?.data?.sub_contract_id){
+            let { sub_contract_id, contract_id } = payload.data;
             let result = yield call(getDetailSubContractAPI, sub_contract_id);
             let { code, data } = result;
-            let responseRequest = yield call(getSubContractRequestAPI, sub_contract_id);
+            let responseRequest = yield call(getSubContractRequestAPI,contract_id, sub_contract_id);
             if (+code === 200 || data.sub_contract.length > 0) {
                 let dataAfterMapping = dataOfSubContractMapping(data.sub_contract[0]);
                 dataAfterMapping.payments = dataOfPayment(data.sub_contract[0].payments);
@@ -345,11 +345,11 @@ function* getDetailSubContract(payload){
             } else {
                 yield put(setContractDetail({}))
             }
-        } else if(payload?.data){
-            let {sub_contract_id, request_done} = payload.data;
+        } else if(payload?.data?.request_done === true || payload?.data?.request_done === false){
+            let {sub_contract_id, request_done, contract_id} = payload.data;
             let result = yield call(getContractDetailAPI, sub_contract_id);
             let { code, data } = result;
-            let responseRequest = yield call(getContractRequestAPI, sub_contract_id, request_done);
+            let responseRequest = yield call(getContractRequestAPI,contract_id, sub_contract_id, request_done);
             if (+code === 200 || result.data.contract.length > 0) {
                 let dataAfterMapping = dataOfContractMapping(result.data.contract[0]);
                 dataAfterMapping.payments = dataOfPayment(result.data.contract[0].payments);

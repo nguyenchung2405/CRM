@@ -478,11 +478,11 @@ export async function getDetailSubContractAPI(sub_contract_id){
     }
 }
 
-export async function getSubContractRequestAPI(sub_contract_id, request_done){
+export async function getSubContractRequestAPI(contract_ID, sub_contract_id, request_done){
     try {
         if(request_done === undefined){
             const result = await AxiosExpress({
-                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}`,
+                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}&contract_id=${contract_ID}`,
                 method: "GET",
             });
             return result.data;

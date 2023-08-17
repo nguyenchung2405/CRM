@@ -57,6 +57,7 @@ export default function SubContractAcceptance() {
     
     return (
         <div className="acceptance__table content">
+            <ReportModalSub isShowModal={isShowModal} setIsShowModal={setIsShowModal} />
             <div className="content reciept__table customer__table">
                 <div className="table__features">
                     <div className="table__features__add">

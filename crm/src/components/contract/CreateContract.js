@@ -73,7 +73,7 @@ export default function CreateContract() {
   }, []);
 
   useEffect(() => {
-    if (customerList.length > 0 && contract_id && typeof +contract_id === "number") {
+    if (customerList.length > 0 && (contract_id || completed_contract_id) && typeof +contract_id === "number") {
       let customerInfor = customerList.find(client => client.id === +valueForm.client_ID);
       setCustomerInfor({ ...customerInfor })
     }
