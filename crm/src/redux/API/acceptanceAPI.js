@@ -115,7 +115,8 @@ export async function createEventAcceptanceAPI(data){
 
 export async function createDetailInAcceptanceAPI(data){
     try {
-        let {desc, contract_id,request_id, from_date, ...rest} = data;
+        let {desc, contract_id,request_id, from_date, sub_contract_id, ...rest} = data;
+        console.log(data)
         let file = data?.fileDetail;
         const formDetail = new FormData();
         let newFromDate = moment(new Date(from_date)).format("YYYY-MM-DD");
@@ -124,6 +125,7 @@ export async function createDetailInAcceptanceAPI(data){
         formDetail.append("contract_id", contract_id)
         formDetail.append("request_id", request_id)
         formDetail.append("from_date", newFromDate)
+        formDetail.append("sub_contract_id", sub_contract_id)
         const result = await AxiosExpress({
             url: `${local}/api/acceptance/detail-create`,
             method: "POST",

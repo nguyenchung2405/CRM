@@ -86,7 +86,7 @@ export default function SubContract() {
     if (sub_contract_id && typeof +sub_contract_id === "number" && +sub_contract_id > 0) {
       dispatch({
         type: GET_DETAIL_SUB_CONTRACT,
-        sub_contract_id
+        data: {sub_contract_id}
       });
       dispatch(setIsLoading(true))
     }

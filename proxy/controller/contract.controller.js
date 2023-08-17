@@ -613,10 +613,10 @@ const getDetailSubContract = async (req, res)=>{
 const getSubContractRequest = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
-        let { sub_contract_id, done } = req.query;
+        let { contract_id, sub_contract_id, done } = req.query;
         if(!done){
             const result = await axios({
-                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&page_size=100&sort_by=id&asc_order=true`,
+                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&contract_id=${contract_id}&page_size=100&sort_by=id&asc_order=true`,
                 method: "GET",
                 headers: {
                     Authorization: authorization

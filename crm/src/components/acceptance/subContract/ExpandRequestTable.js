@@ -12,15 +12,15 @@ export default function ExpandRequestTable(props) {
     const { acceptanceJustCreated } = useSelector(state => state.acceptanceReducer)
 
     useEffect(()=>{
-        getRequest(data.id)
+        getRequest(data.contract_ID, data.id)
     }, [data])
 
     useEffect(()=>{
         addDetail(acceptanceJustCreated)
     }, [acceptanceJustCreated])
 
-    const getRequest = async (sub_contract_id)=>{
-        const result = await getSubContractRequestAPI(sub_contract_id);
+    const getRequest = async (contract_ID, sub_contract_id)=>{
+        const result = await getSubContractRequestAPI(contract_ID, sub_contract_id);
         let newData = result.data.contract_request.map(item => {
             return {
                 ...item,
@@ -78,7 +78,6 @@ export default function ExpandRequestTable(props) {
               pagination={false}
           >
               <Column title="Tên quyền lợi" fixed="left" width="33%" render={(text) => {
-                console.log(text)
                   return text.product_ID.name
               }}></Column>
               <Column title="Số quyền lợi đã thực hiện" width="33%" dataIndex="detail_completed"></Column>

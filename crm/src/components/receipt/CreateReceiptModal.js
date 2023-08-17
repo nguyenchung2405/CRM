@@ -48,7 +48,7 @@ export default function CreateReceiptModal(props) {
         if(dataToCreateModal.sub_contract_id && typeof dataToCreateModal.sub_contract_id === "number" && isShowModal){
             dispatch({
                 type: GET_DETAIL_SUB_CONTRACT,
-                sub_contract_id: dataToCreateModal.sub_contract_id
+                data: {sub_contract_id: dataToCreateModal.sub_contract_id}
             });
             dispatch({
                 type: GET_ACCEPTANCE_LIST_BY_CONTRACT,

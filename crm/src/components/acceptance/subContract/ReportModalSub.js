@@ -225,7 +225,7 @@ export default function ReportModalSub(props) {
                                 onChange={(value) => {
                                     dispatch({
                                         type: GET_DETAIL_SUB_CONTRACT,
-                                        sub_contract_id: value
+                                        data: { sub_contract_id: value, contract_id: valueForm.contract_id }
                                     });
                                     handleChangeValue("sub_contract_id", value)
                                 }}

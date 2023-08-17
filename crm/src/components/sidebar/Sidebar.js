@@ -96,7 +96,6 @@ export default function Sidebar() {
                             <li>
                                 <NavLink to="/crm/product/special">Quản lý sản phẩm đặc biệt</NavLink>
                             </li>
-                            
                             <li>
                                 <NavLink to="/crm/receipt">Quản lý hóa đơn</NavLink>
                             </li>
