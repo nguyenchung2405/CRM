@@ -116,7 +116,6 @@ export async function createEventAcceptanceAPI(data){
 export async function createDetailInAcceptanceAPI(data){
     try {
         let {desc, contract_id,request_id, from_date, sub_contract_id, ...rest} = data;
-        console.log(data)
         let file = data?.fileDetail;
         const formDetail = new FormData();
         let newFromDate = moment(new Date(from_date)).format("YYYY-MM-DD");
