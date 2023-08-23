@@ -387,8 +387,56 @@ img.file, svg.file {
 }
 
 .customer__table .table__features .table__features__search input:first-child {
-    margin-right: 37px;
+    margin-right: 30px;
     width: 200px;
+}
+
+.customer__table .table__features .table__features__search input:nth-child(2){
+    margin-right: 30px;
+}
+
+.customer__table .table__features .table__features__search input::placeholder {
+    color: #666666;
+}
+
+.customer__table .table__features .table__features__search .search__from__date {
+    margin-right: 30px;
+    margin-left: 20px;
+}
+
+.customer__table .table__features .table__features__search .search__to__date {
+    margin-right: 30px;
+}
+
+.customer__table .table__features .table__features__search .search__from__date,
+.customer__table .table__features .table__features__search .search__to__date {
+    border-bottom: none;
+    max-width: 200px;
+    outline: none;
+    box-shadow: none;
+}
+
+.customer__table .table__features .table__features__search .search__from__date .ant-picker-input,
+.customer__table .table__features .table__features__search .search__to__date .ant-picker-input {
+    width: 100%;
+    background-color: #F0F5FA;
+    padding-right: 10px;
+}
+
+.customer__table .table__features .table__features__search .search__from__date .ant-picker-input > input,
+.customer__table .table__features .table__features__search .search__to__date .ant-picker-input > input {
+    width: 100%;
+    margin-right: 0;
+}
+
+.customer__table .table__features .table__features__search .search__from__date .ant-picker-input .ant-picker-clear,
+.customer__table .table__features .table__features__search .search__to__date .ant-picker-input .ant-picker-clear{
+    right: 10px;
+}
+
+.customer__table .table__features .table__features__search .search__select {
+    min-width: 150px;
+    height: 40px;
 }
 
 .customer__table .ant-table-wrapper {
@@ -1060,7 +1108,8 @@ div.product__table .table__features .table__features__search .search__select {
 }
 
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector,
-div.product__table .table__features .table__features__search .search__select > .ant-select-selector {
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector,
+.customer__table .table__features .table__features__search .search__select > .ant-select-selector  {
     height: 100%;
     width: 100%;
     background-color: #F0F5FA;
@@ -1069,7 +1118,8 @@ div.product__table .table__features .table__features__search .search__select > .
 }
 
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search,
-div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search {
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search,
+.customer__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-search {
     height: 100%;
     width: 100%;
 }
@@ -1077,7 +1127,9 @@ div.product__table .table__features .table__features__search .search__select > .
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
 div.contract__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item,
 div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
-div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item {
+div.product__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item,
+div.reciept__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-placeholder,
+div.reciept__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item  {
     line-height: 40px;
     color: #666666;
 }
@@ -1152,7 +1204,7 @@ div.product__table .table__features .table__features__search .search__select > .
     padding: 23px 0 36px 118px;
 }
 
-.create__contract .create__contract__inforCustomer>p,
+.create__contract .create__contract__inforCustomer .display__flex > p,
 .create__contract .create__contract__contactInfor .display__flex,
 .create__contract .create__contract__value p,
 .create__contract .create__contract__payment .display__flex,
@@ -1161,6 +1213,16 @@ div.product__table .table__features .table__features__search .search__select > .
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 20px;
+}
+
+.create__contract .create__contract__inforCustomer .display__flex > p {
+    margin-bottom: 0;
+}
+
+.create__contract .create__contract__inforCustomer .display__flex > img {
+    width: 22px;
+    height: 22px;
+    cursor: help;
 }
 
 .create__contract .create__contract__chiTieu .display__flex {

@@ -206,7 +206,13 @@ export default function CreateContract() {
         return moment(newRequestDate, "DD-MM-YYYY");
       }
       return null
-    } else {
+    } else if(name === "discount_by_percent"){
+      if (Number.isInteger(valueForm[name]) ) {
+        return valueForm[name];
+      } else {
+        return valueForm[name].toString().replace(".", ",");
+      }
+    }else {
       if (valueForm[name] && name === "total") {
         return new Intl.NumberFormat("vi-VN").format(valueForm[name])
       }
@@ -436,6 +442,7 @@ export default function CreateContract() {
           renderOptionOwner={renderOptionOwner}
           valueOfCustomer={valueOfCustomer}
           history={history}
+          customerInfor={customerInfor}
         />
         {valueForm.event_ID && !window.location.href.includes("create") ?
           <RequestEvent

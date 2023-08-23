@@ -1,5 +1,6 @@
-import { Table } from 'antd'
+import { Table, Tooltip } from 'antd'
 import React from 'react'
+import QuestionImg from "../../img/question-mark.png"
 
 export default function RequestEvent(props) {
 
@@ -30,7 +31,12 @@ export default function RequestEvent(props) {
 
   return (
       <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract create__contract__term">
-          <p>Quyền lợi chung</p>
+          <div className="display__flex">
+            <p>Quyền lợi chung</p>
+            <Tooltip title="Nếu khách hàng đồng ý với quyền lợi chung nào của Sự kiện thì tick vào ô vuông ngoài cùng bên phải.">
+              <img src={QuestionImg} alt="question" />
+            </Tooltip>
+          </div>
           <Table
           className="term__table"
           dataSource={convertContractRequest()}
