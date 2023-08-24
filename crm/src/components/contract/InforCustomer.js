@@ -4,8 +4,9 @@ import { checkMicroFe } from '../../untils/helper';
 
 export default function InforCustomer(props) {
 
-    const {renderOption, handleChangeValue, valueOfField, setValueForm, valueForm, renderOptionOwner, valueOfCustomer, history} = props;
+    const {renderOption, handleChangeValue, valueOfField, setValueForm, valueForm, renderOptionOwner, valueOfCustomer, history, customerInfor} = props;
     let uri = checkMicroFe() === true ? "/contract-service" : "";
+    console.log(customerInfor)
   return (
       <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin khách hàng</p>

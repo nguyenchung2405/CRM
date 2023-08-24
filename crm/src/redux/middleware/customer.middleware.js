@@ -7,43 +7,55 @@ import { setMessage } from "../features/messageSlice";
 import { message } from "antd";
 
 function* getCustomerList(payload){
-    let {page, pageNumber} = payload.data;
-    let result = yield call(getCustomerListAPI, page, pageNumber);
-    // let {code, data} = result.data;
-    if(result?.data?.client?.length > 0){
-        yield put(setCustomerList(result.data.client))
-        yield put(setTotalCustomer(result.data.total_data))
-        yield put(setIsLoading(false))
-    } else {
-        yield put(setIsLoading(false))
+    try {
+        let { page, pageNumber } = payload.data;
+        let result = yield call(getCustomerListAPI, page, pageNumber);
+        // let {code, data} = result.data;
+        if (result?.data?.client?.length > 0) {
+            yield put(setCustomerList(result.data.client))
+            yield put(setTotalCustomer(result.data.total_data))
+            yield put(setIsLoading(false))
+        } else {
+            yield put(setIsLoading(false))
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
 function* createCustomer(payload){
-    let {data} = payload;
-    if(!data.is_company){
-        data.is_company = false;
-    }
-    let result = yield call(createCustomerAPI, data);
-    let {code, data: dataResponse} = result;
-    if(code === 200 || dataResponse){
-        yield put(addCustomer(dataResponse));
-        message.success("Tạo khách hàng thành công.")
-    } else {
-        message.error("Tạo khách hàng thất bại.")
+    try {
+        let { data } = payload;
+        if (!data.is_company) {
+            data.is_company = false;
+        }
+        let result = yield call(createCustomerAPI, data);
+        let { code, data: dataResponse } = result;
+        if (code === 200 || dataResponse) {
+            yield put(addCustomer(dataResponse));
+            message.success("Tạo khách hàng thành công.")
+        } else {
+            message.error("Tạo khách hàng thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
 function* searchCustomer(payload){
-    let {searchData} = payload;
-    let result = yield call(searchCustomerAPI, searchData);
-    // let {code, data: dataResponse} = result;
-    if(result.code === 200 || result?.data?.client?.length > 0){
-        yield put(setCustomerList(result.data.client))
-        yield put(setTotalCustomer(result.data.total_data))
-        message.success("Thao tác thành công.")
-    } else {
-        message.error("Thao tác thất bại.")
+    try {
+        let { searchData } = payload;
+        let result = yield call(searchCustomerAPI, searchData);
+        // let {code, data: dataResponse} = result;
+        if (result.code === 200 || result?.data?.client?.length > 0) {
+            yield put(setCustomerList(result.data.client))
+            yield put(setTotalCustomer(result.data.total_data))
+            message.success("Thao tác thành công.")
+        } else {
+            message.error("Thao tác thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 

@@ -220,7 +220,11 @@ export default function ContractValue(props) {
                       // disabled
                       onChange={(e) => {
                           let { value, name } = e.target;
-                          handleChangeValue(name, +value)
+                          if(value.includes(",")){
+                            handleChangeValue(name, value.replace(",", "."))
+                          } else {
+                            handleChangeValue(name, value)
+                          }
                       }}
                       value={valueOfField("discount_by_percent")}
                   />
