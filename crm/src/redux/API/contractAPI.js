@@ -611,3 +611,28 @@ export async function completedContractAPI(contract_id){
         return "Fail"
     }
 }
+
+export async function uploadFileContractAPI(fileList){
+    try {
+        if (fileList.length > 0) {
+            const form = new FormData();
+            for(let i = 0 ; i < fileList?.length; i++){
+                form.append("file", fileList[i]);
+            }
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/upload-files`,
+                method: "POST",
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                data: form
+            });
+            return result.data;
+        } else {
+            return fileList
+        }
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}

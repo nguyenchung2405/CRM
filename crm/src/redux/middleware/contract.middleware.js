@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { COMPLETED_CONTRACT, CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment, dataOfSubContractMapping } from "../../untils/mapping";
-import { completedContractAPI, createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI } from "../API/contractAPI";
-import { addContractRequest, addPayment, deleteContractRequest, removeContractType, removeRequestDetail, setContractDetail, setContractList, setContractRequest, setContractTypeList, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
+import { completedContractAPI, createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI, uploadFileContractAPI } from "../API/contractAPI";
+import { addContractRequest, addPayment, deleteContractRequest, removeContractType, removeRequestDetail, setContractDetail, setContractList, setContractRequest, setContractTypeList, setIsResetUpload, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
 import { addPaymentToReceiptList, updatePaymentToReceiptList } from "../features/receiptSlice";
@@ -33,10 +33,16 @@ function* getContractTypeList() {
 function* createContract(payload) {
     try {
         let { data } = payload;
+        let filesUpload = data.contract.filesUpload && data.contract.filesUpload.length > 0 ? data.contract.filesUpload : [];
+        const uploadFiles = yield call(uploadFileContractAPI, filesUpload);
+        if(uploadFiles.length > 0){
+            data.contract.files = uploadFiles.map(file => file.path)
+        }
         let result = yield call(createContractAPI, data);
         let { code } = result;
         if (+code === 200 || result.data?.contract?.id) {
             message.success("Tạo hợp đồng thành công.")
+            yield put(setIsResetUpload(false))
         } else {
             message.error("Tạo hợp đồng thất bại.")
         }
@@ -111,10 +117,20 @@ function* getOwnerList(payload){
 
 function* updateContract(payload){
     try {
+        let filesUpload = payload.data.filesUpload && payload.data.filesUpload.length > 0 ? payload.data.filesUpload : [];
+        const uploadFiles = yield call(uploadFileContractAPI, filesUpload);
+        if(uploadFiles.length > 0){
+            if(payload.data.files?.length > 0 && payload.data.files !== null){
+                payload.data.files = uploadFiles.map(file => file.path).concat(payload.data.files)
+            } else {
+                payload.data.files = uploadFiles.map(file => file.path)
+            }
+        }
         const result = yield call(updateContractiAPI, payload.data);
         if(result.data?.msg === "Updated successfully!"){
             message.success("Cập nhật hợp đồng thành công.")
             yield put({type: GET_CONTRACT_DETAIL, contract_id: payload.data.contract_id})
+            yield put(setIsResetUpload(false))
         } else {
             message.error("Cập nhật hợp đồng thất bại.")
         }

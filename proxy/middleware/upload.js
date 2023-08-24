@@ -99,11 +99,29 @@ const uploadFileExcelContract = ()=>{
     }
 }
 
+const uploadFilesContract = ()=>{
+    try {
+        const storage = multer.diskStorage({
+            destination: (req, file, cb)=>{
+                cb(null, "./proxy/resources/contract")
+            },
+            filename: (req, file, cb)=>{
+                cb(null, `${Date.now()}_${file.originalname}`)
+            }
+        })
+        const upload = multer({storage});
+        return upload
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     uploadFileCreateClient,
     uploadFileDetail,
     uploadFileDetailAcceptance,
     uploadFileAcceptance,
     uploadFileExcelContract,
-    uploadFileUpdateClient
+    uploadFileUpdateClient,
+    uploadFilesContract
 }
