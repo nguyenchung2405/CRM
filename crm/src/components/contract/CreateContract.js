@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CREATE_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useHistory, useParams } from "react-router-dom";
-import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../redux/features/contractSlice";
+import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail, setIsResetUpload } from "../../redux/features/contractSlice";
 import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
@@ -20,6 +20,7 @@ import FileSaver from "file-saver"
 import ContractPayment from "./ContractPayment";
 import InforCustomer from "./InforCustomer";
 import ContractValue from "./ContractValue";
+import ContractUpload from "./ContractUpload";
 
 export default function CreateContract() {
 
@@ -252,6 +253,7 @@ export default function CreateContract() {
             type: UPDATE_CONTRACT,
             data: valueForm
           })
+          dispatch(setIsResetUpload(true))
         }}>
         Cập nhật
       </button>
@@ -268,6 +270,7 @@ export default function CreateContract() {
             data: newData
           });
           dispatch(setContractRequest([]));
+          dispatch(setIsResetUpload(true))
           setTimeout(() => {
             history.push(`${uri}/crm/contract`)
           }, 1000)
@@ -652,6 +655,12 @@ export default function CreateContract() {
           valueForm={valueForm}
         />
         <ContractHistory data={valueForm.history} VAT={valueForm.VAT} />
+        <ContractUpload
+          valueForm={valueForm}
+          setValueForm={setValueForm}
+          contract_id={contract_id}
+          completed_contract_id={completed_contract_id}
+        />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/contract`) }}>Hủy</button>
           {renderButtonCreateUpdate()}

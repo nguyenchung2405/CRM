@@ -480,7 +480,7 @@ export async function getDetailSubContractAPI(sub_contract_id){
 
 export async function getSubContractRequestAPI(contract_ID, sub_contract_id, request_done){
     try {
-        if(request_done === undefined){
+        if(request_done === undefined && contract_ID && sub_contract_id){
             const result = await AxiosExpress({
                 url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}&contract_id=${contract_ID}`,
                 method: "GET",
@@ -488,7 +488,7 @@ export async function getSubContractRequestAPI(contract_ID, sub_contract_id, req
             return result.data;
         } else {
             const result = await AxiosExpress({
-                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}&done=${request_done}`,
+                url: `${local}/api/contract/request/sub-list?sub_contract_id=${sub_contract_id}`,
                 method: "GET",
             });
             return result.data;
@@ -606,6 +606,31 @@ export async function completedContractAPI(contract_id){
             method: "POST",
         });
         return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Fail"
+    }
+}
+
+export async function uploadFileContractAPI(fileList){
+    try {
+        if (fileList.length > 0) {
+            const form = new FormData();
+            for(let i = 0 ; i < fileList?.length; i++){
+                form.append("file", fileList[i]);
+            }
+            const result = await AxiosExpress({
+                url: `${local}/api/contract/upload-files`,
+                method: "POST",
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                data: form
+            });
+            return result.data;
+        } else {
+            return fileList
+        }
     } catch (error) {
         console.log(error)
         return "Fail"
