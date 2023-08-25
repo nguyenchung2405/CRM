@@ -332,6 +332,11 @@ function* deleteContractType(payload){
 function* createSubContract(payload){
     try {
         let { data } = payload;
+        let filesUpload = data.contract.filesUpload && data.contract.filesUpload.length > 0 ? data.contract.filesUpload : [];
+        const uploadFiles = yield call(uploadFileContractAPI, filesUpload);
+        if(uploadFiles.length > 0){
+            data.contract.files = uploadFiles.map(file => file.path)
+        }
         const result = yield call(createSubContractAPI, data);
         let { code } = result;
         if (+code === 200 || result.data?.sub_contract?.id) {
@@ -388,7 +393,7 @@ function* createRequestSubContract(payload){
         if(result.data?.requests?.length > 0){
             yield put(addContractRequest(result.data.requests[0]));
             message.success("Tạo quyền lợi hợp đồng thành công.")
-            yield put({ type: GET_DETAIL_SUB_CONTRACT, sub_contract_id: payload.data.sub_contract_id })
+            yield put({ type: GET_DETAIL_SUB_CONTRACT, data: {sub_contract_id: payload.data.sub_contract_id} })
             yield put(setIsLoading(false))
         } else if(result?.detail){
             message.error(result.detail)
@@ -408,7 +413,7 @@ function* updateRequestSubContract(payload){
         if(result.data.msg === "Updated successfully!"){
             yield put(updateContractRequest(payload.data))
             message.success("Cập nhật quyền lợi hợp đồng thành công.")
-            yield put({ type: GET_DETAIL_SUB_CONTRACT, sub_contract_id: payload.data.sub_contract_id })
+            yield put({ type: GET_DETAIL_SUB_CONTRACT, data: {sub_contract_id: payload.data.sub_contract_id} })
             yield put(setIsLoading(false))
         } else {
             message.error("Cập nhật quyền lợi hợp đồng thất bại.")
@@ -420,12 +425,22 @@ function* updateRequestSubContract(payload){
 
 function* updateSubContract(payload){
     try {
+        let filesUpload = payload.data.filesUpload && payload.data.filesUpload.length > 0 ? payload.data.filesUpload : [];
+        const uploadFiles = yield call(uploadFileContractAPI, filesUpload);
+        if(uploadFiles.length > 0){
+            if(payload.data.files?.length > 0 && payload.data.files !== null){
+                payload.data.files = uploadFiles.map(file => file.path).concat(payload.data.files)
+            } else {
+                payload.data.files = uploadFiles.map(file => file.path)
+            }
+        }
         const result = yield call(updateSubContractAPI, payload.data);
         if(result.data?.msg === "Updated successfully!"){
-            message.success("Cập nhật hợp đồng thành công.")
-            yield put({type: GET_DETAIL_SUB_CONTRACT, sub_contract_id: payload.data.sub_contract_id})
+            message.success("Cập nhật hợp đồng con thành công.")
+            yield put({type: GET_DETAIL_SUB_CONTRACT, data: {sub_contract_id: payload.data.sub_contract_id} })
+            yield put(setIsResetUpload(false))
         } else {
-            message.error("Cập nhật hợp đồng thất bại.")
+            message.error("Cập nhật hợp đồng con thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -442,7 +457,7 @@ function* importFileSubContract(payload){
             })
         } else {
             message.success("Nhập file thành công.")
-            yield put({type: GET_DETAIL_SUB_CONTRACT, sub_contract_id: payload.data.sub_contract_id})
+            yield put({type: GET_DETAIL_SUB_CONTRACT, data: {sub_contract_id: payload.data.sub_contract_id} })
         }
     } catch (error) {
         console.log(error)
@@ -455,7 +470,7 @@ function* deleteRequestSubContract(payload){
         if(result.data?.msg === "Vô hiệu yêu cầu hợp đồng thành công."){
             yield put(deleteContractRequest(payload.data.request_id))
             message.success("Xóa quyền lợi hợp đồng thành công.")
-            yield put({ type: GET_DETAIL_SUB_CONTRACT, sub_contract_id: payload.data.sub_contract_id })
+            yield put({ type: GET_DETAIL_SUB_CONTRACT, data: {sub_contract_id: payload.data.sub_contract_id} })
         } else {
             message.error("Xóa quyền lợi hợp đồng thất bại.")
         }
