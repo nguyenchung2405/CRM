@@ -118,7 +118,8 @@ export function dataOfSubContractMapping(data) {
             event_detail_IDs: data.event_detail_IDs,
             total_include_VAT: data.total_include_VAT,
             sub_contract_number: data.sub_contract_number,
-            extend_parent_contract: data.extend_parent_contract
+            extend_parent_contract: data.extend_parent_contract,
+            files: data.files
         };
         return {
             dataContract,

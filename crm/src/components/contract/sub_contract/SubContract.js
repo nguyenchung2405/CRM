@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CREATE_SUB_CONTRACT, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_DETAIL_SUB_CONTRACT, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE_SUB_CONTRACT, local, UPDATE_SUB_CONTRACT } from "../../../title/title";
 import TermModal from "../../modal/sub_contract/Term";
 import { useHistory, useParams } from "react-router-dom";
-import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail } from "../../../redux/features/contractSlice";
+import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail, setIsResetUpload } from "../../../redux/features/contractSlice";
 import { checkMicroFe } from "../../../untils/helper";
 import ContractRightSubContract from "./../sub_contract/ContractRightSubContract";
 import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
@@ -20,6 +20,7 @@ import InforCustomer from "./InforCustomerSub";
 import ContractValue from "../ContractValue";
 import { AxiosExpress } from "../../../untils/axios";
 import FileSaver from "file-saver";
+import SubContractUpload from "./SubContractUpload";
 
 export default function SubContract() {
 
@@ -269,6 +270,7 @@ export default function SubContract() {
             type: UPDATE_SUB_CONTRACT,
             data: valueForm
           })
+          dispatch(setIsResetUpload(true))
         }}>
         Cập nhật
       </button>
@@ -285,6 +287,7 @@ export default function SubContract() {
             data: newData
           });
           dispatch(setContractRequest([]));
+          dispatch(setIsResetUpload(true))
           setTimeout(() => {
             history.push(`${uri}/crm/contract`)
           }, 1000)
@@ -659,6 +662,12 @@ export default function SubContract() {
           valueForm={valueForm}
         />
         <ContractHistory data={valueForm.history} VAT={valueForm.VAT} />
+        <SubContractUpload
+          valueForm={valueForm}
+          setValueForm={setValueForm}
+          sub_contract_id={sub_contract_id}
+          // completed_contract_id={completed_contract_id}
+        />
         <div className="create__contract__footer">
           <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/contract`) }}>Hủy</button>
           {renderButtonCreateUpdate()}
