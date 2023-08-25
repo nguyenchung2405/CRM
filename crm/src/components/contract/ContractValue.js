@@ -222,6 +222,8 @@ export default function ContractValue(props) {
                           let { value, name } = e.target;
                           if(value.includes(",")){
                             handleChangeValue(name, value.replace(",", "."))
+                          } else if(value === ""){
+                            handleChangeValue(name, 0)
                           } else {
                             handleChangeValue(name, value)
                           }
