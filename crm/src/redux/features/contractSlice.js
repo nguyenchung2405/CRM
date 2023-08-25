@@ -10,7 +10,8 @@ const initialState = {
     keyOfRequestJustAdd: "",
     ownerList: [],
     totalContractType: 0,
-    subContractInfor: {}
+    subContractInfor: {},
+    isResetUpload: false
 };
 
 const contractSlice = createSlice({
@@ -100,6 +101,9 @@ const contractSlice = createSlice({
         },
         setSubContractInfor: (state, action)=>{
             state.subContractInfor = action.payload;
+        },
+        setIsResetUpload: (state, action)=>{
+            state.isResetUpload = action.payload;
         }
     }
 });
@@ -107,5 +111,5 @@ const contractSlice = createSlice({
 export const { setContractList, setContractTypeList, setContractDetail, addContractRequest, updateContractRequest, 
 deleteContractRequest, addRequestDetail, removeRequestDetail, setKeyOfRequestJustAdd, setKeyOfDetailJustAdd, 
 updateRequestDetail, setContractRequest, setOwnerList, addPayment, setTotalContractType, addContractType, updateContractType,
-removeContractType, setSubContractInfor } = contractSlice.actions;
+removeContractType, setSubContractInfor, setIsResetUpload } = contractSlice.actions;
 export default contractSlice.reducer;

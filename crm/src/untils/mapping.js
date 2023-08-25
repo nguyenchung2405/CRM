@@ -41,8 +41,8 @@ export function dataOfContractMapping(data) {
             total_created_payments: data.total_created_payments,
             history: data.history,
             event_detail_IDs: data.event_detail_IDs,
-            total_include_VAT: data.total_include_VAT
-
+            total_include_VAT: data.total_include_VAT,
+            files: data.files
         };
         // let dataTable = mappingDataOfTable(data)
         return {
@@ -119,7 +119,6 @@ export function dataOfSubContractMapping(data) {
             total_include_VAT: data.total_include_VAT,
             sub_contract_number: data.sub_contract_number,
             extend_parent_contract: data.extend_parent_contract
-
         };
         return {
             dataContract,

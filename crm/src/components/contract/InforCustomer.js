@@ -1,12 +1,63 @@
-import { Select } from 'antd';
-import React from 'react'
+import { Image, Select, Tooltip } from 'antd';
+import React, { useState } from 'react'
 import { checkMicroFe } from '../../untils/helper';
+import {v4 as uuidv4} from "uuid"
+import word from "../../img/doc.png"
+import pdf from "../../img/pdf.png";
+import image from "../../img/image.png";
+import ViewDoc from '../ViewDoc';
+import ViewPDF from '../ViewPDF';
 
 export default function InforCustomer(props) {
 
     const {renderOption, handleChangeValue, valueOfField, setValueForm, valueForm, renderOptionOwner, valueOfCustomer, history, customerInfor} = props;
     let uri = checkMicroFe() === true ? "/contract-service" : "";
-    console.log(customerInfor)
+    let uri_file = checkMicroFe() === true ? 
+                                    window.location.href.includes("dev") ?
+                                    "https://crmservice-dev.tuoitre.vn/" : "https://crmservice-staging.tuoitre.vn/"
+                                    : "http://localhost:3003/";
+    const [isShowModalWord, setIsShowModalWord] = useState(false);
+    const [imageVisible, setImageVisible] = useState(false);
+    const [file, setFile] = useState("");
+    const [isShowModal, setIsShowModal] = useState(false);
+
+    const renderFiles = ()=>{
+        if(customerInfor?.files?.length > 0){
+          return customerInfor?.files?.map((file, indexFile) => {
+            let index = file.indexOf("_")
+            let name = file.slice(index + 1)
+            if (file?.includes("doc") || file?.includes("docx")) {
+              return <div className="upload__file" key={uuidv4()}>
+                <Tooltip title={name}>
+                  <img key={uuidv4()} className="file" src={word} alt="xem word" onClick={() => {
+                    setIsShowModalWord(true)
+                    setFile(uri_file + file)
+                  }} />
+                  </Tooltip>
+              </div>
+            } else if (file?.includes("pdf")) {
+              return <div className="upload__file" key={uuidv4()}>
+                <Tooltip title={name}>
+                  <img key={uuidv4()} className="file" src={pdf} alt="xem pdf" onClick={() => {
+                    setIsShowModal(true)
+                    setFile(uri_file + file)
+                  }} />
+                </Tooltip>
+              </div>
+            } else {
+              return <div className="upload__file" key={uuidv4()}>
+                <Tooltip title={name}>
+                  <img key={uuidv4()} className="file" src={image} alt="Xem ảnh" onClick={() => {
+                    setFile(uri_file + file)
+                    setImageVisible(true)
+                  }} />
+                </Tooltip>
+              </div>
+            }
+          }) 
+        }
+      }
+
   return (
       <div className="create__contract__inforCustomer border_bottom_3px">
           <p>Thông tin khách hàng</p>
@@ -120,16 +171,26 @@ export default function InforCustomer(props) {
                               type="text"
                               disabled
                               value={valueOfCustomer("lienHe")}
-                          // value={()=>{
-                          //   if(customerInfor["representative"] && customerInfor["represent_position"]){
-                          //     return customerInfor["representative"] + " - " + customerInfor["represent_position"]
-                          //   } else {
-                          //     return null;
-                          //   }
-                          // }}
                           />
                           <label>Người liên hệ và chức danh</label>
                       </div>
+                  </div>
+                  <div className="client__files" key={uuidv4()}>
+                      { renderFiles() }
+                      <ViewDoc showModal={isShowModalWord} setIsShowModal={setIsShowModalWord} word={file} />
+                      <Image
+                          style={{
+                              display: 'none',
+                          }}
+                          preview={{
+                              visible: imageVisible,
+                              src: file,
+                              onVisibleChange: (value) => {
+                                  setImageVisible(value);
+                              },
+                          }}
+                      />
+                      <ViewPDF key={uuidv4()} pdf={file} showModal={isShowModal} setIsShowModal={setIsShowModal} />
                   </div>
               </div>
               <div className="infor__owner">
@@ -157,7 +218,6 @@ export default function InforCustomer(props) {
                   </div>
               </div>
           </div>
-
       </div>
   )
 }

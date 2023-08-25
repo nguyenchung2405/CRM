@@ -675,14 +675,22 @@ div.ant-radio-group {
     height: 100%;
 }
 
-.create__customer .client__files {
+.create__customer .client__files,
+.create__contract__inforCustomer .infor__customer .client__files,
+.create__contract__payment .client__files {
     display: flex;
     justify-content: center;
     align-items: flex-end;
     margin-top: 1rem;
 }
 
-.create__customer .client__files > .ant-image {
+.create__contract__payment .client__files {
+    justify-content: left;
+}
+
+.create__customer .client__files > .ant-image,
+.create__contract__inforCustomer .infor__customer .client__files > .ant-image,
+.create__contract__payment .client__files > .ant-image {
     display: none;
 }
 
@@ -690,14 +698,18 @@ div.ant-radio-group {
     display: flex;
 }
 
-.detail__infor__modal .modal__upload .upload__file {
+.detail__infor__modal .modal__upload .upload__file,
+.create__contract__inforCustomer .infor__customer .client__files .upload__file,
+.create__contract__payment .client__files .upload__file {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .create__customer .client__files .upload__file,
-.detail__infor__modal .modal__upload .upload__file {
+.detail__infor__modal .modal__upload .upload__file,
+.create__contract__inforCustomer .infor__customer .client__files .upload__file,
+.create__contract__payment .client__files .upload__file  {
     position: relative;
     margin-right: 1rem;
     width: 40px;
@@ -707,7 +719,8 @@ div.ant-radio-group {
 }
 
 .create__customer .client__files .upload__file > svg:nth-child(2),
-.detail__infor__modal .modal__upload  .upload__file > svg:nth-child(2){
+.detail__infor__modal .modal__upload  .upload__file > svg:nth-child(2), 
+.create__contract__payment .client__files .upload__file > svg:nth-child(2) {
     position: absolute;
     top: -5px;
     right: -5px;
