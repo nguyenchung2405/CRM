@@ -614,7 +614,7 @@ const getSubContractRequest = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
         let { contract_id, sub_contract_id, done } = req.query;
-        if(!done){
+        if(!done && contract_id && sub_contract_id){
             const result = await axios({
                 url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&contract_id=${contract_id}&page_size=100&sort_by=id&asc_order=true`,
                 method: "GET",
@@ -625,7 +625,7 @@ const getSubContractRequest = async (req, res)=>{
             res.send(result.data)
         } else {
             const result = await axios({
-                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&done=${done}&page_size=100&sort_by=id&asc_order=true`,
+                url: `${local}/contract/request/list?sub_contract_ID=${sub_contract_id}&page_size=100&sort_by=id&asc_order=true`,
                 method: "GET",
                 headers: {
                     Authorization: authorization
