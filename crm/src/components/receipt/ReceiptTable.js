@@ -50,9 +50,10 @@ export default function ReceiptTable() {
   useEffect(() => {
     dispatch({
       type: GET_PAYMENT_LIST,
-      data: { page, pageNumber, completed: true },
+      data: { page, pageNumber, completed: true, ...search },
     });
     // dispatch(setIsLoading(true))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, page, pageNumber]);
 
   useEffect(() => {
@@ -77,18 +78,21 @@ export default function ReceiptTable() {
     }
   };
   const handleSubmitSearch = () => {
+    setPage(1);
+    setPageNumber(10);
     dispatch({
       type: GET_PAYMENT_LIST,
       data: { page, pageNumber, completed: true, ...search },
     });
   };
   return (
-    <div className="content reciept__table customer__table">
+    <div className="content reciept__table customer__table payment">
       <CreateReceiptModal
         isShowModal={isShowCreateModal}
         setIsShowModal={setIsShowCreateModal}
         dataToCreateModal={dataToCreateModal}
       />
+
       <div className="table__features">
         <div className="table__features__add">
           <h1>Quản lý hóa đơn</h1>
@@ -101,6 +105,7 @@ export default function ReceiptTable() {
             onChange={(value) => {
               setSearch({ ...search, client_name: value.target.value });
             }}
+            style={{ width: "100%" }}
           />
           <input
             placeholder="Số hợp đồng"
@@ -137,6 +142,7 @@ export default function ReceiptTable() {
             className="style search__from__date"
             placeholder="Từ ngày"
             format={"DD-MM-YYYY"}
+            status={"error"}
             onChange={(date, dateString) => {
               let from_date = moment(dateString, "DD-MM-YYYY").toISOString();
 
@@ -194,13 +200,15 @@ export default function ReceiptTable() {
               Đã thanh lý
             </Select.Option> */}
             <Select.Option
-              key="Chưa xuất hóa đơn"
+              className="select_option"
+              key="Ch%C6%B0a%20xu%E1%BA%A5t%20ho%C3%A1%20%C4%91%C6%A1n"
               value="Ch%C6%B0a%20xu%E1%BA%A5t%20ho%C3%A1%20%C4%91%C6%A1n"
             >
               Chưa xuất hóa đơn
             </Select.Option>
             <Select.Option
-              key="Đã xuất hóa đơn nhưng chưa thanh toán"
+              className="select_option"
+              key="%C4%90%C3%A3%20xu%E1%BA%A5t%20ho%C3%A1%20%C4%91%C6%A1n%20nh%C6%B0ng%20ch%C6%B0a%20thanh%20to%C3%A1n"
               value="%C4%90%C3%A3%20xu%E1%BA%A5t%20ho%C3%A1%20%C4%91%C6%A1n%20nh%C6%B0ng%20ch%C6%B0a%20thanh%20to%C3%A1n"
             >
               Đã xuất hóa đơn nhưng chưa thanh toán
@@ -222,6 +230,8 @@ export default function ReceiptTable() {
           defaultPageSize: 10,
           locale: { items_per_page: "" },
           defaultCurrent: 1,
+          current: page,
+          pageSize: pageNumber,
           showSizeChanger: true,
           total: total,
           pageSizeOptions: [10, 50, 100],
