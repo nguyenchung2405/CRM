@@ -5,6 +5,7 @@ import { addCustomer, setUpdateJobType ,setUpdateType ,setJobTypeListDelete , se
 import { setIsLoading } from "../features/loadingSlice";
 import { setMessage } from "../features/messageSlice";
 import { message } from "antd";
+import { checkMicroFe } from "../../untils/helper";
 
 function* getCustomerList(payload){
     try {
@@ -25,6 +26,7 @@ function* getCustomerList(payload){
 
 function* createCustomer(payload){
     try {
+        let uri = checkMicroFe() === true ? "/contract-service" : "";
         let { data } = payload;
         if (!data.is_company) {
             data.is_company = false;
@@ -34,6 +36,8 @@ function* createCustomer(payload){
         if (code === 200 || dataResponse) {
             yield put(addCustomer(dataResponse));
             message.success("Tạo khách hàng thành công.")
+            yield delay(1000)
+            window.location.replace(`${uri}/crm/customer`)
         } else {
             message.error("Tạo khách hàng thất bại.")
         }

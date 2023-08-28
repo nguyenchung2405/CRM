@@ -243,15 +243,13 @@ export default function ContractRight(props) {
                 let indexSpace = 0
                 let numberIndex = 0
                 for (let i = 0; i < record.desc.length; i++) {
-                  if (record.desc[i] === " " && numberIndex < 3) {
+                  if (record.desc[i] === " " && numberIndex < 6) {
                     indexSpace = i
                     numberIndex += 1
-                  } else {
-                    break;
                   }
                 }
-                return <Tooltip>
-                  {record.desc.slice(0, indexSpace)}
+                return <Tooltip title={record.desc}>
+                  {record.desc.slice(0, indexSpace) + "..."}
                 </Tooltip>
               } else {
                 return record.desc
