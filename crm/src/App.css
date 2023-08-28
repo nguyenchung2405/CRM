@@ -1145,8 +1145,31 @@ div.reciept__table .table__features .table__features__search .search__select > .
 div.reciept__table .table__features .table__features__search .search__select > .ant-select-selector > .ant-select-selection-item  {
     line-height: 40px;
     color: #666666;
+   
 }
+.payment .table__features .table__features__search .search__select >.select_option{
+   
+}
+.payment .table__features .table__features__search .search__select input:first-child{
+    max-width: 100px !important;
 
+}
+ .payment .table__features .table__features__search > input{
+    padding: 10px;  width: 120px !important;
+}
+.payment .table__features .table__features__search > input[placeholder="Tên khách hàng"],
+.payment .table__features .table__features__search > input[placeholder="Số hợp đồng"] {
+   
+    margin-right:10px !important;
+  
+}
+.payment .table__features .table__features__search .search__from__date,.payment .table__features .table__features__search .search__to__date {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+.payment .table__features .table__features__search .search__select>.ant-select-selector{
+    margin-left: 10px !important;
+}
 .contract__table .contract__table__soHopDong {
     padding-left: 30px;
     width: 180px;
