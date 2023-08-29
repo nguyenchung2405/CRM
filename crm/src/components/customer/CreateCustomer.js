@@ -87,8 +87,8 @@ export default function CreateCustomer() {
             data: valueForm
           });
         }
-        history.replace(`${uri}/crm/customer`)
-        setValueForm({})
+        // history.replace(`${uri}/crm/customer`)
+        // setValueForm({})
       }
     }
 

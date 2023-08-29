@@ -28,11 +28,15 @@ const createCustomer = async (req, res)=>{
         const newData = {...req.body};
         // nếu là upload lên server của Đăng thì mở cmt dưới
         // newData.files = [...req.fileUpload];
-        newData.files = [];
-        for(let file of req.files){
-            newData.files.push(file.path)
+        if(req.files.length > 0){
+            newData.files = [];
+            for(let file of req.files){
+                newData.files.push(file.path)
+            }
+        } else {
+            newData.files = null;
         }
-        let newSectors = newData.sectors.split(',');
+        let newSectors = newData.sectors?.split(',');
         newData.sectors = newSectors;
         const result = await axios({
             url: `${local}/client/create`,
