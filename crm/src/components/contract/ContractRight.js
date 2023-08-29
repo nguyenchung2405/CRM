@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { removeRequestDetail, setKeyOfDetailJustAdd, setKeyOfRequestJustAdd, updateRequestDetail } from '../../redux/features/contractSlice';
 import axios from "axios"
-import { CREATE_DETAIL, local, UPDATE_DETAIL } from '../../title/title';
+import { CREATE_DETAIL, DELETE_DETAIL, local, UPDATE_DETAIL } from '../../title/title';
 import ViewPDF from '../ViewPDF';
 import { checkMicroFe } from '../../untils/helper';
 import pdf from "../../img/pdf.png";
@@ -243,9 +243,11 @@ export default function ContractRight(props) {
                 let indexSpace = 0
                 let numberIndex = 0
                 for (let i = 0; i < record.desc.length; i++) {
-                  if (record.desc[i] === " " && numberIndex < 6) {
+                  if (record.desc[i] === " " && numberIndex < 7) {
                     indexSpace = i
                     numberIndex += 1
+                  } else if(numberIndex >= 7){
+                    break;
                   }
                 }
                 return <Tooltip title={record.desc}>
@@ -332,6 +334,14 @@ export default function ContractRight(props) {
                       <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                         Sửa
                       </Typography.Link>
+                      <Popconfirm title="Bạn có muốn xóa chi tiết ?" onConfirm={()=>{
+                        dispatch({
+                          type: DELETE_DETAIL,
+                          data: {contract_detail_id: record.key, request_id: record.request_id}
+                        })
+                      }} okText="Có" cancelText="Không">
+                        <Typography.Link>Xóa</Typography.Link>
+                      </Popconfirm>
                     </>
               );
             }

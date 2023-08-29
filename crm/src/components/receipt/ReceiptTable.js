@@ -287,16 +287,29 @@ export default function ReceiptTable() {
           title="Số hợp đồng"
           key="soHopDong"
           render={(text) => {
-            return (
-              <span
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  history.push(`${uri}/crm/detail/${text?.contract_ID}`);
-                }}
-              >
-                {text?.contract_info?.contract_number}
-              </span>
-            );
+            if(text.sub_contract_ID > 0 && typeof text.sub_contract_ID === "number"){
+              return (
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    history.push(`${uri}/crm/subcontract/detail/${text?.sub_contract_ID}`);
+                  }}
+                >
+                  {text?.contract_info?.contract_number}
+                </span>
+              );
+            } else {
+              return (
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    history.push(`${uri}/crm/detail/${text?.contract_ID}`);
+                  }}
+                >
+                  {text?.contract_info?.contract_number}
+                </span>
+              );
+            }
           }}
         ></Column>
         <Column

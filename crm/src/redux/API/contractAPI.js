@@ -281,6 +281,19 @@ export async function updateDetailAPI(data){
     }
 }
 
+export async function deleteDetailAPI(contract_detail_id){
+    try {
+        const result = await AxiosExpress({
+            url: `${local}/api/contract/detail-delete?contract_detail_id=${contract_detail_id}`,
+            method: "DELETE",
+        });
+        return result.data;
+    } catch (error) {
+        console.log(error)
+        return "Thất bại"
+    }
+}
+
 export async function createPaymentAPI(data){
     try {
         let newRequestDate = moment(data.request_date).format("YYYY-MM-DD");
