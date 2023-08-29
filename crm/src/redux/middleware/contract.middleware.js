@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { COMPLETED_CONTRACT, CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
+import { COMPLETED_CONTRACT, CREATE_CONTRACT, CREATE_CONTRACT_TYPE, CREATE_DETAIL, CREATE_PAYMENT, CREATE_REQUEST, CREATE_REQUEST_SUB_CONTRACT, CREATE_SUB_CONTRACT, DELETE_CONTRACT_TYPE, DELETE_DETAIL, DELETE_REQUEST, DELETE_REQUEST_SUB_CONTRACT, GET_CONTRACT_DETAIL, GET_CONTRACT_LIST, GET_CONTRACT_TYPE, GET_CONTRACT_TYPE_LIST, GET_DETAIL_SUB_CONTRACT, GET_OWNER_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, IMPORT_FILE_SUB_CONTRACT, UPDATE_CONTRACT, UPDATE_CONTRACT_TYPE, UPDATE_DETAIL, UPDATE_PAYMENT, UPDATE_REQUEST, UPDATE_REQUEST_SUB_CONTRACT, UPDATE_SUB_CONTRACT } from "../../title/title";
 import { dataOfContractMapping, dataOfEventMapping, dataOfPayment, dataOfSubContractMapping } from "../../untils/mapping";
-import { completedContractAPI, createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI, uploadFileContractAPI } from "../API/contractAPI";
+import { completedContractAPI, createContractAPI, createContractTypeAPI, createDetailAPI, createPaymentAPI, createRequestAPI, createRequestSubContractAPI, createSubContractAPI, deleteContractTypeAPI, deleteDetailAPI, deleteRequestAPI, getContractDetailAPI, getContractListAPI, getContractRequestAPI, getContractTypeAPI, getContractTypeListAPI, getDetailSubContractAPI, getOwnerListAPI, getRequestOfEventAPI, getSubContractRequestAPI, importFileExcelAPI, importFileSubContractAPI, updateContractiAPI, updateContractTypeMiddlewareAPI, updateDetailAPI, updatePaymentAPI, updateRequestAPI, updateRequestSubContractAPI, updateSubContractAPI, uploadFileContractAPI } from "../API/contractAPI";
 import { addContractRequest, addPayment, deleteContractRequest, removeContractType, removeRequestDetail, setContractDetail, setContractList, setContractRequest, setContractTypeList, setIsResetUpload, setOwnerList, setTotalContractType, updateContractRequest, updateContractType, updateRequestDetail } from "../features/contractSlice";
 import { setRequestOfEvent, setSelectRequest } from "../features/eventSlice";
 import { setIsLoading } from "../features/loadingSlice";
@@ -209,6 +209,20 @@ function* updateDetail(payload){
             message.success("Cập nhật chi tiết quyền lợi hợp đồng thành công.")
         } else {
             message.error("Cập nhật chi tiết quyền lợi hợp đồng thất bại.")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* deleteDetail(payload){
+    try {
+        const result = yield call(deleteDetailAPI, payload.data.contract_detail_id);
+        if(result?.data?.msg === "Vô hiệu chi tiết thực hiện hợp đồng thành công."){
+            message.success("Xóa chi tiết quyền lợi hợp đồng thành công.")
+            yield put(removeRequestDetail({request_id: payload.data.request_id, detail_id: payload.data.contract_detail_id}))
+        } else {
+            message.error("Xóa chi tiết quyền lợi hợp đồng thất bại.")
         }
     } catch (error) {
         console.log(error)
@@ -506,6 +520,7 @@ export default function* contractMiddleware() {
     // Detail Middleware
     yield takeLatest(CREATE_DETAIL, createDetail)
     yield takeLatest(UPDATE_DETAIL, updateDetail)
+    yield takeLatest(DELETE_DETAIL, deleteDetail)
     // Payment
     yield takeLatest(CREATE_PAYMENT, createPayment)
     yield takeLatest(UPDATE_PAYMENT, updatePayment)

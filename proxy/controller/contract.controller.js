@@ -319,6 +319,27 @@ const updateDetail = async (req, res)=>{
     }
 }
 
+const deleteDetail = async (req, res)=>{
+    try {
+        let { headers: { authorization } } = req;
+        let {contract_detail_id} = req.query;
+        const result = await axios({
+            url: `${local}/contractdetail/disable?contract_detail_id=${contract_detail_id}`,
+            method: "DELETE",
+            headers: {
+                Authorization: authorization
+            },
+        });
+        res.send(result.data)
+    } catch (error) {
+        if (error?.response?.data) {
+            res.send(error.response.data)
+        } else {
+            res.send(error)
+        }
+    }
+}
+
 const createPayment = async (req, res)=>{
     try {
         let { headers: { authorization } } = req;
@@ -762,5 +783,6 @@ module.exports = {
     getSubContractByMomContract,
     updateSubContract,
     importFileExcelSubContract,
-    completedContract
+    completedContract,
+    deleteDetail
 }
