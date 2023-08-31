@@ -8,7 +8,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail, setIsResetUpload } from "../../redux/features/contractSlice";
 import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
-import { MdDelete, MdOutlineModeEditOutline } from "react-icons/md";
+import { MdDelete, MdOutlineExpandLess, MdOutlineExpandMore, MdOutlineModeEditOutline } from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
@@ -47,6 +47,7 @@ export default function CreateContract() {
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
   const [selectGeneralRequest, setSelectGeneralRequest] = useState([]);
+  const [isExpand, setIsExpand] = useState(false)
 
   useEffect(() => {
     dispatch({
@@ -298,6 +299,28 @@ export default function CreateContract() {
     }
   }
 
+  const showIconExpand = (data) => {
+    if (data?.length >= 4) {
+      if (isExpand) {
+        return <MdOutlineExpandLess onClick={() => { setIsExpand(false) }} />
+      } else {
+        return <MdOutlineExpandMore onClick={() => { setIsExpand(true) }} />
+      }
+    }
+  }
+
+  const setClassName = (data) => {
+    if (data?.length >= 4) {
+      if (isExpand) {
+        return "term__table table__showmore"
+      } else {
+        return "term__table"
+      }
+    } else {
+      return "term__table"
+    }
+  }
+
   const showGiaTriThucHien = (mode = "display")=>{
     let total = 0;
     contractRequest.forEach((request) => {
@@ -532,7 +555,7 @@ export default function CreateContract() {
             }
           </div>
           <Table
-            className="term__table"
+            className={setClassName(convertContractRequest())}
             dataSource={convertContractRequest()}
             pagination={false}
             expandable={{
@@ -626,6 +649,9 @@ export default function CreateContract() {
               }}
             />
           </Table>
+          <div className="expand__more">
+            {showIconExpand(convertContractRequest())}
+          </div>
           <TermModal
             isShowModal={isShowModal}
             setIsShowModal={setIsShowModal}

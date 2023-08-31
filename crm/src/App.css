@@ -1251,6 +1251,16 @@ div.reciept__table .table__features .table__features__search .search__select > .
     margin-bottom: 20px;
 }
 
+.create__contract .create__contract__term > .term__table {
+    max-height: 322px;
+    overflow: hidden;
+}
+
+.create__contract .create__contract__term > .term__table.table__showmore {
+    height: auto;
+    max-height: fit-content;
+}
+
 .create__contract .create__contract__inforCustomer .display__flex > p {
     margin-bottom: 0;
 }
@@ -1679,12 +1689,14 @@ div.reciept__table .table__features .table__features__search .search__select > .
     overflow: hidden;
 }
 
-.create__contract__payment .expand__more {
+.create__contract__payment .expand__more,
+.create__contract .create__contract__term .expand__more {
     width: 916px;
     text-align: center;
 }
 
-.create__contract__payment .expand__more svg {
+.create__contract__payment .expand__more svg,
+.create__contract .create__contract__term .expand__more svg {
     font-size: 25px;
 }
 
