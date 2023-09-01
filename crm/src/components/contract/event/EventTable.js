@@ -79,7 +79,7 @@ export default function EventTable() {
                         onChange={handleSearchInput} />
                     <div className="table__features__search__btn" style={{ width: "auto" }}>
                         <button onClick={() => {
-                            if (search?.name === "" && search?.tax_number === "" && search?.brief_name === "") {
+                            if (search?.name === "") {
                                 message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
                             } else {
                                 dispatch({

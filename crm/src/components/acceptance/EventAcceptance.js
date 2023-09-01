@@ -1,10 +1,10 @@
-import { Table, Tooltip } from 'antd';
+import { message, Table, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST, GET_EVENT_LIST } from '../../title/title';
+import { GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST, GET_EVENT_LIST, SEARCH_EVENT } from '../../title/title';
 import CreateReceiptModal from '../receipt/CreateReceiptModal';
 import ExpandTableAcceptance from './ExpandTableAcceptance';
 import ReportModal from './ReportModal';
@@ -21,14 +21,18 @@ export default function EventAcceptance() {
     const [list, setList] = useState([])
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
     const [dataToCreateModal, setDataToCreateModal] = useState({})
-    // const {eventAcceptanceList, totalEventAccList} = useSelector(state => state.acceptanceReducer)
+    const [search, setSearch] = useState({ name: ""})
+    const [isFirstRender, setIsFirstRender] = useState(true)
     const { eventList, totalEventList } = useSelector(state => state.eventReducer);
 
     useEffect(()=>{
-        dispatch({
-            type: GET_EVENT_LIST,
-            data: { page, pageNumber }
-        });
+        if (search?.name === "") {
+            dispatch({
+                type: GET_EVENT_LIST,
+                data: { page, pageNumber }
+            });
+            setIsFirstRender(false)
+        }
     }, [page, pageNumber])
 
     useEffect(()=>{
@@ -40,7 +44,24 @@ export default function EventAcceptance() {
         });
         setList(newList)
     }, [eventList])
+
+    useEffect(() => {
+        if (search?.name === "" && !isFirstRender) {
+            dispatch({
+                type: GET_EVENT_LIST,
+                data: { page, pageNumber }
+            });
+        }
+    }, [search])
     
+    const handleSearchInput = (e) => {
+        let { value, name } = e.target;
+        setSearch({
+            ...search,
+            [name]: value
+        })
+    }
+
     return (
         <div className="acceptance__table content">
             <ReportModal 
@@ -65,11 +86,20 @@ export default function EventAcceptance() {
                         </Tooltip>
                     </div>
                     <div className="table__features__search">
-                        <input placeholder="Tên khách hàng" type="text" />
-                        <input placeholder="Loại hợp đồng" type="text" />
-                        <input placeholder="Người đầu mối" type="text" />
-                        <div className="table__features__search__btn">
-                            <button>Tìm kiếm</button>
+                        <input placeholder="Tên sự kiện" type="text"
+                            name="name"
+                            onChange={handleSearchInput} />
+                        <div className="table__features__search__btn" style={{ width: "auto" }}>
+                            <button onClick={() => {
+                                if (search?.name === "") {
+                                    message.warning("Dữ liệu tìm kiếm không thể để trống", 1)
+                                } else {
+                                    dispatch({
+                                        type: SEARCH_EVENT,
+                                        searchData: search
+                                    })
+                                }
+                            }}>Tìm kiếm</button>
                         </div>
                     </div>
                 </div >

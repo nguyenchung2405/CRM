@@ -13,7 +13,6 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import { AiFillPlusCircle, AiOutlineFileDone } from 'react-icons/ai';
 import AskCreateSubContractModal from './sub_contract/AskCreateSubContractModal';
 import ExpandSubContractTable from './sub_contract/ExpandSubContractTable';
-import { setIsCompletedContract } from '../../redux/features/contractSlice';
 
 export default function ContractTable() {
 
