@@ -5,7 +5,7 @@ import { AxiosExpress } from "../../untils/axios";
 export async function getContractListAPI(page, pageNumber, status, search) {
     try {
         let result;
-        if (search) {
+        if (search && status === undefined) {
             let newSearchData = { ...search }
             let queryString = "&";
             for (let prop in search) {
@@ -22,9 +22,24 @@ export async function getContractListAPI(page, pageNumber, status, search) {
                 method: "GET",
                 data: newSearchData
             });
+        } else if(status !== undefined) {
+            let queryString = "&";
+            for (let prop in search) {
+                if (typeof search[prop] === "string" && search[prop].length > 0) {
+                    if (queryString.length > 1) {
+                        queryString += `&${prop}=${search[prop]}`
+                    } else {
+                        queryString += `${prop}=${search[prop]}`
+                    }
+                }
+            }
+            result = await AxiosExpress({
+                url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc${queryString}`,
+                method: "GET",
+            });
         } else {
             result = await AxiosExpress({
-                url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&status=${status}&sort_by=id&order=desc`,
+                url: `${local}/api/contract/list?page_size=${pageNumber}&page=${page}&sort_by=id&order=desc`,
                 method: "GET",
             });
         }

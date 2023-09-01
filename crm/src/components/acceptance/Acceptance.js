@@ -1,9 +1,9 @@
-import { Table, Tooltip } from 'antd';
+import { Select, Table, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_CONTRACT_LIST } from '../../title/title';
+import { GET_CONTRACT_LIST, GET_CONTRACT_TYPE_LIST } from '../../title/title';
 import ReportModal from './ReportModal';
 import ExpandTableAcceptance from "./ExpandTableAcceptance"
 import CreateReceiptModal from '../receipt/CreateReceiptModal';
@@ -19,8 +19,9 @@ export default function Acceptance() {
     const [list, setList] = useState([])
     const [isShowCreateModal, setIsShowCreateModal] = useState(false)
     const [dataToCreateModal, setDataToCreateModal] = useState({})
+    const [search, setSearch] = useState({client_name: "", contract_type_ID: "", owner_name: "", status: ""})
     // const {requestAcceptanceList, totalRequestAccList} = useSelector(state => state.acceptanceReducer)
-    const { total, contractList } = useSelector(state => state.contractReducer);
+    const { total, contractList, contractTypeList } = useSelector(state => state.contractReducer);
 
     useEffect(() => {
         window.addEventListener('error', e => {
@@ -39,13 +40,25 @@ export default function Acceptance() {
                 }
             }
         });
+        dispatch({
+            type: GET_CONTRACT_TYPE_LIST
+        });
     }, []);
     
     useEffect(()=>{
-        dispatch({
-            type: GET_CONTRACT_LIST,
-            data: {page, pageNumber, status: "Đang chạy"}
-        })
+        if(search.client_name !== "" || search.contract_type_ID !== "" || search.owner_name !== "" || search.status !== ""){
+            // dispatch(setIsLoading(true))
+            dispatch({
+                type: GET_CONTRACT_LIST,
+                data: { page, pageNumber, search, status: "Đang chạy" }
+            })
+        } else {
+            dispatch({
+                type: GET_CONTRACT_LIST,
+                data: { page, pageNumber, status: "Đang chạy" }
+            })
+            // dispatch(setIsLoading(true))
+        }
     }, [page, pageNumber])
 
     useEffect(()=>{
@@ -57,6 +70,40 @@ export default function Acceptance() {
         });
         setList(newList)
     }, [contractList])
+
+    useEffect(()=>{
+        if(search.client_name === "" && (search.contract_type_ID === "" || search.contract_type_ID === undefined) && search.owner_name === "" && (search.status === "" || search.status === undefined)){
+            if(page === 1){
+                dispatch({
+                    type: GET_CONTRACT_LIST,
+                    data: { page, pageNumber, status: "Đang chạy" }
+                })
+                // dispatch(setIsLoading(true))
+            } else {
+                setPage(1)
+            }
+        }
+    }, [search])
+
+    const searchContract = ()=>{
+        if(search.client_name !== "" || search.contract_type_ID !== "" || search.owner_name !== "" || search.status !== ""){
+            if(page === 1){
+                dispatch({
+                    type: GET_CONTRACT_LIST,
+                    data: { page, pageNumber, search,  status: "Đang chạy" }
+                })
+                // dispatch(setIsLoading(true))
+            } else {
+                setPage(1)
+            }
+        }
+    }
+
+    const renderContractTypeOption = ()=>{
+        return contractTypeList.map(type => {
+            return <Select.Option key={type.id + type.name} value={type.id}>{type.name}</Select.Option>
+        })
+    }
     
     return (
         <div className="acceptance__table content">
@@ -82,11 +129,32 @@ export default function Acceptance() {
                         </Tooltip>
                     </div>
                     <div className="table__features__search">
-                        <input placeholder="Tên khách hàng" type="text" />
-                        <input placeholder="Loại hợp đồng" type="text" />
-                        <input placeholder="Người đầu mối" type="text" />
+                        <input placeholder="Tên khách hàng" type="text"
+                            name="client_name"
+                            value={search.client_name}
+                            onChange={e => {
+                                let { name, value } = e.target;
+                                setSearch(prev => { return { ...prev, [name]: value } })
+                            }}
+                        />
+                        <Select
+                            className="search__select"
+                            placeholder="Loại hợp đồng"
+                            allowClear
+                            onChange={(value) => { setSearch(prev => { return { ...prev, contract_type_ID: value?.toString() } }) }}
+                        >
+                            {renderContractTypeOption()}
+                        </Select>
+                        <input placeholder="Người đầu mối" type="text"
+                            name="owner_name"
+                            value={search.owner_name}
+                            onChange={e => {
+                                let { name, value } = e.target;
+                                setSearch(prev => { return { ...prev, [name]: value } })
+                            }}
+                        />
                         <div className="table__features__search__btn">
-                            <button>Tìm kiếm</button>
+                            <button onClick={searchContract}>Tìm kiếm</button>
                         </div>
                     </div>
                 </div >

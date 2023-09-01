@@ -1114,7 +1114,8 @@ div.contract__table .table__features .table__features__search input:nth-child(4)
 }
 
 div.contract__table .table__features .table__features__search .search__select,
-div.product__table .table__features .table__features__search .search__select {
+div.product__table .table__features .table__features__search .search__select,
+div.acceptance__table .table__features .table__features__search .search__select {
     width: 251px;
     height: 40px;
     margin-right: 37px;
