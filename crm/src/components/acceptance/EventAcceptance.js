@@ -4,9 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { FcPlus } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_ACCEPTANCE_CONTRACT_LIST, GET_ACCEPTANCE_EVENT_LIST, GET_EVENT_LIST, SEARCH_EVENT } from '../../title/title';
+import { GET_EVENT_LIST, SEARCH_EVENT } from '../../title/title';
 import CreateReceiptModal from '../receipt/CreateReceiptModal';
-import ExpandTableAcceptance from './ExpandTableAcceptance';
 import ReportModal from './ReportModal';
 import ExpandEventAcceptance from './ExpandEventAcc';
 

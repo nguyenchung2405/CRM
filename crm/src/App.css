@@ -1253,7 +1253,7 @@ div.reciept__table .table__features .table__features__search .search__select > .
 }
 
 .create__contract .create__contract__term > .term__table {
-    max-height: 322px;
+    max-height: 400px;
     overflow: hidden;
 }
 
