@@ -1253,8 +1253,8 @@ div.reciept__table .table__features .table__features__search .search__select > .
 }
 
 .create__contract .create__contract__term > .term__table {
-    max-height: 600px;
-    overflow: hidden;
+    /* max-height: 600px;
+    overflow: hidden; */
 }
 
 .create__contract .create__contract__term > .term__table.table__showmore {
