@@ -1,30 +1,33 @@
 import { checkMicroFe, getTokenInCookie } from "../untils/helper";
 
-export const local = checkMicroFe() === true ?
-    window.location.href.includes("staging")
-        ? "https://crmservice-staging.tuoitre.vn"
-        : "https://crmservice-dev.tuoitre.vn"
-    : ""
+export const local =
+  checkMicroFe() === true
+    ? window.location.href.includes("staging")
+      ? "https://crmservice-staging.tuoitre.vn"
+      : "https://crmservice-dev.tuoitre.vn"
+    : "";
 
 export const TOKEN = getTokenInCookie();
 
 export const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-export const regexPhone = /(84[2|3|5|7|8|9]|0[2|3|5|7|8|9])+([0-9]{8}|[0-9]{9})\b/;
+export const regexPhone =
+  /(84[2|3|5|7|8|9]|0[2|3|5|7|8|9])+([0-9]{8}|[0-9]{9})\b/;
 
 export const GET_CUSTOMER_LIST = "GET_CUSTOMER_LIST";
 export const GET_CUSTOMER_TYPE_LIST = "GET_CUSTOMER_TYPE_LIST";
 export const CREATE_CUSTOMER_TYPE = "CREATE_CUSTOMER_TYPE";
 export const DELETE_CUSTOMER_TYPE = "DELETE_CUSTOMER_TYPE";
-export const UPDATE_CUSTOMER_TYPE = "UPDATE_CUSTOMER_TYPE"
+export const UPDATE_CUSTOMER_TYPE = "UPDATE_CUSTOMER_TYPE";
 export const GET_JOB_TYPE_LIST = "GET_JOB_TYPE_LIST";
-export const DELETE_JOB_TYPE_LIST = "DELETE_JOB_TYPE_LIST"
-export const UPDATE_JOB_TYPE_LIST = "UPDATE_JOB_TYPE_LIST"
-export const CREATE_JOB_TYPE_LIST = "CREATE_JOB_TYPE_LIST"
+export const DELETE_JOB_TYPE_LIST = "DELETE_JOB_TYPE_LIST";
+export const UPDATE_JOB_TYPE_LIST = "UPDATE_JOB_TYPE_LIST";
+export const CREATE_JOB_TYPE_LIST = "CREATE_JOB_TYPE_LIST";
 export const GET_CUSTOMER_DETAIL = "GET_CUSTOMER_DETAIL";
 export const CREATE_CUSTOMER = "CREATE_CUSTOMER";
 export const UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
 export const SEARCH_CUSTOMER = "SEARCH_CUSTOMER";
 export const GET_CONTRACT_LIST = "GET_CONTRACT_LIST";
+export const GET_SUB_CONTRACT_LIST = "GET_SUB_CONTRACT_LIST";
 export const CREATE_CONTRACT = "CREATE_CONTRACT";
 export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
 export const GET_PRODUCT_LIST_CONTRACT = "GET_PRODUCT_LIST_CONTRACT";
@@ -40,7 +43,7 @@ export const GET_PRODUCT_SPECIAL = "GET_PRODUCT_SPECIAL";
 export const GET_PRODUCT_SPECIAL_FOR_CLIENT = "GET_PRODUCT_SPECIAL_FOR_CLIENT";
 export const CREATE_PRODUCT_SPECIAL = "CREATE_PRODUCT_SPECIAL";
 export const DELETE_PRODUCT_SPECIAL = "DELETE_PRODUCT_SPECIAL";
-export const GET_GROUP_CHANNEL = "GET_GROUP_CHANNEL"
+export const GET_GROUP_CHANNEL = "GET_GROUP_CHANNEL";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
@@ -79,11 +82,13 @@ export const CREATE_EVENT_ACCEPTANCE = "CREATE_EVENT_ACCEPTANCE";
 export const GET_ACCEPTANCE_CONTRACT_LIST = "GET_ACCEPTANCE_CONTRACT_LIST";
 export const GET_ACCEPTANCE_EVENT_LIST = "GET_ACCEPTANCE_EVENT_LIST";
 export const GET_EVENT_REQUEST_LIST = "GET_EVENT_REQUEST_LIST";
-export const GET_EVENT_REQUEST_CONTRACT_LIST = "GET_EVENT_REQUEST_CONTRACT_LIST";
+export const GET_EVENT_REQUEST_CONTRACT_LIST =
+  "GET_EVENT_REQUEST_CONTRACT_LIST";
 export const CREATE_EXPORT_RECEIPT = "CREATE_EXPORT_RECEIPT";
 export const CANCEL_EXPORT_RECEIPT = "CANCEL_EXPORT_RECEIPT";
 export const COMPLETE_EXPORT_RECEIPT = "COMPLETE_EXPORT_RECEIPT";
-export const GET_ACCEPTANCE_LIST_BY_CONTRACT = "GET_ACCEPTANCE_LIST_BY_CONTRACT";
+export const GET_ACCEPTANCE_LIST_BY_CONTRACT =
+  "GET_ACCEPTANCE_LIST_BY_CONTRACT";
 export const GET_ACCEPTANCE_LIST_BY_EVENT = "GET_ACCEPTANCE_LIST_BY_EVENT";
 export const IMPORT_FILE = "IMPORT_FILE";
 export const GET_CONTRACT_TYPE = "GET_CONTRACT_TYPE";
@@ -99,7 +104,7 @@ export const DELETE_REQUEST_SUB_CONTRACT = "DELETE_REQUEST_SUB_CONTRACT";
 export const IMPORT_FILE_SUB_CONTRACT = "IMPORT_FILE_SUB_CONTRACT";
 export const COMPLETED_CONTRACT = "COMPLETED_CONTRACT";
 export const DELETE_DETAIL = "DELETE_DETAIL";
-export const UPDATE_SUB_CHANEL = "UPDATE_SUB_CHANEL" 
-export const DELETE_SUB_CHANEL = "DELETE_SUB_CHANEL" 
-export const CREATE_SUB_CHANEL = "CREATE_SUB_CHANEL"
-export const GET_SUB_CHANAL = "GET_SUB_CHANAL"
+export const UPDATE_SUB_CHANEL = "UPDATE_SUB_CHANEL";
+export const DELETE_SUB_CHANEL = "DELETE_SUB_CHANEL";
+export const CREATE_SUB_CHANEL = "CREATE_SUB_CHANEL";
+export const GET_SUB_CHANAL = "GET_SUB_CHANAL";
