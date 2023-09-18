@@ -699,7 +699,6 @@ export default function CreateContract() {
               ""
             )}
           </div>
-          {isExpand}
           <Table
             className={setClassName(convertContractRequest())}
             dataSource={
