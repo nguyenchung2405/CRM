@@ -2,28 +2,53 @@ import { DatePicker, Table, Select, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CREATE_CONTRACT, DELETE_REQUEST, GET_CONTRACT_DETAIL, GET_CONTRACT_TYPE_LIST, GET_CUSTOMER_LIST, GET_EVENT_LIST, GET_OWNER_LIST, GET_PRODUCT_LIST, GET_REQUEST_OF_EVENT, IMPORT_FILE, local, TOKEN, UPDATE_CONTRACT } from "../../title/title";
+import {
+  CREATE_CONTRACT,
+  DELETE_REQUEST,
+  GET_CONTRACT_DETAIL,
+  GET_CONTRACT_TYPE_LIST,
+  GET_CUSTOMER_LIST,
+  GET_EVENT_LIST,
+  GET_OWNER_LIST,
+  GET_PRODUCT_LIST,
+  GET_REQUEST_OF_EVENT,
+  IMPORT_FILE,
+  local,
+  TOKEN,
+  UPDATE_CONTRACT,
+} from "../../title/title";
 import TermModal from "../modal/contract/Term";
 import { useHistory, useParams } from "react-router-dom";
-import { addRequestDetail, setContractRequest, deleteContractRequest, removeRequestDetail, setContractDetail, setIsResetUpload } from "../../redux/features/contractSlice";
+import {
+  addRequestDetail,
+  setContractRequest,
+  deleteContractRequest,
+  removeRequestDetail,
+  setContractDetail,
+  setIsResetUpload,
+} from "../../redux/features/contractSlice";
 import { checkMicroFe } from "../../untils/helper";
 import ContractRight from "./ContractRight";
-import { MdDelete, MdOutlineExpandLess, MdOutlineExpandMore, MdOutlineModeEditOutline } from "react-icons/md";
+import {
+  MdDelete,
+  MdOutlineExpandLess,
+  MdOutlineExpandMore,
+  MdOutlineModeEditOutline,
+} from "react-icons/md";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../Loading";
 import { setIsLoading } from "../../redux/features/loadingSlice";
 import RequestEvent from "./RequestEvent";
 import ContractHistory from "./ContractHistory";
-import { CiImport, CiExport } from "react-icons/ci"
+import { CiImport, CiExport } from "react-icons/ci";
 import axios from "axios";
-import FileSaver from "file-saver"
+import FileSaver from "file-saver";
 import ContractPayment from "./ContractPayment";
 import InforCustomer from "./InforCustomer";
 import ContractValue from "./ContractValue";
 import ContractUpload from "./ContractUpload";
 
 export default function CreateContract() {
-
   let uri = checkMicroFe() === true ? "/contract-service" : "";
   const { Column } = Table;
   const { Option } = Select;
@@ -31,80 +56,105 @@ export default function CreateContract() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { contract_id, completed_contract_id } = useParams();
-  const { isLoading } = useSelector(state => state.loadingReducer);
-  const { customerList } = useSelector(state => state.customerReducer);
-  const { contractTypeList, contractDetail, contractRequest, keyOfDetailJustAdd, keyOfRequestJustAdd, ownerList } = useSelector(state => state.contractReducer);
-  const { productList, productListFull } = useSelector(state => state.productReducer)
-  const { eventList, requestOfEvent, selectRequest } = useSelector(state => state.eventReducer);
+  const { isLoading } = useSelector((state) => state.loadingReducer);
+  const { customerList } = useSelector((state) => state.customerReducer);
+  const {
+    contractTypeList,
+    contractDetail,
+    contractRequest,
+    keyOfDetailJustAdd,
+    keyOfRequestJustAdd,
+    ownerList,
+  } = useSelector((state) => state.contractReducer);
+  const { productList, productListFull } = useSelector(
+    (state) => state.productReducer
+  );
+  const { eventList, requestOfEvent, selectRequest } = useSelector(
+    (state) => state.eventReducer
+  );
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataToModal, setDataToModal] = useState();
   const [isUpdateModal, setIsUpdateModal] = useState(false);
-  const [valueForm, setValueForm] = useState({VAT: 10, payment_type: "Nhiều đợt", pay_before_run: true, discount_by_percent: 0});
-  const [soTien, setSoTien] = useState(null)
-  const [requestDate, setRequestDate] = useState(null)
+  const [valueForm, setValueForm] = useState({
+    VAT: 10,
+    payment_type: "Nhiều đợt",
+    pay_before_run: true,
+    discount_by_percent: 0,
+  });
+  const [soTien, setSoTien] = useState(null);
+  const [requestDate, setRequestDate] = useState(null);
   const [dotThanhToan, setDotThanhToan] = useState([]);
   const [customerInfor, setCustomerInfor] = useState({});
   const [isUpdateDetail, setIsUpdateDetail] = useState(false);
   const [unlockInput, setUnlockInput] = useState(true);
   const [selectGeneralRequest, setSelectGeneralRequest] = useState([]);
-  const [isExpand, setIsExpand] = useState(false)
+  const [isExpand, setIsExpand] = useState(false);
 
   useEffect(() => {
     dispatch({
       type: GET_EVENT_LIST,
-      data: { page: 1, pageNumber: 1000 }
+      data: { page: 1, pageNumber: 1000 },
     });
     dispatch({
       type: GET_CUSTOMER_LIST,
-      data: { page: 1, pageNumber: 1000 }
+      data: { page: 1, pageNumber: 1000 },
     });
     dispatch({
       type: GET_PRODUCT_LIST,
-      data: {page:1, pageSize: 1000}
+      data: { page: 1, pageSize: 1000 },
     });
     dispatch({
-      type: GET_CONTRACT_TYPE_LIST
+      type: GET_CONTRACT_TYPE_LIST,
     });
     dispatch({
-      type: GET_OWNER_LIST
-    })
+      type: GET_OWNER_LIST,
+    });
     return () => {
-      dispatch(setContractDetail({}))
+      dispatch(setContractDetail({}));
       dispatch(setContractRequest([]));
-    }
+    };
   }, []);
 
   useEffect(() => {
-    if (customerList.length > 0 && (contract_id || completed_contract_id) && typeof +contract_id === "number") {
-      let customerInfor = customerList.find(client => client.id === +valueForm.client_ID);
-      setCustomerInfor({ ...customerInfor })
+    if (
+      customerList.length > 0 &&
+      (contract_id || completed_contract_id) &&
+      typeof +contract_id === "number"
+    ) {
+      let customerInfor = customerList.find(
+        (client) => client.id === +valueForm.client_ID
+      );
+      setCustomerInfor({ ...customerInfor });
     }
-  }, [contract_id, customerList, valueForm])
+  }, [contract_id, customerList, valueForm]);
 
   useEffect(() => {
     if (contract_id && typeof +contract_id === "number") {
       dispatch({
         type: GET_CONTRACT_DETAIL,
-        contract_id
+        contract_id,
       });
-      dispatch(setIsLoading(true))
-    } else if(completed_contract_id && typeof +completed_contract_id === "number") {
+      dispatch(setIsLoading(true));
+    } else if (
+      completed_contract_id &&
+      typeof +completed_contract_id === "number"
+    ) {
       dispatch({
         type: GET_CONTRACT_DETAIL,
-        data: {contract_id: completed_contract_id, status: "Đã thanh lý"}
+        data: { contract_id: completed_contract_id, status: "Đã thanh lý" },
       });
-      dispatch(setIsLoading(true))
+      dispatch(setIsLoading(true));
     }
-  }, [contract_id, completed_contract_id])
+  }, [contract_id, completed_contract_id]);
 
   useEffect(() => {
-    if(!contract_id){
+    if (!contract_id) {
       setValueForm({
         ...valueForm,
-        total: showGiaTriThucHien("total") * 1000000
-      })
+        total: showGiaTriThucHien("total") * 1000000,
+      });
     }
-  }, [contractRequest])
+  }, [contractRequest]);
 
   useEffect(() => {
     let { dataContract, dataTable: dataOfTable, payments } = contractDetail;
@@ -113,28 +163,28 @@ export default function CreateContract() {
     //   setDataTable([...dataOfTable])
     // }
     if (dataContract) {
-      setValueForm({ ...dataContract })
+      setValueForm({ ...dataContract });
     }
     if (payments) {
-      setDotThanhToan(payments)
+      setDotThanhToan(payments);
     }
-  }, [contractDetail])
+  }, [contractDetail]);
 
   useEffect(() => {
     if (typeof valueForm.event_ID === "number") {
       dispatch({
         type: GET_REQUEST_OF_EVENT,
-        event_id: valueForm.event_ID
-      })
+        event_id: valueForm.event_ID,
+      });
     }
-  }, [valueForm.event_ID])
+  }, [valueForm.event_ID]);
 
-  useEffect(()=>{
-    setSelectGeneralRequest([...selectRequest])
-  }, [selectRequest])
+  useEffect(() => {
+    setSelectGeneralRequest([...selectRequest]);
+  }, [selectRequest]);
 
   const convertContractRequest = () => {
-    return contractRequest?.map(request => {
+    return contractRequest?.map((request) => {
       return {
         key: request?.id,
         id: request?.id,
@@ -143,185 +193,259 @@ export default function CreateContract() {
         quality: request.quality,
         real_price: request.price_ID.price_include_VAT * 1000000,
         details: request.details,
-        custom_price: request.custom_price * 1000000
-      }
-    })
-  }
+        custom_price: request.custom_price * 1000000,
+      };
+    });
+  };
 
   const renderOption = () => {
     return customerList?.map((customer) => {
-      return <Option key={customer.id} value={+customer.id}>{customer.name}</Option>;
+      return (
+        <Option key={customer.id} value={+customer.id}>
+          {customer.name}
+        </Option>
+      );
     });
   };
 
   const renderOptionOwner = () => {
     return ownerList?.map((customer) => {
-      return <Option key={customer.id} value={+customer.id}>{customer.user_full_name}</Option>;
+      return (
+        <Option key={customer.id} value={+customer.id}>
+          {customer.user_full_name}
+        </Option>
+      );
     });
   };
 
   const handleChangeValue = (name, value) => {
     if (name === "client_ID") {
-      let customerInfor = customerList.find(client => client.id === value);
-      setCustomerInfor({ ...customerInfor })
+      let customerInfor = customerList.find((client) => client.id === value);
+      setCustomerInfor({ ...customerInfor });
     }
-    if(name === "contract_type_id"){
-      if(value !== 4){
+    if (name === "contract_type_id") {
+      if (value !== 4) {
         setValueForm({
           ...valueForm,
           event_ID: null,
-          [name]: value
-        })
+          [name]: value,
+        });
       } else {
-        setValueForm({ ...valueForm, [name]: value })
+        setValueForm({ ...valueForm, [name]: value });
       }
     }
     if (name !== "" && name.length > 0 && name !== "contract_type_id") {
-      setValueForm({ ...valueForm, [name]: value })
+      setValueForm({ ...valueForm, [name]: value });
     }
-    
   };
 
   const renderLoaiHopDong = () => {
     return contractTypeList?.map((item) => {
-      return <Option key={item.id} value={+item.id}>{item.name}</Option>
+      return (
+        <Option key={item.id} value={+item.id}>
+          {item.name}
+        </Option>
+      );
     });
-  }
+  };
 
-  const renderEventOption = ()=>{
-    return eventList.map(item => {
-      return <Option key={item.id} value={item.id}>{item.name}</Option>
-    })
+  const renderEventOption = () => {
+    return eventList.map((item) => {
+      return (
+        <Option key={item.id} value={item.id}>
+          {item.name}
+        </Option>
+      );
+    });
   };
 
   const valueOfField = (name) => {
     if (name === "rangePicker") {
-      let newTuNgay = moment(new Date(valueForm["begin_date"])).format("DD-MM-YYYY");
-      let newDenNgay = moment(new Date(valueForm["end_date"])).format("DD-MM-YYYY");
-      if (valueForm["begin_date"] === undefined && valueForm["end_date"] === undefined) {
-        return [null, null]
+      let newTuNgay = moment(new Date(valueForm["begin_date"])).format(
+        "DD-MM-YYYY"
+      );
+      let newDenNgay = moment(new Date(valueForm["end_date"])).format(
+        "DD-MM-YYYY"
+      );
+      if (
+        valueForm["begin_date"] === undefined &&
+        valueForm["end_date"] === undefined
+      ) {
+        return [null, null];
       }
-      return [moment(newTuNgay, "DD-MM-YYYY"), moment(newDenNgay, "DD-MM-YYYY")]
-    } else if(name === "requestDate"){
-      if(requestDate !== null){
-        let newRequestDate = moment(new Date(requestDate)).format("DD-MM-YYYY")
+      return [
+        moment(newTuNgay, "DD-MM-YYYY"),
+        moment(newDenNgay, "DD-MM-YYYY"),
+      ];
+    } else if (name === "requestDate") {
+      if (requestDate !== null) {
+        let newRequestDate = moment(new Date(requestDate)).format("DD-MM-YYYY");
         return moment(newRequestDate, "DD-MM-YYYY");
       }
-      return null
-    } else if(name === "discount_by_percent"){
-      if (Number.isInteger(valueForm[name]) ) {
+      return null;
+    } else if (name === "discount_by_percent") {
+      if (Number.isInteger(valueForm[name])) {
         return valueForm[name];
       } else {
         return valueForm[name].toString().replace(".", ",");
       }
-    }else {
+    } else {
       if (valueForm[name] && name === "total") {
-        return new Intl.NumberFormat("vi-VN").format(valueForm[name])
+        return new Intl.NumberFormat("vi-VN").format(valueForm[name]);
       }
-      return valueForm[name]
+      return valueForm[name];
     }
-  }
+  };
 
   const valueOfCustomer = (name) => {
     if (name === "daiDien") {
-      if (customerInfor["representative"] && customerInfor["represent_position"] && customerInfor["representative"] !== null && customerInfor["represent_position"] !== null) {
-        return customerInfor["representative"] + " - " + customerInfor["represent_position"]
+      if (
+        customerInfor["representative"] &&
+        customerInfor["represent_position"] &&
+        customerInfor["representative"] !== null &&
+        customerInfor["represent_position"] !== null
+      ) {
+        return (
+          customerInfor["representative"] +
+          " - " +
+          customerInfor["represent_position"]
+        );
       } else {
         return "";
       }
-    } else if(name === "lienHe"){
-      if (customerInfor["contact"] && customerInfor["contact_position"] && customerInfor["contact"] !== null && customerInfor["contact_position"] !== null) {
-        return customerInfor["contact"] + " - " + customerInfor["contact_position"]
+    } else if (name === "lienHe") {
+      if (
+        customerInfor["contact"] &&
+        customerInfor["contact_position"] &&
+        customerInfor["contact"] !== null &&
+        customerInfor["contact_position"] !== null
+      ) {
+        return (
+          customerInfor["contact"] + " - " + customerInfor["contact_position"]
+        );
       } else {
         return "";
       }
     } else {
       if (customerInfor[name]) {
-        return customerInfor[name]
+        return customerInfor[name];
       } else {
-        return null
+        return null;
       }
     }
-  }
+  };
 
   const renderButtonCreateUpdate = () => {
     if (contract_id !== undefined && completed_contract_id === undefined) {
-      return <button className="footer__btn btn__create"
-        onClick={() => {
-          valueForm.contract_id = +contract_id;
-          valueForm.event_detail_IDs = selectGeneralRequest;
-          dispatch({
-            type: UPDATE_CONTRACT,
-            data: valueForm
-          })
-          dispatch(setIsResetUpload(true))
-        }}>
-        Cập nhật
-      </button>
-    } else if(contract_id === undefined && completed_contract_id === undefined) {
-      return <button className="footer__btn btn__create"
-        onClick={() => {
-          let newData = {
-            contract: { ...valueForm },
-            request: contractRequest,
-            payment: dotThanhToan
-          };
-          dispatch({
-            type: CREATE_CONTRACT,
-            data: newData
-          });
-          dispatch(setContractRequest([]));
-          dispatch(setIsResetUpload(true))
-          setTimeout(() => {
-            history.push(`${uri}/crm/contract`)
-          }, 1000)
-        }}
-      >Tạo</button>
+      return (
+        <button
+          className="footer__btn btn__create"
+          onClick={() => {
+            valueForm.contract_id = +contract_id;
+            valueForm.event_detail_IDs = selectGeneralRequest;
+            dispatch({
+              type: UPDATE_CONTRACT,
+              data: valueForm,
+            });
+            dispatch(setIsResetUpload(true));
+          }}
+        >
+          Cập nhật
+        </button>
+      );
+    } else if (
+      contract_id === undefined &&
+      completed_contract_id === undefined
+    ) {
+      return (
+        <button
+          className="footer__btn btn__create"
+          onClick={() => {
+            let newData = {
+              contract: { ...valueForm },
+              request: contractRequest,
+              payment: dotThanhToan,
+            };
+            dispatch({
+              type: CREATE_CONTRACT,
+              data: newData,
+            });
+            dispatch(setContractRequest([]));
+            dispatch(setIsResetUpload(true));
+            setTimeout(() => {
+              history.push(`${uri}/crm/contract`);
+            }, 1000);
+          }}
+        >
+          Tạo
+        </button>
+      );
     }
-  }
+  };
 
   const addDetailWhenCreate = (request_id) => {
     let detail = {
-      "desc": "",
-      "from_date": "",
-      "file": null,
-      "id": uuidv4()
+      desc: "",
+      from_date: "",
+      file: null,
+      id: uuidv4(),
     };
-    if (keyOfDetailJustAdd && (keyOfRequestJustAdd && keyOfRequestJustAdd !== "")) {
-      dispatch(removeRequestDetail({ request_id: keyOfRequestJustAdd, detail_id: keyOfDetailJustAdd }));
+    if (
+      keyOfDetailJustAdd &&
+      keyOfRequestJustAdd &&
+      keyOfRequestJustAdd !== ""
+    ) {
+      dispatch(
+        removeRequestDetail({
+          request_id: keyOfRequestJustAdd,
+          detail_id: keyOfDetailJustAdd,
+        })
+      );
     }
     dispatch(addRequestDetail({ request_id, detail }));
-  }
+  };
 
   const showLoading = () => {
     if (isLoading) {
-      return <Loading />
+      return <Loading />;
     }
-  }
+  };
 
   const showIconExpand = (data) => {
-    if (data?.length >= 4) {
+    if (data?.length > 4) {
       if (isExpand) {
-        return <MdOutlineExpandLess onClick={() => { setIsExpand(false) }} />
+        return (
+          <MdOutlineExpandLess
+            onClick={() => {
+              setIsExpand(false);
+            }}
+          />
+        );
       } else {
-        return <MdOutlineExpandMore onClick={() => { setIsExpand(true) }} />
+        return (
+          <MdOutlineExpandMore
+            onClick={() => {
+              setIsExpand(true);
+            }}
+          />
+        );
       }
     }
-  }
+  };
 
   const setClassName = (data) => {
     if (data?.length >= 4) {
       if (isExpand) {
-        return "term__table table__showmore"
+        return "term__table table__showmore";
       } else {
-        return "term__table"
+        return "term__table";
       }
     } else {
-      return "term__table"
+      return "term__table";
     }
-  }
+  };
 
-  const showGiaTriThucHien = (mode = "display")=>{
+  const showGiaTriThucHien = (mode = "display") => {
     let total = 0;
     contractRequest.forEach((request) => {
       if (request.custom_price) {
@@ -329,13 +453,15 @@ export default function CreateContract() {
       } else {
         total += request.price_ID.price_include_VAT * request.quality;
       }
-    })
-    if(total > 0 ){
-      if(mode === "display"){
+    });
+    if (total > 0) {
+      if (mode === "display") {
         return new Intl.NumberFormat("vi-VN").format(total * 1000000);
-      } else if(mode === "number"){
-        return new Intl.NumberFormat("vi-VN").format(valueForm.discount_total * 1000000);
-      } else if(mode === "total_contract"){
+      } else if (mode === "number") {
+        return new Intl.NumberFormat("vi-VN").format(
+          valueForm.discount_total * 1000000
+        );
+      } else if (mode === "total_contract") {
         return new Intl.NumberFormat("vi-VN").format(valueForm.total);
       } else {
         return total;
@@ -343,32 +469,34 @@ export default function CreateContract() {
     } else {
       return null;
     }
-  }
+  };
 
   const showGiaTriGoc = (mode = "display") => {
     let total = 0;
     contractRequest.forEach((request) => {
       total += request.price_ID.price * request.quality;
-    })
+    });
     // return new Intl.NumberFormat("vi--VN").format(total) + " VNĐ";
-    if(total > 0 && mode === "display"){
+    if (total > 0 && mode === "display") {
       return new Intl.NumberFormat("vi-VN").format(total * 1000000);
     } else {
-      if(mode === "number"){
+      if (mode === "number") {
         // return total;
-        return new Intl.NumberFormat("vi-VN").format(valueForm.original_total * 1000000);
+        return new Intl.NumberFormat("vi-VN").format(
+          valueForm.original_total * 1000000
+        );
       }
       return null;
     }
-  }
+  };
 
-  const showTitleContract =()=>{
-    if(contract_id !== undefined || completed_contract_id !== undefined){
-      return "Chỉnh sửa hợp đồng"
+  const showTitleContract = () => {
+    if (contract_id !== undefined || completed_contract_id !== undefined) {
+      return "Chỉnh sửa hợp đồng";
     } else {
-      return "Tạo hợp đồng"
+      return "Tạo hợp đồng";
     }
-  }
+  };
 
   return (
     <div className="create__contract content">
@@ -380,14 +508,14 @@ export default function CreateContract() {
         <div className="create__contract__inforCustomer border_bottom_3px create__contract__inforContract">
           <p>Thông tin hợp đồng</p>
           <div className="field__input field__flex two__field">
-            <div className="contract__field" style={{ alignItems: "flex-end" }} >
+            <div className="contract__field" style={{ alignItems: "flex-end" }}>
               <input
                 className="style"
                 type="text"
                 name="contract_number"
                 onChange={(e) => {
                   let { value, name } = e.target;
-                  handleChangeValue(name, value)
+                  handleChangeValue(name, value);
                 }}
                 value={valueOfField("contract_number")}
               />
@@ -398,7 +526,9 @@ export default function CreateContract() {
               <Select
                 className="style"
                 type="text"
-                placeholder={window.location.href.includes("create") ? "Loại hợp đồng" : ""}
+                placeholder={
+                  window.location.href.includes("create") ? "Loại hợp đồng" : ""
+                }
                 onChange={(value) => {
                   handleChangeValue("contract_type_id", value);
                 }}
@@ -431,13 +561,19 @@ export default function CreateContract() {
                   </svg>
                 }
                 onChange={(date, dateString) => {
-                  let ngayThucHien = moment(dateString[0], "DD-MM-YYYY").toISOString();
-                  let ngayKetThucThucHien = moment(dateString[1], "DD-MM-YYYY").toISOString();
+                  let ngayThucHien = moment(
+                    dateString[0],
+                    "DD-MM-YYYY"
+                  ).toISOString();
+                  let ngayKetThucThucHien = moment(
+                    dateString[1],
+                    "DD-MM-YYYY"
+                  ).toISOString();
                   setValueForm({
                     ...valueForm,
                     begin_date: ngayThucHien,
-                    end_date: ngayKetThucThucHien
-                  })
+                    end_date: ngayKetThucThucHien,
+                  });
                 }}
                 value={valueOfField("rangePicker")}
               />
@@ -447,9 +583,11 @@ export default function CreateContract() {
               <Select
                 className="style"
                 type="text"
-                placeholder={window.location.href.includes("create") ? "Tên sự kiện" : ""}
+                placeholder={
+                  window.location.href.includes("create") ? "Tên sự kiện" : ""
+                }
                 onChange={(value) => {
-                  handleChangeValue("event_ID", value)
+                  handleChangeValue("event_ID", value);
                 }}
                 value={valueOfField("event_ID")}
                 disabled={valueForm.contract_type_id === 4 ? false : true}
@@ -470,14 +608,16 @@ export default function CreateContract() {
           history={history}
           customerInfor={customerInfor}
         />
-        {valueForm.event_ID && !window.location.href.includes("create") ?
+        {valueForm.event_ID && !window.location.href.includes("create") ? (
           <RequestEvent
             productListFull={productListFull}
             requestOfEvent={requestOfEvent}
             selectGeneralRequest={selectGeneralRequest}
             setSelectGeneralRequest={setSelectGeneralRequest}
-          /> : ""
-        }
+          />
+        ) : (
+          ""
+        )}
         <div className="create__contract__term border_bottom_3px">
           <div className="display__flex">
             <p>Quyền lợi hợp đồng</p>
@@ -515,52 +655,68 @@ export default function CreateContract() {
                 strokeLinejoin="round"
               />
             </svg>
-            {
-              contract_id ?
-                <>
-                  <div className="upload__file">
-                    <Tooltip title="Nhập file" color="green">
-                      <label htmlFor="upFileExcel">
-                        <CiImport />
-                      </label>
-                      <input id="upFileExcel" type="file" onChange={e => {
+            {contract_id ? (
+              <>
+                <div className="upload__file">
+                  <Tooltip title="Nhập file" color="green">
+                    <label htmlFor="upFileExcel">
+                      <CiImport />
+                    </label>
+                    <input
+                      id="upFileExcel"
+                      type="file"
+                      onChange={(e) => {
                         dispatch({
                           type: IMPORT_FILE,
-                          data: { file: e.target.files[0], contract_id }
-                        })
-                      }} />
-                    </Tooltip>
-                  </div>
-                  <Tooltip title="Xuất file" color="green">
-                    <CiExport
-                      onClick={async (e) => {
-                        const result = await axios({
-                          url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
-                          method: "GET",
-                          headers: {
-                            Authorization: "Bearer " + TOKEN,
-                            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                          },
-                          responseType: 'arraybuffer'
+                          data: { file: e.target.files[0], contract_id },
                         });
-                        let fileBlob = new Blob([result.data], {
-                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-                        })
-                        FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx")
                       }}
                     />
                   </Tooltip>
-                </>
-            : ""
-            }
+                </div>
+                <Tooltip title="Xuất file" color="green">
+                  <CiExport
+                    onClick={async (e) => {
+                      const result = await axios({
+                        url: `${local}/api/contract/request-get-file?contract_ID=${contract_id}`,
+                        method: "GET",
+                        headers: {
+                          Authorization: "Bearer " + TOKEN,
+                          "Content-Type":
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        },
+                        responseType: "arraybuffer",
+                      });
+                      let fileBlob = new Blob([result.data], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+                      });
+                      FileSaver.saveAs(fileBlob, "yeu_cau_hop_dong.xlsx");
+                    }}
+                  />
+                </Tooltip>
+              </>
+            ) : (
+              ""
+            )}
           </div>
           <Table
             className={setClassName(convertContractRequest())}
-            dataSource={convertContractRequest()}
+            dataSource={
+              isExpand
+                ? convertContractRequest()
+                : convertContractRequest().slice(0, 4)
+            }
             pagination={false}
             expandable={{
               expandedRowRender: (record) => {
-                return <ContractRight data={record} contract_id={contract_id} isUpdateDetail={isUpdateDetail} setIsUpdateDetail={setIsUpdateDetail} />
+                return (
+                  <ContractRight
+                    data={record}
+                    contract_id={contract_id}
+                    isUpdateDetail={isUpdateDetail}
+                    setIsUpdateDetail={setIsUpdateDetail}
+                  />
+                );
               },
               rowExpandable: (record) => record?.details?.length > 0,
             }}
@@ -573,8 +729,16 @@ export default function CreateContract() {
               render={(text) => {
                 // let product = productList?.find(product => product.id === text)
                 // return product?.name || product?.Product_name
-                let product = productListFull.find(product => product.id === text.product_ID)
-                return product?.channel?.name + " - " + product?.location?.name + " - " + product?.name
+                let product = productListFull.find(
+                  (product) => product.id === text.product_ID
+                );
+                return (
+                  product?.channel?.name +
+                  " - " +
+                  product?.location?.name +
+                  " - " +
+                  product?.name
+                );
               }}
             />
             <Column
@@ -585,7 +749,9 @@ export default function CreateContract() {
                 // console.log("text", text)
                 // let vndCurrency = new Intl.NumberFormat("vi-VN",{currency: "VND"}).format(text.real_price)
                 // return `${text.real_price} VNĐ`;
-                return `${new Intl.NumberFormat("vi-VN").format(text.real_price)} VNĐ`;
+                return `${new Intl.NumberFormat("vi-VN").format(
+                  text.real_price
+                )} VNĐ`;
               }}
             />
             <Column
@@ -608,7 +774,9 @@ export default function CreateContract() {
                 // return `${new Intl.NumberFormat("vi-VN").format(text.quality * text.price)} VNĐ`;
                 // console.log(text)
                 // let newPrice = Number(text.real_price.replaceAll(".",""));
-                return `${new Intl.NumberFormat("vi-VN").format(text.real_price * text.quality)} VNĐ`;
+                return `${new Intl.NumberFormat("vi-VN").format(
+                  text.real_price * text.quality
+                )} VNĐ`;
               }}
             />
             <Column
@@ -617,7 +785,9 @@ export default function CreateContract() {
               key="custom_price"
               render={(text) => {
                 if (text.custom_price > 0) {
-                  return `${new Intl.NumberFormat("vi-VN").format(text.custom_price)} VNĐ`;
+                  return `${new Intl.NumberFormat("vi-VN").format(
+                    text.custom_price
+                  )} VNĐ`;
                 } else {
                   return null;
                 }
@@ -626,26 +796,40 @@ export default function CreateContract() {
             <Column
               className="thaoTac"
               render={(text) => {
-                return <div>
-                  <button disabled={text.quality === text.details?.length ? true : false} className="btn__green" onClick={() => {
-                    addDetailWhenCreate(text.id)
-                  }}>Thêm chi tiết</button>
-                  <MdOutlineModeEditOutline onClick={() => {
-                    setIsShowModal(true);
-                    setIsUpdateModal(true)
-                    setDataToModal(text)
-                  }} />
-                  <MdDelete onClick={() => {
-                    if (window.location.href.includes("create")) {
-                      dispatch(deleteContractRequest(text.id))
-                    } else {
-                      dispatch({
-                        type: DELETE_REQUEST,
-                        data: {request_id: text.id, contract_id}
-                      })
-                    }
-                  }} />
-                </div>
+                return (
+                  <div>
+                    <button
+                      disabled={
+                        text.quality === text.details?.length ? true : false
+                      }
+                      className="btn__green"
+                      onClick={() => {
+                        addDetailWhenCreate(text.id);
+                      }}
+                    >
+                      Thêm chi tiết
+                    </button>
+                    <MdOutlineModeEditOutline
+                      onClick={() => {
+                        setIsShowModal(true);
+                        setIsUpdateModal(true);
+                        setDataToModal(text);
+                      }}
+                    />
+                    <MdDelete
+                      onClick={() => {
+                        if (window.location.href.includes("create")) {
+                          dispatch(deleteContractRequest(text.id));
+                        } else {
+                          dispatch({
+                            type: DELETE_REQUEST,
+                            data: { request_id: text.id, contract_id },
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                );
               }}
             />
           </Table>
@@ -688,10 +872,17 @@ export default function CreateContract() {
           completed_contract_id={completed_contract_id}
         />
         <div className="create__contract__footer">
-          <button className="footer__btn btn__delete" onClick={() => { history.replace(`${uri}/crm/contract`) }}>Hủy</button>
+          <button
+            className="footer__btn btn__delete"
+            onClick={() => {
+              history.replace(`${uri}/crm/contract`);
+            }}
+          >
+            Hủy
+          </button>
           {renderButtonCreateUpdate()}
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }
